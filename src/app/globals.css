@@ -1,0 +1,244 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import 'prism-themes/themes/prism-a11y-dark.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --animate-aurora: aurora 60s linear infinite;
+  @keyframes aurora {
+    from {
+      background-position:
+              50% 50%,
+              50% 50%;
+    }
+    to {
+      background-position:
+              350% 50%,
+              350% 50%;
+    }
+  }
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --animate-shiny-text: shiny-text 8s infinite;
+  @keyframes shiny-text {
+  0%, 90%, 100% {
+    background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+  30%, 60% {
+    background-position: calc(100% + var(--shiny-width)) 0;
+    }
+
+  }
+  --animate-rainbow: rainbow var(--speed, 2s) infinite linear;
+  --color-color-5: var(--color-5-new);
+  --color-color-4: var(--color-4-new);
+  --color-color-3: var(--color-3-new);
+  --color-color-2: var(--color-2-new);
+  --color-color-1: var(--color-1-new)
+;
+  @keyframes rainbow {
+  0% {
+    background-position: 0%;}
+  100% {
+    background-position: 200%;}}}
+
+:root {
+  --radius: 0.625rem; /* 半径保持不变或按需调整 */
+
+  /* 白、灰、天蓝主题 - 亮色模式 */
+  --background: oklch(0.985 0.003 230); /* 非常浅的冷灰色/近乎白色 */
+  --foreground: oklch(0.22 0.01 230);  /* 深冷灰色 (用于文本) */
+
+  --card: oklch(1 0 0);               /* 卡片背景 - 纯白 */
+  --card-foreground: oklch(0.22 0.01 230); /* 卡片文字 - 深冷灰色 */
+
+  --popover: oklch(1 0 0);            /* 弹窗背景 - 纯白 */
+  --popover-foreground: oklch(0.22 0.01 230); /* 弹窗文字 - 深冷灰色 */
+
+  --primary: oklch(0.68 0.15 225);      /* 主色 - 天蓝色 */
+  --primary-foreground: oklch(0.99 0 0);  /* 主色上的文字 - 白色 */
+
+  --secondary: oklch(0.94 0.004 230);   /* 次要色背景 - 浅冷灰色 */
+  --secondary-foreground: oklch(0.35 0.01 230); /* 次要色文字 - 中深冷灰色 */
+
+  --muted: oklch(0.96 0.003 230);       /* 静默色背景 - 更浅的冷灰色 */
+  --muted-foreground: oklch(0.48 0.008 230); /* 静默色文字 - 中冷灰色 */
+
+  --accent: oklch(0.72 0.14 230);       /* 强调色 - 略亮的天蓝色 */
+  --accent-foreground: oklch(0.99 0 0);   /* 强调色上的文字 - 白色 */
+
+  --destructive: oklch(0.577 0.245 27.325); /* 破坏色 - 保持红色系或按需调整 */
+
+  --border: oklch(0.90 0.005 230);      /* 边框 - 浅冷灰色 */
+  --input: oklch(0.95 0.004 230);       /* 输入框背景 - 非常浅的冷灰色 */
+  --ring: oklch(0.68 0.15 225 / 0.5);   /* 焦点环 - 半透明天蓝色 (基于 primary) */
+
+  /* 图表颜色 - 使用天蓝的各种色调和中性灰 */
+  --chart-1: oklch(0.68 0.15 225);     /* 天蓝 */
+  --chart-2: oklch(0.75 0.10 230);     /* 较浅的天蓝 */
+  --chart-3: oklch(0.55 0.02 230);     /* 深静默蓝灰色 */
+  --chart-4: oklch(0.82 0.08 220);     /* 非常浅的天蓝 */
+  --chart-5: oklch(0.60 0.05 235);     /* 中等蓝灰色 */
+
+  /* 侧边栏颜色 - 亮色模式 */
+  --sidebar: oklch(0.97 0.003 230);        /* 侧边栏背景 - 非常浅的冷灰色 */
+  --sidebar-foreground: oklch(0.25 0.01 230); /* 侧边栏文字 - 深冷灰色 */
+  --sidebar-primary: oklch(0.68 0.15 225);   /* 侧边栏主色 - 天蓝色 */
+  --sidebar-primary-foreground: oklch(0.99 0 0); /* 侧边栏主色上的文字 - 白色 */
+  --sidebar-accent: oklch(0.72 0.14 230);    /* 侧边栏强调色 - 略亮天蓝 */
+  --sidebar-accent-foreground: oklch(0.99 0 0);/* 侧边栏强调色上的文字 - 白色 */
+  --sidebar-border: oklch(0.90 0.005 230);   /* 侧边栏边框 - 浅冷灰色 */
+  --sidebar-ring: oklch(0.68 0.15 225 / 0.5);/* 侧边栏焦点环 - 半透明天蓝色 */
+
+  /* 新的彩虹色，围绕天蓝主题 */
+  --color-1-new: oklch(0.68 0.15 225);  /* 主天蓝 */
+  --color-2-new: oklch(0.75 0.13 240);  /* 偏紫的天蓝 */
+  --color-3-new: oklch(0.72 0.16 210);  /* 偏青的天蓝 */
+  --color-4-new: oklch(0.82 0.10 230);  /* 更亮的天蓝 */
+  --color-5-new: oklch(0.60 0.18 220);  /* 更深的天蓝 */
+}
+
+.dark {
+  /* 白、灰、天蓝主题 - 暗色模式 */
+  --background: oklch(0.12 0.008 230); /* 深邃的冷调暗灰色/近乎黑色 */
+  --foreground: oklch(0.94 0.004 230); /* 浅冷灰色 (用于文本) */
+
+  --card: oklch(0.17 0.01 230);       /* 卡片背景 - 比主背景稍亮的暗灰色 */
+  --card-foreground: oklch(0.94 0.004 230); /* 卡片文字 - 浅冷灰色 */
+
+  --popover: oklch(0.17 0.01 230);    /* 弹窗背景 - 同卡片 */
+  --popover-foreground: oklch(0.94 0.004 230); /* 弹窗文字 - 浅冷灰色 */
+
+  --primary: oklch(0.72 0.14 225);      /* 主色 - 亮眼的天蓝色 (比亮色模式下的 primary 更亮一点以便突出) */
+  --primary-foreground: oklch(0.1 0.01 230);  /* 主色上的文字 - 非常深的冷灰色 */
+
+  --secondary: oklch(0.22 0.01 230);   /* 次要色背景 - 中等暗灰色 */
+  --secondary-foreground: oklch(0.88 0.005 230); /* 次要色文字 - 较浅的冷灰色 */
+
+  --muted: oklch(0.25 0.01 230);       /* 静默色背景 - 略浅于次要色的暗灰色 */
+  --muted-foreground: oklch(0.65 0.008 230); /* 静默色文字 - 中等强度的冷灰色 */
+
+  --accent: oklch(0.75 0.15 230);       /* 强调色 - 更亮的天蓝色 */
+  --accent-foreground: oklch(0.1 0.01 230);   /* 强调色上的文字 - 非常深的冷灰色 */
+
+  --destructive: oklch(0.704 0.191 22.216); /* 破坏色 - 保持红色系或按需调整 */
+
+  --border: oklch(0.30 0.01 230);      /* 边框 - 在暗背景上可见的灰色 */
+  --input: oklch(0.28 0.01 230);       /* 输入框背景 - 略浅的暗灰色 */
+  --ring: oklch(0.72 0.14 225 / 0.5);   /* 焦点环 - 半透明亮天蓝色 (基于 primary) */
+
+  /* 图表颜色 - 暗色模式 */
+  --chart-1: oklch(0.72 0.14 225);     /* 亮天蓝 */
+  --chart-2: oklch(0.65 0.10 230);     /* 较暗但仍清晰的天蓝 */
+  --chart-3: oklch(0.80 0.08 220);     /* 更亮、略偏青的天蓝 */
+  --chart-4: oklch(0.45 0.05 235);     /* 深蓝灰色 */
+  --chart-5: oklch(0.55 0.07 240);     /* 中等蓝紫色调 */
+
+  /* 侧边栏颜色 - 暗色模式 */
+  --sidebar: oklch(0.17 0.01 230);         /* 侧边栏背景 - 同卡片背景 */
+  --sidebar-foreground: oklch(0.94 0.004 230);  /* 侧边栏文字 - 浅冷灰色 */
+  --sidebar-primary: oklch(0.72 0.14 225);    /* 侧边栏主色 - 亮天蓝 */
+  --sidebar-primary-foreground: oklch(0.1 0.01 230);/* 侧边栏主色上的文字 - 非常深的冷灰色 */
+  --sidebar-accent: oklch(0.75 0.15 230);     /* 侧边栏强调色 - 更亮天蓝 */
+  --sidebar-accent-foreground: oklch(0.1 0.01 230); /* 侧边栏强调色上的文字 - 非常深的冷灰色 */
+  --sidebar-border: oklch(0.30 0.01 230);    /* 侧边栏边框 - 同全局边框 */
+  --sidebar-ring: oklch(0.72 0.14 225 / 0.5); /* 侧边栏焦点环 - 半透明亮天蓝色 */
+
+  /* 新的彩虹色，在暗色模式下保持鲜明但不过于刺眼 */
+  --color-1-new: oklch(0.68 0.15 225);
+  --color-2-new: oklch(0.75 0.13 240);
+  --color-3-new: oklch(0.72 0.16 210);
+  --color-4-new: oklch(0.82 0.10 230);
+  --color-5-new: oklch(0.60 0.18 220);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.rehype-code-title {
+  /* 自定义代码块标题的样式 */
+  background-color: #2a2d2a; /* 示例颜色 */
+  color: #c5c8c6;
+  padding: 0.5em 1em;
+  border-top-left-radius: 0.3em;
+  border-top-right-radius: 0.3em;
+  font-size: 0.85em;
+  font-family: monospace;
+  border-bottom: 1px solid #1a1c1a;
+}
+.rehype-code-title + pre,
+pre.line-numbers {
+  margin-top: 0 !important; /* 确保标题和代码块之间没有多余间距 */
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.line-numbers .line-numbers-rows {
+  border-right-color: #555 !important; /* 根据主题调整行号分隔线颜色 */
+  font-size: 0.85em !important;    /* 行号字体大小 */
+  padding-top: 1.1em !important;   /* 调整行号的垂直对齐，确保与代码行对齐 */
+  padding-bottom: 1.1em !important;
+  line-height: 1.5 !important;    /* 与代码行高一致 */
+}
+.line-numbers-rows > span:before {
+  color: #999 !important;          /* 行号数字颜色 */
+}
+/* 确保 Tailwind Typography 的样式不会干扰 PrismJS 的代码块内部样式 */
+.prose pre code {
+  font-size: inherit !important;
+  color: inherit !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  white-space: pre-wrap !important; /* 允许自动换行，同时保留 pre 的格式 */
+  word-break: break-all !important; /* 对于长字符串强制换行 */
+}
+/* 为 <pre> 标签本身设置一个最大宽度和水平滚动，以防代码过长 */
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: #272822; /* 确保 <pre> 背景与 Prism 主题匹配 */
+  padding: 1em; /* 确保 <pre> 有内边距 */
+  border-radius: 0.3em;
+}
