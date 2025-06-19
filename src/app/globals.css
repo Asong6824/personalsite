@@ -242,3 +242,23 @@ pre.line-numbers {
   padding: 1em; /* 确保 <pre> 有内边距 */
   border-radius: 0.3em;
 }
+
+/* 保证锚点 # 和标题字号一致 */
+.prose .anchor-link {
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  opacity: 1;
+  transition: none;
+}
+
+.prose .anchor-link > span {
+  display: none;
+}
+
+/* 增大 h2 标题字号 */
+.prose h2 {
+  font-size: 2rem;   /* 36px，按需调整 */
+  line-height: 1.2;
+  font-weight: 800;
+}

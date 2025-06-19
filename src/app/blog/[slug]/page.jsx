@@ -108,9 +108,9 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-12">
-            <article className="max-w-3xl mx-auto"> {/* 控制文章最大宽度以提高可读性 */}
+            <article className="max-w-3xl mx-auto flex flex-col"> {/* 控制文章最大宽度以提高可读性 */}
                 <header className="mb-8 md:mb-12 text-center">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white leading-tight break-words">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-neutral-900 dark:text-white leading-tight break-words">
                         {frontmatter.title}
                     </h1>
                     <div className="text-neutral-400 text-sm space-x-2">
@@ -151,12 +151,27 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
                 {/* 应用 Tailwind Typography 插件的样式，并可进一步自定义 */}
                 <div
                     className="prose prose-lg dark:prose-invert max-w-none
-                     prose-headings:text-sky-300
-                     prose-a:text-blue-400 hover:prose-a:text-blue-300
-                     prose-strong:text-neutral-100
-                     prose-blockquote:border-l-sky-500 prose-blockquote:text-neutral-300
-                     prose-code:text-pink-400 prose-code:bg-neutral-700/30 prose-code:p-0.5 prose-code:px-1.5 prose-code:rounded-md prose-code:font-mono prose-code:text-sm
-                     prose-pre:bg-neutral-800/70 prose-pre:rounded-md prose-pre:shadow-md" // 为 <pre> 元素添加背景和圆角
+        // 标题：亮色模式为深灰，暗色模式为天蓝
+        prose-headings:text-neutral-800 dark:prose-headings:text-sky-300
+
+        // 链接：亮色模式为深蓝，暗色模式为浅蓝
+        prose-a:text-blue-600 dark:prose-a:text-blue-400
+        hover:prose-a:text-blue-500 dark:hover:prose-a:text-blue-300
+
+        // 粗体：亮色模式为纯黑，暗色模式为亮灰
+        prose-strong:text-neutral-900 dark:prose-strong:text-neutral-100
+
+        // 引用块：边框颜色不变，文本在亮色模式为中灰，暗色模式为浅灰
+        prose-blockquote:border-l-sky-500
+        prose-blockquote:text-neutral-600 dark:prose-blockquote:text-neutral-300
+
+        // 行内代码：为两种模式分别设置文本和背景色
+        prose-code:text-pink-600 dark:prose-code:text-pink-400
+        prose-code:bg-neutral-200/50 dark:prose-code:bg-neutral-800/50
+        prose-code:p-0.5 prose-code:px-1.5 prose-code:rounded-md prose-code:font-mono prose-code:text-sm
+
+        // 代码块：背景在两种模式下都用暗色，因为有语法高亮
+        prose-pre:bg-neutral-800/70 prose-pre:rounded-md prose-pre:shadow-md"
                 >
                     <MDXRemote
                         source={content}
@@ -176,7 +191,7 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
                                             children: [{type: 'text', value: '#'}]
                                         }
                                     }],
-                                    [rehypePrismPlus, { ignoreMissing: true, showLineNumbers: true }]
+                                    [rehypePrismPlus, {ignoreMissing: true, showLineNumbers: true}]
                                 ],
                             },
                         }}

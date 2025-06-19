@@ -8,59 +8,62 @@ excerpt: '你所需要的画图知识，Drawing map is all you need'
 coverImage: 'https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Tokyo/tokyo_map_points_20250324_cover.png'
 ---
 
-# 引言
+## 引言
 在我们分享旅行经历时，地点始终是读者关注的核心。
 对于熟悉的城市，简单的地名或定位信息可能已经足够。
 但当目的地是国外、冷门或路线复杂的区域时，单靠文字和照片往往难以让人准确理解去了哪里、怎么移动的、景点之间的关系如何。
 例如新宿和东京是什么关系，为什么在日本可以不换车直达周边某个城市。
 这时，一张清晰的旅行地图就能起到关键作用——不仅能提供地理上下文，也能让整篇博文更具条可读性，方便他人计划自己的行程。
-
+<br />
 本文提供了两种地图的绘制方法：城市路网点位图和铁路路线图
-
+<br />
 <figure>
     <img src="https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Tokyo/tokyo_map_points_20250324.png" alt="东京路网点位图" />
     <figcaption style={{textAlign: 'center'}}>城市点位图（东京） </figcaption>
 </figure>
-
+<br />
 <figure>
     <img src="https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Tokyo/shinjuku_line_map.png" alt="新宿出发铁路图" />
     <figcaption style={{textAlign: 'center'}}>新宿站出发铁路路线图 </figcaption>
 </figure>
+<br />
 
-# 方法一：城市路网点位图
-
+## 方法一：城市路网点位图
+<br />
 绘制城市路网基于下面的连接：  
-
+<br />
 https://anvaka.github.io/city-roads  
-
-这个项目的作者基于 OpenStreetMap 的数据，实现了查询城市并可视化路网。  
-
+<br />
+这个项目的作者基于 OpenStreetMap 的数据，实现了查询城市并可视化路网。
+<br />
+OpenStreetMap 的数据保存了多国语言版本，使用中文搜索也没关系，例如我们可以打开网站并搜索*鞍山*。
+<br />
 <figure>
     <img src="https://blog-assets-asong.tos-cn-beijing.volces.com/tech/map-drawing/anshan_map.png" alt="路网查询展示" />
     <figcaption style={{textAlign: 'center'}}>查询鞍山路网 </figcaption>
 </figure>
-
-OpenStreetMap 的数据保存了多国语言版本，使用中文搜索也没关系，例如我们可以打开网站并搜索*鞍山*。  
-
+<br />
 在这个界面可以自由缩放选择自己喜欢的路网密度。  
-
+<br />
 随后我们可以基于简单的黑白路网图添加自己喜欢的表示和标签，方法有很多种，最简单的是使用 windows 自带的画图插入文字，如前面展示的城市点位图（东京）。  
-
+<br />
 也可以选择其他拥有更丰富功能的工具，画出自己喜欢的版本
+<br />
 
-# 方法二：铁路图
+## 方法二：铁路图
 
+<br />
 铁路图的绘制同样要依赖于 OpenStreetMap 的数据，类似 https://overpass-turbo.eu/ 的网站提供了优秀的查询视图。  
-
+<br />
 <figure>
     <img src="https://blog-assets-asong.tos-cn-beijing.volces.com/tech/map-drawing/overpass.png" alt="overpass查询展示" />
     <figcaption style={{textAlign: 'center'}}>overpass 查询中央线线路 </figcaption>
 </figure>
-
+<br />
 在大模型时代，我们甚至不需要学会这种查询语言，大模型可以帮助我们完成查询语言的编写。  
-
+<br />
 overpass 也支持爬虫访问他们的 api，我们也可以使用简单的爬虫程序得到我们想要的数据。  
-
+<br />
 - 首先导入一些必须的库和目标地址
 
 ```python
@@ -72,8 +75,9 @@ import copy
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 ```
-
+<br />
 - 基于车站名查询从本站出发的线路
+<br />
 
 ```python
 def fetch_line_names_near_station(station_name="新宿駅", radius=1000):
@@ -112,8 +116,9 @@ def fetch_line_names_near_station(station_name="新宿駅", radius=1000):
         print(f"获取线路名称时出错: {e}")
         return []
 ```
-
+<br />
 - 基于线路名查询完整信息，并于大小自动分割保存到不同文件中
+<br />
 
 ```python
 def create_gpx_from_line_names(line_names, filenameindex, max_size_bytes=4_500_000, ):
@@ -248,25 +253,27 @@ out geom;
     if gpx.tracks or gpx.waypoints:
         save_gpx(gpx, part_index)
 ```
-
+<br />
 - 调用相关函数完成数据收集
-
+<br />
 ```python
 line_names = fetch_line_names_near_station("東京駅", radius=1000)
 create_gpx_from_line_names(line_names, "tokyo_route_")
 ```
-
+<br />
 在使用爬虫或手动完成数据收集后，我们可以打开 Google Map 的自制地图服务：  
-
+<br />
 https://www.google.com/intl/zh-CN/maps/about/mymaps/  
-
+<br />
 在这里导入我们收集到的 GPX 类型数据，如：
-
+<br />
 <figure>
     <img src="https://blog-assets-asong.tos-cn-beijing.volces.com/tech/map-drawing/google-my-map.png" alt="自制地图" />
     <figcaption style={{textAlign: 'center'}}>自制地图 </figcaption>
 </figure>
-
+<br />
 可以手动添加图层或删除不必要的节点，来完成我们想要的版本。  
-
+<br />
 vscode 也有 Geo View 相关插件，也可以用于预览数据。
+
+## aaa
