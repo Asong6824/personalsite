@@ -225,25 +225,89 @@ pre.line-numbers {
   color: #999 !important;          /* 行号数字颜色 */
 }
 /* 确保 Tailwind Typography 的样式不会干扰 PrismJS 的代码块内部样式 */
+.prose {
+  /* 为文章区域定义一套独立的 "SmartBlue" 变量 - 亮色模式 */
+  --prose-bg: oklch(1 0 0); /* 文章区域背景 - 纯白，与页面背景区分 */
+  --prose-fg: oklch(0.2 0.02 240); /* 深海军蓝文字 */
+  --prose-primary: oklch(0.6 0.15 245); /* 沉稳蓝 */
+  --prose-secondary-fg: oklch(0.3 0.02 240); /* 中度海军蓝 */
+  --prose-muted-fg: oklch(0.45 0.015 240); /* 柔和海军蓝 */
+  --prose-border: oklch(0.88 0.01 235); /* 柔和蓝灰色边框 */
+  --prose-code-bg: oklch(0.96 0.005 230); /* 代码块浅蓝灰背景 */
+  --prose-code-fg: var(--prose-fg);
+  --prose-code-title-bg: var(--prose-code-bg);
+  --prose-code-title-fg: var(--prose-muted-fg);
+
+  /* 应用这些变量 */
+  color: var(--prose-fg);
+  background-color: var(--prose-bg);
+  border: 1px solid var(--prose-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem; /* 给文章内容一些呼吸空间 */
+}
+
+.dark .prose {
+  /* 为文章区域定义一套独立的 "SmartBlue" 变量 - 暗色模式 */
+  --prose-bg: oklch(0.18 0.018 240); /* 文章区域背景 - 稍亮的深蓝 */
+  --prose-fg: oklch(0.9 0.005 230); /* 亮蓝灰色文字 */
+  --prose-primary: oklch(0.65 0.18 240); /* 亮蓝色 */
+  --prose-secondary-fg: oklch(0.8 0.008 230);
+  --prose-muted-fg: oklch(0.6 0.01 235);
+  --prose-border: oklch(0.35 0.02 240);
+  --prose-code-bg: oklch(0.19 0.02 240); /* 深色代码块背景 */
+  --prose-code-fg: var(--prose-fg);
+  --prose-code-title-bg: var(--prose-code-bg);
+  --prose-code-title-fg: var(--prose-muted-fg);
+}
+
+/* --- 代码块样式 --- */
+/* 使用 .prose 内部的变量 */
+.prose .rehype-code-title {
+  background-color: var(--prose-code-title-bg);
+  color: var(--prose-code-title-fg);
+  padding: 0.5em 1em;
+  border-top-left-radius: 0.3em;
+  border-top-right-radius: 0.3em;
+  font-size: 0.85em;
+  font-family: monospace;
+  border-bottom: 1px solid var(--prose-border);
+}
+.prose .rehype-code-title + pre,
+.prose pre.line-numbers {
+  margin-top: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.prose .line-numbers .line-numbers-rows {
+  border-right-color: var(--prose-border) !important;
+  font-size: 0.85em !important;
+  padding-top: 1.1em !important;
+  padding-bottom: 1.1em !important;
+  line-height: 1.5 !important;
+}
+.prose .line-numbers-rows > span:before {
+  color: var(--prose-muted-fg) !important;
+}
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: var(--prose-code-bg);
+  padding: 1em;
+  border-radius: 0.3em;
+  border: 1px solid var(--prose-border);
+}
 .prose pre code {
   font-size: inherit !important;
   color: inherit !important;
   background-color: transparent !important;
   padding: 0 !important;
   border-radius: 0 !important;
-  white-space: pre-wrap !important; /* 允许自动换行，同时保留 pre 的格式 */
-  word-break: break-all !important; /* 对于长字符串强制换行 */
-}
-/* 为 <pre> 标签本身设置一个最大宽度和水平滚动，以防代码过长 */
-.prose pre {
-  max-width: 100%;
-  overflow-x: auto;
-  background-color: #272822; /* 确保 <pre> 背景与 Prism 主题匹配 */
-  padding: 1em; /* 确保 <pre> 有内边距 */
-  border-radius: 0.3em;
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
 }
 
-/* 保证锚点 # 和标题字号一致 */
+/* --- 排版样式 --- */
+/* 使用 .prose 内部的变量 */
 .prose .anchor-link {
   font-size: inherit;
   line-height: inherit;
@@ -251,14 +315,35 @@ pre.line-numbers {
   opacity: 1;
   transition: none;
 }
-
 .prose .anchor-link > span {
   display: none;
 }
-
-/* 增大 h2 标题字号 */
 .prose h2 {
-  font-size: 2rem;   /* 36px，按需调整 */
+  font-size: 2rem;
   line-height: 1.2;
   font-weight: 800;
+  color: var(--prose-primary); /* 使用文章主色 */
+}
+.prose h3 {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.7em;
+  color: var(--prose-primary); /* 使用文章主色 */
+}
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+}
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+}
+.prose li {
+  margin-bottom: 0.5em;
+}
+.prose strong {
+  font-weight: 800;
+  color: var(--prose-secondary-fg); /* 使用文章次要文字颜色 */
 }

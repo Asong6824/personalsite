@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
     const postData = await getPostData(params.slug); // getPostData 是同步的，如果改为异步则这里用 await
 
     if (!postData) {
-        // 如果博文不存在，可以返回一个通用的“未找到”标题
+        // 如果博文不存在，可以返回一个通用的"未找到"标题
         return {
             title: '博文未找到',
         };
@@ -40,14 +40,14 @@ export async function generateMetadata({ params }) {
         : new URL('/default-og-image.png', siteUrl).toString(); // 准备一个默认的 OG 图片
 
     return {
-        title: `${postData.frontmatter.title} | 您的博客名`, // 替换“您的博客名”
+        title: `${postData.frontmatter.title} | 您的博客名`, // 替换"您的博客名"
         description: postData.frontmatter.excerpt || '阅读这篇精彩的文章...',
         authors: [{ name: postData.frontmatter.author || '站点作者' }],
         openGraph: {
             title: postData.frontmatter.title,
             description: postData.frontmatter.excerpt || '',
             url: `${siteUrl}/blog/${params.slug}`,
-            siteName: '您的网站名', // 替换“您的网站名”
+            siteName: '您的网站名', // 替换"您的网站名"
             images: [
                 {
                     url: ogImageUrl,
@@ -107,7 +107,7 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="container mx-auto px-4 pb-8 pt-16 md:pb-12 md:pt-20">
             <article className="max-w-3xl mx-auto flex flex-col"> {/* 控制文章最大宽度以提高可读性 */}
                 <header className="mb-8 md:mb-12 text-center">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-neutral-900 dark:text-white leading-tight break-words">
@@ -117,7 +117,7 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
                         <span>作者：{frontmatter.author || '佚名'}</span>
                         <span>·</span>
                         <span>
-              发布于 {frontmatter.date ? format(parseISO(frontmatter.date), 'yyyy年MM月dd日', { locale: zhCN }) : '未知日期'}
+              发布于 {frontmatter.date ? format(parseISO(frontmatter.date), 'yyyy年MM月dd日', {locale: zhCN}) : '未知日期'}
             </span>
                     </div>
                     {frontmatter.tags && frontmatter.tags.length > 0 && (
@@ -136,12 +136,13 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
                 </header>
 
                 {frontmatter.coverImage && (
-                    <div className="mb-8 md:mb-12 rounded-lg overflow-hidden shadow-xl aspect-[16/9] relative"> {/* aspect-video 或其他比例 */}
+                    <div
+                        className="mb-8 md:mb-12 rounded-lg overflow-hidden shadow-xl aspect-[16/9] relative"> {/* aspect-video 或其他比例 */}
                         <Image
                             src={frontmatter.coverImage}
                             alt={`${frontmatter.title} 封面图`}
                             fill
-                            style={{ objectFit: 'cover' }}
+                            style={{objectFit: 'cover'}}
                             priority // 对于首屏或重要的图片，建议添加 priority
                             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 60vw" // 根据您的布局调整 sizes
                         />
@@ -178,7 +179,7 @@ export default function PostPage({ params }) { // params 中会包含 { slug: 'y
                         components={mdxComponents}
                         options={{
                             mdxOptions: {
-                                remarkPlugins: [remarkGfm],
+                                remarkPlugins: [[remarkGfm, {breaks: true}]],
                                 rehypePlugins: [
                                     rehypeSlug,
                                     [rehypeAutolinkHeadings, {
