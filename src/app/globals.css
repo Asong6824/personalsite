@@ -22,6 +22,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-cursive: 'KaiTi', 'STKaiti', '楷体', 'SimKai', cursive;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -132,6 +133,11 @@
   --color-3-new: oklch(0.72 0.16 210);  /* 偏青的天蓝 */
   --color-4-new: oklch(0.82 0.10 230);  /* 更亮的天蓝 */
   --color-5-new: oklch(0.60 0.18 220);  /* 更深的天蓝 */
+}
+
+/* 行书字体样式 */
+.font-cursive {
+  font-family: 'KaiTi', 'STKaiti', '楷体', 'SimKai', cursive;
 }
 
 .dark {
@@ -322,6 +328,8 @@ pre.line-numbers {
   font-size: 2rem;
   line-height: 1.2;
   font-weight: 800;
+  margin-top: 2.5em;
+  margin-bottom: 1em;
   color: var(--prose-primary); /* 使用文章主色 */
 }
 .prose h3 {
@@ -342,6 +350,19 @@ pre.line-numbers {
 }
 .prose li {
   margin-bottom: 0.5em;
+}
+
+/* --- Figure 和 Figcaption 样式 --- */
+.prose figure {
+  margin: 2em 0;
+}
+
+.prose figcaption {
+  margin-top: 0.75em;
+  text-align: center;
+  font-size: 0.875em;
+  color: var(--prose-muted-fg);
+  font-style: italic;
 }
 .prose strong {
   font-weight: 800;
