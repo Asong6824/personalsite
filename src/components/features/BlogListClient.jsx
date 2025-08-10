@@ -68,8 +68,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
             {/* 博文列表展示 */}
             {postsToDisplay.length > 0 ? (
                 <div className="grid gap-8 md:gap-10">
-                    {postsToDisplay.map(({ slug, title, date, excerpt, tags, coverImage, author }) => (
-                        <article key={slug} className="p-6 rounded-lg shadow-lg bg-card hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row gap-6 items-start">
+                    {postsToDisplay.map(({ slug, title, date, excerpt, tags, coverImage, author, pinned }) => (
+                        <article key={slug} className={`p-6 rounded-lg shadow-lg bg-card hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row gap-6 items-start ${pinned ? 'ring-2 ring-yellow-400/50 bg-gradient-to-r from-yellow-50/50 to-transparent dark:from-yellow-900/20' : ''}`}>
                             {coverImage && (
                                 <Link href={`/blog/${slug}`} className="block md:w-1/3 w-full aspect-video rounded overflow-hidden flex-shrink-0">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -77,8 +77,15 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                 </Link>
                             )}
                             <div className="flex-grow">
-                                <h2 className="text-2xl font-semibold mb-2 text-primary hover:text-primary/80">
-                                    <Link href={`/blog/${slug}`}>{title || '未命名文章'}</Link>
+                                <h2 className="text-2xl font-semibold mb-2 text-primary hover:text-primary/80 flex items-center gap-2">
+                                    <Link href={`/blog/${slug}`} className="flex items-center gap-2">
+                                        {pinned && (
+                                            <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 rounded-full whitespace-nowrap">
+                                                📌 置顶
+                                            </span>
+                                        )}
+                                        {title || '未命名文章'}
+                                    </Link>
                                 </h2>
                                 <p className="text-muted-foreground text-sm mb-3">
                                     {author && <span>{author} · </span>}

@@ -42,14 +42,25 @@ export function getSortedPostsData() {
             };
         });
 
-    // 按日期降序对博文进行排序
+    // 按置顶状态和日期排序：置顶文章优先，然后按日期降序排序
     return allPostsData.sort((a, b) => {
-        if (new Date(a.date) < new Date(b.date)) {
-            return 1;
-        } else if (new Date(a.date) > new Date(b.date)) {
-            return -1;
+        // 首先按置顶状态排序（置顶文章在前）
+        const aPinned = a.pinned || false;
+        const bPinned = b.pinned || false;
+        
+        if (aPinned && !bPinned) {
+            return -1; // a 置顶，b 不置顶，a 在前
+        } else if (!aPinned && bPinned) {
+            return 1;  // b 置顶，a 不置顶，b 在前
         } else {
-            return 0;
+            // 都置顶或都不置顶时，按日期降序排序
+            if (new Date(a.date) < new Date(b.date)) {
+                return 1;
+            } else if (new Date(a.date) > new Date(b.date)) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
     });
 }

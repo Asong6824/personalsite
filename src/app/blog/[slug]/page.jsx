@@ -9,7 +9,8 @@ import { zhCN } from 'date-fns/locale'; // 中文日期格式
 import { getAllPostSlugs, getPostData } from '@/lib/post'; // 确保路径相对于您的项目结构正确
 import { MDXRemote } from 'next-mdx-remote/rsc'; // 用于 App Router (RSC)渲染 MDX
 import { InlineExplanation } from '@/components/ui/InlineExplanation'; // 导入InlineExplanation组件
-import { TableOfContents } from '@/components/ui/TableOfContents'; // 导入目录组件
+import { TableOfContents } from '@/components/ui/TableOfContents';
+import { MusicPlayer, defaultPlaylist } from '@/components/ui/MusicPlayer'; // 导入目录组件
 
 // 导入 remark/rehype 插件 (用于 MDXRemote 的 options)
 import remarkGfm from 'remark-gfm'; // 支持 GitHub Flavored Markdown (表格、删除线等)
@@ -225,7 +226,22 @@ export default async function PostPage({ params }) { // params 中会包含 { sl
                     
                     {/* 右侧目录区域 */}
                     <div className="relative">
-                        <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                        <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto space-y-4">
+                            <MusicPlayer playlist={
+                                frontmatter.music 
+                                    ? Array.isArray(frontmatter.music) 
+                                        ? frontmatter.music.map((url, index) => ({
+                                            title: `背景音乐 ${index + 1}`,
+                                            artist: "博客配乐",
+                                            src: url
+                                          }))
+                                        : [{
+                                            title: "背景音乐 1",
+                                            artist: "博客配乐",
+                                            src: frontmatter.music
+                                          }]
+                                    : defaultPlaylist
+                            } />
                             <TableOfContents />
                         </div>
                     </div>
