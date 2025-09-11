@@ -3,15 +3,16 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
 // import { useRouter } from 'next/navigation'; // 可选，用于更复杂的导航后操作
 
 // 1. 更新 navLinks 数组，添加 type 并修正 href
 const navLinks = [
-    { label: '首页', href: '#hero', type: 'scroll' }, // 假设 #hero 在主页
-    { label: '关于我', href: '#about', type: 'scroll' },
-    { label: '技术栈', href: '#programmer-details', type: 'scroll' },
-    { label: '足迹', href: '#footprints', type: 'scroll' }, // 修正 href, 假设 #footprints 在主页
+    { label: '首页', href: '/#hero', type: 'scroll' }, // 使用 /#hero 格式确保从任何页面都能跳转
+    { label: '关于我', href: '/#about', type: 'scroll' },
+    { label: '技术栈', href: '/#programmer-details', type: 'scroll' },
+    { label: '足迹', href: '/#footprints', type: 'scroll' },
     { label: '博客', href: '/blog', type: 'page' },     // 明确为页面链接到 /blog
     // { label: '联系我', href: '#contact', type: 'scroll' }, // 如果需要可以加回来
 ];
@@ -19,6 +20,7 @@ const navLinks = [
 const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const pathname = usePathname();
     // const router = useRouter(); // 如果需要用 router.push
 
     // 平滑滚动到指定区域的函数
@@ -53,33 +55,14 @@ const Navbar = () => {
         setIsMobileMenuOpen(false);
 
         if (type === 'scroll') {
-            const targetId = href.startsWith('/#') ? href.substring(1) : href; // 获取 #sectionId
-
             // 如果当前就在主页 (pathname === '/')，则平滑滚动
             if (window.location.pathname === '/') {
                 e.preventDefault();
+                const targetId = href.startsWith('/#') ? href.substring(1) : href; // 获取 #sectionId
                 scrollToSection(targetId);
-            } else {
-                // 如果不在主页，但链接是 /#hash 形式，我们希望 Link 组件导航到主页
-                // 然后浏览器会自动尝试滚动到该哈希位置。
-                // Next.js 的 <Link href="/#someId"> 会处理这个导航。
-                // 这里不需要 e.preventDefault()。
-                // 注意：从其他页面跳转回主页的哈希链接的“平滑”滚动，
-                // 可能需要目标页面（主页）的 useEffect 监听哈希变化来实现，
-                // 或者接受浏览器默认的“跳转到锚点”行为。
-                // 为简化，此处不阻止默认行为，让 Link 和浏览器处理。
-                if (!href.startsWith('/#')) {
-                    // 如果是纯 #hash (e.g. href="#about") 且不在主页，这个滚动可能不会按预期工作
-                    // 因为它会在当前页面 (e.g. /blog) 寻找 #about。
-                    // 因此，对于要从任何页面都能链接到的主页区域，href 应为 /#sectionId
-                    console.warn(`Trying to scroll to "${targetId}" from "${window.location.pathname}". Ensure target exists on this page or link href is "/${targetId}".`);
-                    // 为了安全，如果不是 /# 开头且不在主页，也阻止默认行为并尝试滚动（可能失败）
-                    // 或者这里应该让 Link 直接导航到 href (如果 href 是 /#sectionId)
-                    e.preventDefault();
-                    scrollToSection(targetId); // 这行在非主页上对纯 #hash 效果不佳
-                }
-                // 如果 href 是 /#sectionId，则 Link 会导航，不需要 e.preventDefault()
             }
+            // 如果不在主页，让 Next.js Link 组件处理导航到 /#sectionId
+            // Link 会自动导航到主页并定位到对应的锚点
         }
         // 对于 type === 'page' (例如 href="/blog")，不执行 e.preventDefault()
         // Link 组件会处理页面跳转
@@ -97,21 +80,30 @@ const Navbar = () => {
     }, []);
 
     // 4. 应用全局样式 (使用 CSS 变量对应的 Tailwind 类)
+    // 检查是否在技术详情页或生活频道页
+    const isTechPage = pathname?.startsWith('/blog/tech') || pathname?.startsWith('/blog/technology');
+    const isLifePage = pathname?.startsWith('/blog/life');
+    
     const navBackgroundClass = isScrolled || isMobileMenuOpen
-        ? "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg" // 使用卡片背景，增加暗色模式透明度
-        : "bg-transparent";
+        ? (isTechPage ? "backdrop-blur-md shadow-lg" : "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg") // 技术页面使用特殊背景
+        : (isTechPage ? "" : "bg-transparent");
 
     const textClassBase = "transition-colors duration-200 cursor-pointer";
     const textScrolledClass = isScrolled || isMobileMenuOpen
-        ? "text-foreground hover:text-primary"
-        : "text-foreground hover:text-primary"; // 在透明背景时，前景文字也应清晰
+        ? (isTechPage ? "text-foreground" : isLifePage ? "text-white hover:text-white/80" : "text-foreground hover:text-primary")
+        : (isTechPage ? "text-foreground" : isLifePage ? "text-white hover:text-white/80" : "text-foreground hover:text-primary"); // 生活页面使用白色文字
 
-    const navLinkHoverBgClass = isScrolled || isMobileMenuOpen ? "hover:bg-muted/50" : "hover:bg-accent/10 dark:hover:bg-accent/20";
+    const navLinkHoverBgClass = isScrolled || isMobileMenuOpen 
+        ? (isTechPage ? "" : isLifePage ? "hover:bg-white/10" : "hover:bg-muted/50") 
+        : (isTechPage ? "" : isLifePage ? "hover:bg-white/10" : "hover:bg-accent/10 dark:hover:bg-accent/20");
 
     const mobileMenuBgClass = "bg-card/95 dark:bg-card/95 backdrop-blur-md"; // 移动菜单背景
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBackgroundClass}`}>
+        <nav 
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBackgroundClass}`}
+            style={isTechPage ? { backgroundColor: '#f8f1ee' } : {}}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
@@ -132,6 +124,7 @@ const Navbar = () => {
                                     href={linkItem.href}
                                     onClick={(e) => handleNavLinkClick(e, linkItem.href, linkItem.type)}
                                     className={`px-3 py-2 rounded-md text-lg font-medium ${textClassBase} ${textScrolledClass} ${navLinkHoverBgClass}`}
+
                                 >
                                     {linkItem.label}
                                 </Link>
@@ -166,7 +159,7 @@ const Navbar = () => {
                                 key={linkItem.label}
                                 href={linkItem.href}
                                 onClick={(e) => handleNavLinkClick(e, linkItem.href, linkItem.type)}
-                                className={`block px-3 py-2 rounded-md text-base font-medium ${textClassBase} text-foreground hover:text-primary hover:bg-muted/50`}
+                                className={`block px-3 py-2 rounded-md text-base font-medium ${textClassBase} ${isLifePage ? 'text-white hover:text-white/80 hover:bg-white/10' : 'text-foreground'} ${isTechPage ? '' : isLifePage ? '' : 'hover:text-primary hover:bg-muted/50'}`}
                             >
                                 {linkItem.label}
                             </Link>

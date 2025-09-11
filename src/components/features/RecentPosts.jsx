@@ -1,6 +1,6 @@
 // src/components/features/RecentPosts.jsx
 import Link from 'next/link';
-import { getSortedPostsData } from '@/lib/post'; // 确保路径正确
+// import { getSortedPostsData } from '@/lib/post'; // 移除服务端函数导入
 import { format, parseISO } from 'date-fns'; // format 用于显示，parseISO 用于确保日期对象
 import { zhCN } from 'date-fns/locale';
 
@@ -19,9 +19,8 @@ const DEFAULT_AUTHOR_NAME = "您的名字/博客名";
 const DEFAULT_AUTHOR_HANDLE = "@您的Handle";
 const DEFAULT_AVATAR_URL = "https://blog-assets-asong.tos-cn-beijing.volces.com/avatar.jpg"; // 确保此图片存在于 public 目录下
 
-export default function RecentPosts() {
-    const allPosts = getSortedPostsData();
-    const recentPosts = allPosts.slice(0, 3);
+export default function RecentPosts({ posts = [] }) {
+    const recentPosts = posts.slice(0, 3);
 
     if (recentPosts.length === 0) {
         return null;
@@ -30,7 +29,7 @@ export default function RecentPosts() {
     return (
         <section id="recentposts" className="mt-32 mb-16">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12">
                     最新博文
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-start justify-items-center">
@@ -78,7 +77,7 @@ export default function RecentPosts() {
                         );
                     })}
                 </div>
-                {allPosts.length > recentPosts.length && (
+                {posts.length > recentPosts.length && (
                     <div className="text-center mt-12">
                         <Link href="/blog"
                               className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300">

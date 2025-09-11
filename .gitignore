@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+BLOG_REDESIGN.md
+.gitignore
+MUSIC_PLAYER.md

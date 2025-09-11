@@ -11,6 +11,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'; // 用于 App Router (RSC)渲�
 import { InlineExplanation } from '@/components/ui/InlineExplanation'; // 导入InlineExplanation组件
 import { TableOfContents } from '@/components/ui/TableOfContents';
 import { MusicPlayer, defaultPlaylist } from '@/components/ui/MusicPlayer'; // 导入目录组件
+import { Highlighter } from '@/components/magicui/highlighter';
 
 // 导入 remark/rehype 插件 (用于 MDXRemote 的 options)
 import remarkGfm from 'remark-gfm'; // 支持 GitHub Flavored Markdown (表格、删除线等)
@@ -96,6 +97,19 @@ export default async function PostPage({ params }) { // params 中会包含 { sl
     const mdxComponents = {
         // 添加InlineExplanation组件
         InlineExplanation: InlineExplanation,
+        
+        // 添加Highlighter组件，根据频道类型决定是否可用
+        Highlighter: ({ children, color = "#a18072", action = "highlight", ...props }) => (
+            <Highlighter 
+                color={color} 
+                action={action} 
+                isView={true}
+                animationDuration={800}
+                {...props}
+            >
+                {children}
+            </Highlighter>
+        ),
         
         // 例如，如果您想自定义图片渲染，可以这样做：
         // img: (props) => (

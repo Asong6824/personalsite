@@ -1,6 +1,604 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import 'prism-themes/themes/prism-a11y-dark.css';
+@import "fullpage.js/dist/fullpage.css";
+
+/* FullPage.js 增强样式 */
+.fullpage-wrapper.enhanced {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 加载屏幕 */
+.fp-loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.fp-loading-content {
+  text-align: center;
+  color: white;
+}
+
+.fp-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(16, 185, 129, 0.3);
+  border-top: 3px solid #10b981;
+  border-radius: 50%;
+  animation: fp-spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.fp-loading-text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+@keyframes fp-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 自定义导航系统 */
+.fp-custom-nav {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fp-nav-progress {
+  width: 2px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fp-nav-progress-bar {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to bottom, #10b981, #059669);
+  border-radius: 1px;
+  transition: height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.fp-nav-dots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.fp-nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.fp-nav-dot:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.fp-nav-dot.active {
+  background: #10b981;
+  transform: scale(1.3);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.fp-nav-dot.active::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 50%;
+  animation: fp-pulse 2s infinite;
+}
+
+@keyframes fp-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.fp-nav-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.fp-nav-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  transform: translateX(10px);
+  opacity: 0.6;
+  user-select: none;
+}
+
+.fp-nav-label.active {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  transform: translateX(0);
+  opacity: 1;
+  font-weight: 500;
+}
+
+.fp-nav-label:hover {
+  color: rgba(255, 255, 255, 0.8);
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Section 动画效果 - 优化布局 */
+.fp-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.fp-section-animated {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fp-section-leaving {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.fp-section-entering {
+  transform: scale(1.02);
+}
+
+.fp-section-loaded {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Section 内容动画 - 修复布局约束 */
+.section-content {
+  width: 100%;
+  min-height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* 确保子组件不会超出容器 */
+.section-content > * {
+  max-width: 100%;
+  max-height: calc(100vh - 4rem);
+  box-sizing: border-box;
+}
+
+.section-content-animated {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fp-fadeInUp 0.6s ease-out forwards;
+}
+
+.content-animated .section-content-animated {
+  animation-delay: 0.1s;
+}
+
+@keyframes fp-fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 优化的弹跳动画 */
+@keyframes fp-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) translateZ(0);
+  }
+  40% {
+    transform: translateY(-8px) translateZ(0);
+  }
+  60% {
+    transform: translateY(-4px) translateZ(0);
+  }
+}
+
+/* 优化的旋转动画 */
+@keyframes fp-spin {
+  0% { transform: rotate(0deg) translateZ(0); }
+  100% { transform: rotate(360deg) translateZ(0); }
+}
+
+/* 滚动提示 */
+.fp-scroll-hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.fp-scroll-hint-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fp-scroll-hint-text {
+  font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+.fp-scroll-hint-arrow {
+  animation: fp-bounce 2s infinite;
+}
+
+@keyframes fp-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* 视差效果增强 */
+.fp-section[data-fp-styles] {
+  will-change: transform;
+}
+
+/* 滚动溢出容器样式 */
+.fp-overflow {
+  overflow-y: auto;
+  height: 100vh;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.6) rgba(255, 255, 255, 0.1);
+}
+
+.fp-overflow::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fp-overflow::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.fp-overflow::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.6);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.fp-overflow::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.8);
+}
+
+/* 响应式设计 - 优化布局 */
+@media (max-width: 1024px) {
+  .fp-custom-nav {
+    right: 1rem;
+  }
+  
+  .fp-nav-progress {
+    height: 150px;
+  }
+  
+  .section-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  .section-content > * {
+    max-height: calc(100vh - 3rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .fp-custom-nav {
+    display: none;
+  }
+  
+  .fp-scroll-hint {
+    bottom: 1rem;
+  }
+  
+  .fp-scroll-hint-text {
+    font-size: 0.75rem;
+  }
+  
+  .section-content {
+    padding: 1rem 0.75rem;
+    min-height: 100vh;
+  }
+  
+  .section-content > * {
+    max-height: calc(100vh - 2rem);
+  }
+  
+  /* 移动端禁用fullpage时的样式 */
+  .fp-responsive .fp-section {
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .fp-responsive .section-content {
+    min-height: 100vh;
+    max-height: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .fp-loading-spinner {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .fp-loading-text {
+    font-size: 0.875rem;
+  }
+  
+  .section-content {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .section-content > * {
+    max-height: calc(100vh - 1.5rem);
+  }
+}
+
+/* 性能优化 */
+.fp-section,
+.fp-section * {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 响应式fullpage增强 */
+@media (max-width: 768px) and (max-height: 600px) {
+  .fullpage-wrapper.enhanced {
+    height: auto;
+    overflow: visible;
+  }
+  
+  .fp-section {
+    height: auto !important;
+    min-height: 100vh;
+  }
+  
+  .section-content {
+    min-height: 100vh;
+    max-height: none;
+    padding: 1rem;
+  }
+}
+
+/* 横屏模式优化 */
+@media (orientation: landscape) and (max-height: 500px) {
+  .section-content {
+    padding: 0.5rem;
+    min-height: 100vh;
+  }
+  
+  .section-content > * {
+    max-height: calc(100vh - 1rem);
+  }
+  
+  .fp-scroll-hint {
+    display: none;
+  }
+}
+
+/* 超大屏幕优化 */
+@media (min-width: 1920px) {
+  .section-content {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  .fp-nav-label:hover {
+    transform: none;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .fp-scroll-hint {
+    animation-duration: 1.5s;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .fp-nav-label {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .fp-nav-label.active {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+  }
+}
+
+/* 减少动画效果（用户偏好） */
+@media (prefers-reduced-motion: reduce) {
+  .fp-section-animated,
+  .fp-section-leaving,
+  .fp-section-entering,
+  .fp-section-loaded,
+  .section-content-animated,
+  .fp-loading-screen,
+  .fp-scroll-hint,
+  .fp-nav-progress-bar,
+  .fp-nav-label {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .fp-scroll-hint-arrow {
+    animation: none !important;
+  }
+  
+  .fp-loading-spinner {
+    animation: none !important;
+    border: 3px solid #10b981;
+  }
+}
+
+/* 动画性能优化 */
+.fp-section-animated,
+.section-content-animated,
+.fp-nav-progress-bar,
+.fp-nav-label {
+  will-change: transform, opacity;
+}
+
+.fp-section-leaving,
+.fp-section-entering {
+  will-change: transform;
+}
+
+/* 完成动画后清理will-change */
+.fp-section-loaded {
+  will-change: auto;
+}
+
+.content-animated .section-content-animated {
+  will-change: auto;
+}
+
+/* GPU加速优化 */
+.fp-section,
+.section-content,
+.fp-nav-progress-bar {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* 减少重绘和回流 */
+.fp-section {
+  contain: layout style paint;
+}
+
+.section-content {
+  contain: layout style;
+}
+
+/* VS Code 风格的代码高亮样式 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6a9955 !important;
+}
+
+.token.punctuation {
+  color: #d4d4d4 !important;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #b5cea8 !important;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #ce9178 !important;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d4d4d4 !important;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #569cd6 !important;
+}
+
+.token.function,
+.token.class-name {
+  color: #dcdcaa !important;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #d16969 !important;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
 
 /* 音乐播放器滑块样式 */
 .slider::-webkit-slider-thumb {
@@ -228,8 +826,21 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    /* 防止过度滚动时显示白边 */
+    overscroll-behavior: none;
+  }
   body {
     @apply bg-background text-foreground;
+    /* 防止过度滚动时显示白边 */
+    overscroll-behavior: none;
+  }
+  /* 针对技术频道页面的特殊处理 */
+  body:has([data-tech-page]) {
+    background-color: #f8f1ee;
+  }
+  html:has([data-tech-page]) {
+    background-color: #f8f1ee;
   }
 }
 
@@ -250,151 +861,66 @@ pre.line-numbers {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
 }
-.line-numbers .line-numbers-rows {
-  border-right-color: #555 !important; /* 根据主题调整行号分隔线颜色 */
-  font-size: 0.85em !important;    /* 行号字体大小 */
-  padding-top: 1.1em !important;   /* 调整行号的垂直对齐，确保与代码行对齐 */
-  padding-bottom: 1.1em !important;
-  line-height: 1.5 !important;    /* 与代码行高一致 */
-}
-.line-numbers-rows > span:before {
-  color: #999 !important;          /* 行号数字颜色 */
-}
-/* 确保 Tailwind Typography 的样式不会干扰 PrismJS 的代码块内部样式 */
-.prose {
-  /* 为文章区域定义一套独立的 "SmartBlue" 变量 - 亮色模式 */
-  --prose-bg: oklch(1 0 0); /* 文章区域背景 - 纯白，与页面背景区分 */
-  --prose-fg: oklch(0.2 0.02 240); /* 深海军蓝文字 */
-  --prose-primary: oklch(0.6 0.15 245); /* 沉稳蓝 */
-  --prose-secondary-fg: oklch(0.3 0.02 240); /* 中度海军蓝 */
-  --prose-muted-fg: oklch(0.45 0.015 240); /* 柔和海军蓝 */
-  --prose-border: oklch(0.88 0.01 235); /* 柔和蓝灰色边框 */
-  --prose-code-bg: oklch(0.96 0.005 230); /* 代码块浅蓝灰背景 */
-  --prose-code-fg: var(--prose-fg);
-  --prose-code-title-bg: var(--prose-code-bg);
-  --prose-code-title-fg: var(--prose-muted-fg);
 
-  /* 应用这些变量 */
-  color: var(--prose-fg);
-  background-color: var(--prose-bg);
-  border: 1px solid var(--prose-border);
-  border-radius: var(--radius-lg);
-  padding: 2rem; /* 给文章内容一些呼吸空间 */
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 2rem 0;
+  }
 }
 
-.dark .prose {
-  /* 为文章区域定义一套独立的 "SmartBlue" 变量 - 暗色模式 */
-  --prose-bg: oklch(0.18 0.018 240); /* 文章区域背景 - 稍亮的深蓝 */
-  --prose-fg: oklch(0.9 0.005 230); /* 亮蓝灰色文字 */
-  --prose-primary: oklch(0.65 0.18 240); /* 亮蓝色 */
-  --prose-secondary-fg: oklch(0.8 0.008 230);
-  --prose-muted-fg: oklch(0.6 0.01 235);
-  --prose-border: oklch(0.35 0.02 240);
-  --prose-code-bg: oklch(0.19 0.02 240); /* 深色代码块背景 */
-  --prose-code-fg: var(--prose-fg);
-  --prose-code-title-bg: var(--prose-code-bg);
-  --prose-code-title-fg: var(--prose-muted-fg);
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* --- 代码块样式 --- */
-/* 使用 .prose 内部的变量 */
-.prose .rehype-code-title {
-  background-color: var(--prose-code-title-bg);
-  color: var(--prose-code-title-fg);
-  padding: 0.5em 1em;
-  border-top-left-radius: 0.3em;
-  border-top-right-radius: 0.3em;
-  font-size: 0.85em;
-  font-family: monospace;
-  border-bottom: 1px solid var(--prose-border);
-}
-.prose .rehype-code-title + pre,
-.prose pre.line-numbers {
-  margin-top: 0 !important;
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-}
-.prose .line-numbers .line-numbers-rows {
-  border-right-color: var(--prose-border) !important;
-  font-size: 0.85em !important;
-  padding-top: 1.1em !important;
-  padding-bottom: 1.1em !important;
-  line-height: 1.5 !important;
-}
-.prose .line-numbers-rows > span:before {
-  color: var(--prose-muted-fg) !important;
-}
-.prose pre {
-  max-width: 100%;
-  overflow-x: auto;
-  background-color: var(--prose-code-bg);
-  padding: 1em;
-  border-radius: 0.3em;
-  border: 1px solid var(--prose-border);
-}
-.prose pre code {
-  font-size: inherit !important;
-  color: inherit !important;
-  background-color: transparent !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  white-space: pre-wrap !important;
-  word-break: break-all !important;
+/* 卡片样式 */
+.card {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s ease;
 }
 
-/* --- 排版样式 --- */
-/* 使用 .prose 内部的变量 */
-.prose .anchor-link {
-  font-size: inherit;
-  line-height: inherit;
-  vertical-align: baseline;
-  opacity: 1;
-  transition: none;
-}
-.prose .anchor-link > span {
-  display: none;
-}
-.prose h2 {
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: 800;
-  margin-top: 2.5em;
-  margin-bottom: 1em;
-  color: var(--prose-primary); /* 使用文章主色 */
-}
-.prose h3 {
-  font-size: 1.25rem;
-  line-height: 1.3;
-  font-weight: 700;
-  margin-top: 1.5em;
-  margin-bottom: 0.7em;
-  color: var(--prose-primary); /* 使用文章主色 */
-}
-.prose ul {
-  list-style-type: disc;
-  padding-left: 1.5em;
-}
-.prose ol {
-  list-style-type: decimal;
-  padding-left: 1.5em;
-}
-.prose li {
-  margin-bottom: 0.5em;
+.card:hover {
+  box-shadow: var(--shadow-md);
 }
 
-/* --- Figure 和 Figcaption 样式 --- */
-.prose figure {
-  margin: 2em 0;
+/* 按钮样式 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
 }
 
-.prose figcaption {
-  margin-top: 0.75em;
-  text-align: center;
-  font-size: 0.875em;
-  color: var(--prose-muted-fg);
-  font-style: italic;
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
 }
-.prose strong {
-  font-weight: 800;
-  color: var(--prose-secondary-fg); /* 使用文章次要文字颜色 */
+
+.btn-primary:hover {
+  background: var(--secondary-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--background-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
