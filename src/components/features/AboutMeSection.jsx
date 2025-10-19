@@ -2,12 +2,14 @@
 "use client";
 
 import React from "react";
+import { useRouter } from 'next/navigation';
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel"; // 确保路径正确
 import { scrollToSection } from '@/lib/scrollUtils';
 import { RainbowButton } from "@/components/magicui/rainbow-button"; // 确保路径正确
 
 // IdentityCardContent 子组件
 const IdentityCardContent = ({ title, description, targetId, imageUrl }) => {
+    const router = useRouter();
     return (
         // 使用全局定义的卡片背景和前景颜色
         <div className="bg-card text-card-foreground p-8 md:p-10 rounded-3xl mb-4 shadow-lg dark:shadow-neutral-700/50">
@@ -28,8 +30,13 @@ const IdentityCardContent = ({ title, description, targetId, imageUrl }) => {
             <div className="text-center">
                 {/* RainbowButton 使用全局定义的主色和主色前景 */}
                 <RainbowButton
-                    onClick={() => scrollToSection(targetId)}
-                    // size="lg" // RainbowButton 可能没有 size prop，或您需要自定义
+                    onClick={() => {
+                        if (targetId?.startsWith('#')) {
+                            scrollToSection(targetId);
+                        } else if (targetId) {
+                            router.push(targetId);
+                        }
+                    }}
                     className="bg-primary hover:bg-primary/90 text-primary-foreground dark:bg-primary dark:hover:bg-primary/80 dark:text-primary-foreground px-6 py-2.5 text-base font-medium" // 示例尺寸和字体样式
                 >
                     查看详情 &rarr;
@@ -46,12 +53,12 @@ const identityData = [
         category: "程序员",
         title: "代码构建世界",
         src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop",
-        targetId: '#programmer-details',
+        targetId: '/blog/tech',
         content: (
             <IdentityCardContent
                 title="深入代码世界"
                 description="作为一名程序员，我热衷于用代码解决复杂问题，构建高效、可扩展的应用程序，并持续探索前沿技术。"
-                targetId="#programmer-details"
+                targetId="/blog/tech"
                 imageUrl="https://assets.aceternity.com/macbook.png"
             />
         ),
@@ -76,12 +83,12 @@ const identityData = [
         category: "旅行家",
         title: "探索无垠视界",
         src: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop",
-        targetId: '#traveler-details',
+        targetId: '/blog/life',
         content: (
             <IdentityCardContent
                 title="体验多元文化"
                 description="作为一名旅行爱好者，我相信行万里路能开阔视野、丰富人生。我享受探索未知，体验不同的文化和风景。"
-                targetId="#traveler-details"
+                targetId="/blog/life"
                 imageUrl="https://images.unsplash.com/photo-1503220317375-aaad61436b1b?q=80&w=2070&auto=format&fit=crop"
             />
         ),

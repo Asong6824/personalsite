@@ -10,6 +10,7 @@ import { zhCN } from 'date-fns/locale';
 import { getColumnByTags } from '@/lib/channels';
 import { PixelImage } from '@/components/magicui/pixel-image';
 import { TypingAnimation } from '@/components/magicui/typing-animation';
+import TravelSection from '@/components/features/TravelSection';
 
 export default function LifeChannelLayout({ channelKey, channelConfig, posts }) {
     const [showTitle, setShowTitle] = React.useState(false);
@@ -71,6 +72,9 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                     )}
                 </div>
             </section>
+
+            {/* 旅行记忆 */}
+            <TravelSection />
 
             {/* 精选专栏 */}
             <section className="py-16 md:py-32" style={{backgroundColor: '#F5F3F0'}}>

@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { getColumnByTags } from '@/lib/channels';
+import ProgrammerDetails from '@/components/features/ProgrammerDetails';
 
 export default function TechChannelLayout({ channelKey, channelConfig, posts }) {
     // 按专栏分组文章
@@ -86,6 +87,9 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                     </div>
                 </div>
             </motion.section>
+
+            {/* 技术世界栏目 */}
+            <ProgrammerDetails />
 
             {/* 精选专栏 */}
             <section className="py-12 md:py-16 lg:py-24">

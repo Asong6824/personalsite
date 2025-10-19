@@ -42,7 +42,7 @@ const travelExperiences = [
 
 export default function TravelSection() {
     return (
-        <section id="travel-stories" className="py-16 md:py-24 bg-background text-foreground">
+        <section id="travel-stories" className="py-16 md:py-24" style={{ backgroundColor: '#F5F3F0' }}>
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
@@ -56,39 +56,39 @@ export default function TravelSection() {
                 {travelExperiences.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch justify-items-center">
                         {travelExperiences.map((experience) => {
-                            // 为每张卡片动态设置背景图片
-                            const cardStyle = {
-                                backgroundImage: `url(${experience.image})`,
-                            };
-
                             // 这是直接嵌入的、基于您提供的 CardDemo 修改的 JSX 结构
                             const cardInternalContent = (
-                                <div className="max-w-xs w-full group/card"> {/* CardDemo 的外层 group */}
+                                <div className="w-full group/card">
                                     <div
-                                        style={cardStyle}
                                         className={cn(
-                                            "cursor-pointer overflow-hidden relative card h-96 rounded-md shadow-xl",
-                                            "bg-cover bg-center",
-                                            "flex flex-col justify-between p-4"
+                                            "cursor-pointer overflow-hidden relative rounded-md shadow-xl",
+                                            "flex flex-col justify-end",
+                                            "h-96 md:h-[28rem]"
                                         )}
                                     >
+                                        <NextImage
+                                            src={experience.image}
+                                            alt={`${experience.title} - ${experience.location}`}
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        />
+
                                         {/* 遮罩层 */}
-                                        <div className="absolute w-full h-full top-0 left-0 transition duration-300 group-hover/card:bg-black opacity-60 z-0"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent transition-opacity duration-300 group-hover/card:from-black/70"></div>
 
                                         {/* 顶部作者信息 */}
-                                        <div className="flex flex-row items-center space-x-3 z-10 relative">
-
+                                        <div className="flex flex-row items-center space-x-3 z-10 relative p-4">
                                             <div className="flex flex-col">
-
                                                 {/* 显示地点和日期 */}
-                                                <p className="text-sm text-gray-300 relative">
+                                                <p className="text-sm text-gray-200 relative">
                                                     {experience.location} - {experience.date}
                                                 </p>
                                             </div>
                                         </div>
 
                                         {/* 底部内容 */}
-                                        <div className="relative z-10">
+                                        <div className="relative z-10 p-4">
                                             <h3 className="font-bold text-xl md:text-2xl text-gray-50 relative">
                                                 {experience.title}
                                             </h3>
