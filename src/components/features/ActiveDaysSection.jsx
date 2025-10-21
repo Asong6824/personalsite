@@ -2,6 +2,7 @@
 
 import React from "react";
 import CircadianChart from "./CircadianChart";
+// import SankeyChart from "./SankeyChart";
 
 function CodingActivityPeriods() {
   const [mounted, setMounted] = React.useState(false);
@@ -73,59 +74,94 @@ const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"
 
 function buildWeeks({ totalCells = 364 }) {
   const today = new Date();
-  const start = new Date(today);
-  // Ensure the last cell represents today
-  start.setDate(today.getDate() - totalCells + 1);
-  const cols = Math.ceil(totalCells / 7);
-  const result = [];
-  for (let c = 0; c < cols; c++) {
-    const col = [];
-    const base = c * 7;
-    const cellsInCol = Math.min(7, totalCells - base);
-    for (let r = 0; r < cellsInCol; r++) {
-      const date = new Date(start);
-      date.setDate(start.getDate() + base + r);
-      col.push(date);
-    }
-    result.push(col);
+  // 原始范围起点：确保最后一个有效日期是今天
+  const startRange = new Date(today);
+  startRange.setDate(today.getDate() - totalCells + 1);
+  // 将范围起点对齐到该周的周日，以保证列按自然周对齐
+  const firstWeekStart = new Date(startRange);
+  firstWeekStart.setDate(firstWeekStart.getDate() - firstWeekStart.getDay()); // 周日=0
+  // 计算从对齐起点到今天的天数
+  const diffDays = Math.floor((new Date(today.toDateString()) - new Date(firstWeekStart.toDateString())) / (24 * 3600 * 1000)) + 1;
+  const cols = Math.ceil(diffDays / 7);
+  const result = Array.from({ length: cols }, () => Array(7).fill(null));
+  // 填充每一天到正确的列和星期行
+  for (let offset = 0; offset < cols * 7; offset++) {
+    const d = new Date(firstWeekStart);
+    d.setDate(firstWeekStart.getDate() + offset);
+    // 超过今天或早于真实起点的天不填充
+    if (d < startRange || d > today) continue;
+    const colIdx = Math.floor(offset / 7);
+    const rowIdx = d.getDay(); // 0=周日, 6=周六
+    result[colIdx][rowIdx] = d;
   }
-  return result; // columns of up to 7 days, last cell = today
+  return result; // 每列固定7行，按周日到周六对齐；空位为 null
 }
 
 function buildMonthLabels(weeks) {
-  const segments = [];
-  let current = null;
-  weeks.forEach((col, colIdx) => {
-    col.forEach((date) => {
-      const m = date.getMonth();
-      if (!current || current.month !== m) {
-        if (current) segments.push(current);
-        current = { month: m, startCol: colIdx, endCol: colIdx };
-      } else {
-        current.endCol = colIdx;
-      }
-    });
+  const cols = weeks.length;
+  const meta = weeks.map((col) => {
+    let months = new Set();
+    let count = 0;
+    let leadingMonth = null;
+    for (let i = 0; i < col.length; i++) {
+      const d = col[i];
+      if (!d) continue;
+      if (leadingMonth === null) leadingMonth = d.getMonth();
+      months.add(d.getMonth());
+      count++;
+    }
+    const isFull = count === 7 && months.size === 1;
+    const fullMonth = isFull ? [...months][0] : null;
+    return { months, count, isFull, fullMonth, leadingMonth };
   });
-  if (current) segments.push(current);
-  return segments.map(seg => ({
-    label: MONTH_NAMES[seg.month],
-    startCol: seg.startCol,
-    endCol: seg.endCol,
-  })); // months with column ranges
+
+  const findFirstFullMonthCol = (startIdx, month) => {
+    for (let i = startIdx; i < cols; i++) {
+      const m = meta[i];
+      if (m.isFull && m.fullMonth === month) return i;
+    }
+    return -1;
+  };
+  const findFirstConsistentMonthCol = (startIdx, month) => {
+    for (let i = startIdx; i < cols; i++) {
+      const m = meta[i];
+      if (m.count > 0 && m.months.size === 1 && [...m.months][0] === month) return i;
+    }
+    return -1;
+  };
+
+  const labels = [];
+  let currentMonth = null;
+  for (let colIdx = 0; colIdx < cols; colIdx++) {
+    const lead = meta[colIdx].leadingMonth;
+    if (lead === null || lead === undefined) continue; // 此列没有有效日期
+    if (currentMonth === null || lead !== currentMonth) {
+      currentMonth = lead;
+      let anchor = findFirstFullMonthCol(colIdx, currentMonth);
+      if (anchor === -1) {
+        anchor = findFirstConsistentMonthCol(colIdx, currentMonth);
+      }
+      if (anchor === -1) anchor = colIdx; // 兜底：使用当前列
+      labels.push({ label: MONTH_NAMES[currentMonth], col: anchor });
+    }
+  }
+  return labels; // 数组：{ label, col }
 }
 
 function colorForCount(c) {
-  if (c <= 0) return "#EDEFF2";
-  if (c <= 2) return "#C9D1F5";
-  if (c <= 4) return "#AEBBF2";
-  if (c <= 7) return "#8FA4EE";
-  return "#6A86E8";
+  if (c <= 0) return "#EDEFF2"; // no data
+  if (c <= 1) return "#e7f5ff";
+  if (c <= 2) return "#a5d8ff";
+  if (c <= 3) return "#4dabf7";
+  if (c <= 4) return "#228be6";
+  return "#1971c2"; // 5+
 }
 
 function generateSampleData(weeks) {
   const map = new Map();
   let total = 0;
   weeks.flat().forEach((date, i) => {
+    if (!date) return; // 跳过空位，避免 null.toISOString()
     const key = date.toISOString().slice(0, 10);
     const count = Math.max(0, Math.round((Math.sin(i / 4) + 1) * 2 + (Math.random() * 2 - 1)));
     total += count;
@@ -161,9 +197,27 @@ export default function ActiveDaysSection() {
     const w = buildWeeks({ totalCells: TOTAL_CELLS });
     setWeeks(w);
     setMonthLabels(buildMonthLabels(w));
-    const { map, total } = generateSampleData(w);
-    setDataMap(map);
-    setTotal(total);
+    const load = async () => {
+      try {
+        const res = await fetch(`/api/notion/heatmap?days=${TOTAL_CELLS}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const map = new Map();
+        let totalScore = 0;
+        (json.days || []).forEach(d => {
+          map.set(d.date, d.score || 0);
+          totalScore += (d.score || 0);
+        });
+        setDataMap(map);
+        setTotal(totalScore);
+      } catch (err) {
+        const { map, total } = generateSampleData(w);
+        setDataMap(map);
+        setTotal(total);
+        console.error('Failed to load Notion heatmap API, using sample data', err);
+      }
+    };
+    load();
   }, []);
 
   React.useEffect(() => {
@@ -171,8 +225,9 @@ export default function ActiveDaysSection() {
     if (!el) return;
     const compute = () => {
       const available = el.clientWidth; // visible width of scroll container
-      const totalGaps = (columnsCount - 1) * COL_GAP;
-      const desired = Math.floor((available - totalGaps) / columnsCount);
+      const currentColumns = weeks.length || columnsCount; // 使用实际列数
+      const totalGaps = (currentColumns - 1) * COL_GAP;
+      const desired = Math.floor((available - totalGaps) / currentColumns);
       const clamped = Math.max(COL_W_MIN, Math.min(COL_W_MAX, desired));
       setColWidth(clamped);
     };
@@ -180,9 +235,9 @@ export default function ActiveDaysSection() {
     const ro = new ResizeObserver(() => compute());
     ro.observe(el);
     return () => ro.disconnect();
-  }, [columnsCount]);
+  }, [columnsCount, weeks]);
  
-  const gridWidthPx = columnsCount * (colWidth + COL_GAP) - COL_GAP;
+  const gridWidthPx = (weeks.length || columnsCount) * (colWidth + COL_GAP) - COL_GAP;
  
   return (
     <section id="active-days" className="py-16 md:py-24 bg-background">
@@ -191,9 +246,10 @@ export default function ActiveDaysSection() {
           <div className="rounded-xl border border-gray-200 bg-white p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl md:text-2xl font-semibold">Active Days</h2>
-              <div className="w-48 h-2 rounded bg-indigo-200/25 relative">
-                <div className="absolute inset-y-0 left-0 rounded" style={{ width: `${Math.min(100, Math.round((total / 300) * 100))}%`, backgroundColor: "rgba(194,202,242,0.85)" }} />
-                <span className="absolute -top-6 right-0 text-sm text-muted-foreground">{total}</span>
+              <div className="flex items-center gap-1" aria-label="强度示例">
+                {['#e7f5ff','#a5d8ff','#4dabf7','#228be6','#1971c2'].map((c, i) => (
+                  <div key={i} className="w-5 h-5 rounded-[2px] border border-gray-200" style={{ backgroundColor: c }} />
+                ))}
               </div>
             </div>
 
@@ -206,7 +262,11 @@ export default function ActiveDaysSection() {
           <div className="mr-2" style={{ marginTop: MONTH_HEADER_HEIGHT + MONTH_HEADER_SPACING }}>
              <div className="flex flex-col" style={{ gap: COL_GAP }}>
                {Array.from({ length: 7 }).map((_, idx) => (
-                 <div key={idx} className="flex items-center text-[10px] text-muted-foreground" style={{ height: colWidth }}>
+                 <div
+                   key={idx}
+                   className="text-[10px] text-muted-foreground text-center font-mono"
+                   style={{ width: colWidth, height: colWidth, lineHeight: `${colWidth}px` }}
+                 >
                    {idx === 1 ? 'M' : idx === 3 ? 'W' : idx === 5 ? 'F' : ''}
                  </div>
                ))}
@@ -219,17 +279,12 @@ export default function ActiveDaysSection() {
               {/* Month labels overlay aligned to grid columns */}
               <div className="relative" style={{ height: MONTH_HEADER_HEIGHT, marginBottom: MONTH_HEADER_SPACING, width: '100%' }}>
                  {mounted && monthLabels.length > 0 && (() => {
-                   const centers = monthLabels.map(m => Math.round((m.startCol + m.endCol) / 2));
-                   const positions = centers.map(c => c * (colWidth + COL_GAP) + colWidth / 2);
-                   for (let i = 1; i < positions.length; i++) {
-                     const delta = positions[i] - positions[i - 1];
-                     if (delta < MIN_LABEL_SPACING) positions[i] = positions[i - 1] + MIN_LABEL_SPACING;
-                   }
+                   const positions = monthLabels.map(m => m.col * (colWidth + COL_GAP) + colWidth / 2);
                    return positions.map((left, i) => (
                      <span
                        key={monthLabels[i].label + i}
                        className="absolute top-0 text-xs text-muted-foreground"
-                       style={{ left: Math.max(colWidth / 2, left), transform: 'translateX(-50%)' }}
+                       style={{ left: Math.max(colWidth / 2, Math.min(gridWidthPx - colWidth / 2, left)), transform: 'translateX(-50%)' }}
                      >
                        {monthLabels[i].label}
                      </span>
@@ -238,11 +293,19 @@ export default function ActiveDaysSection() {
                </div>
 
               {/* Cells grid */}
-              <div className="grid grid-rows-7 grid-flow-col" style={{ gridTemplateColumns: `repeat(${columnsCount}, ${colWidth}px)`, columnGap: COL_GAP, rowGap: COL_GAP }}>
+              <div className="grid grid-rows-7 grid-flow-col" style={{ gridTemplateColumns: `repeat(${weeks.length || columnsCount}, ${colWidth}px)`, columnGap: COL_GAP, rowGap: COL_GAP }}>
                 {weeks.length > 0 ? (
                   weeks.map((week, wIdx) => (
                     <React.Fragment key={wIdx}>
                       {week.map((date, rIdx) => {
+                        if (!date) {
+                          return (
+                            <div
+                              key={`empty-${wIdx}-${rIdx}`}
+                              style={{ width: colWidth, height: colWidth, visibility: 'hidden' }}
+                            />
+                          );
+                        }
                         const key = date.toISOString().slice(0, 10);
                         const count = dataMap.get(key) || 0;
                         const bg = colorForCount(count);
@@ -276,6 +339,9 @@ export default function ActiveDaysSection() {
           </div>
         </div>
           </div>
+
+          {/* Sankey chart under the calendar heatmap (暂时注释掉 OKR 展示) */}
+          {/* <SankeyChart height={360} /> */}
 
           <CodingActivityPeriods />
         </div>
