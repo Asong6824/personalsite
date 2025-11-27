@@ -84,23 +84,6 @@
       }
     },
     {
-      "slug": "tech/design/micro-interactions",
-      "rel": "tech/design/micro-interactions.mdx",
-      "data": {
-        "title": "设计之美：探索数字界面的微交互",
-        "date": "2025-11-25",
-        "channel": "tech",
-        "column": "design",
-        "tags": [
-          "设计",
-          "UI",
-          "交互"
-        ],
-        "excerpt": "微交互是用户体验设计的灵魂，本文探讨了如何通过细微的动画和反馈提升产品的质感。",
-        "coverImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
-      }
-    },
-    {
       "slug": "git-study-notes",
       "rel": "git-study-notes.mdx",
       "data": {
@@ -352,5 +335,5 @@
       }
     }
   ],
-  "updatedAt": "2025-11-26T15:35:46.634Z"
+  "updatedAt": "2025-11-27T13:44:12.538Z"
 }
