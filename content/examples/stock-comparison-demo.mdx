@@ -1,0 +1,28 @@
+---
+title: '股票对比组件演示：多符号区间趋势'
+date: '2025-11-09'
+slug: 'stock-comparison-demo'
+author: '阿松'
+tags: ['财经', 'finance', '投资']
+channel: 'finance'
+column: 'finance'
+excerpt: '使用可复用组件在 MDX 中展示多只股票的区间走势与关键指标。'
+coverImage: ''
+---
+
+## 组件介绍
+
+本文演示如何在 MDX 中直接使用 `StockComparisonChart` 组件来对比多只股票在不同时间区间的趋势，并在下方表格展示关键指标。
+
+<StockComparisonChart
+  symbols={['BE', 'ETN', 'VRT', 'CAT']}
+  ranges={[
+    { id: 'ai-infra', label: 'AI Infra Rally', start: '2024-10-01', end: '2025-07-01' },
+    { id: 'post-earnings', label: 'Post Earnings', start: '2025-07-02', end: '2025-11-01' }
+  ]}
+  defaultRangeId="ai-infra"
+  source="yahoo"
+  theme="dark"
+/>
+
+> 说明：若未配置外部数据源 API Key，会自动回退到 mock 数据，方便在开发环境和示例文章中演示。

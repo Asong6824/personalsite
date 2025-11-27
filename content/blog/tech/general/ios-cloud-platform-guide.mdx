@@ -1,0 +1,532 @@
+---
+title: "iOS 云真机平台实现指南（Host–Device 侧）"
+date: "2025-11-25"
+slug: "ios-cloud-platform-guide"
+author: "韩若冲"
+tags: ["技术", "iOS", "云真机", "WDA", "pymobiledevice3", "tidevice"]
+channel: "tech"
+column: "general"
+excerpt: "本文聚焦于云真机测试平台的 iOS 侧实现，详细解析 Host 与 Device 之间的协同工作原理，以及从 tidevice 到 pymobiledevice3 的技术演进。"
+coverImage: ""
+pinned: false
+---
+## 引言
+
+在云真机测试平台的开发过程中，各端的 Agent 实现通常是重中之重，其中 iOS 由于系统闭源、协议复杂、工具链变化快，整体实现成本和维护成本都显著更高。
+
+本篇文章以最近一次对云真机 **iOS 端 Agent 升级改造** 为主线，从三个层次展开：
+
+1. 先从系统设计的角度梳理：要支撑云真机场景，一个 iOS Agent 需要具备哪些能力；
+2. 再结合过去几年团队的落地实践，说明这些能力是如何真正实现出来的；
+3. 最后，以本次升级为切入点，介绍 iOS 17 之后协议栈的变化，以及我们如何演进以适配更新的 iOS 版本。
+
+## 项目全貌与架构
+
+### 核心问题：我们要做什么？
+
+我们的目标只有一句话：让平台能够稳定地通过自动化用例驱动这些设备执行。
+
+为了支撑这个目标，iOS 端需要实现以下能力：
+
+1. **设备接入与管理**
+   - 自动发现 / 下线 iOS 设备
+   - 维护设备状态（在线、空闲、占用、错误）
+   - 采集基础信息（UDID、型号、系统版本、电量等）
+
+2. **App 生命周期管理**
+   - 安装 / 卸载 App
+   - 启动 / 关闭 / 重启 App
+   - 清理数据、恢复到“干净环境”
+
+3. **远程手动操作**
+   - 屏幕画面采集和推流
+   - 鼠标 / 键盘操作注入
+   - 截图、录屏
+
+4. **自动化测试能力**
+   - 稳定地驱动 UI：点击、滑动、输入、断言
+   - 承接上层测试框架（XCUITest / Appium 等）的调用
+
+5. **日志与诊断**
+   - App crash log、系统日志
+   - 性能指标（CPU、内存、流量、FPS 等）
+
+6. **平台级能力（Host 视角）**
+   - Session 管理、设备锁
+   - 心跳上报、任务执行状态上报
+   - 监控、告警、自愈（重启 WDA、重连设备等）
+
+这些能力看上去都很“常规”，但在 iOS 封闭的生态下，要把它们在真机上跑起来，至少还要翻过三座大山：
+
+1. 屏幕获取：iOS 不允许后台录屏
+2. 模拟操作：iOS 不允许应用见互相控制
+3. 远程传输：平台的指令如何下发到设备，设备的结果如何回传给平台
+
+为了解决这前两个问题，业界通用的方案是 Facebook 开源的 WebDriverAgent（WDA）。
+WDA 是一个运行在 iOS 中的 App。它利用 Apple 提供的 XCTest 框架，XCTest 拥有极高的权限，可以获取屏幕截图和模拟点击。
+WDA 启动后，会在手机上开启一个 HTTP 服务器，外部可以通过发送 HTTP 请求来控制手机。
+
+但是，iOS 的安全性禁止直接通过公网的 HTTP 请求来控制手机，因此需要用 PC 作为 host 端，通过 USB 线连接手机，将平台下发的指令转发给设备，这也就是最经典的 host-device 架构，我们的实现即采用了这种架构。
+
+### 系统全景
+
+
+
+## 3. 设备接入与管理
+
+### 原理层：iOS 设备是怎么连到 host 上的
+
+直觉感官上，我们用数据线连接设备到 PC 上后就可以查看设备信息、传输文件，但是实际上背后存在一系列服务支持这个功能
+
+连接时到的典型流程如下：
+1. iPhone 插入 Host；
+2. 操作系统识别到有新 USB 设备接入，`usbmuxd` 为其分配一个内部 Device ID；
+3. 上层应用（Xcode / Host Agent 等）通过 Unix socket（通常是 `/var/run/usbmuxd`）与 usbmuxd 通信：
+   - 获取当前已接入的设备列表；
+   - 请求“连接某个设备上的某个端口”，建立对应的 TCP 连接；
+4. 在这些连接之上，iOS 暴露出一系列服务协议，例如：
+   - `lockdown`：配对、设备信息获取；
+   - `installation_proxy`：安装 / 卸载 App；
+   - `instruments` / `dvt`：调试、性能、进程管理等。
+
+tidevice、pymobiledevice3 这类库，本质上都是在这一整套协议上封装了一层 Python API，让我们可以用“调库”的方式完成设备发现、信息获取和后续操作。
+
+
+### tidevice 版本：我们以前是怎么做设备管理的
+
+
+在 iOS 16 之前，我们使用 tidevice 作为主要的设备通信底层，并在 Host 内部封装成 `DeviceProviderTidevice`，对上暴露统一的 `DeviceProvider` 接口。
+
+从功能上看，主要包括三块：
+
+- **设备发现**
+  - 通过 tidevice 列出当前所有 UDID；
+  - 周期性轮询，对比前后结果，识别新增 / 移除的设备；
+  - 为每台设备创建内部 `Device` 对象，交给上层管理。
+
+- **设备信息采集**
+  - 对每个 UDID，调用 tidevice 的 info 能力，获取：
+    - `UDID`
+    - `ProductType`（机型）
+    - `ProductVersion`（iOS 版本）
+    - 设备名称等；
+  - 映射成平台内部统一的设备结构，写入 Host 的设备表，用于后续调度与展示。
+
+  简化示例（仅展示调用链，省略错误处理和初始化）：
+
+  ```python
+  from tidevice import Device
+
+  device = Device(udid="00008120-00061C621409A01E")
+  info = device.info  # 包含 DeviceName, ProductVersion, ProductType 等
+  print(info)
+设备健康检查
+
+Host 定期对每台设备发起轻量请求（例如再次读取 info 或访问某个服务）；
+
+结合超时 / 异常统计，更新设备状态：
+
+Online / Idle / Busy / Error / Maintenance 等。
+
+这一整套逻辑被封装在 DeviceProviderTidevice 中，上层代码只依赖 DeviceProvider 抽象，不直接感知 tidevice 的存在。
+
+在 iOS 16 之前，这套基于 tidevice 的接入方案整体运行比较平稳，也支撑了我们早期的云真机能力。
+
+* **设备健康检查**
+  * Host 定期对每台设备发起简单请求（例如读取 info / ping 某服务）；
+  * 结合超时 / 异常统计，更新设备状态：
+    * `Online / Idle / Busy / Error / Maintenance` 等。
+
+这一整套逻辑被封装在 `DeviceProviderTidevice` 中，上层并不知道具体用了哪一个库。
+
+### 3.3 iOS 17 之后的变化：为什么 tidevice 顶不住
+
+从 iOS 16 开始，Apple 对部分开发者服务和协议行为做了调整；到了 iOS 17，又在此基础上引入了更复杂的 CoreDevice / Remote Service Discovery (RSD) / 隧道等机制。
+
+我们的原 tidevice 方案在面对 iOS17 及以上版本的设备时，无法安装 WDA、无法启动 WDA 的问题频发。
+
+对我们的直接影响是迟迟无法扩展云真机池，导致 iOS 设备短缺
+### 3.4 新方案：DeviceProviderPym（基于 pymobiledevice3）
+
+为完成 iOS 17+ 的适配，我们引入了 `pymobiledevice3`，并实现新的 DeviceProvider：
+
+* `DeviceProviderPym` 提供与 `DeviceProviderTidevice` 相同的接口集：
+  * `list_devices`, `get_device_info`, `check_device_health`, `install_app`, `launch_app`, `launch_wda` 等；
+* 内部全部改用 pymobiledevice3 的 API：
+  * 设备发现、信息获取：通过其 lockdown / CoreDevice / RSD 封装；
+  * 后续进程控制 / WDA 启动：使用 DVT / ProcessControl。
+
+这样，上层模块（SessionManager / WdaManager）只需要在配置中指定“当前 DeviceProvider 类型”，即可在 tidevice 与 pymobiledevice3 之间灰度切换。
+
+---
+
+## 4. App 安装与启动（C2）
+
+本节回答：
+“服务端说：把这个 IPA 装到这台机器上、启动它、结束后清干净——Host 和 Device 怎么配合完成？”
+
+### 4.1 平台在 App 维度的要求
+
+* **安装/卸载：** 支持从 Host 本地或远程存储拉取 IPA，并安装到指定设备；
+* **运行控制：** 按 bundle id 启动 / 停止 App，必要时获取对应 PID；
+* **环境清理：** 卸载 App 或清理沙盒目录，保证 Session 之间不会互相污染。
+
+### 4.2 基于 tidevice 的实现（旧方案）
+
+在 iOS 16 及以前，tidevice 封装了 `installation_proxy` 和部分 process control 服务，接口调用相对简单。
+
+**安装 App（简化示例）**
+
+```python
+from tidevice import Device
+
+device = Device(udid="...")
+device.app_install("path/to/app.ipa")
+```
+
+**启动 / 停止 App**
+
+```python
+pid = device.app_start("com.example.demo")
+print(f"App started with PID: {pid}")
+
+device.app_stop("com.example.demo")
+```
+
+在 Host 代码中，这些调用被封装在 `DeviceProviderTidevice` 内，再由 Session 层根据指令调度：
+
+* 安装过程拆分为多个阶段（上传 / 校验 / 安装 / 验证）上报进度；
+* 启动前后与 WDA 状态挂钩（例如先确保 WDA 正常、再启动 App）。
+
+### 4.3 iOS 17 的影响（实践层面）
+
+随着 iOS 17 / CoreDevice 引入：
+
+* 依赖旧 instruments 接口的 `app_start` 等调用在部分机型上出现不可用或行为不稳定；
+* 即便安装本身仍然使用 installation_proxy，多数情况下我们更倾向于“整体迁移到新的 DVT / CoreDevice 路径”，而不是同时维护两套行为。
+
+这直接导致：
+
+* 对于新购的 iOS 17+ 设备，基于 tidevice 的 App 管理无法满足生产环境要求；
+* 不得不寻找在“接近 Xcode 行为”的新实现。
+
+### 4.4 基于 pymobiledevice3 的新实现
+
+在新方案中：
+
+* 安装依旧使用 `InstallationProxyService`；
+* 进程控制（启动 / 停止 App）则通过 DVT / ProcessControl 实现。
+
+**安装 App 示例（简化版）**
+
+```python
+from pymobiledevice3.services.installation_proxy import InstallationProxyService
+
+# 前提：lockdown_client 已初始化
+with InstallationProxyService(lockdown=lockdown_client) as iproxy:
+    iproxy.install_from_local("path/to/app.ipa")
+```
+
+**启动 App 示例**
+
+```python
+from pymobiledevice3.services.dvt.dvt_secure_socket_proxy import DvtSecureSocketProxyService
+from pymobiledevice3.services.dvt.instruments.process_control import ProcessControl
+
+# 前提：lockdown_client / rsd 已初始化
+dvt = DvtSecureSocketProxyService(lockdown=lockdown_client, rsd=rsd)
+process_control = ProcessControl(dvt)
+
+pid = process_control.launch(
+    bundle_id="com.example.demo",
+    arguments=[],
+    environment={"ENV_VAR": "1"},
+    kill_existing=True
+)
+print(f"App started with PID: {pid}")
+```
+
+Host 侧对外暴露的仍然是 `DeviceProvider.launch_app` / `DeviceProvider.uninstall_app` 之类统一接口，只是在实现中替换了底层调用。
+
+---
+
+## 5. 自动化与远程控制：WDA 链路（C1 + C4）
+
+这一节聚焦：
+“点击是怎么从远端一路传到 iOS 屏幕上的？自动化脚本又是怎么驱动 UI 的？”
+
+### 5.1 需求拆解
+
+从 Host 的视角，我们需要提供：
+
+* 一套 **对上统一的“UI 操作接口”**：
+  * 点击 / 滑动 / 输入 / 查找元素 / 获取 UI 树；
+* 对外兼容常见自动化协议：
+  * WebDriver / Appium；
+* 能够把远端传来的坐标变成设备屏幕上的真正触摸。
+
+### 5.2 为什么离不开 WDA
+
+iOS 的安全模型决定了：
+
+* 普通 App 无法跨进程控制其他 App；
+* 能够自动化 UI 的唯一正路是 XCTest / UI Testing 相关能力。
+
+> [!NOTE]
+> **WDA（WebDriverAgent）**
+> 一个基于 XCTest 的“测试 Runner”，运行在 iOS 设备上，暴露 WebDriver 协议（HTTP + JSON）。
+> 它内部通过 XCTest 和 Accessibility API 控制 UI。
+
+在 Host 侧，整条操作链大致如下：
+
+<figure>
+    <div dangerouslySetInnerHTML={{__html: `<svg id="ios-wda-flow" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="flowchart" style="max-width: 1621.89px; background-color: transparent;" viewBox="0 0 1621.890625 94" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#ios-wda-flow{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#ios-wda-flow .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#ios-wda-flow .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#ios-wda-flow .error-icon{fill:#552222;}#ios-wda-flow .error-text{fill:#552222;stroke:#552222;}#ios-wda-flow .edge-thickness-normal{stroke-width:1px;}#ios-wda-flow .edge-thickness-thick{stroke-width:3.5px;}#ios-wda-flow .edge-pattern-solid{stroke-dasharray:0;}#ios-wda-flow .edge-thickness-invisible{stroke-width:0;fill:none;}#ios-wda-flow .edge-pattern-dashed{stroke-dasharray:3;}#ios-wda-flow .edge-pattern-dotted{stroke-dasharray:2;}#ios-wda-flow .marker{fill:#333333;stroke:#333333;}#ios-wda-flow .marker.cross{stroke:#333333;}#ios-wda-flow svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#ios-wda-flow p{margin:0;}#ios-wda-flow .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#ios-wda-flow .cluster-label text{fill:#333;}#ios-wda-flow .cluster-label span{color:#333;}#ios-wda-flow .cluster-label span p{background-color:transparent;}#ios-wda-flow .label text,#ios-wda-flow span{fill:#333;color:#333;}#ios-wda-flow .node rect,#ios-wda-flow .node circle,#ios-wda-flow .node ellipse,#ios-wda-flow .node polygon,#ios-wda-flow .node path{fill:#ECECFF;stroke:#9370DB;stroke-width:1px;}#ios-wda-flow .rough-node .label text,#ios-wda-flow .node .label text,#ios-wda-flow .image-shape .label,#ios-wda-flow .icon-shape .label{text-anchor:middle;}#ios-wda-flow .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#ios-wda-flow .rough-node .label,#ios-wda-flow .node .label,#ios-wda-flow .image-shape .label,#ios-wda-flow .icon-shape .label{text-align:center;}#ios-wda-flow .node.clickable{cursor:pointer;}#ios-wda-flow .root .anchor path{fill:#333333!important;stroke-width:0;stroke:#333333;}#ios-wda-flow .arrowheadPath{fill:#333333;}#ios-wda-flow .edgePath .path{stroke:#333333;stroke-width:2.0px;}#ios-wda-flow .flowchart-link{stroke:#333333;fill:none;}#ios-wda-flow .edgeLabel{background-color:rgba(232,232,232, 0.8);text-align:center;}#ios-wda-flow .edgeLabel p{background-color:rgba(232,232,232, 0.8);}#ios-wda-flow .edgeLabel rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#ios-wda-flow .labelBkg{background-color:rgba(232, 232, 232, 0.5);}#ios-wda-flow .cluster rect{fill:#ffffde;stroke:#aaaa33;stroke-width:1px;}#ios-wda-flow .cluster text{fill:#333;}#ios-wda-flow .cluster span{color:#333;}#ios-wda-flow div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(80, 100%, 96.2745098039%);border:1px solid #aaaa33;border-radius:2px;pointer-events:none;z-index:100;}#ios-wda-flow .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#333;}#ios-wda-flow rect.text{fill:none;stroke-width:0;}#ios-wda-flow .icon-shape,#ios-wda-flow .image-shape{background-color:rgba(232,232,232, 0.8);text-align:center;}#ios-wda-flow .icon-shape p,#ios-wda-flow .image-shape p{background-color:rgba(232,232,232, 0.8);padding:2px;}#ios-wda-flow .icon-shape rect,#ios-wda-flow .image-shape rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#ios-wda-flow .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#ios-wda-flow .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#ios-wda-flow :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="ios-wda-flow_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="ios-wda-flow_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="ios-wda-flow_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="ios-wda-flow_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="ios-wda-flow_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"/></marker><marker id="ios-wda-flow_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"/></marker><g class="root"><g class="clusters"/><g class="edgePaths"><path d="M268,47L281.395,47C294.789,47,321.578,47,347.701,47C373.823,47,399.279,47,412.007,47L424.734,47" id="L_Client_Host_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_Client_Host_0" data-points="W3sieCI6MjY4LCJ5Ijo0N30seyJ4IjozNDguMzY3MTg3NSwieSI6NDd9LHsieCI6NDI4LjczNDM3NSwieSI6NDd9XQ==" marker-end="url(#ios-wda-flow_flowchart-v2-pointEnd)"/><path d="M665.625,47L683.057,47C700.49,47,735.354,47,769.552,47C803.75,47,837.281,47,854.047,47L870.813,47" id="L_Host_WDA_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_Host_WDA_0" data-points="W3sieCI6NjY1LjYyNSwieSI6NDd9LHsieCI6NzcwLjIxODc1LCJ5Ijo0N30seyJ4Ijo4NzQuODEyNSwieSI6NDd9XQ==" marker-end="url(#ios-wda-flow_flowchart-v2-pointEnd)"/><path d="M1103.094,47L1109.927,47C1116.76,47,1130.427,47,1143.427,47C1156.427,47,1168.76,47,1174.927,47L1181.094,47" id="L_WDA_XCTest_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_WDA_XCTest_0" data-points="W3sieCI6MTEwMy4wOTM3NSwieSI6NDd9LHsieCI6MTE0NC4wOTM3NSwieSI6NDd9LHsieCI6MTE4NS4wOTM3NSwieSI6NDd9XQ==" marker-end="url(#ios-wda-flow_flowchart-v2-pointEnd)"/><path d="M1388.141,47L1396.612,47C1405.083,47,1422.026,47,1438.302,47C1454.578,47,1470.188,47,1477.992,47L1485.797,47" id="L_XCTest_App_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_XCTest_App_0" data-points="W3sieCI6MTM4OC4xNDA2MjUsInkiOjQ3fSx7IngiOjE0MzguOTY4NzUsInkiOjQ3fSx7IngiOjE0ODkuNzk2ODc1LCJ5Ijo0N31d" marker-end="url(#ios-wda-flow_flowchart-v2-pointEnd)"/></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(348.3671875, 47)"><g class="label" data-id="L_Client_Host_0" transform="translate(-55.3671875, -12)"><foreignObject width="110.734375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>WebDriver 请求</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(770.21875, 47)"><g class="label" data-id="L_Host_WDA_0" transform="translate(-79.59375, -12)"><foreignObject width="159.1875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>USB / 隧道 / 端口转发</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(1144.09375, 47)"><g class="label" data-id="L_WDA_XCTest_0" transform="translate(-16, -12)"><foreignObject width="32" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>调用</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(1438.96875, 47)"><g class="label" data-id="L_XCTest_App_0" transform="translate(-25.828125, -12)"><foreignObject width="51.65625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>控制 UI</p></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-Client-0" transform="translate(138, 47)"><rect class="basic label-container" style="" x="-130" y="-39" width="260" height="78"/><g class="label" style="" transform="translate(-100, -24)"><rect/><foreignObject width="200" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel"><p>远端客户端\n(Appium / 自研自动化服务)</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-Host-1" transform="translate(547.1796875, 47)"><rect class="basic label-container" style="" x="-118.4453125" y="-27" width="236.890625" height="54"/><g class="label" style="" transform="translate(-88.4453125, -12)"><rect/><foreignObject width="176.890625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Host Agent\n(WdaClient)</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-WDA-2" transform="translate(988.953125, 47)"><rect class="basic label-container" style="" x="-114.140625" y="-27" width="228.28125" height="54"/><g class="label" style="" transform="translate(-84.140625, -12)"><rect/><foreignObject width="168.28125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>WDA Server\n(iOS 设备)</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-XCTest-3" transform="translate(1286.6171875, 47)"><rect class="basic label-container" style="" x="-101.5234375" y="-27" width="203.046875" height="54"/><g class="label" style="" transform="translate(-71.5234375, -12)"><rect/><foreignObject width="143.046875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>XCTest\n(UI Testing)</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-App-4" transform="translate(1551.84375, 47)"><rect class="basic label-container" style="" x="-62.046875" y="-27" width="124.09375" height="54"/><g class="label" style="" transform="translate(-32.046875, -12)"><rect/><foreignObject width="64.09375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>被测 App</p></span></div></foreignObject></g></g></g></g></g></svg>`}} />
+    <figcaption style={{textAlign: 'center'}}>WDA 操作链路</figcaption>
+</figure>
+
+Host 这边的工作主要包括：
+
+* 启动 WDA；
+* 建立端口转发，让远端能访问 `http://host:port/…`；
+* 对上封装 facebook-wda-client / Appium 相关调用统一接口。
+
+### 5.3 tidevice 时代的 WDA 管理（旧方案）
+
+在旧方案中，我们基本依赖 tidevice 提供的能力：
+
+* 使用 tidevice 调用 instruments / testmanagerd 启动 `WebDriverAgentRunner`；
+* 使用 tidevice 进行端口映射，将设备 8100 → Host 本地端口；
+* 上层使用 `facebook-wda-client` 按 WebDriver 协议发起请求。
+
+示例（极简版，仅说明调用链）：
+
+```python
+from tidevice import Device
+
+device = Device(udid="...")
+
+# 启动 WDA（Runner bundle id 一般类似于 com.facebook.WebDriverAgentRunner.xctrunner）
+device.xctest(bundle_id="com.facebook.WebDriverAgentRunner.xctrunner")
+```
+
+Host 侧 WdaManager 负责：
+
+* 检查 WDA 是否已启动；
+* 定期调用 `/status` 做健康检查；
+* 异常时尝试重启。
+
+### 5.4 iOS 17 后的挑战
+
+随着 iOS 17 引入 CoreDevice 相关机制，我们在实践中遇到：
+
+* 通过旧的 testmanagerd / instruments 路径启动 WDA 的成功率下降；
+* 即便 WDA 启动了，端口转发在某些情况下表现不稳定。
+
+结合 tidevice 本身缺乏对新协议的完整支持，我们选择把 WDA 链路全面迁移到 pymobiledevice3 封装的 DVT / 隧道之上。
+
+### 5.5 pymobiledevice3 下的 WDA 管理（新方案）
+
+在新方案中，WDA 启动与连接流程大致如下：
+
+1. 建立与设备的安全隧道；
+2. 通过 RSD 获取 DVT / testmanagerd 等服务；
+3. 使用 DVT ProcessControl 启动 `WebDriverAgentRunner`；
+4. 使用 pymobiledevice3 提供的 usbmux forward 做端口转发；
+5. 上层继续使用 facebook-wda-client 访问 `http://localhost:port/`。
+
+**启动 WDA 示例（简化）**
+
+```python
+from pymobiledevice3.services.dvt.dvt_secure_socket_proxy import DvtSecureSocketProxyService
+from pymobiledevice3.services.dvt.instruments.process_control import ProcessControl
+
+dvt = DvtSecureSocketProxyService(lockdown=lockdown_client, rsd=rsd)
+process_control = ProcessControl(dvt)
+
+pid = process_control.launch(
+    bundle_id="com.facebook.WebDriverAgentRunner.xctrunner",
+    arguments=[],
+    environment={
+        "USE_PORT": "8100",
+        "MJPEG_SERVER_PORT": "9100"
+    },
+    kill_existing=True
+)
+print(f"WDA PID: {pid}")
+```
+
+**端口转发示例（命令行）**
+
+```bash
+python3 -m pymobiledevice3 usbmux forward 8100 8100 --udid <UDID>
+```
+
+**上层使用 facebook-wda-client**
+
+```python
+import wda
+
+client = wda.Client("http://127.0.0.1:8100")
+client.click(100, 200)
+client.swipe(100, 500, 100, 100)
+```
+
+在 Host 内部，这些被包装在 `WdaManager` / `WdaClient` 中，Session 层只需要“要一个可用的 WDA endpoint”。
+
+---
+
+## 6. 日志与性能监控（C5）
+
+### 6.1 实时日志（Syslog / 控制台日志）
+
+对于排查问题、分析崩溃非常重要。
+
+在 tidevice 方案中，可以通过其内建命令 / 接口获取日志流；
+在迁移到 pymobiledevice3 后，我们使用其 `SyslogService`：
+
+```python
+from pymobiledevice3.services.syslog import SyslogService
+
+syslog = SyslogService(lockdown=lockdown_client)
+for line in syslog.watch():
+    # 可以按需打标签并转发到日志系统
+    print(line)
+```
+
+Host 中的 `LogCollector` 模块通常会：
+
+* 将日志按设备 / 会话进行分流；
+* 同时输出到本地日志和集中式日志系统；
+* 提供基本过滤能力（例如按 bundle id 过滤）。
+
+### 6.2 性能监控（Instruments / DVT）
+
+性能数据需要通过 Instruments / DTX 协议获取，技术细节较重。简要说明思路：
+
+* tidevice 方案：使用其封装的 perf 功能获取 CPU/内存等；
+* pymobiledevice3 方案：通过其 Instruments / DVT 封装与设备建立会话，再订阅对应通道。
+
+伪代码示例（仅说明接口形态）：
+
+```python
+from pymobiledevice3.services.dvt.instruments.instruments import InstrumentsService
+
+instruments = InstrumentsService(lockdown_client)
+# 启动某个性能监控通道
+instruments.start_monitoring(channel="Activity Monitor")
+# 后续从 instruments 中读取指标数据并上报
+```
+
+在 Host 层，我们一般会：
+
+* 把性能指标聚合到统一监控系统；
+* 给每台设备打“健康分”（CPU 持续 100%、温度过高等情况标记为风险）；
+* 为自动化任务产生性能报告做准备。
+
+---
+
+## 7. Host 侧稳定性与自愈（C6）
+
+Host 侧如果不做稳定性治理，再好的协议栈也会被“现实世界”的 USB 掉线、WDA 卡死打败。
+
+### 7.1 Session 与设备锁
+
+从 Host 视角，Session 可以简单理解为：
+
+* “在某个时间段内，这个 UDID 被谁占用、跑了什么”。
+
+SessionManager 的职责包括：
+
+* Session 创建 / 结束；
+* 给设备加锁 / 解锁：
+  * 同一时刻同一设备只允许一个活跃 Session；
+* 提供超时回收机制：
+  * 如一段时间没有心跳就释放 Session、重置设备。
+
+### 7.2 端口映射管理
+
+在大量设备场景下，端口转发会成为一片“雷区”，常见问题：
+
+* 转发进程泄露、端口未释放；
+* Host 重启后，残留进程占用端口。
+
+典型做法：
+
+```python
+def add_device(self, device_info):
+    port = self.get_free_port()  # 例如 9200
+    
+    cmd = (
+        f"pymobiledevice3 usbmux forward {port} 9100 "
+        f"--serial {device_info['udid']}"
+    )
+    subprocess.Popen(cmd, shell=True)
+    
+    return port
+```
+
+配套策略：
+
+* 启动 Host Agent 前先扫描并清理旧的 usbmux forward 进程；
+* 为每个转发进程记录元信息，定期校验其是否仍与某个 Session 关联。
+
+### 7.3 自愈机制
+
+常见异常场景：
+
+* USB 掉线；
+* WDA 崩溃 / 卡死；
+* Host 自身进程异常退出。
+
+典型自愈策略：
+
+* **进程守护**
+  * 为 Host Agent / 设备子进程 / 关键转发进程建立 watchdog；
+  * 使用 PID 文件或 supervisor 工具监控是否存活。
+* **WDA 自愈**
+  * WdaManager 定期访问 `/status`；
+  * 若连续多次失败，尝试：
+    * 重启 WDA；
+    * 重建端口映射；
+    * 若仍失败，将设备标记为 `Error`，交给人工 / 后台任务进一步排查。
+* **设备隔离**
+  * 对异常频繁的设备做黑名单 / maintenance 标记，不再分配给新 Session；
+  * 提供运维接口来手工重置设备（重启 / 刷机等）。
+
+---
+
+## 8. 总结与演进路线（只看 iOS 侧）
+
+从 Host–Device 角度看，一个 iOS 云真机平台的演进，大致可以概括为：
+
+* **第一阶段：tidevice 为主的快速落地**
+  * 使用 tidevice 封装的 lockdown / instruments 等能力：
+    * 完成设备接入与管理（C3）；
+    * 完成 App 安装与启动（C2）；
+    * 完成 WDA 启动与基础自动化（C1/C4）；
+    * 提供基本日志 / 性能采集（C5）。
+  * 优点：简单、上手快、社区 ecosystem 完整；
+  * 局限：对 iOS 17 之后的协议与行为变化支持有限。
+
+* **第二阶段：基于 pymobiledevice3 的能力重构**
+  * 在 Host 内部引入清晰的抽象层（DeviceProvider/WdaManager/SessionManager 等）；
+  * 使用 `DeviceProviderPym` 替换 tidevice 版本，实现：
+    * 基于 CoreDevice / RSD / 隧道的设备接入；
+    * 通过 DVT / ProcessControl 的 App 启动 / WDA 启动；
+    * 更贴近 Xcode 的日志与性能数据获取；
+  * 在上层接口不变的前提下完成底层“换心”。
+
+* **未来方向（从 Host–Device 视角）**
+  * 持续跟进 iOS 18+ 的协议与工具链变化；
+  * 在性能与可观测性方面使用更多开发者服务通道（例如更完整的 instruments 通道组合）；
+  * 优化视频采集与编码链路，在 Host 利用硬件加速，进一步降低延迟。
+
+如果你是新加入的同学，建议阅读顺序：
+
+1. 通读第 1 章，理解 Host–Device 需要做哪些事；
+2. 看第 2 章，建立脑中的“Host–Device 架构图”；
+3. 根据你负责的方向：
+   * 设备接入 / App 管理 → 重点看第 3、4 章；
+   * 自动化 / 远控 → 重点看第 5 章；
+   * 日志 / 性能 / 稳定性 → 重点看第 6、7 章；
+4. 最后再回来看第 8 章，把 tidevice → pymobiledevice3 的演进脉络串起来。

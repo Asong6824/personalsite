@@ -3,6 +3,7 @@
 import React from "react";
 import CircadianChart from "./CircadianChart";
 // import SankeyChart from "./SankeyChart";
+import GoalProgressGrid from "./GoalProgressGrid";
 
 function CodingActivityPeriods() {
   const [mounted, setMounted] = React.useState(false);
@@ -205,8 +206,11 @@ export default function ActiveDaysSection() {
         const map = new Map();
         let totalScore = 0;
         (json.days || []).forEach(d => {
-          map.set(d.date, d.score || 0);
-          totalScore += (d.score || 0);
+          const score = Number.isFinite(d?.score) ? d.score : 0;
+          const hasPositiveEff = Array.isArray(d?.entries) && d.entries.some(e => (e?.effMinutes || 0) > 0);
+          const count = score > 0 ? score : (hasPositiveEff ? 1 : 0);
+          map.set(d.date, count);
+          totalScore += count;
         });
         setDataMap(map);
         setTotal(totalScore);
@@ -343,6 +347,10 @@ export default function ActiveDaysSection() {
           {/* Sankey chart under the calendar heatmap (暂时注释掉 OKR 展示) */}
           {/* <SankeyChart height={360} /> */}
 
+          {/* Goals progress grid using animated circular progress bar */}
+          <GoalProgressGrid days={7} height={220} />
+
+          {/* Day/Night circadian chart below OKR progress */}
           <CodingActivityPeriods />
         </div>
       </div>

@@ -4,6 +4,7 @@ import { generateColumnStaticParams, generateColumnMetadata, validateChannelColu
 import { generateColumnStructuredData } from '@/lib/seo-utils';
 import { CHANNELS_CONFIG } from '@/lib/channels';
 import ColumnLayout from '@/components/features/ColumnLayout';
+import JapanColumnLayout from '@/components/features/columns/life/JapanColumnLayout';
 import StructuredData from '@/components/StructuredData';
 import { notFound } from 'next/navigation';
 
@@ -38,13 +39,23 @@ export default async function LifeColumnPage({ params }) {
     return (
         <>
             <StructuredData data={structuredData} id="life-column-structured-data" />
-            <ColumnLayout
-                channelKey={CHANNEL_KEY}
-                channelConfig={channelConfig}
-                columnKey={columnSlug}
-                columnConfig={columnConfig}
-                posts={posts}
-            />
+            {columnSlug === 'japan' ? (
+                <JapanColumnLayout
+                    channelKey={CHANNEL_KEY}
+                    channelConfig={channelConfig}
+                    columnKey={columnSlug}
+                    columnConfig={columnConfig}
+                    posts={posts}
+                />
+            ) : (
+                <ColumnLayout
+                    channelKey={CHANNEL_KEY}
+                    channelConfig={channelConfig}
+                    columnKey={columnSlug}
+                    columnConfig={columnConfig}
+                    posts={posts}
+                />
+            )}
         </>
     );
 }

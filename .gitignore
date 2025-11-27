@@ -42,3 +42,7 @@ next-env.d.ts
 BLOG_REDESIGN.md
 .gitignore
 MUSIC_PLAYER.md
+
+.trae
+.figma
+.idea

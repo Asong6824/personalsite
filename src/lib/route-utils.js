@@ -31,6 +31,10 @@ export function generatePostStaticParams(channelKey) {
     
     if (!channelConfig) return [];
     
+    if (process.env.NODE_ENV === 'development') {
+        return [];
+    }
+    
     const params = [];
     
     for (const columnKey of Object.keys(channelConfig.columns)) {
@@ -93,12 +97,20 @@ export function generatePostMetadata(post, channelKey = null, columnSlug = null)
     const channelConfig = channelKey ? CHANNELS_CONFIG[channelKey] : null;
     const columnConfig = channelConfig?.columns?.[columnSlug];
     
+    const title = post.title || post.frontmatter?.title;
+    const excerpt = post.excerpt || post.frontmatter?.excerpt || title;
+    const coverImage = post.coverImage || post.frontmatter?.coverImage;
+    const date = post.date || post.frontmatter?.date;
+    const lastModified = post.lastModified || post.frontmatter?.lastModified || date;
+    const author = post.author || post.frontmatter?.author;
+    const tagsArr = post.tags || post.frontmatter?.tags || [];
+    
     const url = channelKey && columnSlug 
         ? `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/blog/${channelKey}/${columnSlug}/${post.slug}`
         : `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/posts/${post.slug}`;
     
     const tags = [
-        ...(post.tags || []),
+        ...(tagsArr || []),
         ...(channelConfig ? [channelConfig.name] : []),
         ...(columnConfig ? [columnConfig.name] : []),
         '博客',
@@ -106,16 +118,16 @@ export function generatePostMetadata(post, channelKey = null, columnSlug = null)
     ];
     
     return generateEnhancedMetadata({
-        title: `${post.title} | 阿松的个人网站`,
-        description: post.excerpt || post.title,
+        title: `${title} | 阿松的个人网站`,
+        description: excerpt,
         url,
-        image: post.coverImage,
+        image: coverImage,
         tags,
         section: columnConfig?.name || '博客',
         type: 'article',
-        publishedTime: post.date,
-        modifiedTime: post.lastModified || post.date,
-        authors: post.author ? [post.author] : undefined
+        publishedTime: date,
+        modifiedTime: lastModified,
+        authors: author ? [author] : undefined
     });
 }
 

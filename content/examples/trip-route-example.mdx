@@ -1,0 +1,35 @@
+---
+title: 旅行路线组件示例
+date: 2025-11-15
+channel: life
+column: japan
+hidden: true
+---
+
+# 旅行路线示例
+
+<TripRouteChart
+  height={600}
+  mainColor="#8B7355"
+  secondaryColor="#d9cec8"
+  mapConfig={{
+    geoKey: "worldLow",
+    view: { type: "home", center: { lon: 20, lat: 10 }, zoom: 1.8 },
+    interactive: { pan: false, zoom: false }
+  }}
+  points={[
+    { distance: 0,   category: "city", name: "Vilnius",  date: "2025-05-01", population: 607404, coordinates: [25.279652, 54.687157] },
+    { distance: 462, category: "city", name: "Warsaw",   date: "2025-05-02", population: 1793579, coordinates: [21.01178, 52.22977] },
+    { distance: 1033,category: "city", name: "Berlin",   date: "2025-05-03", population: 3769000, coordinates: [13.41053, 52.52437] },
+    { distance: 1604,category: "city", name: "Amsterdam",date: "2025-05-04", population: 933680,  coordinates: [4.897070, 52.377956] },
+    { distance: 1813,category: "city", name: "Brussels", date: "2025-05-05", population: 1250000, coordinates: [4.34878, 50.85045] },
+    { distance: 2125,category: "city", name: "Paris",    date: "2025-05-06", population: 2048472, coordinates: [2.349014, 48.864716] },
+    { distance: 2772,category: "city", name: "Zurich",   date: "2025-05-07", population: 448664,  coordinates: [8.55, 47.36667] },
+    { distance: 3300,category: "city", name: "Vienna",   date: "2025-05-08", population: 1921153, coordinates: [16.363449, 48.210033] },
+    { distance: 3546,category: "city", name: "Budapest", date: "2025-05-09", population: 1780390, coordinates: [19.04, 47.4980] },
+    { distance: 4254,category: "city", name: "Venice",   date: "2025-05-10", population: 258685,  coordinates: [12.33265, 45.43713] },
+    { distance: 5000,category: "city", name: "Rome",     date: "2025-05-11", population: 4347100, coordinates: [12.496366, 41.902782] },
+    { distance: 5229,category: "city", name: "Naples",   date: "2025-05-12", population: 2182170, coordinates: [14.305573, 40.853294] },
+    { distance: 5957,category: "city", name: "Palermo",  date: "2025-05-13", population: 851282,  coordinates: [13.3356, 38.1321] }
+  ]}
+/>

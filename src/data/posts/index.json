@@ -1,0 +1,356 @@
+{
+  "items": [
+    {
+      "slug": "life/japan/japan-live",
+      "rel": "life/japan/japan-live.mdx",
+      "data": {
+        "title": "日本生活总集篇",
+        "date": "2025-08-08",
+        "slug": "japan-live",
+        "author": "阿松",
+        "tags": [
+          "生活",
+          "日本",
+          "日本文化"
+        ],
+        "channel": "life",
+        "column": "japan",
+        "excerpt": "日本生活总集",
+        "coverImage": "",
+        "pinned": true
+      }
+    },
+    {
+      "slug": "tech/design/design-principle-proximity",
+      "rel": "tech/design/design-principle-proximity.mdx",
+      "data": {
+        "title": "设计原则：亲密性 —— 让信息不再“形同陌路”",
+        "date": "2025-11-26",
+        "channel": "tech",
+        "column": "design",
+        "tags": [
+          "设计",
+          "排版",
+          "亲密性",
+          "Design Principles"
+        ],
+        "excerpt": "为什么你的排版看起来乱糟糟？可能只是因为你没把该在一起的东西放在一起。本文带你深入了解设计四大原则之首：亲密性。",
+        "coverImage": "https://images.unsplash.com/photo-1517260739337-6799d239ce83?q=80&w=2070&auto=format&fit=crop"
+      }
+    },
+    {
+      "slug": "tech/test/iOS_Cloud_Testing_Tutorial",
+      "rel": "tech/test/iOS_Cloud_Testing_Tutorial.mdx",
+      "data": {
+        "title": "iOS 云真机测试平台架构与源码深度解析",
+        "date": "2025-11-25",
+        "slug": "ios-cloud-testing-tutorial",
+        "author": "韩若冲",
+        "tags": [
+          "技术",
+          "iOS",
+          "WDA",
+          "自动化测试",
+          "云真机"
+        ],
+        "channel": "tech",
+        "column": "general",
+        "excerpt": "通过 WDA、宿主代理与 MJPEG 流实现云端控制 iPhone 的完整方案与源码解析",
+        "coverImage": "",
+        "pinned": false
+      }
+    },
+    {
+      "slug": "tech/general/ios-cloud-platform-guide",
+      "rel": "tech/general/ios-cloud-platform-guide.mdx",
+      "data": {
+        "title": "iOS 云真机平台实现指南（Host–Device 侧）",
+        "date": "2025-11-25",
+        "slug": "ios-cloud-platform-guide",
+        "author": "韩若冲",
+        "tags": [
+          "技术",
+          "iOS",
+          "云真机",
+          "WDA",
+          "pymobiledevice3",
+          "tidevice"
+        ],
+        "channel": "tech",
+        "column": "general",
+        "excerpt": "本文聚焦于云真机测试平台的 iOS 侧实现，详细解析 Host 与 Device 之间的协同工作原理，以及从 tidevice 到 pymobiledevice3 的技术演进。",
+        "coverImage": "",
+        "pinned": false
+      }
+    },
+    {
+      "slug": "tech/design/micro-interactions",
+      "rel": "tech/design/micro-interactions.mdx",
+      "data": {
+        "title": "设计之美：探索数字界面的微交互",
+        "date": "2025-11-25",
+        "channel": "tech",
+        "column": "design",
+        "tags": [
+          "设计",
+          "UI",
+          "交互"
+        ],
+        "excerpt": "微交互是用户体验设计的灵魂，本文探讨了如何通过细微的动画和反馈提升产品的质感。",
+        "coverImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
+      }
+    },
+    {
+      "slug": "git-study-notes",
+      "rel": "git-study-notes.mdx",
+      "data": {
+        "title": "git学习笔记",
+        "date": "2025-10-12",
+        "slug": "git-study-notes",
+        "author": "阿松",
+        "tags": [
+          "Git",
+          "版本控制",
+          "工具"
+        ],
+        "channel": "tech",
+        "column": "devtools",
+        "excerpt": "系统梳理 Git 基础概念、常用命令、协作流程与问题排查。",
+        "coverImage": "",
+        "music": "",
+        "pinned": false
+      }
+    },
+    {
+      "slug": "nlp-decade-siri-to-gpt",
+      "rel": "nlp-decade-siri-to-gpt.mdx",
+      "data": {
+        "title": "从 Siri 到 GPT：十年自然语言处理的跃迁",
+        "date": "2025-10-07",
+        "slug": "nlp-decade-siri-to-gpt",
+        "author": "阿松",
+        "tags": [
+          "NLP",
+          "AI",
+          "自然语言处理"
+        ],
+        "channel": "tech",
+        "column": "nlp",
+        "excerpt": "从语音助手到大模型：回顾过去十年NLP的技术范式转变与应用落地。",
+        "coverImage": "",
+        "music": "",
+        "pinned": false
+      }
+    },
+    {
+      "slug": "life/japan/japan-gion-matsuri",
+      "rel": "life/japan/japan-gion-matsuri.mdx",
+      "data": {
+        "title": "日本纪行 祭典篇：千年之约，京都祇园祭",
+        "date": "2025-08-08",
+        "slug": "japan-gion-matsuri",
+        "author": "阿松",
+        "tags": [
+          "生活",
+          "日本",
+          "日本文化"
+        ],
+        "channel": "life",
+        "column": "japan",
+        "excerpt": "2025京都祇园祭记录",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/life/matsuri/gionmatsuti_cover.jpg",
+        "music": "https://blog-assets-asong.tos-cn-beijing.volces.com/life/matsuri/gion_bayashi_debayashi.mp3"
+      }
+    },
+    {
+      "slug": "figma-redefining-creation",
+      "rel": "figma-redefining-creation.mdx",
+      "data": {
+        "title": "Figma：重新定义创造",
+        "date": "2025-08-01",
+        "slug": "figma-redefining-creation",
+        "author": "阿松",
+        "tags": [
+          "产品"
+        ],
+        "channel": "tech",
+        "column": "product",
+        "excerpt": "Figma 如何掀起一场创意革命",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/tech/figma/figma/figma_cover.avif"
+      }
+    },
+    {
+      "slug": "notion-zen",
+      "rel": "notion-zen.mdx",
+      "data": {
+        "title": "Notion 与禅与我",
+        "date": "2025-07-03",
+        "slug": "notion-zen",
+        "author": "阿松",
+        "tags": [
+          "产品"
+        ],
+        "channel": "tech",
+        "column": "product",
+        "excerpt": "参加2025ivs有感",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/life/notion-zen/notion.jpg"
+      }
+    },
+    {
+      "slug": "2025-mid-review",
+      "rel": "2025-mid-review.mdx",
+      "data": {
+        "title": "2025 年中总结：拥抱变化，主动变化，用变化创造价值",
+        "date": "2025-06-25",
+        "slug": "2025-mid-review",
+        "author": "阿松",
+        "tags": [
+          "总结"
+        ],
+        "channel": "life",
+        "column": "thoughts",
+        "excerpt": "",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Hokkaido/hakodate_hachimanzaka_cover.jpg",
+        "music": [
+          ""
+        ]
+      }
+    },
+    {
+      "slug": "iphone-proraw-lightroom-guide",
+      "rel": "iphone-proraw-lightroom-guide.mdx",
+      "data": {
+        "title": "解锁 iPhone 摄影新视界：ProRAW 拍摄与 Lightroom 修图全攻略",
+        "date": "2025-06-22",
+        "slug": "iphone-proraw-lightroom-guide",
+        "author": "阿松",
+        "tags": [
+          "摄影"
+        ],
+        "channel": "tech",
+        "column": "photography",
+        "excerpt": "iPhone photography is all you need",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/tech/proraw-lightroom/cover.jpg"
+      }
+    },
+    {
+      "slug": "map-drawing-guide",
+      "rel": "map-drawing-guide.mdx",
+      "data": {
+        "title": "如何绘制旅行地图",
+        "date": "2025-06-19",
+        "slug": "map-drawing-guide",
+        "author": "阿松",
+        "tags": [
+          "旅行",
+          "技术"
+        ],
+        "channel": "tech",
+        "column": "general",
+        "excerpt": "你所需要的画图知识，Drawing map is all you need",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Tokyo/tokyo_map_points_20250324_cover.png"
+      }
+    },
+    {
+      "slug": "life/japan/japan-train-generality",
+      "rel": "life/japan/japan-train-generality.mdx",
+      "data": {
+        "title": "日本纪行 铁道篇：连接梦想的铁道线",
+        "date": "2025-06-15",
+        "slug": "japan-train-generality",
+        "author": "阿松",
+        "tags": [
+          "生活",
+          "日本",
+          "日本文化",
+          "旅行"
+        ],
+        "channel": "life",
+        "column": "japan",
+        "excerpt": "日本铁道文化的感悟与记录",
+        "coverImage": "",
+        "music": ""
+      }
+    },
+    {
+      "slug": "efficient-go-cpu-macro",
+      "rel": "efficient-go-cpu-macro.mdx",
+      "data": {
+        "title": "Efficient Go | Go如何使用CPU资源（宏观视角：从CPU到Go Runtime调度器）",
+        "date": "2025-05-30",
+        "slug": "efficient-go-cpu-macro",
+        "author": "阿松",
+        "tags": [
+          "Go"
+        ],
+        "channel": "tech",
+        "column": "go",
+        "excerpt": "对《Efficient Go》一书第四章How Go Uses the CPU Resource读后的摘要和补充。",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/tech/go/efficient-go-cover.png"
+      }
+    },
+    {
+      "slug": "agent",
+      "rel": "agent.mdx",
+      "data": {
+        "title": "大模型 Agent 简史：从 AutoGPT 到自主工作流",
+        "date": "2025-05-01",
+        "slug": "agent",
+        "author": "阿松",
+        "tags": [
+          "AI",
+          "Agent",
+          "技术"
+        ],
+        "channel": "tech",
+        "column": "general",
+        "excerpt": "梳理大模型 Agent 的关键节点，从 Prompt 工具到多智能体协作，再到原生自主模型。",
+        "coverImage": "",
+        "music": "",
+        "pinned": false
+      }
+    },
+    {
+      "slug": "life/japan/japan-travel-sapporo",
+      "rel": "life/japan/japan-travel-sapporo.mdx",
+      "data": {
+        "title": "日本纪行 散策篇：北国札幌的春日风光",
+        "date": "2025-05-01",
+        "slug": "japan-travel-sapporo",
+        "author": "阿松",
+        "tags": [
+          "生活",
+          "日本",
+          "旅行"
+        ],
+        "channel": "life",
+        "column": "japan",
+        "excerpt": "2025黄金周札幌旅行记录",
+        "coverImage": "",
+        "music": ""
+      }
+    },
+    {
+      "slug": "life/japan/japan-hokuriku",
+      "rel": "life/japan/japan-hokuriku.mdx",
+      "data": {
+        "title": "日本纪行 北陆篇：海风与雪的旅途",
+        "date": "2024-11-17",
+        "slug": "japan-hokuriku",
+        "author": "阿松",
+        "tags": [
+          "生活",
+          "日本",
+          "旅行",
+          "日本文化"
+        ],
+        "channel": "life",
+        "column": "japan",
+        "excerpt": "记录一次关于日本北陆的旅行与所见所感",
+        "coverImage": "",
+        "music": ""
+      }
+    }
+  ],
+  "updatedAt": "2025-11-26T15:35:46.634Z"
+}

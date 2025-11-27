@@ -1,6 +1,6 @@
 // app/blog/page.jsx
 import { CHANNELS_CONFIG } from '@/lib/channels';
-import { AnimatedTestimonials } from '@/components/ui/animated-testimonials';
+import TakeoverLinks from '@/components/ui/takeover-links';
 import { Timeline } from '@/components/ui/timeline';
 import { getSortedPostsData } from '@/lib/post';
 import Link from 'next/link';
@@ -11,13 +11,13 @@ export const metadata = {
 };
 
 export default function BlogIndexPage() {
-    // 频道卡片数据
-    const channelTestimonials = Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({
-        quote: config.description,
-        name: config.name,
-        designation: `${Object.keys(config.columns).length} 个专栏`,
-        src: config.icon,
-        link: `/blog/${key}`
+    // 频道卡片数据 -> TakeoverLinks items
+    const channelItems = Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({
+        title: config.name,
+        // 简化为仅展示频道名称，取消副文以符合参考风格
+        href: `/blog/${key}`,
+        image: Object.values(config.columns)?.[0]?.cover || config.icon,
+        accent: ({ tech: 'rgb(56 189 248)', life: '#8B7355', finance: '#10b981' }[key]) || 'rgb(56 189 248)'
     }));
 
     // 获取所有文章数据并按年份分组
@@ -30,7 +30,7 @@ export default function BlogIndexPage() {
         acc[year].push({
             title: post.title,
             description: post.excerpt || post.title,
-            date: post.date,
+            date: new Date(post.date).toISOString().slice(0, 10),
             channel: CHANNELS_CONFIG[post.channel]?.name || post.channel,
             image: post.coverImage,
             href: `/blog/${post.channel}/${post.column}/${post.slug}`
@@ -43,23 +43,15 @@ export default function BlogIndexPage() {
         .sort(([a], [b]) => parseInt(b) - parseInt(a))
         .map(([year, posts]) => ({
             title: year,
-            posts: posts.slice(0, 6) // 每年最多显示6篇文章
+            posts,
         }));
-    
+
     return (
-        <div className="min-h-screen">
-            {/* 频道卡片区域 */}
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="container mx-auto px-4 py-8 max-w-4xl">
-                    <AnimatedTestimonials 
-                        testimonials={channelTestimonials}
-                        autoplay={false}
-                    />
-                </div>
+        <div className="min-h-screen bg-white dark:bg-neutral-950">
+            <TakeoverLinks items={channelItems} variant="fullscreen" />
+            <div className="mt-10">
+                <Timeline data={timelineData} />
             </div>
-            
-            {/* 时间轴区域 */}
-            <Timeline data={timelineData} />
         </div>
     );
 }

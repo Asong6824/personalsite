@@ -9,6 +9,7 @@ class MemoryCache {
         this.cache = new Map();
         this.timestamps = new Map();
         this.defaultTTL = 5 * 60 * 1000; // 5分钟默认过期时间
+        this.maxSize = 200;
     }
     
     /**
@@ -20,6 +21,12 @@ class MemoryCache {
     set(key, value, ttl = this.defaultTTL) {
         this.cache.set(key, value);
         this.timestamps.set(key, Date.now() + ttl);
+        if (this.cache.size > this.maxSize) {
+            const oldestKey = this.cache.keys().next().value;
+            if (oldestKey && oldestKey !== key) {
+                this.delete(oldestKey);
+            }
+        }
     }
     
     /**
@@ -117,7 +124,8 @@ export function withCache(fn, cacheType, ttl = 5 * 60 * 1000) {
         const result = fn.apply(this, args);
         
         // 存入缓存
-        postCache.set(cacheKey, result, ttl);
+        const effectiveTTL = process.env.NODE_ENV === 'development' ? Math.min(ttl, 120000) : ttl;
+        postCache.set(cacheKey, result, effectiveTTL);
         
         if (process.env.NODE_ENV === 'development') {
             console.log(`💾 Cache miss, stored: ${cacheKey}`);

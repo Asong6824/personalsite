@@ -27,6 +27,12 @@ export const CHANNELS_CONFIG = {
                 tags: ['产品', 'product', '设计', 'UX', 'UI'],
                 cover: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop'
             },
+            design: {
+                name: '设计美学',
+                description: '像素、逻辑与美学的交汇',
+                tags: ['设计', 'design', '视觉', '美学', '交互'],
+                cover: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop'
+            },
         }
     },
     life: {
@@ -35,8 +41,8 @@ export const CHANNELS_CONFIG = {
         icon: 'https://blog-assets-asong.tos-cn-beijing.volces.com/travel/izu/xiuqiu_cover_1-1.jpg',
         columns: {
             japan: {
-                name: '日本旅行',
-                description: '日本旅行记录与文化体验',
+                name: '日本行纪',
+                description: '以此记录 2023-2025 的日本生活',
                 tags: ['日本', 'japan', '日本旅行', '日本文化'],
                 cover: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop'
             },
@@ -83,7 +89,7 @@ export function getChannelByTags(postOrTags) {
         // 使用文章的标签进行匹配
         const tags = postOrTags.tags;
         if (!tags || !Array.isArray(tags)) return null;
-        
+
         for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
             for (const column of Object.values(channel.columns)) {
                 if (tags.some(tag => column.tags.includes(tag))) {
@@ -93,11 +99,11 @@ export function getChannelByTags(postOrTags) {
         }
         return null;
     }
-    
+
     // 兼容原有的标签数组调用方式
     const tags = Array.isArray(postOrTags) ? postOrTags : null;
     if (!tags || !Array.isArray(tags)) return null;
-    
+
     for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
         for (const column of Object.values(channel.columns)) {
             if (tags.some(tag => column.tags.includes(tag))) {
@@ -122,11 +128,11 @@ export function getColumnByTags(postOrTags) {
                 return { channelKey: postOrTags.channel, columnKey: postOrTags.column };
             }
         }
-        
+
         // 使用文章的标签进行匹配
         const tags = postOrTags.tags;
         if (!tags || !Array.isArray(tags)) return null;
-        
+
         for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
             for (const [columnKey, column] of Object.entries(channel.columns)) {
                 if (tags.some(tag => column.tags.includes(tag))) {
@@ -136,11 +142,11 @@ export function getColumnByTags(postOrTags) {
         }
         return null;
     }
-    
+
     // 兼容原有的标签数组调用方式
     const tags = Array.isArray(postOrTags) ? postOrTags : null;
     if (!tags || !Array.isArray(tags)) return null;
-    
+
     for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
         for (const [columnKey, column] of Object.entries(channel.columns)) {
             if (tags.some(tag => column.tags.includes(tag))) {

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 @import "fullpage.js/dist/fullpage.css";
 
@@ -820,6 +821,60 @@
   --color-3-new: oklch(0.72 0.16 210);
   --color-4-new: oklch(0.82 0.10 230);
   --color-5-new: oklch(0.60 0.18 220);
+}
+
+.theme-muji {
+  --muji-bg: #F7F4EF;
+  --muji-paper: #FEFCFA;
+  --muji-ink: #4A4A4A;
+  --muji-taupe: #A0927D;
+  --muji-wood: #8B7355;
+  --muji-border: #E5DDD5;
+  --muji-accent: #C8B99C;
+  --muji-map-visited: #EAE3D8;
+  --muji-map-stayed: #CBB89B;
+  --muji-map-lived: #8B7355;
+  --muji-map-unvisited: #CDC6BD;
+}
+
+.theme-muji #JP-01 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-02 { fill: var(--muji-map-visited); }
+.theme-muji #JP-03 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-04 { fill: var(--muji-map-visited); }
+.theme-muji #JP-05 { fill: var(--muji-map-visited); }
+.theme-muji #JP-09 { fill: var(--muji-map-visited); }
+.theme-muji #JP-10 { fill: var(--muji-map-visited); }
+.theme-muji #JP-12 { fill: var(--muji-map-visited); }
+.theme-muji #JP-13 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-14 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-16 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-17 { fill: var(--muji-map-visited); }
+.theme-muji #JP-19 { fill: var(--muji-map-visited); }
+.theme-muji #JP-21 { fill: var(--muji-map-visited); }
+.theme-muji #JP-22 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-23 { fill: var(--muji-map-visited); }
+.theme-muji #JP-25 { fill: var(--muji-map-lived); }
+.theme-muji #JP-26 { fill: var(--muji-map-visited); }
+.theme-muji #JP-27 { fill: var(--muji-map-lived); }
+.theme-muji #JP-28 { fill: var(--muji-map-visited); }
+.theme-muji #JP-29 { fill: var(--muji-map-visited); }
+.theme-muji #JP-30 { fill: var(--muji-map-visited); }
+.theme-muji #JP-31 { fill: var(--muji-map-visited); }
+.theme-muji #JP-33 { fill: var(--muji-map-visited); }
+.theme-muji #JP-37 { fill: var(--muji-map-stayed); }
+.theme-muji #JP-40 { fill: var(--muji-map-visited); }
+
+.theme-muji svg path[id^="JP-"] { fill: var(--muji-map-unvisited); }
+
+.muji-card {
+  background-color: var(--muji-paper);
+  border: 1px solid var(--muji-border);
+  border-radius: 0px;
+}
+
+.muji-sep {
+  background-color: var(--muji-accent);
+  height: 1px;
 }
 
 @layer base {
