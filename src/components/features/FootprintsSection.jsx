@@ -44,18 +44,18 @@ export default function FootprintsSection() { // 将 WorldMapDemo 重命名为 F
                 <h2 className="font-bold text-xl md:text-4xl dark:text-white text-black mb-4">
                     足迹{" "}
                     <span className="text-neutral-400">
-            {"探索过的世界".split("").map((char, idx) => ( // 修改了文字和变量名
-                <motion.span
-                    key={idx}
-                    className="inline-block"
-                    initial={{ x: -10, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5, delay: idx * 0.05 }} // 调整了 delay
-                >
-                    {char === " " ? "\u00A0" : char} {/* 处理空格 */}
-                </motion.span>
-            ))}
-          </span>
+                        {"探索过的世界".split("").map((char, idx) => ( // 修改了文字和变量名
+                            <motion.span
+                                key={idx}
+                                className="inline-block"
+                                initial={{ x: -10, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ duration: 0.5, delay: idx * 0.05 }} // 调整了 delay
+                            >
+                                {char === " " ? "\u00A0" : char} {/* 处理空格 */}
+                            </motion.span>
+                        ))}
+                    </span>
                 </h2>
                 <p className="text-sm md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto py-4">
                     那些我去过、感受过、留下回忆的城市和角落。
@@ -68,15 +68,15 @@ export default function FootprintsSection() { // 将 WorldMapDemo 重命名为 F
             <div className="relative mx-auto mt-8 h-[350px] w-[90%] max-w-4xl md:h-[500px] overflow-hidden rounded-lg border bg-background md:mt-12">
                 <WorldMap
                     dots={mapDotsData} // 使用我们生成的从家到各地的弧线数据
-                    // 您可能需要根据 WorldMap 组件的实际 props 调整以下配置
-                    // 例如：globeConfig, dotColor, arcColor, arcWidth 等
-                    // backgroundColor="transparent" // 或您主题的背景色
-                    // dotColor="white"
-                    // dotOpacity={0.5}
-                    // arcColor="white"
-                    // arcOpacity={0.3}
-                    // arcWidth={1}
-                    // travelSpeed={0.5}
+                // 您可能需要根据 WorldMap 组件的实际 props 调整以下配置
+                // 例如：globeConfig, dotColor, arcColor, arcWidth 等
+                // backgroundColor="transparent" // 或您主题的背景色
+                // dotColor="white"
+                // dotOpacity={0.5}
+                // arcColor="white"
+                // arcOpacity={0.3}
+                // arcWidth={1}
+                // travelSpeed={0.5}
                 />
             </div>
 
@@ -86,8 +86,8 @@ export default function FootprintsSection() { // 将 WorldMapDemo 重命名为 F
                 <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 mt-3">
                     {visitedPlaces.map(place => (
                         <span key={place.name} className="px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-full text-xs shadow-sm">
-              {place.name}
-            </span>
+                            {place.name}
+                        </span>
                     ))}
                 </div>
             </div>

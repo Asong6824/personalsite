@@ -102,8 +102,8 @@ const workExperiences = [
 ];
 
 const educationExperiences = [
-    { period: "2021 - 2025", school: "大连理工大学", degree: "学位/专业"},
-    { period: "2023 - 2025", school: "立命馆大学", degree: "学士学位"},
+    { period: "2021 - 2025", school: "大连理工大学", degree: "学位/专业" },
+    { period: "2023 - 2025", school: "立命馆大学", degree: "学士学位" },
 ];
 
 const normalizePeriod = (period) => period.replace(/\s*-\s*/g, ' – ');
@@ -114,46 +114,46 @@ const ExperienceOverview = () => {
             <div className="grid grid-cols-12 gap-x-12 gap-y-12 p-8 md:p-10 items-start justify-items-center">
                 {/* 左侧：经历 */}
                 <div className="col-span-12 md:col-span-6 flex justify-center">
-                  <div className="w-full max-w-[640px] rounded-2xl bg-card/50 shadow-sm p-6 md:p-8">
-                    <div className="grid grid-cols-[12ch,1fr] md:grid-cols-[16ch,1fr] gap-x-8 md:gap-x-12 gap-y-6">
-                      <h3 className="col-span-2 text-2xl md:text-3xl font-bold">工作经历</h3>
-                      {workExperiences.map((item, idx) => (
-                        <React.Fragment key={`work-${idx}`}>
-                          <span className="text-muted-foreground tabular-nums font-mono whitespace-nowrap leading-6">{normalizePeriod(item.period)}</span>
-                          <div>
-                            <p className="font-semibold min-w-0 truncate text-left leading-6">{item.company}</p>
-                            <p className="text-muted-foreground text-sm md:text-base leading-6">{item.description}</p>
-                          </div>
-                        </React.Fragment>
-                      ))}
-                      <h3 className="col-span-2 text-2xl md:text-3xl font-bold">教育经历</h3>
-                      {educationExperiences.map((item, idx) => (
-                        <React.Fragment key={`edu-${idx}`}>
-                          <span className="text-muted-foreground tabular-nums font-mono whitespace-nowrap leading-6">{normalizePeriod(item.period)}</span>
-                          <div>
-                            <p className="font-semibold min-w-0 truncate text-left leading-6">{item.school}</p>
-                            <p className="text-muted-foreground text-sm md:text-base leading-6">{item.degree}{item.description ? ` — ${item.description}` : ''}</p>
-                          </div>
-                        </React.Fragment>
-                      ))}
+                    <div className="w-full max-w-[640px] rounded-2xl bg-card/50 shadow-sm p-6 md:p-8">
+                        <div className="grid grid-cols-[12ch,1fr] md:grid-cols-[16ch,1fr] gap-x-8 md:gap-x-12 gap-y-6">
+                            <h3 className="col-span-2 text-2xl md:text-3xl font-bold">工作经历</h3>
+                            {workExperiences.map((item, idx) => (
+                                <React.Fragment key={`work-${idx}`}>
+                                    <span className="text-muted-foreground tabular-nums font-mono whitespace-nowrap leading-6">{normalizePeriod(item.period)}</span>
+                                    <div>
+                                        <p className="font-semibold min-w-0 truncate text-left leading-6">{item.company}</p>
+                                        <p className="text-muted-foreground text-sm md:text-base leading-6">{item.description}</p>
+                                    </div>
+                                </React.Fragment>
+                            ))}
+                            <h3 className="col-span-2 text-2xl md:text-3xl font-bold">教育经历</h3>
+                            {educationExperiences.map((item, idx) => (
+                                <React.Fragment key={`edu-${idx}`}>
+                                    <span className="text-muted-foreground tabular-nums font-mono whitespace-nowrap leading-6">{normalizePeriod(item.period)}</span>
+                                    <div>
+                                        <p className="font-semibold min-w-0 truncate text-left leading-6">{item.school}</p>
+                                        <p className="text-muted-foreground text-sm md:text-base leading-6">{item.degree}{item.description ? ` — ${item.description}` : ''}</p>
+                                    </div>
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
-                  </div>
                 </div>
 
                 {/* 右侧：照片 */}
                 <div className="col-span-12 md:col-span-6 flex justify-center">
-                  <div className="w-full max-w-[640px] rounded-2xl bg-card/50 shadow-sm p-6 md:p-8 md:sticky md:top-24">
-                    <div className="relative rounded-2xl overflow-hidden bg-muted/20 w-full aspect-[3/4] min-h-[240px]">
-                      <img
-                        src="https://blog-assets-asong.tos-cn-beijing.volces.com/personalsite/personalphoto.JPG"
-                        alt="个人照片"
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => { e.currentTarget.src = "/placeholder-image.svg"; }}
-                      />
+                    <div className="w-full max-w-[640px] rounded-2xl bg-card/50 shadow-sm p-6 md:p-8 md:sticky md:top-24">
+                        <div className="relative rounded-2xl overflow-hidden bg-muted/20 w-full aspect-[3/4] min-h-[240px]">
+                            <img
+                                src="https://blog-assets-asong.tos-cn-beijing.volces.com/personalsite/personalphoto.JPG"
+                                alt="个人照片"
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                                referrerPolicy="no-referrer"
+                                onError={(e) => { e.currentTarget.src = "/placeholder-image.svg"; }}
+                            />
+                        </div>
                     </div>
-                  </div>
                 </div>
             </div>
         </div>

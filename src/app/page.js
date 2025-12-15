@@ -3,7 +3,7 @@ import HeroSection from '@/components/features/HeroSection';
 import AboutMeSection from '@/components/features/AboutMeSection';
 import RecentPosts from "@/components/features/RecentPosts";
 import FootprintsSection from "@/components/features/FootprintsSection";
-import {getSortedPostsData} from "@/lib/post";
+import { getSortedPostsData } from "@/lib/post";
 import ActiveDaysSection from "@/components/features/ActiveDaysSection";
 
 export default function HomePage() {
@@ -20,7 +20,7 @@ export default function HomePage() {
             {/* 身份详情区域 */}
             <FootprintsSection />
             <ActiveDaysSection />
-            <RecentPosts posts={recentPostsData}/>
+            <RecentPosts posts={recentPostsData} />
 
             {/* 其他区域 */}
         </>

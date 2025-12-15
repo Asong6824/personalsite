@@ -13,6 +13,9 @@ import { MusicPlayer, defaultPlaylist } from '@/components/ui/MusicPlayer'; // �
 import { Highlighter } from '@/components/magicui/highlighter';
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { BeforeAfter } from '@/components/ui/BeforeAfter'; // 导入BeforeAfter组件
+import { HSBSliders } from '@/components/mdx/HSBSliders';
+import { ColorWheelSteps } from '@/components/mdx/ColorWheelSteps';
+import { RotatableColorWheel } from '@/components/mdx/RotatableColorWheel';
 
 // 导入 remark/rehype 插件 (用于 MDXRemote 的 options)
 import remarkGfm from 'remark-gfm'; // 支持 GitHub Flavored Markdown (表格、删除线等)
@@ -63,7 +66,7 @@ export default async function PostPage({ params }) {
     const channelStyles = {
         tech: {
             containerBg: 'bg-[#f8f1ee] dark:bg-[#1a1a1a]', // Tech频道背景色 (暗色模式需适配)
-            prose: 'prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-[#a18072] dark:prose-a:text-[#c4a495] hover:prose-a:text-[#8b6b5d] dark:hover:prose-a:text-[#debbaf] prose-strong:text-gray-900 dark:prose-strong:text-gray-100 prose-blockquote:border-l-[#a18072] prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300',
+            prose: 'prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-[#a18072] dark:prose-a:text-[#c4a495] hover:prose-a:text-[#8b6b5d] dark:hover:prose-a:text-[#debbaf] prose-strong:text-[#FF7A45] dark:prose-strong:text-[#FF7A45] prose-blockquote:border-l-[#a18072] prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300',
             headerTitle: 'text-gray-900 dark:text-white',
             headerMeta: 'text-gray-500 dark:text-gray-400',
             tagBg: 'bg-[#eaddd7] hover:bg-[#d8c5bc] text-[#5e4b42]', // Tech频道标签样式
@@ -78,14 +81,15 @@ export default async function PostPage({ params }) {
     };
 
     const currentStyle = isTechChannel ? channelStyles.tech : channelStyles.default;
-
-    // MDX 内容渲染时使用的自定义组件 (可选)
     const mdxComponents = {
         // 添加InlineExplanation组件
         InlineExplanation: InlineExplanation,
         BentoGrid: BentoGrid,
         BentoGridItem: BentoGridItem,
         BeforeAfter: BeforeAfter,
+        HSBSliders: HSBSliders,
+        ColorWheelSteps: ColorWheelSteps,
+        RotatableColorWheel: RotatableColorWheel,
         h2: ({ children, ...props }) => (
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props}>
                 {children}
@@ -166,13 +170,21 @@ export default async function PostPage({ params }) {
                                 className={`prose prose-lg dark:prose-invert max-w-none
             ${currentStyle.prose}
 
-            // 行内代码：为两种模式分别设置文本和背景色
-            prose-code:text-pink-600 dark:prose-code:text-pink-400
-            prose-code:bg-neutral-200/50 dark:prose-code:bg-neutral-800/50
-            prose-code:p-0.5 prose-code:px-1.5 prose-code:rounded-md prose-code:font-mono prose-code:text-sm
+            // 行内代码样式 (使用 :not(pre) > code 避免影响代码块)
+            [&_:not(pre)>code]:text-pink-600 dark:[&_:not(pre)>code]:text-pink-400
+            [&_:not(pre)>code]:bg-neutral-200/50 dark:[&_:not(pre)>code]:bg-neutral-800/50
+            [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:rounded-md
+            [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-sm
+            [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none
 
-            // 代码块：背景在两种模式下都用暗色，因为有语法高亮
-            prose-pre:bg-neutral-800/70 prose-pre:rounded-md prose-pre:shadow-md`}
+            // 代码块样式：Solarized/GitHub Light 风格 (纸张凹陷效果)
+            prose-pre:bg-[#EAE8E0] dark:prose-pre:bg-[#EAE8E0] 
+            prose-pre:text-[#24292e] 
+            prose-pre:rounded-xl 
+            prose-pre:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.5)] 
+            prose-pre:border prose-pre:border-[#d1d5da]
+            prose-pre:p-4
+            prose-pre:my-6`}
                             >
                                 <MDXRemote
                                     source={content}
@@ -183,7 +195,7 @@ export default async function PostPage({ params }) {
                                             rehypePlugins: [
                                                 rehypeSlug,
                                                 [rehypeAutolinkHeadings, {
-                                                    behavior: 'wrap', // 或 'append' 或 'prepend'
+                                                    behavior: 'append', // 或 'append' 或 'prepend'
                                                     properties: { className: ['anchor-link', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'duration-200'] }, // 自定义锚点链接样式
                                                     content: { // 自定义锚点链接图标 (可选)
                                                         type: 'element',
@@ -278,13 +290,21 @@ export default async function PostPage({ params }) {
                             className={`prose prose-lg dark:prose-invert max-w-none
             ${currentStyle.prose}
 
-            // 行内代码：为两种模式分别设置文本和背景色
-            prose-code:text-pink-600 dark:prose-code:text-pink-400
-            prose-code:bg-neutral-200/50 dark:prose-code:bg-neutral-800/50
-            prose-code:p-0.5 prose-code:px-1.5 prose-code:rounded-md prose-code:font-mono prose-code:text-sm
+            // 行内代码样式 (使用 :not(pre) > code 避免影响代码块)
+            [&_:not(pre)>code]:text-pink-600 dark:[&_:not(pre)>code]:text-pink-400
+            [&_:not(pre)>code]:bg-neutral-200/50 dark:[&_:not(pre)>code]:bg-neutral-800/50
+            [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:rounded-md
+            [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-sm
+            [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none
 
-            // 代码块：背景在两种模式下都用暗色，因为有语法高亮
-            prose-pre:bg-neutral-800/70 prose-pre:rounded-md prose-pre:shadow-md`}
+            // 代码块样式：Solarized/GitHub Light 风格 (纸张凹陷效果)
+            prose-pre:bg-[#EAE8E0] dark:prose-pre:bg-[#EAE8E0] 
+            prose-pre:text-[#24292e] 
+            prose-pre:rounded-xl 
+            prose-pre:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.5)] 
+            prose-pre:border prose-pre:border-[#d1d5da]
+            prose-pre:p-4
+            prose-pre:my-6`}
                         >
                             <MDXRemote
                                 source={content}
@@ -295,7 +315,7 @@ export default async function PostPage({ params }) {
                                         rehypePlugins: [
                                             rehypeSlug,
                                             [rehypeAutolinkHeadings, {
-                                                behavior: 'wrap', // 或 'append' 或 'prepend'
+                                                behavior: 'append', // 或 'append' 或 'prepend'
                                                 properties: { className: ['anchor-link', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'duration-200'] }, // 自定义锚点链接样式
                                                 content: { // 自定义锚点链接图标 (可选)
                                                     type: 'element',

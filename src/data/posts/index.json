@@ -21,10 +21,52 @@
       }
     },
     {
-      "slug": "tech/design/design-principle-proximity",
-      "rel": "tech/design/design-principle-proximity.mdx",
+      "slug": "tech/design/typography-basics",
+      "rel": "tech/design/typography-basics.mdx",
       "data": {
-        "title": "设计原则：亲密性 —— 让信息不再“形同陌路”",
+        "title": "Typography排版基础",
+        "date": "2025-12-14",
+        "channel": "tech",
+        "column": "design",
+        "summary": "了解Typography排版的基础知识，包括字体选择、层级结构、行高字间距等核心概念。"
+      }
+    },
+    {
+      "slug": "tech/design/color-basics",
+      "rel": "tech/design/color-basics.mdx",
+      "data": {
+        "title": "颜色基础知识",
+        "date": "2025-12-10",
+        "channel": "tech",
+        "column": "design",
+        "summary": "探索色彩的基础理论，包括色轮、色彩搭配和心理学效应。"
+      }
+    },
+    {
+      "slug": "life/thoughts/investment-and-life",
+      "rel": "life/thoughts/investment-and-life.mdx",
+      "data": {
+        "title": "投资观与人生观",
+        "date": "2025-11-30",
+        "slug": "investment-and-life",
+        "author": "阿松",
+        "tags": [
+          "思考",
+          "投资",
+          "人生"
+        ],
+        "channel": "life",
+        "column": "thoughts",
+        "excerpt": "关于投资与人生的思考...",
+        "coverImage": "",
+        "music": []
+      }
+    },
+    {
+      "slug": "tech/design/design-principles-basic",
+      "rel": "tech/design/design-principles-basic.mdx",
+      "data": {
+        "title": "四大基本设计原则",
         "date": "2025-11-26",
         "channel": "tech",
         "column": "design",
@@ -335,5 +377,5 @@
       }
     }
   ],
-  "updatedAt": "2025-11-27T13:44:12.538Z"
+  "updatedAt": "2025-12-14T07:00:52.517Z"
 }

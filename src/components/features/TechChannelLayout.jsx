@@ -14,7 +14,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
     // 按专栏分组文章
     const postsByColumn = React.useMemo(() => {
         const grouped = {};
-        
+
         posts.forEach(post => {
             const column = getColumnByTags(post);
             if (column && column.channelKey === channelKey) {
@@ -28,7 +28,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                 grouped[columnKey].posts.push(post);
             }
         });
-        
+
         return grouped;
     }, [posts, channelKey, channelConfig]);
 
@@ -38,7 +38,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
     return (
         <div className="min-h-screen" style={{ backgroundColor: '#f8f1ee' }} data-tech-page>
             {/* Hero Section */}
-            <motion.section 
+            <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
@@ -48,7 +48,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 md:gap-12">
                         {/* 左侧标语 */}
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3 }}
@@ -67,7 +67,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                         </motion.div>
 
                         {/* 右侧SVG图像 */}
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: 30 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.4 }}
@@ -94,7 +94,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
             {/* 精选专栏 */}
             <section className="py-12 md:py-16 lg:py-24">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -126,7 +126,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                 src={config.coverImage}
                                                 alt={config.name || '专栏封面'}
                                                 fill
-                                                style={{objectFit: 'cover'}}
+                                                style={{ objectFit: 'cover' }}
                                                 className="transition-transform duration-300 hover:scale-105"
                                                 sizes="(max-width: 768px) 100vw, 50vw"
                                             />
@@ -136,7 +136,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                             </div>
                                         )}
                                     </div>
-                                    
+
                                     {/* 右侧内容 */}
                                     <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
                                         <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
@@ -168,7 +168,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
             {/* 精选文章 */}
             <section className="py-12 md:py-16 lg:py-24" style={{ backgroundColor: '#f8f1ee' }}>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -193,7 +193,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                     transition={{ delay: index * 0.1, duration: 0.6 }}
                                     className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
                                 >
-                                    <Link href={column ? `/blog/${column.channelKey}/${column.columnKey}/${post.slug}` : `/blog/${post.slug}`}>
+                                    <Link href={`/blog/${post.slug}`}>
                                         {/* 文章图片 */}
                                         <div className="aspect-video relative overflow-hidden">
                                             {post.coverImage ? (
@@ -207,7 +207,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                     <span className="text-gray-400 text-xs sm:text-sm">文章首图占位 (16:9)</span>
                                                 </div>
                                             )}
-                                            
+
                                             {/* 置顶和分类标签 */}
                                             <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex gap-1 sm:gap-2">
                                                 {post.pinned && (
@@ -222,7 +222,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                 )}
                                             </div>
                                         </div>
-                                        
+
                                         {/* 文章内容 */}
                                         <div className="p-4 sm:p-6">
                                             <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 line-clamp-2">
@@ -233,7 +233,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                     {post.excerpt}
                                                 </p>
                                             )}
-                                            
+
                                             <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
                                                 <span>{post.author || '阿松'}</span>
                                                 <time dateTime={post.date}>

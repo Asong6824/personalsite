@@ -46,8 +46,13 @@
 }
 
 @keyframes fp-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 自定义导航系统 */
@@ -127,6 +132,7 @@
     transform: scale(1);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.5);
     opacity: 0;
@@ -212,7 +218,7 @@
 }
 
 /* 确保子组件不会超出容器 */
-.section-content > * {
+.section-content>* {
   max-width: 100%;
   max-height: calc(100vh - 4rem);
   box-sizing: border-box;
@@ -237,12 +243,19 @@
 
 /* 优化的弹跳动画 */
 @keyframes fp-bounce {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0) translateZ(0);
   }
+
   40% {
     transform: translateY(-8px) translateZ(0);
   }
+
   60% {
     transform: translateY(-4px) translateZ(0);
   }
@@ -250,8 +263,13 @@
 
 /* 优化的旋转动画 */
 @keyframes fp-spin {
-  0% { transform: rotate(0deg) translateZ(0); }
-  100% { transform: rotate(360deg) translateZ(0); }
+  0% {
+    transform: rotate(0deg) translateZ(0);
+  }
+
+  100% {
+    transform: rotate(360deg) translateZ(0);
+  }
 }
 
 /* 滚动提示 */
@@ -283,12 +301,19 @@
 }
 
 @keyframes fp-bounce {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
+
   40% {
     transform: translateY(-10px);
   }
+
   60% {
     transform: translateY(-5px);
   }
@@ -331,16 +356,16 @@
   .fp-custom-nav {
     right: 1rem;
   }
-  
+
   .fp-nav-progress {
     height: 150px;
   }
-  
+
   .section-content {
     padding: 1.5rem 1rem;
   }
-  
-  .section-content > * {
+
+  .section-content>* {
     max-height: calc(100vh - 3rem);
   }
 }
@@ -349,30 +374,30 @@
   .fp-custom-nav {
     display: none;
   }
-  
+
   .fp-scroll-hint {
     bottom: 1rem;
   }
-  
+
   .fp-scroll-hint-text {
     font-size: 0.75rem;
   }
-  
+
   .section-content {
     padding: 1rem 0.75rem;
     min-height: 100vh;
   }
-  
-  .section-content > * {
+
+  .section-content>* {
     max-height: calc(100vh - 2rem);
   }
-  
+
   /* 移动端禁用fullpage时的样式 */
   .fp-responsive .fp-section {
     height: auto;
     min-height: 100vh;
   }
-  
+
   .fp-responsive .section-content {
     min-height: 100vh;
     max-height: none;
@@ -384,16 +409,16 @@
     width: 30px;
     height: 30px;
   }
-  
+
   .fp-loading-text {
     font-size: 0.875rem;
   }
-  
+
   .section-content {
     padding: 0.75rem 0.5rem;
   }
-  
-  .section-content > * {
+
+  .section-content>* {
     max-height: calc(100vh - 1.5rem);
   }
 }
@@ -411,12 +436,12 @@
     height: auto;
     overflow: visible;
   }
-  
+
   .fp-section {
     height: auto !important;
     min-height: 100vh;
   }
-  
+
   .section-content {
     min-height: 100vh;
     max-height: none;
@@ -430,11 +455,11 @@
     padding: 0.5rem;
     min-height: 100vh;
   }
-  
-  .section-content > * {
+
+  .section-content>* {
     max-height: calc(100vh - 1rem);
   }
-  
+
   .fp-scroll-hint {
     display: none;
   }
@@ -454,7 +479,7 @@
     transform: none;
     color: rgba(255, 255, 255, 0.6);
   }
-  
+
   .fp-scroll-hint {
     animation-duration: 1.5s;
   }
@@ -465,7 +490,7 @@
   .fp-nav-label {
     color: rgba(255, 255, 255, 0.6);
   }
-  
+
   .fp-nav-label.active {
     color: #10b981;
     background: rgba(16, 185, 129, 0.15);
@@ -474,6 +499,7 @@
 
 /* 减少动画效果（用户偏好） */
 @media (prefers-reduced-motion: reduce) {
+
   .fp-section-animated,
   .fp-section-leaving,
   .fp-section-entering,
@@ -486,11 +512,11 @@
     animation: none !important;
     transition: none !important;
   }
-  
+
   .fp-scroll-hint-arrow {
     animation: none !important;
   }
-  
+
   .fp-loading-spinner {
     animation: none !important;
     border: 3px solid #10b981;
@@ -537,15 +563,18 @@
 }
 
 /* VS Code 风格的代码高亮样式 */
+/* GitHub Light 风格的代码高亮样式 (适配 #EAE8E0 背景) */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #6a9955 !important;
+  color: #6a737d !important;
+  /* 灰色注释 */
 }
 
 .token.punctuation {
-  color: #d4d4d4 !important;
+  color: #24292e !important;
+  /* 深灰标点 */
 }
 
 .token.property,
@@ -555,7 +584,8 @@
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: #b5cea8 !important;
+  color: #005cc5 !important;
+  /* 蓝色常量/数值 */
 }
 
 .token.selector,
@@ -564,7 +594,8 @@
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #ce9178 !important;
+  color: #032f62 !important;
+  /* 深蓝字符串 */
 }
 
 .token.operator,
@@ -572,24 +603,28 @@
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: #d4d4d4 !important;
+  color: #d73a49 !important;
+  /* 红色运算符 */
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: #569cd6 !important;
+  color: #d73a49 !important;
+  /* 红色关键字 */
 }
 
 .token.function,
 .token.class-name {
-  color: #dcdcaa !important;
+  color: #6f42c1 !important;
+  /* 紫色函数/类名 */
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-  color: #d16969 !important;
+  color: #e36209 !important;
+  /* 橙色变量/正则 */
 }
 
 .token.important,
@@ -635,23 +670,30 @@
 
 @theme inline {
   --animate-aurora: aurora 60s linear infinite;
+
   @keyframes aurora {
     from {
       background-position:
-              50% 50%,
-              50% 50%;
+        50% 50%,
+        50% 50%;
     }
+
     to {
       background-position:
-              350% 50%,
-              350% 50%;
+        350% 50%,
+        350% 50%;
     }
   }
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-cursive: 'KaiTi', 'STKaiti', '楷体', 'SimKai', cursive;
+  --font-cursive: 'KaiTi',
+  'STKaiti',
+  '楷体',
+  'SimKai',
+  cursive;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -686,82 +728,131 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --animate-shiny-text: shiny-text 8s infinite;
+
   @keyframes shiny-text {
-  0%, 90%, 100% {
-    background-position: calc(-100% - var(--shiny-width)) 0;
+
+    0%,
+    90%,
+    100% {
+      background-position: calc(-100% - var(--shiny-width)) 0;
     }
-  30%, 60% {
-    background-position: calc(100% + var(--shiny-width)) 0;
+
+    30%,
+    60% {
+      background-position: calc(100% + var(--shiny-width)) 0;
     }
 
   }
+
   --animate-rainbow: rainbow var(--speed, 2s) infinite linear;
   --color-color-5: var(--color-5-new);
   --color-color-4: var(--color-4-new);
   --color-color-3: var(--color-3-new);
   --color-color-2: var(--color-2-new);
-  --color-color-1: var(--color-1-new)
-;
+  --color-color-1: var(--color-1-new);
+
   @keyframes rainbow {
-  0% {
-    background-position: 0%;}
-  100% {
-    background-position: 200%;}}}
+    0% {
+      background-position: 0%;
+    }
+
+    100% {
+      background-position: 200%;
+    }
+  }
+}
 
 :root {
-  --radius: 0.625rem; /* 半径保持不变或按需调整 */
+  --radius: 0.625rem;
+  /* 半径保持不变或按需调整 */
 
   /* 白、灰、天蓝主题 - 亮色模式 */
-  --background: oklch(0.985 0.003 230); /* 非常浅的冷灰色/近乎白色 */
-  --foreground: oklch(0.22 0.01 230);  /* 深冷灰色 (用于文本) */
+  --background: oklch(0.985 0.003 230);
+  /* 非常浅的冷灰色/近乎白色 */
+  --foreground: oklch(0.22 0.01 230);
+  /* 深冷灰色 (用于文本) */
 
-  --card: oklch(1 0 0);               /* 卡片背景 - 纯白 */
-  --card-foreground: oklch(0.22 0.01 230); /* 卡片文字 - 深冷灰色 */
+  --card: oklch(1 0 0);
+  /* 卡片背景 - 纯白 */
+  --card-foreground: oklch(0.22 0.01 230);
+  /* 卡片文字 - 深冷灰色 */
 
-  --popover: oklch(1 0 0);            /* 弹窗背景 - 纯白 */
-  --popover-foreground: oklch(0.22 0.01 230); /* 弹窗文字 - 深冷灰色 */
+  --popover: oklch(1 0 0);
+  /* 弹窗背景 - 纯白 */
+  --popover-foreground: oklch(0.22 0.01 230);
+  /* 弹窗文字 - 深冷灰色 */
 
-  --primary: oklch(0.68 0.15 225);      /* 主色 - 天蓝色 */
-  --primary-foreground: oklch(0.99 0 0);  /* 主色上的文字 - 白色 */
+  --primary: oklch(0.68 0.15 225);
+  /* 主色 - 天蓝色 */
+  --primary-foreground: oklch(0.99 0 0);
+  /* 主色上的文字 - 白色 */
 
-  --secondary: oklch(0.94 0.004 230);   /* 次要色背景 - 浅冷灰色 */
-  --secondary-foreground: oklch(0.35 0.01 230); /* 次要色文字 - 中深冷灰色 */
+  --secondary: oklch(0.94 0.004 230);
+  /* 次要色背景 - 浅冷灰色 */
+  --secondary-foreground: oklch(0.35 0.01 230);
+  /* 次要色文字 - 中深冷灰色 */
 
-  --muted: oklch(0.96 0.003 230);       /* 静默色背景 - 更浅的冷灰色 */
-  --muted-foreground: oklch(0.48 0.008 230); /* 静默色文字 - 中冷灰色 */
+  --muted: oklch(0.96 0.003 230);
+  /* 静默色背景 - 更浅的冷灰色 */
+  --muted-foreground: oklch(0.48 0.008 230);
+  /* 静默色文字 - 中冷灰色 */
 
-  --accent: oklch(0.72 0.14 230);       /* 强调色 - 略亮的天蓝色 */
-  --accent-foreground: oklch(0.99 0 0);   /* 强调色上的文字 - 白色 */
+  --accent: oklch(0.72 0.14 230);
+  /* 强调色 - 略亮的天蓝色 */
+  --accent-foreground: oklch(0.99 0 0);
+  /* 强调色上的文字 - 白色 */
 
-  --destructive: oklch(0.577 0.245 27.325); /* 破坏色 - 保持红色系或按需调整 */
+  --destructive: oklch(0.577 0.245 27.325);
+  /* 破坏色 - 保持红色系或按需调整 */
 
-  --border: oklch(0.90 0.005 230);      /* 边框 - 浅冷灰色 */
-  --input: oklch(0.95 0.004 230);       /* 输入框背景 - 非常浅的冷灰色 */
-  --ring: oklch(0.68 0.15 225 / 0.5);   /* 焦点环 - 半透明天蓝色 (基于 primary) */
+  --border: oklch(0.90 0.005 230);
+  /* 边框 - 浅冷灰色 */
+  --input: oklch(0.95 0.004 230);
+  /* 输入框背景 - 非常浅的冷灰色 */
+  --ring: oklch(0.68 0.15 225 / 0.5);
+  /* 焦点环 - 半透明天蓝色 (基于 primary) */
 
   /* 图表颜色 - 使用天蓝的各种色调和中性灰 */
-  --chart-1: oklch(0.68 0.15 225);     /* 天蓝 */
-  --chart-2: oklch(0.75 0.10 230);     /* 较浅的天蓝 */
-  --chart-3: oklch(0.55 0.02 230);     /* 深静默蓝灰色 */
-  --chart-4: oklch(0.82 0.08 220);     /* 非常浅的天蓝 */
-  --chart-5: oklch(0.60 0.05 235);     /* 中等蓝灰色 */
+  --chart-1: oklch(0.68 0.15 225);
+  /* 天蓝 */
+  --chart-2: oklch(0.75 0.10 230);
+  /* 较浅的天蓝 */
+  --chart-3: oklch(0.55 0.02 230);
+  /* 深静默蓝灰色 */
+  --chart-4: oklch(0.82 0.08 220);
+  /* 非常浅的天蓝 */
+  --chart-5: oklch(0.60 0.05 235);
+  /* 中等蓝灰色 */
 
   /* 侧边栏颜色 - 亮色模式 */
-  --sidebar: oklch(0.97 0.003 230);        /* 侧边栏背景 - 非常浅的冷灰色 */
-  --sidebar-foreground: oklch(0.25 0.01 230); /* 侧边栏文字 - 深冷灰色 */
-  --sidebar-primary: oklch(0.68 0.15 225);   /* 侧边栏主色 - 天蓝色 */
-  --sidebar-primary-foreground: oklch(0.99 0 0); /* 侧边栏主色上的文字 - 白色 */
-  --sidebar-accent: oklch(0.72 0.14 230);    /* 侧边栏强调色 - 略亮天蓝 */
-  --sidebar-accent-foreground: oklch(0.99 0 0);/* 侧边栏强调色上的文字 - 白色 */
-  --sidebar-border: oklch(0.90 0.005 230);   /* 侧边栏边框 - 浅冷灰色 */
-  --sidebar-ring: oklch(0.68 0.15 225 / 0.5);/* 侧边栏焦点环 - 半透明天蓝色 */
+  --sidebar: oklch(0.97 0.003 230);
+  /* 侧边栏背景 - 非常浅的冷灰色 */
+  --sidebar-foreground: oklch(0.25 0.01 230);
+  /* 侧边栏文字 - 深冷灰色 */
+  --sidebar-primary: oklch(0.68 0.15 225);
+  /* 侧边栏主色 - 天蓝色 */
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  /* 侧边栏主色上的文字 - 白色 */
+  --sidebar-accent: oklch(0.72 0.14 230);
+  /* 侧边栏强调色 - 略亮天蓝 */
+  --sidebar-accent-foreground: oklch(0.99 0 0);
+  /* 侧边栏强调色上的文字 - 白色 */
+  --sidebar-border: oklch(0.90 0.005 230);
+  /* 侧边栏边框 - 浅冷灰色 */
+  --sidebar-ring: oklch(0.68 0.15 225 / 0.5);
+  /* 侧边栏焦点环 - 半透明天蓝色 */
 
   /* 新的彩虹色，围绕天蓝主题 */
-  --color-1-new: oklch(0.68 0.15 225);  /* 主天蓝 */
-  --color-2-new: oklch(0.75 0.13 240);  /* 偏紫的天蓝 */
-  --color-3-new: oklch(0.72 0.16 210);  /* 偏青的天蓝 */
-  --color-4-new: oklch(0.82 0.10 230);  /* 更亮的天蓝 */
-  --color-5-new: oklch(0.60 0.18 220);  /* 更深的天蓝 */
+  --color-1-new: oklch(0.68 0.15 225);
+  /* 主天蓝 */
+  --color-2-new: oklch(0.75 0.13 240);
+  /* 偏紫的天蓝 */
+  --color-3-new: oklch(0.72 0.16 210);
+  /* 偏青的天蓝 */
+  --color-4-new: oklch(0.82 0.10 230);
+  /* 更亮的天蓝 */
+  --color-5-new: oklch(0.60 0.18 220);
+  /* 更深的天蓝 */
 }
 
 /* 行书字体样式 */
@@ -771,49 +862,80 @@
 
 .dark {
   /* 白、灰、天蓝主题 - 暗色模式 */
-  --background: oklch(0.12 0.008 230); /* 深邃的冷调暗灰色/近乎黑色 */
-  --foreground: oklch(0.94 0.004 230); /* 浅冷灰色 (用于文本) */
+  --background: oklch(0.12 0.008 230);
+  /* 深邃的冷调暗灰色/近乎黑色 */
+  --foreground: oklch(0.94 0.004 230);
+  /* 浅冷灰色 (用于文本) */
 
-  --card: oklch(0.17 0.01 230);       /* 卡片背景 - 比主背景稍亮的暗灰色 */
-  --card-foreground: oklch(0.94 0.004 230); /* 卡片文字 - 浅冷灰色 */
+  --card: oklch(0.17 0.01 230);
+  /* 卡片背景 - 比主背景稍亮的暗灰色 */
+  --card-foreground: oklch(0.94 0.004 230);
+  /* 卡片文字 - 浅冷灰色 */
 
-  --popover: oklch(0.17 0.01 230);    /* 弹窗背景 - 同卡片 */
-  --popover-foreground: oklch(0.94 0.004 230); /* 弹窗文字 - 浅冷灰色 */
+  --popover: oklch(0.17 0.01 230);
+  /* 弹窗背景 - 同卡片 */
+  --popover-foreground: oklch(0.94 0.004 230);
+  /* 弹窗文字 - 浅冷灰色 */
 
-  --primary: oklch(0.72 0.14 225);      /* 主色 - 亮眼的天蓝色 (比亮色模式下的 primary 更亮一点以便突出) */
-  --primary-foreground: oklch(0.1 0.01 230);  /* 主色上的文字 - 非常深的冷灰色 */
+  --primary: oklch(0.72 0.14 225);
+  /* 主色 - 亮眼的天蓝色 (比亮色模式下的 primary 更亮一点以便突出) */
+  --primary-foreground: oklch(0.1 0.01 230);
+  /* 主色上的文字 - 非常深的冷灰色 */
 
-  --secondary: oklch(0.22 0.01 230);   /* 次要色背景 - 中等暗灰色 */
-  --secondary-foreground: oklch(0.88 0.005 230); /* 次要色文字 - 较浅的冷灰色 */
+  --secondary: oklch(0.22 0.01 230);
+  /* 次要色背景 - 中等暗灰色 */
+  --secondary-foreground: oklch(0.88 0.005 230);
+  /* 次要色文字 - 较浅的冷灰色 */
 
-  --muted: oklch(0.25 0.01 230);       /* 静默色背景 - 略浅于次要色的暗灰色 */
-  --muted-foreground: oklch(0.65 0.008 230); /* 静默色文字 - 中等强度的冷灰色 */
+  --muted: oklch(0.25 0.01 230);
+  /* 静默色背景 - 略浅于次要色的暗灰色 */
+  --muted-foreground: oklch(0.65 0.008 230);
+  /* 静默色文字 - 中等强度的冷灰色 */
 
-  --accent: oklch(0.75 0.15 230);       /* 强调色 - 更亮的天蓝色 */
-  --accent-foreground: oklch(0.1 0.01 230);   /* 强调色上的文字 - 非常深的冷灰色 */
+  --accent: oklch(0.75 0.15 230);
+  /* 强调色 - 更亮的天蓝色 */
+  --accent-foreground: oklch(0.1 0.01 230);
+  /* 强调色上的文字 - 非常深的冷灰色 */
 
-  --destructive: oklch(0.704 0.191 22.216); /* 破坏色 - 保持红色系或按需调整 */
+  --destructive: oklch(0.704 0.191 22.216);
+  /* 破坏色 - 保持红色系或按需调整 */
 
-  --border: oklch(0.30 0.01 230);      /* 边框 - 在暗背景上可见的灰色 */
-  --input: oklch(0.28 0.01 230);       /* 输入框背景 - 略浅的暗灰色 */
-  --ring: oklch(0.72 0.14 225 / 0.5);   /* 焦点环 - 半透明亮天蓝色 (基于 primary) */
+  --border: oklch(0.30 0.01 230);
+  /* 边框 - 在暗背景上可见的灰色 */
+  --input: oklch(0.28 0.01 230);
+  /* 输入框背景 - 略浅的暗灰色 */
+  --ring: oklch(0.72 0.14 225 / 0.5);
+  /* 焦点环 - 半透明亮天蓝色 (基于 primary) */
 
   /* 图表颜色 - 暗色模式 */
-  --chart-1: oklch(0.72 0.14 225);     /* 亮天蓝 */
-  --chart-2: oklch(0.65 0.10 230);     /* 较暗但仍清晰的天蓝 */
-  --chart-3: oklch(0.80 0.08 220);     /* 更亮、略偏青的天蓝 */
-  --chart-4: oklch(0.45 0.05 235);     /* 深蓝灰色 */
-  --chart-5: oklch(0.55 0.07 240);     /* 中等蓝紫色调 */
+  --chart-1: oklch(0.72 0.14 225);
+  /* 亮天蓝 */
+  --chart-2: oklch(0.65 0.10 230);
+  /* 较暗但仍清晰的天蓝 */
+  --chart-3: oklch(0.80 0.08 220);
+  /* 更亮、略偏青的天蓝 */
+  --chart-4: oklch(0.45 0.05 235);
+  /* 深蓝灰色 */
+  --chart-5: oklch(0.55 0.07 240);
+  /* 中等蓝紫色调 */
 
   /* 侧边栏颜色 - 暗色模式 */
-  --sidebar: oklch(0.17 0.01 230);         /* 侧边栏背景 - 同卡片背景 */
-  --sidebar-foreground: oklch(0.94 0.004 230);  /* 侧边栏文字 - 浅冷灰色 */
-  --sidebar-primary: oklch(0.72 0.14 225);    /* 侧边栏主色 - 亮天蓝 */
-  --sidebar-primary-foreground: oklch(0.1 0.01 230);/* 侧边栏主色上的文字 - 非常深的冷灰色 */
-  --sidebar-accent: oklch(0.75 0.15 230);     /* 侧边栏强调色 - 更亮天蓝 */
-  --sidebar-accent-foreground: oklch(0.1 0.01 230); /* 侧边栏强调色上的文字 - 非常深的冷灰色 */
-  --sidebar-border: oklch(0.30 0.01 230);    /* 侧边栏边框 - 同全局边框 */
-  --sidebar-ring: oklch(0.72 0.14 225 / 0.5); /* 侧边栏焦点环 - 半透明亮天蓝色 */
+  --sidebar: oklch(0.17 0.01 230);
+  /* 侧边栏背景 - 同卡片背景 */
+  --sidebar-foreground: oklch(0.94 0.004 230);
+  /* 侧边栏文字 - 浅冷灰色 */
+  --sidebar-primary: oklch(0.72 0.14 225);
+  /* 侧边栏主色 - 亮天蓝 */
+  --sidebar-primary-foreground: oklch(0.1 0.01 230);
+  /* 侧边栏主色上的文字 - 非常深的冷灰色 */
+  --sidebar-accent: oklch(0.75 0.15 230);
+  /* 侧边栏强调色 - 更亮天蓝 */
+  --sidebar-accent-foreground: oklch(0.1 0.01 230);
+  /* 侧边栏强调色上的文字 - 非常深的冷灰色 */
+  --sidebar-border: oklch(0.30 0.01 230);
+  /* 侧边栏边框 - 同全局边框 */
+  --sidebar-ring: oklch(0.72 0.14 225 / 0.5);
+  /* 侧边栏焦点环 - 半透明亮天蓝色 */
 
   /* 新的彩虹色，在暗色模式下保持鲜明但不过于刺眼 */
   --color-1-new: oklch(0.68 0.15 225);
@@ -837,34 +959,113 @@
   --muji-map-unvisited: #CDC6BD;
 }
 
-.theme-muji #JP-01 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-02 { fill: var(--muji-map-visited); }
-.theme-muji #JP-03 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-04 { fill: var(--muji-map-visited); }
-.theme-muji #JP-05 { fill: var(--muji-map-visited); }
-.theme-muji #JP-09 { fill: var(--muji-map-visited); }
-.theme-muji #JP-10 { fill: var(--muji-map-visited); }
-.theme-muji #JP-12 { fill: var(--muji-map-visited); }
-.theme-muji #JP-13 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-14 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-16 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-17 { fill: var(--muji-map-visited); }
-.theme-muji #JP-19 { fill: var(--muji-map-visited); }
-.theme-muji #JP-21 { fill: var(--muji-map-visited); }
-.theme-muji #JP-22 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-23 { fill: var(--muji-map-visited); }
-.theme-muji #JP-25 { fill: var(--muji-map-lived); }
-.theme-muji #JP-26 { fill: var(--muji-map-visited); }
-.theme-muji #JP-27 { fill: var(--muji-map-lived); }
-.theme-muji #JP-28 { fill: var(--muji-map-visited); }
-.theme-muji #JP-29 { fill: var(--muji-map-visited); }
-.theme-muji #JP-30 { fill: var(--muji-map-visited); }
-.theme-muji #JP-31 { fill: var(--muji-map-visited); }
-.theme-muji #JP-33 { fill: var(--muji-map-visited); }
-.theme-muji #JP-37 { fill: var(--muji-map-stayed); }
-.theme-muji #JP-40 { fill: var(--muji-map-visited); }
+.theme-muji #JP-01 {
+  fill: var(--muji-map-stayed);
+}
 
-.theme-muji svg path[id^="JP-"] { fill: var(--muji-map-unvisited); }
+.theme-muji #JP-02 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-03 {
+  fill: var(--muji-map-stayed);
+}
+
+.theme-muji #JP-04 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-05 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-09 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-10 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-12 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-13 {
+  fill: var(--muji-map-stayed);
+}
+
+.theme-muji #JP-14 {
+  fill: var(--muji-map-stayed);
+}
+
+.theme-muji #JP-16 {
+  fill: var(--muji-map-stayed);
+}
+
+.theme-muji #JP-17 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-19 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-21 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-22 {
+  fill: var(--muji-map-stayed);
+}
+
+.theme-muji #JP-23 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-25 {
+  fill: var(--muji-map-lived);
+}
+
+.theme-muji #JP-26 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-27 {
+  fill: var(--muji-map-lived);
+}
+
+.theme-muji #JP-28 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-29 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-30 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-31 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-33 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji #JP-37 {
+  fill: var(--muji-map-stayed);
+}
+
+.theme-muji #JP-40 {
+  fill: var(--muji-map-visited);
+}
+
+.theme-muji svg path[id^="JP-"] {
+  fill: var(--muji-map-unvisited);
+}
 
 .muji-card {
   background-color: var(--muji-paper);
@@ -881,19 +1082,23 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     /* 防止过度滚动时显示白边 */
     overscroll-behavior: none;
   }
+
   body {
     @apply bg-background text-foreground;
     /* 防止过度滚动时显示白边 */
     overscroll-behavior: none;
   }
+
   /* 针对技术频道页面的特殊处理 */
   body:has([data-tech-page]) {
     background-color: #f8f1ee;
   }
+
   html:has([data-tech-page]) {
     background-color: #f8f1ee;
   }
@@ -901,7 +1106,8 @@
 
 .rehype-code-title {
   /* 自定义代码块标题的样式 */
-  background-color: #2a2d2a; /* 示例颜色 */
+  background-color: #2a2d2a;
+  /* 示例颜色 */
   color: #c5c8c6;
   padding: 0.5em 1em;
   border-top-left-radius: 0.3em;
@@ -910,9 +1116,11 @@
   font-family: monospace;
   border-bottom: 1px solid #1a1c1a;
 }
-.rehype-code-title + pre,
+
+.rehype-code-title+pre,
 pre.line-numbers {
-  margin-top: 0 !important; /* 确保标题和代码块之间没有多余间距 */
+  margin-top: 0 !important;
+  /* 确保标题和代码块之间没有多余间距 */
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
 }

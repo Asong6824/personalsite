@@ -71,7 +71,7 @@ export default function RecentPosts({ posts = [] }) {
                                 <MagicTweet
                                     tweet={mockEnrichedTweet} // MagicTweet 期望的 prop 名是 tweet
                                     className="min-h-[200px] cursor-pointer transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-sky-500/50" // 确保卡片有最小高度并可交互
-                                    // components prop 是 react-tweet 用的，这里可能不需要，除非 MagicTweet 内部也用
+                                // components prop 是 react-tweet 用的，这里可能不需要，除非 MagicTweet 内部也用
                                 />
                             </Link>
                         );
@@ -80,7 +80,7 @@ export default function RecentPosts({ posts = [] }) {
                 {posts.length > recentPosts.length && (
                     <div className="text-center mt-12">
                         <Link href="/blog"
-                              className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300">
+                            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300">
                             查看所有博文
                         </Link>
                     </div>

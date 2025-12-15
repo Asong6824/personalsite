@@ -1,5 +1,6 @@
 // src/app/layout.js
 import Navbar from '@/components/layout/Navbar'; // 确保路径正确
+import PerformanceMonitor from '@/components/debug/PerformanceMonitor';
 import './globals.css'; // 您的全局样式
 
 // 假设您有字体设置
@@ -14,10 +15,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="zh-CN">
-        <body className={`${inter.className} bg-background text-foreground`}>
-        <Navbar/>
-        <main>{children}</main>
-        </body>
+            <body className={`${inter.className} bg-background text-foreground`} suppressHydrationWarning>
+                <PerformanceMonitor />
+                <Navbar />
+                <main>{children}</main>
+            </body>
         </html>
     );
 }

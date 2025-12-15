@@ -1,40 +1,41 @@
 "use client";;
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { motion } from "motion/react";
 import DottedMap from "dotted-map";
 
 import { useTheme } from "next-themes";
+
+const projectPoint = (lat, lng) => {
+  const x = (lng + 180) * (800 / 360);
+  const y = (90 - lat) * (400 / 180);
+  return { x, y };
+};
+
+const createCurvedPath = (
+  start,
+  end
+) => {
+  const midX = (start.x + end.x) / 2;
+  const midY = Math.min(start.y, end.y) - 50;
+  return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
+};
 
 export default function WorldMap({
   dots = [],
   lineColor = "#0ea5e9"
 }) {
   const svgRef = useRef(null);
-  const map = new DottedMap({ height: 100, grid: "diagonal" });
-
   const { theme } = useTheme();
 
-  const svgMap = map.getSVG({
-    radius: 0.22,
-    color: theme === "dark" ? "#FFFFFF40" : "#00000040",
-    shape: "circle",
-    backgroundColor: theme === "dark" ? "black" : "white",
-  });
-
-  const projectPoint = (lat, lng) => {
-    const x = (lng + 180) * (800 / 360);
-    const y = (90 - lat) * (400 / 180);
-    return { x, y };
-  };
-
-  const createCurvedPath = (
-    start,
-    end
-  ) => {
-    const midX = (start.x + end.x) / 2;
-    const midY = Math.min(start.y, end.y) - 50;
-    return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
-  };
+  const svgMap = useMemo(() => {
+    const map = new DottedMap({ height: 100, grid: "diagonal" });
+    return map.getSVG({
+      radius: 0.22,
+      color: theme === "dark" ? "#FFFFFF40" : "#00000040",
+      shape: "circle",
+      backgroundColor: theme === "dark" ? "black" : "white",
+    });
+  }, [theme]);
 
   return (
     <div

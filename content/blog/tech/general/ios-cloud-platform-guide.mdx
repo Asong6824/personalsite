@@ -10,6 +10,8 @@ excerpt: "本文聚焦于云真机测试平台的 iOS 侧实现，详细解析 H
 coverImage: ""
 pinned: false
 ---
+
+
 ## 引言
 
 在云真机测试平台的开发过程中，各端的 Agent 实现通常是重中之重，其中 iOS 由于系统闭源、协议复杂、工具链变化快，整体实现成本和维护成本都显著更高。
@@ -75,90 +77,155 @@ WDA 启动后，会在手机上开启一个 HTTP 服务器，外部可以通过�
 ## 3. 设备接入与管理
 
 ### 原理层：iOS 设备是怎么连到 host 上的
+先不谈云真机，只看一个最日常的场景：
+把 iPhone 用数据线插到一台 Mac 上，然后：
 
-直觉感官上，我们用数据线连接设备到 PC 上后就可以查看设备信息、传输文件，但是实际上背后存在一系列服务支持这个功能
+- 在 Finder 里能看到这台 iPhone；
 
-连接时到的典型流程如下：
-1. iPhone 插入 Host；
-2. 操作系统识别到有新 USB 设备接入，`usbmuxd` 为其分配一个内部 Device ID；
-3. 上层应用（Xcode / Host Agent 等）通过 Unix socket（通常是 `/var/run/usbmuxd`）与 usbmuxd 通信：
-   - 获取当前已接入的设备列表；
-   - 请求“连接某个设备上的某个端口”，建立对应的 TCP 连接；
-4. 在这些连接之上，iOS 暴露出一系列服务协议，例如：
-   - `lockdown`：配对、设备信息获取；
-   - `installation_proxy`：安装 / 卸载 App；
-   - `instruments` / `dvt`：调试、性能、进程管理等。
+- 在 Xcode 里能看到它出现在 Devices 列表；
 
-tidevice、pymobiledevice3 这类库，本质上都是在这一整套协议上封装了一层 Python API，让我们可以用“调库”的方式完成设备发现、信息获取和后续操作。
+- 一些命令行工具（比如 ideviceinfo）能打印出 UDID、系统版本、设备名称等信息。
+
+这些操作背后，核心就是两块：usbmuxd 和 lockdown。
+
+usbmuxd：把 USB 变成“可以复用的网络管道”
+
+当你把 iPhone 插到 Mac 上时，大致会发生这些事：
+
+1. 操作系统识别到有一台新的 USB 设备接入；
+
+2. usbmuxd（USB Multiplexing Daemon）这个系统进程接手，给这台设备分配一个内部 ID；
+
+3. 各种上层程序（Finder、Xcode、命令行工具）并不会直接操作 USB 驱动，而是：
+  - 通过一个 Unix Domain Socket（通常是 /var/run/usbmuxd）连接到 usbmuxd；
+  - 让 usbmuxd 帮自己“连到这台设备上的某个端口”。
+
+可以把它理解成：
+usbmuxd 就是跑在本机上的“小型路由器”，专门负责把多路 TCP 连接复用到一根 USB 线上。
+
+lockdown：负责“配对”和“讲出自己是谁”
+
+有了 usbmuxd 打开的通道之后，还需要有一个在设备上的“服务”来回答问题，这个角色就是 lockdown。
+
+对 iPhone 来说，lockdown 是一个常驻服务，负责：
+
+设备配对（pairing）和信任关系管理；
+
+提供设备的基础信息（名称、系统版本、型号、序列号等）；
+
+告诉上层：“还有哪些服务可以用”（类似一个服务目录）。
+
+对 Mac 上的工具来说，典型流程是：
+
+1. 通过 usbmuxd 建立到 iPhone 上 lockdown 端口的连接；
+
+2. 通过 lockdown 完成配对（第一次插入时会弹出“是否信任此电脑”的对话框）；
+
+3. 配对成功后，发送请求获取各种设备信息。
+
+很多常用的工具，其实就是包了一层 lockdown 协议，例如：
+
+- Xcode 的设备列表；
+
+- Finder 里的设备信息面板；
+
+- 以及本文后面要讲到的 tidevice、pymobiledevice3。
+
+可以用一句话概括整个链路：
+
+iPhone ←→ USB 线 ←→ usbmuxd ←→（lockdown 协议）←→ 各种上层工具
+
+也正是因为这套机制存在，后面我们在 Host 侧才能“像普通工具那样”列出设备、读取信息，再在这个基础上去做更复杂的事情（装包、起 WDA、抓日志等）。
 
 
 ### tidevice 版本：我们以前是怎么做设备管理的
+在老版本里，Host 上的本地 Agent 主要通过 tidevice 做了三件事：
 
+1. **基于 usbmuxd 的设备枚举（设备发现）**
 
-在 iOS 16 之前，我们使用 tidevice 作为主要的设备通信底层，并在 Host 内部封装成 `DeviceProviderTidevice`，对上暴露统一的 `DeviceProvider` 接口。
+   - 管理设备的脚本每隔固定周期（例如 10 秒）调用：
 
-从功能上看，主要包括三块：
+     ```python
+     from tidevice import Usbmux
 
-- **设备发现**
-  - 通过 tidevice 列出当前所有 UDID；
-  - 周期性轮询，对比前后结果，识别新增 / 移除的设备；
-  - 为每台设备创建内部 `Device` 对象，交给上层管理。
+     mux = Usbmux()
+     devices = mux.device_list()
+     ```
 
-- **设备信息采集**
-  - 对每个 UDID，调用 tidevice 的 info 能力，获取：
-    - `UDID`
-    - `ProductType`（机型）
-    - `ProductVersion`（iOS 版本）
-    - 设备名称等；
-  - 映射成平台内部统一的设备结构，写入 Host 的设备表，用于后续调度与展示。
+   - 这行代码本质上就是去访问本机的 `/var/run/usbmuxd`，拿到当前所有通过 USB 接入的 iOS 设备列表。
+   - Agent 会把这个列表和自己维护的“已接入设备集合”做一次 diff：
+     - 新出现的 UDID → 认为是“新设备插入”，走接入流程；
+     - 消失的 UDID → 认为是“设备拔出或异常”，走清理流程。
 
-  简化示例（仅展示调用链，省略错误处理和初始化）：
+2. **基于 lockdown 的设备信息获取（识别设备是谁）**
 
-  ```python
-  from tidevice import Device
+   - 对于每一个新发现的 UDID，Agent 会用 tidevice 创建一个 `Device` 对象并读取其 `info` 字段：
 
-  device = Device(udid="00008120-00061C621409A01E")
-  info = device.info  # 包含 DeviceName, ProductVersion, ProductType 等
-  print(info)
-设备健康检查
+     ```python
+     from tidevice import Device
 
-Host 定期对每台设备发起轻量请求（例如再次读取 info 或访问某个服务）；
+     d = Device(udid="00008120-00061C621409A01E")
+     info = d.info  # 实际来自 lockdown 的 all values
+     name = info.get("DeviceName")
+     model = info.get("ProductType")
+     ios_version = info.get("ProductVersion")
+     ```
 
-结合超时 / 异常统计，更新设备状态：
+   - 这一步背后，其实就是通过 usbmuxd 建立到 lockdown 端口的连接，然后用 lockdown 协议请求“设备的完整信息”。
+   - 我们会把这些字段整理成自己的设备结构（UDID、名称、机型、系统版本、序列号等），一方面用于在平台上展示，另一方面也作为后续注册和调度的基础数据。
 
-Online / Idle / Busy / Error / Maintenance 等。
+3. **为每台设备建立本地“控制单元”（端口转发 + 设备主进程）**
 
-这一整套逻辑被封装在 DeviceProviderTidevice 中，上层代码只依赖 DeviceProvider 抽象，不直接感知 tidevice 的存在。
+   在拿到“有哪些设备”“它们是谁”之后，Agent 会为每台设备做两件关键的接入动作：
 
-在 iOS 16 之前，这套基于 tidevice 的接入方案整体运行比较平稳，也支撑了我们早期的云真机能力。
+   - **端口转发：让本机可以访问设备上的 WDA/MJPEG**
 
-* **设备健康检查**
-  * Host 定期对每台设备发起简单请求（例如读取 info / ping 某服务）；
-  * 结合超时 / 异常统计，更新设备状态：
-    * `Online / Idle / Busy / Error / Maintenance` 等。
+     - 从端口池（例如 `9200–9900`）里挑选一个空闲端口；
+     - 通过 tidevice 启动转发命令，把本地端口映射到设备上的 WDA/MJPEG 端口（通常是 9100）：
 
-这一整套逻辑被封装在 `DeviceProviderTidevice` 中，上层并不知道具体用了哪一个库。
+       ```bash
+       tidevice relay <free_port> 9100
+       ```
+
+     - 这样一来，后续无论是云控页面还是本地脚本，只要访问 `http://localhost:<free_port>`，就能打到这台设备上的 WDA/MJPEG 服务。
+
+   - **启动设备专属主进程：把所有操作“托管”出去**
+
+     - 在 `install/device_detection.py` 里，每当发现一台新设备，Agent 会为它启动一个独立的 Python 进程（`devicemain.mainFunc`），并通过队列拿到这个进程的 `PID`；
+     - 这个 `PID` 会同时写进 `pids/<udid>.pid` 文件和内存映射表，用来之后做健康检查和清理；
+     - 设备主进程启动后会完成：
+       - 向服务端注册设备信息、获取逻辑层面的 `uid`；
+       - 基于 `uid` 建立 WebSocket 长连接，持续接收指令；
+       - 把收到的指令分发给各类脚本（截图、点击、安装/卸载、录屏、性能采集等），脚本内部再通过 `facebook-wda` 和刚才的端口转发去操作设备。
+
 
 ### 3.3 iOS 17 之后的变化：为什么 tidevice 顶不住
 
-从 iOS 16 开始，Apple 对部分开发者服务和协议行为做了调整；到了 iOS 17，又在此基础上引入了更复杂的 CoreDevice / Remote Service Discovery (RSD) / 隧道等机制。
+从 iOS 17 开始，Apple 在 Xcode 15 里正式引入了新的 CoreDevice 栈，用它来统一 Mac ↔ iOS 设备的通信，替代之前那套“东拼西凑”的设备支持文件 + 旧协议组合。
+Stack Overflow
++1
 
-我们的原 tidevice 方案在面对 iOS17 及以上版本的设备时，无法安装 WDA、无法启动 WDA 的问题频发。
+几个关键点：
 
-对我们的直接影响是迟迟无法扩展云真机池，导致 iOS 设备短缺
-### 3.4 新方案：DeviceProviderPym（基于 pymobiledevice3）
+1. CoreDevice 接管了开发者相关服务
 
-为完成 iOS 17+ 的适配，我们引入了 `pymobiledevice3`，并实现新的 DeviceProvider：
+  - 之前很多服务是直接通过 lockdown + 固定 service name 暴露出来；
 
-* `DeviceProviderPym` 提供与 `DeviceProviderTidevice` 相同的接口集：
-  * `list_devices`, `get_device_info`, `check_device_health`, `install_app`, `launch_app`, `launch_wda` 等；
-* 内部全部改用 pymobiledevice3 的 API：
-  * 设备发现、信息获取：通过其 lockdown / CoreDevice / RSD 封装；
-  * 后续进程控制 / WDA 启动：使用 DVT / ProcessControl。
+  - iOS 17 开始，调试、挂 DDI、开发者工具这类功能，统一走 CoreDevice 这条栈。
 
-这样，上层模块（SessionManager / WdaManager）只需要在配置中指定“当前 DeviceProvider 类型”，即可在 tidevice 与 pymobiledevice3 之间灰度切换。
+2. 引入 Remote Service Discovery（RSD）+ 隧道机制
 
----
+  - 设备在 USB 之上“虚拟”了一层 RSD / 虚拟网卡 / QUIC 隧道，开发者工具要先连上这个隧道，再在隧道里发现和访问服务。
+
+3. 旧路径逐步收紧 / 变行为“只剩 lockdown”
+
+  - 社区里不少逆向项目都提到：iOS 17 上通过旧的 usbmuxd 接口，基本只剩 lockdown 还在“说话”，其他开发者相关服务流量几乎都不见了。
+
+而 tidevice 依然停留在“直接对接 usbmuxd + 旧服务”的时代，没有实现 CoreDevice / RSD / 隧道那一整套新机制。
+
+因此当我们利用 tidevice 管理 iOS17 及以上的新设备时，lockdown 还在，所以还能通过 tidevice 列出设备、拿到基本 info；但真正需要开发者能力的操作（起 WDA、装 DDI、跑测试）统统失败
+
+### pymobiledevice3 的实现
 
 ## 4. App 安装与启动（C2）
 
