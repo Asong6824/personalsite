@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -9,6 +9,7 @@ import flowFrag from "./shaders/flow.frag?raw";
 const FlowBackground = ({ uProgress }) => {
     const meshRef = useRef();
     const materialRef = useRef();
+    const [hasWebGL, setHasWebGL] = useState(true);
 
     const uniforms = useMemo(
         () => ({
@@ -22,12 +23,34 @@ const FlowBackground = ({ uProgress }) => {
         []
     );
 
+    useEffect(() => {
+        try {
+            const canvas = document.createElement("canvas");
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            setHasWebGL(!!gl);
+        } catch {
+            setHasWebGL(false);
+        }
+    }, []);
+
     useFrame((state) => {
         if (materialRef.current) {
             materialRef.current.uniforms.uProgress.value = uProgress;
             materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
         }
     });
+
+    if (!hasWebGL) {
+        return (
+            <div
+                className="absolute inset-0"
+                style={{
+                    background: "linear-gradient(135deg, #4A90D9 0%, #FF8C42 50%, #FFD93D 100%)",
+                    opacity: uProgress,
+                }}
+            />
+        );
+    }
 
     return (
         <mesh ref={meshRef} scale={[200, 200, 1]}>
