@@ -2,7 +2,14 @@
 "use client";
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import dynamic from "next/dynamic";
 import ColorWheelCanvas from "./HeroSection/ColorWheelCanvas";
+
+const FlowBackground = dynamic(() => import("./FlowBackground"), {
+    ssr: false,
+    loading: () => null,
+});
 
 const HeroSection = () => {
     const containerRef = useRef(null);
@@ -27,6 +34,9 @@ const HeroSection = () => {
     // Fade out after expansion
     const colorWheelOpacity = useTransform(scrollYProgress, [0.55, 0.65], [1, 0]);
 
+    // FlowBackground progress — starts when color wheel expands past 0.42
+    const flowProgress = useTransform(scrollYProgress, [0.42, 0.60], [0, 1]);
+
     // Phase 4: Chinese quote reveal - words float up from below with larger offset
     const quote1Opacity = useTransform(scrollYProgress, [0.48, 0.56], [0, 1]);
     const quote2Opacity = useTransform(scrollYProgress, [0.56, 0.64], [0, 1]);
@@ -46,6 +56,13 @@ const HeroSection = () => {
             <div className="sticky top-0 h-screen w-full overflow-hidden">
                 {/* White background */}
                 <div className="absolute inset-0 bg-white" />
+
+                {/* FlowBackground R3F Canvas */}
+                <div className="absolute inset-0 z-0">
+                    <Canvas gl={{ alpha: true, antialias: true }}>
+                        <FlowBackground uProgress={flowProgress} />
+                    </Canvas>
+                </div>
 
                 {/* Main content */}
                 <div className="absolute inset-0 flex items-center justify-center">
