@@ -51,12 +51,12 @@ const ColorWheelCanvas = ({
 
     return (
         <motion.div
+            scale={scale}
+            opacity={opacity}
             className={cn("relative", className)}
             style={{
                 width: size,
                 height: size,
-                scale: scale,
-                opacity: opacity,
             }}
         >
             <canvas
