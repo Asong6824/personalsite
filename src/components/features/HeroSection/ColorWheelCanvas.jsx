@@ -1,7 +1,6 @@
 "use client";
-import React, { useRef, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { useRef, useCallback } from "react";
+import { useMotionValueEvent } from "framer-motion";
 
 const COLORS = ["#4A90D9", "#FF8C42", "#FFD93D", "#FF6B9D"];
 const SEGMENTS = 4;
@@ -42,18 +41,16 @@ const ColorWheelCanvas = ({
         [size]
     );
 
-    useEffect(() => {
+    useMotionValueEvent(rotation, "change", (latestRotation) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
-        draw(ctx, rotation);
-    }, [draw, rotation]);
+        draw(ctx, latestRotation);
+    });
 
     return (
-        <motion.div
-            scale={scale}
-            opacity={opacity}
-            className={cn("relative", className)}
+        <div
+            className={className}
             style={{
                 width: size,
                 height: size,
@@ -65,9 +62,11 @@ const ColorWheelCanvas = ({
                     width: size,
                     height: size,
                     borderRadius: "50%",
+                    scale: scale,
+                    opacity: opacity,
                 }}
             />
-        </motion.div>
+        </div>
     );
 };
 
