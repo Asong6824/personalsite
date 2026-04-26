@@ -30,7 +30,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (can opt-in committing if needed)
 .env*
 
 # vercel
@@ -39,10 +39,27 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-BLOG_REDESIGN.md
-.gitignore
-MUSIC_PLAYER.md
 
+# IDE
+.idea/
 .trae
-.figma
-.idea.mcp.json
+
+# secrets
+.mcp.json
+
+# large / binary files
+*.zip
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# scratch / temp projects
+scratch_*/
+
+# auto-generated data
+src/data/posts/index.json
+src/data/stocks/
+
+# personal notion exports
+src/data/notion/*.csv
