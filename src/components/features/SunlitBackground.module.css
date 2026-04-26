@@ -1,0 +1,84 @@
+/* src/components/features/SunlitBackground.module.css */
+.container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  --shadow: var(--theme-primary, #1A1A1A);
+  z-index: 0; /* Placed at the very bottom, fixed to viewport */
+}
+
+.progressiveBlur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.progressiveBlur > div {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  inset: 0;
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
+  -webkit-mask-image: linear-gradient(252deg, transparent, transparent var(--stop1), black var(--stop2), black);
+}
+
+.progressiveBlur > div:nth-child(1) { --blur-amount: 3px; --stop1: 0%; --stop2: 0%; }
+.progressiveBlur > div:nth-child(2) { --blur-amount: 6px; --stop1: 40%; --stop2: 80%; }
+.progressiveBlur > div:nth-child(3) { --blur-amount: 24px; --stop1: 40%; --stop2: 70%; }
+.progressiveBlur > div:nth-child(4) { --blur-amount: 48px; --stop1: 70%; --stop2: 80%; }
+
+.perspective {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.08; /* Subdued shadow intensity */
+  mix-blend-mode: darken; 
+  transform-origin: center center;
+  transform-style: preserve-3d;
+}
+
+.shojiLattice {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  --wood-color: var(--shadow);
+  --thick: 4px; /* lattice frame thickness */
+  --pane-width: 10vw;
+  --pane-height: 25vh;
+  /* Drawing the mathematical intersection of horizontal and vertical grids */
+  background-image: 
+    repeating-linear-gradient(to right, transparent, transparent calc(var(--pane-width) - var(--thick)), var(--wood-color) calc(var(--pane-width) - var(--thick)), var(--wood-color) var(--pane-width)),
+    repeating-linear-gradient(to bottom, transparent, transparent calc(var(--pane-height) - var(--thick)), var(--wood-color) calc(var(--pane-height) - var(--thick)), var(--wood-color) var(--pane-height));
+  z-index: 2; /* Put lattice in front of leaves */
+}
+
+.leaves {
+  position: absolute;
+  inset: 0; 
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("/bamboo_leaves.png");
+  /* Reactivate the wind filter */
+  filter: url(#wind);
+  animation: billow 8s ease-in-out infinite;
+  z-index: 1; /* Behind lattice */
+}
+
+@keyframes billow {
+  0% { transform: scale(1) translate(0, 0); }
+  25% { transform: scale(1.005) translate(-1px, 1px); }
+  50% { transform: scale(0.995) translate(1px, -1px); }
+  75% { transform: scale(1.01) translate(1px, 1px); }
+  100% { transform: scale(1) translate(0, 0); }
+}

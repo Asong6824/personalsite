@@ -21,6 +21,25 @@
       }
     },
     {
+      "slug": "life/thoughts/2025-year-end-summary",
+      "rel": "life/thoughts/2025-year-end-summary.mdx",
+      "data": {
+        "title": "2025 年终总结",
+        "date": "2025-12-31",
+        "slug": "2025-year-end-summary",
+        "author": "阿松",
+        "tags": [
+          "总结",
+          "年度总结"
+        ],
+        "channel": "life",
+        "column": "thoughts",
+        "excerpt": "2025 年终总结",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Hokkaido/hakodate_hachimanzaka_cover.jpg",
+        "music": []
+      }
+    },
+    {
       "slug": "tech/design/typography-basics",
       "rel": "tech/design/typography-basics.mdx",
       "data": {
@@ -32,12 +51,34 @@
       }
     },
     {
+      "slug": "create/design/typography-basics",
+      "rel": "create/design/typography-basics.mdx",
+      "data": {
+        "title": "Typography排版基础",
+        "date": "2025-12-14",
+        "channel": "create",
+        "column": "design",
+        "summary": "了解Typography排版的基础知识，包括字体选择、层级结构、行高字间距等核心概念。"
+      }
+    },
+    {
       "slug": "tech/design/color-basics",
       "rel": "tech/design/color-basics.mdx",
       "data": {
         "title": "颜色基础知识",
         "date": "2025-12-10",
         "channel": "tech",
+        "column": "design",
+        "summary": "探索色彩的基础理论，包括色轮、色彩搭配和心理学效应。"
+      }
+    },
+    {
+      "slug": "create/design/color-basics",
+      "rel": "create/design/color-basics.mdx",
+      "data": {
+        "title": "颜色基础知识",
+        "date": "2025-12-10",
+        "channel": "create",
         "column": "design",
         "summary": "探索色彩的基础理论，包括色轮、色彩搭配和心理学效应。"
       }
@@ -69,6 +110,24 @@
         "title": "四大基本设计原则",
         "date": "2025-11-26",
         "channel": "tech",
+        "column": "design",
+        "tags": [
+          "设计",
+          "排版",
+          "亲密性",
+          "Design Principles"
+        ],
+        "excerpt": "为什么你的排版看起来乱糟糟？可能只是因为你没把该在一起的东西放在一起。本文带你深入了解设计四大原则之首：亲密性。",
+        "coverImage": "https://images.unsplash.com/photo-1517260739337-6799d239ce83?q=80&w=2070&auto=format&fit=crop"
+      }
+    },
+    {
+      "slug": "create/design/design-principles-basic",
+      "rel": "create/design/design-principles-basic.mdx",
+      "data": {
+        "title": "四大基本设计原则",
+        "date": "2025-11-26",
+        "channel": "create",
         "column": "design",
         "tags": [
           "设计",
@@ -205,6 +264,22 @@
       }
     },
     {
+      "slug": "create/product/figma-redefining-creation",
+      "rel": "create/product/figma-redefining-creation.mdx",
+      "data": {
+        "title": "Figma：重新定义创造",
+        "date": "2025-08-01",
+        "author": "阿松",
+        "tags": [
+          "产品"
+        ],
+        "channel": "create",
+        "column": "product",
+        "excerpt": "Figma 如何掀起一场创意革命",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/tech/figma/figma/figma_cover.avif"
+      }
+    },
+    {
       "slug": "notion-zen",
       "rel": "notion-zen.mdx",
       "data": {
@@ -216,6 +291,22 @@
           "产品"
         ],
         "channel": "tech",
+        "column": "product",
+        "excerpt": "参加2025ivs有感",
+        "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/life/notion-zen/notion.jpg"
+      }
+    },
+    {
+      "slug": "create/product/notion-zen",
+      "rel": "create/product/notion-zen.mdx",
+      "data": {
+        "title": "Notion 与禅与我",
+        "date": "2025-07-03",
+        "author": "阿松",
+        "tags": [
+          "产品"
+        ],
+        "channel": "create",
         "column": "product",
         "excerpt": "参加2025ivs有感",
         "coverImage": "https://blog-assets-asong.tos-cn-beijing.volces.com/life/notion-zen/notion.jpg"
@@ -356,6 +447,23 @@
       }
     },
     {
+      "slug": "finance/investment-methodology/value-investing-first-principles",
+      "rel": "finance/investment-methodology/value-investing-first-principles.mdx",
+      "data": {
+        "title": "投资、人类文明与个人发展",
+        "date": "2025-01-17",
+        "channel": "finance",
+        "column": "investment-methodology",
+        "tags": [
+          "投资",
+          "价值投资",
+          "第一性原理",
+          "方法论"
+        ],
+        "brief": "回归投资的本质"
+      }
+    },
+    {
       "slug": "life/japan/japan-hokuriku",
       "rel": "life/japan/japan-hokuriku.mdx",
       "data": {
@@ -377,5 +485,5 @@
       }
     }
   ],
-  "updatedAt": "2025-12-14T07:00:52.517Z"
+  "updatedAt": "2026-04-01T14:47:37.943Z"
 }

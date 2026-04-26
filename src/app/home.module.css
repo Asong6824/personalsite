@@ -1,0 +1,112 @@
+/* src/app/home.module.css */
+.scholarlyTheme {
+  /* Override global Tailwind variables within this scope */
+  --background: #F3EFE3;
+  --foreground: #1A1A1A;
+  
+  --primary: #1A1A1A;
+  --primary-foreground: #F3EFE3;
+  
+  --card: #DEDAC9;
+  --card-foreground: #1A1A1A;
+  
+  --secondary: #5F5E5E;
+  --secondary-foreground: #F3EFE3;
+  
+  --muted: #DEDAC9;
+  --muted-foreground: #5F5E5E;
+  
+  --accent: #DEDAC9;
+  --accent-foreground: #1A1A1A;
+  
+  --border: #DEDAC9;
+  --input: #DEDAC9;
+  --ring: #1A1A1A;
+  
+  --radius: 0px;
+
+  /* Custom Theme Tokens for easy access */
+  --theme-surface: #F3EFE3; /* Neutral */
+  --theme-surface-low: rgba(222, 218, 201, 0.4); /* Tertiary with opacity for subtle cards */
+  --theme-surface-high: #DEDAC9; /* Tertiary */
+  --theme-surface-highest: #DEDAC9; /* Tertiary */
+  
+  --theme-primary: #1A1A1A; /* Primary */
+  --theme-primary-dim: #5F5E5E; /* Secondary */
+  
+  --theme-ink: #1A1A1A; /* Primary */
+  
+  --theme-outline: #5F5E5E; /* Secondary */
+  --theme-outline-variant: #DEDAC9; /* Tertiary */
+
+  /* Base styling */
+  background-color: var(--theme-surface);
+  color: var(--theme-ink);
+  font-family: var(--font-inter), sans-serif;
+  min-height: 100vh;
+}
+
+/* Enforce the 0px architectural intent */
+.scholarlyTheme * {
+  border-radius: 0 !important;
+  box-shadow: none !important; /* No drop shadows */
+}
+
+/* Editorial Typography */
+.scholarlyTheme h1, 
+.scholarlyTheme h2, 
+.scholarlyTheme h3, 
+.scholarlyTheme h4, 
+.scholarlyTheme h5, 
+.scholarlyTheme h6,
+.scholarlyTheme .serifFont {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+.scholarlyTheme .displayHeadline {
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism utility for floating components */
+.scholarlyTheme .glassFloating {
+  background-color: rgba(255, 251, 255, 0.8) !important; /* surface at 80% */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Palette-only class for channel pages that want the color system without the global overrides */
+.scholarlyPalette {
+  --theme-surface: #F3EFE3;
+  --theme-surface-low: rgba(222, 218, 201, 0.4);
+  --theme-surface-high: #DEDAC9;
+  --theme-surface-highest: #DEDAC9;
+  --theme-primary: #1A1A1A;
+  --theme-primary-dim: #5F5E5E;
+  --theme-ink: #1A1A1A;
+  --theme-outline: #5F5E5E;
+  --theme-outline-variant: #DEDAC9;
+}
+
+/* Custom gradients & interactive textures */
+.scholarlyTheme .primaryButton {
+  background: linear-gradient(155deg, #5f5e5e, #535252) !important;
+  color: #faf7f6 !important;
+  border: none !important;
+}
+
+.scholarlyTheme .secondaryButton {
+  background: transparent !important;
+  border: 1px solid var(--theme-outline) !important;
+}
+
+.scholarlyTheme .inputField {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--theme-outline-variant) !important;
+  outline: none !important;
+  transition: border-color 0.2s ease;
+}
+
+.scholarlyTheme .inputField:focus {
+  border-bottom-color: var(--theme-primary) !important;
+}

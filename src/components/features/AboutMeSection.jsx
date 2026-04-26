@@ -7,6 +7,7 @@ import { Carousel, Card } from "@/components/ui/apple-cards-carousel"; // 确保
 import { scrollToSection } from '@/lib/scrollUtils';
 import { RainbowButton } from "@/components/magicui/rainbow-button"; // 确保路径正确
 import Image from "next/image";
+import { BookShelf } from "./BookShelf3D/BookShelf";
 
 // IdentityCardContent 子组件
 const IdentityCardContent = ({ title, description, targetId, imageUrl }) => {
@@ -166,21 +167,32 @@ export function AboutMeSection() {
     ));
 
     return (
-        // section 的背景会从 body 或父级继承，通常是 --background
-        // 如果需要特定背景，可以设置 bg-background 或 bg-secondary 等
-        <section id="about" className="py-16 md:py-24"> {/* 移除了内联的背景色，使其依赖全局样式 */}
-            <div className="container mx-auto px-4"> {/* 添加 container 和水平 padding */}
-                <h2
-                    // 使用全局定义的前景颜色
-                    className="max-w-7xl mx-auto text-3xl md:text-5xl font-bold text-foreground font-sans mb-10 md:mb-16 text-center"
-                >
-                    关于我
-                </h2>
-                {/* <ExperienceOverview /> */}
-                {/* Carousel 组件本身可能也需要一些样式调整以适应主题 */}
-                <Carousel items={cards} />
-            </div>
-        </section>
+        <>
+            <section id="about" className="py-16 md:py-24">
+                <div className="container mx-auto px-4">
+                    <h2
+                        className="max-w-7xl mx-auto text-3xl md:text-5xl font-bold text-foreground font-sans mb-10 md:mb-16 text-center"
+                    >
+                        关于我
+                    </h2>
+                    {/* <ExperienceOverview /> */}
+                    {/* Carousel 组件本身可能也需要一些样式调整以适应主题 */}
+                    <Carousel items={cards} />
+                </div>
+            </section>
+
+            <section id="bookshelf" className="w-full relative bg-[#f2f2f2] dark:bg-[#0c0c0c]">
+                <div className="absolute top-12 left-0 right-0 z-10 pointer-events-none">
+                    <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white font-sans text-center">
+                        书籍收藏
+                    </h2>
+                    <p className="text-center text-neutral-500 mt-2 max-w-2xl mx-auto">
+                        沉浸式的思考空间
+                    </p>
+                </div>
+                <BookShelf />
+            </section>
+        </>
     );
 }
 

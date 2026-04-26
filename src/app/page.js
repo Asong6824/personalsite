@@ -1,28 +1,37 @@
 // src/app/page.js
-import HeroSection from '@/components/features/HeroSection';
-import AboutMeSection from '@/components/features/AboutMeSection';
-import RecentPosts from "@/components/features/RecentPosts";
-import FootprintsSection from "@/components/features/FootprintsSection";
-import { getSortedPostsData } from "@/lib/post";
-import ActiveDaysSection from "@/components/features/ActiveDaysSection";
+"use client";
+import React, { useState } from 'react';
+import ScrollytellingSection from '@/components/features/Scrollytelling/ScrollytellingSection';
+import SunlitBackground from '@/components/features/SunlitBackground';
+import styles from './home.module.css';
 
 export default function HomePage() {
-    const allPosts = getSortedPostsData();
-    const recentPostsData = allPosts.slice(0, 3);
+    // Shared state between Scrollytelling format and Background Lighting
+    const [activeSection, setActiveSection] = useState('hero');
+
     return (
-        <>
-            <section id="hero"> {/* Hero Section */}
-                <HeroSection />
-            </section>
+        <div className={styles.scholarlyTheme}>
+            {/* Global Fixed Viewport Spanning Background */}
+            <SunlitBackground />
 
-            <AboutMeSection /> {/* 使用新的 AboutMeSection */}
+            {/* Content Layers (Need relative positioning to sit above fixed background) */}
+            <div className="relative z-10">
+                {/* Hero Content Wrapper */}
+                <section id="hero" className="min-h-screen w-full flex items-center justify-center border-b border-[var(--theme-outline-variant)]">
+                    <div className="flex flex-col items-center justify-center text-center">
+                        <h1 className="serifFont displayHeadline text-5xl md:text-7xl font-bold tracking-tight text-[var(--theme-ink)] mb-4 drop-shadow-sm">
+                            Ruochong Han
+                        </h1>
+                        <p className="font-mono text-sm tracking-widest text-[var(--theme-outline)] uppercase drop-shadow-sm">
+                            Digital Curator & Developer
+                        </p>
+                    </div>
+                </section>
 
-            {/* 身份详情区域 */}
-            <FootprintsSection />
-            <ActiveDaysSection />
-            <RecentPosts posts={recentPostsData} />
+                {/* Scrollytelling About Me Section */}
+                <ScrollytellingSection onPhaseChange={setActiveSection} />
 
-            {/* 其他区域 */}
-        </>
+            </div>
+        </div>
     );
 }

@@ -4,17 +4,14 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { getColumnByTags } from '@/lib/channels';
-import { PixelImage } from '@/components/magicui/pixel-image';
-import { TypingAnimation } from '@/components/magicui/typing-animation';
+import { BookShelf } from '@/components/features/BookShelf3D';
 import TravelSection from '@/components/features/TravelSection';
+import styles from '@/app/home.module.css';
 
 export default function LifeChannelLayout({ channelKey, channelConfig, posts }) {
-    const [showTitle, setShowTitle] = React.useState(false);
-    
     // 按专栏分组文章
     const postsByColumn = React.useMemo(() => {
         const grouped = {};
@@ -40,63 +37,48 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
     const featuredPosts = posts.slice(0, 6);
 
     return (
-        <div className="min-h-screen">
-            {/* Hero Section */}
-            <section className="relative h-screen flex items-center justify-center" style={{backgroundColor: '#F5F3F0'}}>
-                {/* 背景图片 - 像素化加载效果 */}
-                <div className="absolute inset-0">
-                    <PixelImage 
-                        src="https://blog-assets-asong.tos-cn-beijing.volces.com/life/cover/xifangsi.jpeg"
-                        grid="6x4"
-                        grayscaleAnimation={true}
-                        pixelFadeInDuration={1000}
-                        maxAnimationDelay={1200}
-                        colorRevealDelay={1500}
-                        className="w-full h-full"
-                        onAnimationComplete={() => setShowTitle(true)}
-                    />
-                </div>
-                
-                {/* 中心文字 */}
-                <div className="relative z-10 text-center px-4">
-                    {/* 主标题 */}
-                    {showTitle && (
-                        <TypingAnimation
-                            className="text-3xl md:text-5xl lg:text-6xl text-slate-200 font-light mb-6 drop-shadow-lg"
-                            style={{letterSpacing: '0.05em', textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}
-                            duration={150}
-                            delay={500}
-                        >
-                            阿松的生活杂记
-                        </TypingAnimation>
-                    )}
+        <div className={`min-h-screen ${styles.scholarlyPalette}`}>
+            {/* Hero Section — 复制首页 Hero 结构 */}
+            <section id="hero" className={`min-h-screen w-full flex items-center justify-center border-b border-[var(--theme-outline-variant)] ${styles.scholarlyTheme}`}>
+                <div className="flex flex-col items-center justify-center text-center">
+                    <h1 className="serifFont displayHeadline text-5xl md:text-7xl font-bold tracking-tight text-[var(--theme-ink)] mb-4 drop-shadow-sm">
+                        阿松的生活杂记
+                    </h1>
+                    <p className="font-mono text-sm tracking-widest text-[var(--theme-outline)] uppercase drop-shadow-sm">
+                        Life & Travel
+                    </p>
                 </div>
             </section>
 
             {/* 旅行记忆 */}
             <TravelSection />
 
+            {/* 3D Digital Bookshelf Section */}
+            <section className="relative w-full h-[100dvh]">
+                <BookShelf />
+            </section>
+
             {/* 精选专栏 */}
-            <section className="py-16 md:py-32" style={{backgroundColor: '#F5F3F0'}}>
+            <section className="py-16 md:py-32" style={{backgroundColor: 'var(--theme-surface)'}}>
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12 md:mb-20">
-                        <h2 className="text-2xl md:text-4xl font-light mb-4 md:mb-6" style={{color: '#8B7355', letterSpacing: '0.02em'}}>
+                        <h2 className="text-2xl md:text-4xl font-light mb-4 md:mb-6" style={{color: 'var(--theme-ink)', letterSpacing: '0.02em'}}>
                             精选专栏
                         </h2>
-                        <p className="text-base md:text-lg font-light max-w-2xl mx-auto px-4" style={{color: '#A0927D', letterSpacing: '0.01em'}}>
+                        <p className="text-base md:text-lg font-light max-w-2xl mx-auto px-4" style={{color: 'var(--theme-outline)', letterSpacing: '0.01em'}}>
                             深度探索生活的各个维度
                         </p>
-                        <div className="mt-8 w-12 h-px mx-auto" style={{backgroundColor: '#C8B99C', opacity: 0.6}}></div>
+                        <div className="mt-8 w-12 h-px mx-auto" style={{backgroundColor: 'var(--theme-outline-variant)', opacity: 0.6}}></div>
                     </div>
 
                     <div className="space-y-6">
-                        {Object.entries(postsByColumn).map(([columnKey, { config, posts: columnPosts }], index) => (
+                        {Object.entries(postsByColumn).map(([columnKey, { config, posts: columnPosts }]) => (
                             <div
                                 key={columnKey}
                                 className="overflow-hidden transition-all duration-300"
                                 style={{
-                                    backgroundColor: '#FEFCFA',
-                                    border: '1px solid #E5DDD5',
+                                    backgroundColor: 'var(--theme-surface-high)',
+                                    border: '1px solid var(--theme-outline-variant)',
                                     borderRadius: '2px'
                                 }}
                             >
@@ -121,15 +103,15 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                     
                                     {/* 右侧内容 */}
                                     <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
-                                        <h3 className="text-2xl font-light mb-4" style={{color: 'rgb(139, 90, 60)', letterSpacing: '0.02em'}}>
-                            {config.name}
-                        </h3>
-                                        <p className="font-light mb-6 line-clamp-3 leading-relaxed" style={{color: '#A0927D', letterSpacing: '0.01em'}}>
+                                        <h3 className="text-2xl font-light mb-4" style={{color: 'var(--theme-ink)', letterSpacing: '0.02em'}}>
+                                            {config.name}
+                                        </h3>
+                                        <p className="font-light mb-6 line-clamp-3 leading-relaxed" style={{color: 'var(--theme-outline)', letterSpacing: '0.01em'}}>
                                             {config.description}
                                         </p>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-light flex items-center" style={{color: '#B8A690'}}>
-                                                <span className="w-1 h-1 mr-2" style={{backgroundColor: '#C8B99C'}}></span>
+                                            <span className="text-sm font-light flex items-center" style={{color: 'var(--theme-outline)'}}>
+                                                <span className="w-1 h-1 mr-2" style={{backgroundColor: 'var(--theme-outline-variant)'}}></span>
                                                 {columnPosts.length} 篇文章
                                             </span>
                                             <Link
@@ -137,8 +119,8 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                                 className="inline-flex items-center px-6 py-3 font-light transition-all duration-300 min-h-[44px] min-w-[44px] justify-center"
                                                 style={{
                                                     fontFamily: 'serif',
-                                                    backgroundColor: '#8B7355',
-                                                    color: '#FEFCFA',
+                                                    backgroundColor: 'var(--theme-primary)',
+                                                    color: 'var(--theme-surface)',
                                                     letterSpacing: '0.01em'
                                                 }}
                                             >
@@ -154,28 +136,28 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
             </section>
 
             {/* 精选博文 */}
-            <section className="py-16 md:py-32" style={{backgroundColor: '#F9F7F4'}}>
+            <section className="py-16 md:py-32" style={{backgroundColor: 'var(--theme-surface)'}}>
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12 md:mb-20">
-                        <h2 className="text-2xl md:text-4xl font-light mb-4 md:mb-6" style={{color: '#8B7355', letterSpacing: '0.02em'}}>
+                        <h2 className="text-2xl md:text-4xl font-light mb-4 md:mb-6" style={{color: 'var(--theme-ink)', letterSpacing: '0.02em'}}>
                             精选博文
                         </h2>
-                        <p className="text-base md:text-lg font-light max-w-2xl mx-auto px-4" style={{color: '#A0927D', letterSpacing: '0.01em'}}>
+                        <p className="text-base md:text-lg font-light max-w-2xl mx-auto px-4" style={{color: 'var(--theme-outline)', letterSpacing: '0.01em'}}>
                             最新的生活感悟与旅行记录
                         </p>
-                        <div className="mt-8 w-12 h-px mx-auto" style={{backgroundColor: '#C8B99C', opacity: 0.6}}></div>
+                        <div className="mt-8 w-12 h-px mx-auto" style={{backgroundColor: 'var(--theme-outline-variant)', opacity: 0.6}}></div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {featuredPosts.map((post, index) => {
+                        {featuredPosts.map((post) => {
                             const column = getColumnByTags(post);
                             return (
                                 <article
                                     key={post.slug}
                                     className="overflow-hidden transition-all duration-300"
                                     style={{
-                                        backgroundColor: '#FEFCFA',
-                                        border: '1px solid #E5DDD5',
+                                        backgroundColor: 'var(--theme-surface-high)',
+                                        border: '1px solid var(--theme-outline-variant)',
                                         borderRadius: '2px'
                                     }}
                                 >
@@ -199,40 +181,40 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                                 <div className="flex items-center gap-3 mb-4">
                                                     {post.pinned && (
                                                         <span className="text-xs px-3 py-1 font-light" style={{
-                                                            backgroundColor: '#F0EBE5',
-                                                            color: '#8B7355',
-                                                            border: '1px solid #E5DDD5'
+                                                            backgroundColor: 'var(--theme-surface-low)',
+                                                            color: 'var(--theme-primary)',
+                                                            border: '1px solid var(--theme-outline-variant)'
                                                         }}>
                                                             置顶
                                                         </span>
                                                     )}
                                                     {column && (
                                                         <span className="text-xs px-3 py-1 font-light" style={{
-                                                            backgroundColor: '#F0EBE5',
-                                                            color: '#8B7355',
-                                                            border: '1px solid #E5DDD5'
+                                                            backgroundColor: 'var(--theme-surface-low)',
+                                                            color: 'var(--theme-primary)',
+                                                            border: '1px solid var(--theme-outline-variant)'
                                                         }}>
                                                             {postsByColumn[column.columnKey]?.config?.name}
                                                         </span>
                                                     )}
                                                 </div>
-                                                <h3 className="text-lg md:text-xl font-light mb-3 line-clamp-2" style={{color: '#8B7355', letterSpacing: '0.02em'}}>
+                                                <h3 className="text-lg md:text-xl font-light mb-3 line-clamp-2" style={{color: 'var(--theme-ink)', letterSpacing: '0.02em'}}>
                                                     {post.title}
                                                 </h3>
                                                 {post.excerpt && (
-                                                    <p className="text-sm md:text-base font-light line-clamp-3 mb-4 leading-relaxed" style={{color: '#A0927D', letterSpacing: '0.01em'}}>
+                                                    <p className="text-sm md:text-base font-light line-clamp-3 mb-4 leading-relaxed" style={{color: 'var(--theme-outline)', letterSpacing: '0.01em'}}>
                                                         {post.excerpt}
                                                     </p>
                                                 )}
                                             </div>
                                             
-                                            <div className="flex items-center justify-between text-xs md:text-sm font-light pt-4" style={{borderTop: '1px solid #F0EBE5', color: '#B8A690'}}>
+                                            <div className="flex items-center justify-between text-xs md:text-sm font-light pt-4" style={{borderTop: '1px solid var(--theme-outline-variant)', color: 'var(--theme-outline)'}}>
                                                 <span className="flex items-center">
-                                                    <span className="w-1 h-1 mr-2" style={{backgroundColor: '#C8B99C'}}></span>
+                                                    <span className="w-1 h-1 mr-2" style={{backgroundColor: 'var(--theme-outline-variant)'}}></span>
                                                     {post.author || '阿松'}
                                                 </span>
                                                 <time dateTime={post.date} className="flex items-center">
-                                                    <span className="w-1 h-1 mr-2" style={{backgroundColor: '#C8B99C'}}></span>
+                                                    <span className="w-1 h-1 mr-2" style={{backgroundColor: 'var(--theme-outline-variant)'}}></span>
                                                     {format(parseISO(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
                                                 </time>
                                             </div>

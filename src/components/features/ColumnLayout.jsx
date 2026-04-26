@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
+import { GlassCard } from '@/components/create/GlassCard';
 
 export default function ColumnLayout({ channelKey, channelConfig, columnKey, columnConfig, posts }) {
     // 检查频道类型
     const isTechChannel = channelKey === 'tech';
     const isLifeChannel = channelKey === 'life';
     const isFinanceChannel = channelKey === 'finance';
+    const isCreateChannel = channelKey === 'create';
 
     // 根据频道定义主题色
     const getChannelTheme = () => {
@@ -34,6 +36,12 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                     primaryHover: '#22c55e',
                     cardRadius: 'rounded-2xl',
                 };
+            case 'create':
+                return {
+                    primary: 'rgb(167, 139, 250)', // 浅紫色
+                    primaryHover: '#a78bfa',
+                    cardRadius: 'rounded-3xl',
+                };
             default:
                 return {
                     primary: 'rgb(139, 90, 60)',
@@ -50,7 +58,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
     return (
         <div
             className="min-h-screen"
-            style={isTechChannel ? { backgroundColor: '#f8f1ee' } : {}}
+            style={isTechChannel ? { backgroundColor: '#f8f1ee' } : isCreateChannel ? { backgroundColor: '#0a0a1a' } : {}}
             {...(isTechChannel && { 'data-tech-page': true })}
         >
             <div className="container mx-auto px-4 pt-24 pb-8 md:pt-28 md:pb-12">
@@ -102,66 +110,127 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                     className="group"
                                 >
                                     <Link href={`/blog/${channelKey}/${columnKey}/${post.slug}`}>
-                                        <div className={`bg-white/50 dark:bg-gray-800/50 ${theme.cardRadius} p-6 md:p-8 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:shadow-lg`}>
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div className="flex-1 min-w-0">
-                                                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white transition-colors mb-3 line-clamp-2 group-hover:text-primary">
-                                                        {post.title}
-                                                    </h2>
+                                        {isCreateChannel ? (
+                                            <GlassCard hover className="p-6 md:p-8">
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <div className="flex-1 min-w-0">
+                                                        <h2 className="text-xl md:text-2xl font-bold text-white transition-colors mb-3 line-clamp-2 group-hover:text-purple-300">
+                                                            {post.title}
+                                                        </h2>
 
-                                                    {post.excerpt && (
-                                                        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
-                                                            {post.excerpt}
-                                                        </p>
-                                                    )}
+                                                        {post.excerpt && (
+                                                            <p className="text-white/50 mb-4 line-clamp-3">
+                                                                {post.excerpt}
+                                                            </p>
+                                                        )}
 
-                                                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                                                        <span className="flex items-center gap-1">
-                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                            </svg>
-                                                            {post.date ? format(parseISO(post.date), 'yyyy年MM月dd日', { locale: zhCN }) : '未知日期'}
-                                                        </span>
-
-                                                        {post.author && (
+                                                        <div className="flex items-center gap-4 text-sm text-white/40">
                                                             <span className="flex items-center gap-1">
                                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                                 </svg>
-                                                                {post.author}
+                                                                {post.date ? format(parseISO(post.date), 'yyyy年MM月dd日', { locale: zhCN }) : '未知日期'}
                                                             </span>
-                                                        )}
-                                                    </div>
 
-                                                    {post.tags && post.tags.length > 0 && (
-                                                        <div className="flex flex-wrap gap-2 mt-4">
-                                                            {post.tags.slice(0, 4).map(tag => (
-                                                                <span key={tag} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-xs">
-                                                                    #{tag}
-                                                                </span>
-                                                            ))}
-                                                            {post.tags.length > 4 && (
-                                                                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded text-xs">
-                                                                    +{post.tags.length - 4}
+                                                            {post.author && (
+                                                                <span className="flex items-center gap-1">
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                                    </svg>
+                                                                    {post.author}
                                                                 </span>
                                                             )}
                                                         </div>
-                                                    )}
-                                                </div>
 
-                                                {/* 置顶标识和箭头 */}
-                                                <div className="flex flex-col items-end gap-2">
-                                                    {post.pinned && (
-                                                        <span className="inline-flex items-center px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium rounded">
-                                                            📌 置顶
-                                                        </span>
-                                                    )}
-                                                    <svg className="w-6 h-6 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
+                                                        {post.tags && post.tags.length > 0 && (
+                                                            <div className="flex flex-wrap gap-2 mt-4">
+                                                                {post.tags.slice(0, 4).map(tag => (
+                                                                    <span key={tag} className="px-2.5 py-1 bg-white/5 text-white/40 border border-white/10 rounded-full text-xs">
+                                                                        #{tag}
+                                                                    </span>
+                                                                ))}
+                                                                {post.tags.length > 4 && (
+                                                                    <span className="px-2.5 py-1 bg-white/5 text-white/30 border border-white/10 rounded-full text-xs">
+                                                                        +{post.tags.length - 4}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="flex flex-col items-end gap-2">
+                                                        {post.pinned && (
+                                                            <span className="inline-flex items-center px-2 py-1 bg-purple-500/10 text-purple-300 text-xs font-medium rounded-full border border-purple-500/20">
+                                                                置顶
+                                                            </span>
+                                                        )}
+                                                        <svg className="w-6 h-6 text-white/20 group-hover:text-purple-300/60 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </GlassCard>
+                                        ) : (
+                                            <div className={`bg-white/50 dark:bg-gray-800/50 ${theme.cardRadius} p-6 md:p-8 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:shadow-lg`}>
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <div className="flex-1 min-w-0">
+                                                        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white transition-colors mb-3 line-clamp-2 group-hover:text-primary">
+                                                            {post.title}
+                                                        </h2>
+
+                                                        {post.excerpt && (
+                                                            <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+                                                                {post.excerpt}
+                                                            </p>
+                                                        )}
+
+                                                        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                                                            <span className="flex items-center gap-1">
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                </svg>
+                                                                {post.date ? format(parseISO(post.date), 'yyyy年MM月dd日', { locale: zhCN }) : '未知日期'}
+                                                            </span>
+
+                                                            {post.author && (
+                                                                <span className="flex items-center gap-1">
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                                    </svg>
+                                                                    {post.author}
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        {post.tags && post.tags.length > 0 && (
+                                                            <div className="flex flex-wrap gap-2 mt-4">
+                                                                {post.tags.slice(0, 4).map(tag => (
+                                                                    <span key={tag} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-xs">
+                                                                        #{tag}
+                                                                    </span>
+                                                                ))}
+                                                                {post.tags.length > 4 && (
+                                                                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded text-xs">
+                                                                        +{post.tags.length - 4}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="flex flex-col items-end gap-2">
+                                                        {post.pinned && (
+                                                            <span className="inline-flex items-center px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium rounded">
+                                                                📌 置顶
+                                                            </span>
+                                                        )}
+                                                        <svg className="w-6 h-6 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </Link>
                                 </motion.article>
                             ))}

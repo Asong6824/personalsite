@@ -63,13 +63,22 @@ export default async function PostPage({ params }) {
     const isTechChannel = frontmatter.channel === 'tech';
 
     // 频道特定样式配置
+    const isCreateChannel = frontmatter.channel === 'create';
+
     const channelStyles = {
         tech: {
-            containerBg: 'bg-[#f8f1ee] dark:bg-[#1a1a1a]', // Tech频道背景色 (暗色模式需适配)
+            containerBg: 'bg-[#f8f1ee] dark:bg-[#1a1a1a]',
             prose: 'prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-[#a18072] dark:prose-a:text-[#c4a495] hover:prose-a:text-[#8b6b5d] dark:hover:prose-a:text-[#debbaf] prose-strong:text-[#FF7A45] dark:prose-strong:text-[#FF7A45] prose-blockquote:border-l-[#a18072] prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300',
             headerTitle: 'text-gray-900 dark:text-white',
             headerMeta: 'text-gray-500 dark:text-gray-400',
-            tagBg: 'bg-[#eaddd7] hover:bg-[#d8c5bc] text-[#5e4b42]', // Tech频道标签样式
+            tagBg: 'bg-[#eaddd7] hover:bg-[#d8c5bc] text-[#5e4b42]',
+        },
+        create: {
+            containerBg: 'bg-[#0a0a1a]',
+            prose: 'prose-headings:text-white prose-a:text-purple-300 hover:prose-a:text-purple-200 prose-strong:text-purple-200 prose-blockquote:border-l-purple-400/60 prose-blockquote:text-white/70',
+            headerTitle: 'text-white',
+            headerMeta: 'text-white/40',
+            tagBg: 'bg-white/5 hover:bg-white/10 text-white/60 border border-white/10',
         },
         default: {
             containerBg: 'bg-white dark:bg-neutral-950',
@@ -80,7 +89,7 @@ export default async function PostPage({ params }) {
         }
     };
 
-    const currentStyle = isTechChannel ? channelStyles.tech : channelStyles.default;
+    const currentStyle = isTechChannel ? channelStyles.tech : isCreateChannel ? channelStyles.create : channelStyles.default;
     const mdxComponents = {
         // 添加InlineExplanation组件
         InlineExplanation: InlineExplanation,

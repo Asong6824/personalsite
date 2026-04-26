@@ -72,6 +72,25 @@ export const CHANNELS_CONFIG = {
                 cover: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop'
             }
         }
+    },
+    create: {
+        name: '创造',
+        description: '逻辑与感性的液态交汇',
+        icon: '/placeholder-image.svg',
+        columns: {
+            design: {
+                name: '设计美学',
+                description: '像素、逻辑与美学的交汇',
+                tags: ['设计', 'design', '视觉', '美学', '交互'],
+                cover: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop'
+            },
+            product: {
+                name: '产品设计',
+                description: '产品设计与用户体验',
+                tags: ['产品', 'product', '设计', 'UX', 'UI'],
+                cover: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop'
+            }
+        }
     }
 };
 

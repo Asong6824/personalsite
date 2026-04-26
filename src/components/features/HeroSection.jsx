@@ -4,9 +4,13 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import dynamic from "next/dynamic";
-import ColorWheelCanvas from "./HeroSection/ColorWheelCanvas";
 
-const FlowBackground = dynamic(() => import("./FlowBackground"), {
+const GradientOrbCanvas = dynamic(() => import("./HeroSection/GradientOrbCanvas"), {
+    ssr: false,
+    loading: () => <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#eee" }} />,
+});
+
+const FlowBackground = dynamic(() => import("./HeroSection/FlowBackground"), {
     ssr: false,
     loading: () => null,
 });
@@ -60,7 +64,7 @@ const HeroSection = () => {
                 {/* FlowBackground R3F Canvas */}
                 <div className="absolute inset-0 z-0">
                     <Canvas gl={{ alpha: true, antialias: true }}>
-                        <FlowBackground uProgress={flowProgress} />
+                        <FlowBackground uProgress={flowProgress} scrollYProgress={scrollYProgress} />
                     </Canvas>
                 </div>
 
@@ -81,13 +85,18 @@ const HeroSection = () => {
                             As
                         </span>
 
-                        {/* Color wheel "o" */}
-                        <ColorWheelCanvas
-                            size={80}
-                            rotation={colorWheelRotation}
-                            scale={colorWheelTotalScale}
-                            opacity={colorWheelOpacity}
-                        />
+                        {/* Gradient Orb "o" */}
+                        <motion.div
+                            style={{
+                                width: 80,
+                                height: 80,
+                                rotate: colorWheelRotation,
+                                scale: colorWheelTotalScale,
+                                opacity: colorWheelOpacity,
+                            }}
+                        >
+                            <GradientOrbCanvas size={80} />
+                        </motion.div>
 
                         <span
                             className="text-7xl md:text-8xl lg:text-9xl font-bold text-gray-900 tracking-tight"
