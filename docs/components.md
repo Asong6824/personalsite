@@ -39,3 +39,58 @@
 ```js
 import { DualTimeline } from '@content/components/rag/DualTimeline';
 ```
+
+---
+
+## 文章可用组件速查
+
+以下组件在 `src/app/blog/[...slug]/page.jsx` 中已注册，可在任意 MDX 文章中直接使用。
+
+### 通用交互组件
+
+| 组件 | 用法示例 | 说明 |
+|------|---------|------|
+| `InlineExplanation` | `<InlineExplanation explanation="详细说明...">关键词</InlineExplanation>` | 点击关键词展开/收起行内解释块 |
+| `TableOfContents` | `<TableOfContents />` | 自动读取文章标题生成可点击目录，无 props |
+| `MusicPlayer` | `<MusicPlayer />` | 播放 frontmatter `music` 字段配置的音频；也可传 `playlist={[{title, artist, src}]}` |
+| `BeforeAfter` | `<BeforeAfter before={<div>A</div>} after={<div>B</div>} beforeLabel="之前" afterLabel="之后" />` | 左右对比布局，支持自定义标签 |
+| `Highlighter` | `<Highlighter color="#ffd1dc">文本</Highlighter>` | 基于 Rough Notation 的手绘高亮，支持 `action`（highlight/underline/circle/box）、`animationDuration`、`isView`（滚动触发） |
+| `Mermaid` | `<Mermaid chart="graph TD; A-->B;" />` | 渲染 Mermaid 图表，传 `chart` 字符串 |
+| `WidthToggle` | `<WidthToggle />` | 文章页宽屏/窄屏阅读切换按钮 |
+
+### 布局组件
+
+| 组件 | 用法示例 | 说明 |
+|------|---------|------|
+| `BentoGrid` | `<BentoGrid><BentoGridItem title="..." description="..." header={...} icon={...} /></BentoGrid>` | 三列网格布局，`BentoGridItem` 支持 `title`、`description`、`header`、`icon` |
+
+### 色彩工具（`content/components/color/`）
+
+| 组件 | 用法 | 说明 |
+|------|------|------|
+| `HSBSliders` | `<HSBSliders />` | 交互式 HSB 滑块，自包含状态 |
+| `ColorWheelSteps` | `<ColorWheelSteps />` | 步骤式色轮（Primary → Secondary → Tertiary） |
+| `RotatableColorWheel` | `<RotatableColorWheel />` | 可旋转的 12 色色轮 |
+
+### RAG 专用可视化（`content/components/rag/`）
+
+| 组件 | 用法 | 说明 |
+|------|------|------|
+| `DualTimeline` | `<DualTimeline />` | LLM 与 RAG 发展双时间线（固定内容） |
+| `RAGFlowDiagram` | `<RAGFlowDiagram />` | 索引 + 检索完整流程图（可交互） |
+| `SketchyRAGOverview` | `<SketchyRAGOverview />` | RAG 四大发展阶段概览图 |
+| `Word2VecVectorSpace` | `<Word2VecVectorSpace />` | Word2Vec 向量空间示意（King-Queen 示例） |
+| `InContextLearningChart` | `<InContextLearningChart />` | 上下文学习性能曲线图 |
+
+### 手绘风格组件库（`content/components/sketchy/`）
+
+见 [`docs/sketchy-components.md`](./sketchy-components.md) 完整指南。快速示例：
+
+```jsx
+<SketchySvg width={400} height={300}>
+  <SketchyRect x={50} y={50} width={100} height={80} fill="#fef9e9" />
+  <SketchyArrow x1={160} y1={90} x2={250} y2={90} />
+  <SketchyCircle cx={300} cy={90} diameter={60} fill="#ede9ce" />
+  <SketchyText x={280} y={95} text="Hello" fontSize={14} />
+</SketchySvg>
+```

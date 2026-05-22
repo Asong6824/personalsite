@@ -56,6 +56,7 @@ npm run lint     # 代码检查
 | 内容系统（MDX、Frontmatter、索引、频道） | `docs/content-system.md` |
 | 路由架构 | `docs/routing.md` |
 | 组件组织与 MDX 自定义组件 | `docs/components.md` |
+| 手绘风格组件库（Sketchy） | `docs/sketchy-components.md` |
 | 数据系统（股票、数据集、Notion） | `docs/data-system.md` |
 | 开发约定（风格、缓存、环境变量） | `docs/conventions.md` |
 | 架构反思与未来方向 | `docs/architecture-reflection.md` |
