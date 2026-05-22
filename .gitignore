@@ -64,3 +64,9 @@ src/data/stocks/
 # personal notion exports
 src/data/notion/*.csv
 Kimi_Agent_Asong圆球动画/
+
+# temp files / artifacts
+echo
+twitter-gif-*.gif
+临时素材/
+stitch_column_list_financial_investment/
