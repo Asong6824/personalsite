@@ -1,5 +1,7 @@
 // src/app/blog/finance/page.jsx
-import FinanceChannelClient from './FinanceChannelClient';
+import FinanceHomeClient from '@/components/finance/FinanceHomeClient';
+import { CHANNELS_CONFIG } from '@/lib/channels';
+import { getPostsByChannel, getPostsByColumn } from '@/lib/post';
 
 export const metadata = {
     title: '金融频道 | 阿松的个人网站',
@@ -7,11 +9,20 @@ export const metadata = {
 };
 
 export default function FinanceChannelPage() {
+    const channelConfig = CHANNELS_CONFIG['finance'];
+    const allPosts = getPostsByChannel('finance');
+
+    // 按专栏获取文章
+    const postsByColumn = {};
+    for (const columnKey of Object.keys(channelConfig.columns)) {
+        postsByColumn[columnKey] = getPostsByColumn('finance', columnKey);
+    }
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900">
-            <div className="container mx-auto px-4 py-12">
-                <FinanceChannelClient />
-            </div>
-        </div>
+        <FinanceHomeClient
+            channelConfig={channelConfig}
+            postsByColumn={postsByColumn}
+            allPosts={allPosts}
+        />
     );
 }

@@ -66,7 +66,7 @@ export default function JapanColumnLayout({ channelKey, channelConfig, columnKey
           {Array.isArray(posts) && posts.length > 0 ? (
             <div className="grid gap-6 max-w-4xl mx-auto">
               {posts.map((post) => (
-                <Link key={post.slug} href={`/blog/${channelKey}/${columnKey}/${post.slug}`} className="group">
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
                   <div className="p-6 md:p-8 muji-card transition-all duration-300 hover:shadow-lg">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">

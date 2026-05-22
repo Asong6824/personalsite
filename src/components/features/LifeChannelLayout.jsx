@@ -9,6 +9,7 @@ import { zhCN } from 'date-fns/locale';
 import { getColumnByTags } from '@/lib/channels';
 import { BookShelf } from '@/components/features/BookShelf3D';
 import TravelSection from '@/components/features/TravelSection';
+import SunlitBackground from '@/components/features/SunlitBackground';
 import styles from '@/app/home.module.css';
 
 export default function LifeChannelLayout({ channelKey, channelConfig, posts }) {
@@ -38,20 +39,25 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
 
     return (
         <div className={`min-h-screen ${styles.scholarlyPalette}`}>
-            {/* Hero Section — 复制首页 Hero 结构 */}
-            <section id="hero" className={`min-h-screen w-full flex items-center justify-center border-b border-[var(--theme-outline-variant)] ${styles.scholarlyTheme}`}>
-                <div className="flex flex-col items-center justify-center text-center">
-                    <h1 className="serifFont displayHeadline text-5xl md:text-7xl font-bold tracking-tight text-[var(--theme-ink)] mb-4 drop-shadow-sm">
-                        阿松的生活杂记
-                    </h1>
-                    <p className="font-mono text-sm tracking-widest text-[var(--theme-outline)] uppercase drop-shadow-sm">
-                        Life & Travel
-                    </p>
-                </div>
-            </section>
+            {/* Global Fixed Viewport Spanning Background */}
+            <SunlitBackground />
 
-            {/* 旅行记忆 */}
-            <TravelSection />
+            {/* Content Layers */}
+            <div className="relative z-10">
+                {/* Hero Section — 复制首页 Hero 结构 */}
+                <section id="hero" className={`min-h-screen w-full flex items-center justify-center border-b border-[var(--theme-outline-variant)] ${styles.scholarlyTheme}`}>
+                    <div className="flex flex-col items-center justify-center text-center">
+                        <h1 className="serifFont displayHeadline text-5xl md:text-7xl font-bold tracking-tight text-[var(--theme-ink)] mb-4 drop-shadow-sm">
+                            阿松的生活杂记
+                        </h1>
+                        <p className="font-mono text-sm tracking-widest text-[var(--theme-outline)] uppercase drop-shadow-sm">
+                            Life & Travel
+                        </p>
+                    </div>
+                </section>
+
+                {/* 旅行记忆 */}
+                <TravelSection />
 
             {/* 3D Digital Bookshelf Section */}
             <section className="relative w-full h-[100dvh]">
@@ -226,6 +232,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                     </div>
                 </div>
             </section>
+            </div>
         </div>
     );
 }

@@ -29,9 +29,22 @@ function buildIndexFromFS() {
     try {
       const raw = fs.readFileSync(fp, 'utf-8')
       const { data } = matter(raw)
-      // Fix: Use relative path as slug, keeping directory structure
-      // e.g. "life/japan.mdx" -> "life/japan"
-      const slug = rel.replace(/\.mdx?$/, '')
+      // Default slug from file path
+      const pathSlug = rel.replace(/\.mdx?$/, '')
+      // If frontmatter provides a slug, use it to override the filename portion
+      // while keeping the directory structure.
+      // e.g. content/blog/tech/general/post.mdx with slug: "custom" -> "tech/general/custom"
+      let slug = pathSlug
+      const fmSlug = data.slug?.trim()
+      if (fmSlug && fmSlug.length > 0) {
+        const dir = path.dirname(rel)
+        // Reject slugs that contain path separators or traversal attempts
+        if (/[\\/]/.test(fmSlug) || fmSlug.startsWith('.')) {
+          console.warn(`[PostIndex] Invalid slug "${fmSlug}" in ${rel}. Using filename instead.`)
+        } else {
+          slug = dir === '.' ? fmSlug : `${dir}/${fmSlug}`
+        }
+      }
       items.push({ slug, rel, data })
     } catch (e) {
       console.error(`[PostIndex] Error reading ${rel}:`, e)
@@ -97,14 +110,33 @@ export function getOrBuildPostsIndex() {
   // For now, let's just rebuild if the file count is different.
 
   const fsFiles = getMdFiles()
-  if (idx.items.length !== fsFiles.length) {
-    console.log('[PostIndex] File count changed, rebuilding index...')
+  const idxRels = new Set(idx.items.map(i => i.rel))
+  const fsFilesSet = new Set(fsFiles)
+  const setsMatch = fsFiles.length === idx.items.length &&
+    fsFiles.every(f => idxRels.has(f)) &&
+    idx.items.every(i => fsFilesSet.has(i.rel))
+  if (!setsMatch) {
+    console.log('[PostIndex] File set changed, rebuilding index...')
     return writePostsIndex(buildIndexFromFS())
   }
 
-  // Optional: If you really need to detect content changes in dev without restart,
-  // you could check the mtime of the *latest* modified file vs index.updatedAt.
-  // But let's keep it safe and fast for now.
+  // Dev: detect content/frontmatter changes via mtime
+  if (process.env.NODE_ENV !== 'production') {
+    try {
+      const idxTime = new Date(idx.updatedAt).getTime()
+      let latestMtime = 0
+      for (const rel of fsFiles) {
+        const stat = fs.statSync(path.join(POSTS_DIR, rel))
+        if (stat.mtimeMs > latestMtime) latestMtime = stat.mtimeMs
+      }
+      if (latestMtime > idxTime) {
+        console.log('[PostIndex] Content changed, rebuilding index...')
+        return writePostsIndex(buildIndexFromFS())
+      }
+    } catch {
+      return writePostsIndex(buildIndexFromFS())
+    }
+  }
 
   return idx
 }
@@ -119,7 +151,9 @@ export function findPostPathBySlug(slug) {
 
 export function listIndexedPosts() {
   const idx = getOrBuildPostsIndex()
-  return idx.items.map(i => ({ slug: i.slug, ...i.data }))
+  // Ensure the computed slug (which may be overridden by frontmatter) takes precedence
+  // over the raw frontmatter slug field.
+  return idx.items.map(i => ({ ...i.data, slug: i.slug }))
 }
 
 export function listIndexedSlugs() {

@@ -13,9 +13,26 @@ import { MusicPlayer, defaultPlaylist } from '@/components/ui/MusicPlayer'; // �
 import { Highlighter } from '@/components/magicui/highlighter';
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { BeforeAfter } from '@/components/ui/BeforeAfter'; // 导入BeforeAfter组件
-import { HSBSliders } from '@/components/mdx/HSBSliders';
-import { ColorWheelSteps } from '@/components/mdx/ColorWheelSteps';
-import { RotatableColorWheel } from '@/components/mdx/RotatableColorWheel';
+import { HSBSliders } from '@content/components/color/HSBSliders';
+import { ColorWheelSteps } from '@content/components/color/ColorWheelSteps';
+import { RotatableColorWheel } from '@content/components/color/RotatableColorWheel';
+import { WidthToggle } from '@/components/layout/WidthToggle';
+import { DualTimeline } from '@content/components/rag/DualTimeline';
+import { RAGFlowDiagram } from '@content/components/rag/RAGFlowDiagram';
+import { SketchyRAGOverview } from '@content/components/rag/SketchyRAGOverview';
+import { Word2VecVectorSpace } from '@content/components/rag/Word2VecVectorSpace';
+import { InContextLearningChart } from '@content/components/rag/InContextLearningChart';
+import {
+    SketchySvg,
+    SketchyLine,
+    SketchyArrow,
+    SketchyRect,
+    SketchyCircle,
+    SketchyEllipse,
+    SketchyPath,
+    SketchyDashedLine,
+    SketchyText,
+} from '@content/components/sketchy';
 
 // 导入 remark/rehype 插件 (用于 MDXRemote 的 options)
 import remarkGfm from 'remark-gfm'; // 支持 GitHub Flavored Markdown (表格、删除线等)
@@ -61,9 +78,8 @@ export default async function PostPage({ params }) {
 
     const { frontmatter, content } = postData;
     const isTechChannel = frontmatter.channel === 'tech';
-
-    // 频道特定样式配置
     const isCreateChannel = frontmatter.channel === 'create';
+    const isFinanceChannel = frontmatter.channel === 'finance';
 
     const channelStyles = {
         tech: {
@@ -80,6 +96,13 @@ export default async function PostPage({ params }) {
             headerMeta: 'text-white/40',
             tagBg: 'bg-white/5 hover:bg-white/10 text-white/60 border border-white/10',
         },
+        finance: {
+            containerBg: 'bg-[#fafaf5]',
+            prose: 'prose-headings:text-[#1a1c19] prose-a:text-[#506354] hover:prose-a:text-[#1a1c19] prose-strong:text-[#1a1c19] prose-blockquote:border-l-[#506354] prose-blockquote:text-[#444748] prose-p:text-[#444748]',
+            headerTitle: 'text-[#1a1c19]',
+            headerMeta: 'text-[#747878]',
+            tagBg: 'bg-[#f4f4ef] hover:bg-[#e3e3de] text-[#444748]',
+        },
         default: {
             containerBg: 'bg-white dark:bg-neutral-950',
             prose: 'prose-headings:text-neutral-800 dark:prose-headings:text-sky-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:text-blue-500 dark:hover:prose-a:text-blue-300 prose-strong:text-neutral-900 dark:prose-strong:text-neutral-100 prose-blockquote:border-l-sky-500 prose-blockquote:text-neutral-600 dark:prose-blockquote:text-neutral-300',
@@ -89,7 +112,7 @@ export default async function PostPage({ params }) {
         }
     };
 
-    const currentStyle = isTechChannel ? channelStyles.tech : isCreateChannel ? channelStyles.create : channelStyles.default;
+    const currentStyle = isTechChannel ? channelStyles.tech : isCreateChannel ? channelStyles.create : isFinanceChannel ? channelStyles.finance : channelStyles.default;
     const mdxComponents = {
         // 添加InlineExplanation组件
         InlineExplanation: InlineExplanation,
@@ -99,6 +122,20 @@ export default async function PostPage({ params }) {
         HSBSliders: HSBSliders,
         ColorWheelSteps: ColorWheelSteps,
         RotatableColorWheel: RotatableColorWheel,
+        DualTimeline: DualTimeline,
+        RAGFlowDiagram: RAGFlowDiagram,
+        SketchyRAGOverview: SketchyRAGOverview,
+        Word2VecVectorSpace: Word2VecVectorSpace,
+        InContextLearningChart: InContextLearningChart,
+        SketchySvg: SketchySvg,
+        SketchyLine: SketchyLine,
+        SketchyArrow: SketchyArrow,
+        SketchyRect: SketchyRect,
+        SketchyCircle: SketchyCircle,
+        SketchyEllipse: SketchyEllipse,
+        SketchyPath: SketchyPath,
+        SketchyDashedLine: SketchyDashedLine,
+        SketchyText: SketchyText,
         h2: ({ children, ...props }) => (
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props}>
                 {children}
@@ -124,20 +161,25 @@ export default async function PostPage({ params }) {
         ),
     };
 
+    const isRAGPost = slug.join('/') === 'tech/general/from-rag-technique-to-rag-philosophy';
+
     return (
         <div className={`min-h-screen ${currentStyle.containerBg}`}>
-            <div className="container mx-auto px-4 pb-8 pt-16 md:pb-12 md:pt-20">
-                <div className="max-w-7xl mx-auto">
-                    <div className="hidden xl:grid xl:grid-cols-[1fr_768px_1fr] xl:gap-8">
+            <div className="mx-auto px-4 pb-8 pt-16 md:pb-12 md:pt-20">
+                <div className="mx-auto article-container">
+                    <div className="hidden xl:grid xl:gap-8 transition-[grid-template-columns] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" style={{ gridTemplateColumns: 'minmax(0, 1fr) minmax(0, var(--article-width, 768px)) minmax(12rem, 1fr)' }}>
                         {/* 左侧空白区域 */}
                         <div></div>
 
                         {/* 文章内容 - 居中显示 */}
-                        <article className="max-w-3xl"> {/* 控制文章最大宽度以提高可读性 */}
+                        <article className="min-w-0 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"> {/* 宽度由 grid 列控制；min-w-0 防止内容撑开列 */}
                             <header className="mb-8 md:mb-12 text-left">
-                                <h1 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 leading-tight break-words ${currentStyle.headerTitle}`}>
-                                    {frontmatter.title}
-                                </h1>
+                                <div className="flex items-start justify-between gap-4">
+                                    <h1 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 leading-tight break-words ${currentStyle.headerTitle}`}>
+                                        {frontmatter.title}
+                                    </h1>
+                                    <WidthToggle className="shrink-0 mt-1" />
+                                </div>
                                 <div className={`text-sm space-x-2 ${currentStyle.headerMeta}`}>
                                     <span>作者：{frontmatter.author || '佚名'}</span>
                                     <span>·</span>
@@ -148,17 +190,22 @@ export default async function PostPage({ params }) {
                                 {frontmatter.tags && frontmatter.tags.length > 0 && (
                                     <div className="mt-4 flex flex-wrap justify-start items-center gap-2">
                                         {frontmatter.tags.map(tag => (
-                                            <Link
-                                                href={`/blog/tag/${tag}`} // 假设您未来会有标签页
+                                            <span
                                                 key={tag}
-                                                className={`text-xs px-2.5 py-1 rounded-full transition-colors ${currentStyle.tagBg}`}
+                                                className={`text-xs px-2.5 py-1 rounded-full cursor-default ${currentStyle.tagBg}`}
                                             >
                                                 #{tag}
-                                            </Link>
+                                            </span>
                                         ))}
                                     </div>
                                 )}
                             </header>
+
+                            {isRAGPost && (
+                                <div className="not-prose mb-8 md:mb-12">
+                                    <SketchyRAGOverview />
+                                </div>
+                            )}
 
                             {frontmatter.coverImage && (
                                 <div
@@ -221,7 +268,7 @@ export default async function PostPage({ params }) {
                             </div>
 
                             <div className="mt-12 pt-8 border-t border-neutral-700 text-center">
-                                <Link href="/blog" className="text-blue-400 hover:text-blue-300 font-medium">
+                                <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-[#506354] hover:text-[#1a1c19]' : 'text-blue-400 hover:text-blue-300'}`}>
                                     &larr; 返回博客列表
                                 </Link>
                             </div>
@@ -253,12 +300,15 @@ export default async function PostPage({ params }) {
                     </div>
 
                     {/* 小屏幕时的布局 */}
-                    <article className="xl:hidden max-w-3xl mx-auto">
+                    <article className="xl:hidden mx-auto transition-[max-width] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" style={{ maxWidth: 'var(--article-width, 48rem)' }}>
                         <header className="mb-8 md:mb-12 text-center">
-                            <h1 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 leading-tight break-words ${currentStyle.headerTitle}`}>
-                                {frontmatter.title}
-                            </h1>
-                            <div className={`text-sm space-x-2 ${currentStyle.headerMeta}`}>
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <h1 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold mb-0 leading-tight break-words ${currentStyle.headerTitle}`}>
+                                    {frontmatter.title}
+                                </h1>
+                                <WidthToggle className="shrink-0" />
+                            </div>
+                            <div className={`text-sm space-x-2 mt-4 ${currentStyle.headerMeta}`}>
                                 <span>作者：{frontmatter.author || '佚名'}</span>
                                 <span>·</span>
                                 <span>
@@ -268,17 +318,22 @@ export default async function PostPage({ params }) {
                             {frontmatter.tags && frontmatter.tags.length > 0 && (
                                 <div className="mt-4 flex flex-wrap justify-center items-center gap-2">
                                     {frontmatter.tags.map(tag => (
-                                        <Link
-                                            href={`/blog/tag/${tag}`} // 假设您未来会有标签页
+                                        <span
                                             key={tag}
-                                            className={`text-xs px-2.5 py-1 rounded-full transition-colors ${currentStyle.tagBg}`}
+                                            className={`text-xs px-2.5 py-1 rounded-full cursor-default ${currentStyle.tagBg}`}
                                         >
                                             #{tag}
-                                        </Link>
+                                        </span>
                                     ))}
                                 </div>
                             )}
                         </header>
+
+                        {isRAGPost && (
+                            <div className="not-prose -mx-4 mb-8 md:mb-12">
+                                <SketchyRAGOverview />
+                            </div>
+                        )}
 
                         {frontmatter.coverImage && (
                             <div
@@ -341,7 +396,7 @@ export default async function PostPage({ params }) {
                         </div>
 
                         <div className="mt-12 pt-8 border-t border-neutral-700 text-center">
-                            <Link href="/blog" className="text-blue-400 hover:text-blue-300 font-medium">
+                            <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-[#506354] hover:text-[#1a1c19]' : 'text-blue-400 hover:text-blue-300'}`}>
                                 &larr; 返回博客列表
                             </Link>
                         </div>

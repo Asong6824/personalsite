@@ -109,7 +109,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                     transition={{ delay: index * 0.1, duration: 0.6 }}
                                     className="group"
                                 >
-                                    <Link href={`/blog/${channelKey}/${columnKey}/${post.slug}`}>
+                                    <Link href={`/blog/${post.slug}`}>
                                         {isCreateChannel ? (
                                             <GlassCard hover className="p-6 md:p-8">
                                                 <div className="flex items-start justify-between gap-4">

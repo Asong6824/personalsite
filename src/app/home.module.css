@@ -1,43 +1,43 @@
 /* src/app/home.module.css */
 .scholarlyTheme {
   /* Override global Tailwind variables within this scope */
-  --background: #F3EFE3;
-  --foreground: #1A1A1A;
-  
-  --primary: #1A1A1A;
-  --primary-foreground: #F3EFE3;
-  
-  --card: #DEDAC9;
-  --card-foreground: #1A1A1A;
-  
-  --secondary: #5F5E5E;
-  --secondary-foreground: #F3EFE3;
-  
-  --muted: #DEDAC9;
-  --muted-foreground: #5F5E5E;
-  
-  --accent: #DEDAC9;
-  --accent-foreground: #1A1A1A;
-  
-  --border: #DEDAC9;
-  --input: #DEDAC9;
-  --ring: #1A1A1A;
-  
-  --radius: 0px;
+  --background: #EBE3D5;
+  --foreground: #3D3A36;
+
+  --primary: #0077A3;
+  --primary-foreground: #F7F3EC;
+
+  --card: #EBE3D5;
+  --card-foreground: #3D3A36;
+
+  --secondary: #A9A6A0;
+  --secondary-foreground: #3D3A36;
+
+  --muted: #D4C8B4;
+  --muted-foreground: #85827C;
+
+  --accent: #D4C8B4;
+  --accent-foreground: #3D3A36;
+
+  --border: #D4C8B4;
+  --input: #D4C8B4;
+  --ring: #00A9E0;
+
+  --radius: 0.5rem;
 
   /* Custom Theme Tokens for easy access */
-  --theme-surface: #F3EFE3; /* Neutral */
-  --theme-surface-low: rgba(222, 218, 201, 0.4); /* Tertiary with opacity for subtle cards */
-  --theme-surface-high: #DEDAC9; /* Tertiary */
-  --theme-surface-highest: #DEDAC9; /* Tertiary */
-  
-  --theme-primary: #1A1A1A; /* Primary */
-  --theme-primary-dim: #5F5E5E; /* Secondary */
-  
-  --theme-ink: #1A1A1A; /* Primary */
-  
-  --theme-outline: #5F5E5E; /* Secondary */
-  --theme-outline-variant: #DEDAC9; /* Tertiary */
+  --theme-surface: #EBE3D5; /* Blond Wood */
+  --theme-surface-low: rgba(212, 200, 180, 0.4); /* Tertiary with opacity for subtle cards */
+  --theme-surface-high: #D4C8B4; /* Darker wood */
+  --theme-surface-highest: #D4C8B4; /* Darker wood */
+
+  --theme-primary: #0077A3; /* Deep Blue Bottle Blue */
+  --theme-primary-dim: #00A9E0; /* Blue Bottle Blue */
+
+  --theme-ink: #3D3A36; /* Fog Grey */
+
+  --theme-outline: #85827C; /* Neutral 500 */
+  --theme-outline-variant: #D4C8B4; /* Darker wood */
 
   /* Base styling */
   background-color: var(--theme-surface);
@@ -46,18 +46,16 @@
   min-height: 100vh;
 }
 
-/* Enforce the 0px architectural intent */
-.scholarlyTheme * {
-  border-radius: 0 !important;
-  box-shadow: none !important; /* No drop shadows */
-}
+/* NOTE: Removed global border-radius: 0 !important and box-shadow: none !important
+   to allow HeroOrbSection animations (orb border-radius, card shadows).
+   Specific components can enforce their own radius/shadow preferences. */
 
 /* Editorial Typography */
-.scholarlyTheme h1, 
-.scholarlyTheme h2, 
-.scholarlyTheme h3, 
-.scholarlyTheme h4, 
-.scholarlyTheme h5, 
+.scholarlyTheme h1,
+.scholarlyTheme h2,
+.scholarlyTheme h3,
+.scholarlyTheme h4,
+.scholarlyTheme h5,
 .scholarlyTheme h6,
 .scholarlyTheme .serifFont {
   font-family: var(--font-newsreader), serif !important;
@@ -69,28 +67,28 @@
 
 /* Glassmorphism utility for floating components */
 .scholarlyTheme .glassFloating {
-  background-color: rgba(255, 251, 255, 0.8) !important; /* surface at 80% */
+  background-color: rgba(247, 243, 236, 0.8) !important; /* surface at 80% */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
 /* Palette-only class for channel pages that want the color system without the global overrides */
 .scholarlyPalette {
-  --theme-surface: #F3EFE3;
-  --theme-surface-low: rgba(222, 218, 201, 0.4);
-  --theme-surface-high: #DEDAC9;
-  --theme-surface-highest: #DEDAC9;
-  --theme-primary: #1A1A1A;
-  --theme-primary-dim: #5F5E5E;
-  --theme-ink: #1A1A1A;
-  --theme-outline: #5F5E5E;
-  --theme-outline-variant: #DEDAC9;
+  --theme-surface: #EBE3D5;
+  --theme-surface-low: rgba(212, 200, 180, 0.4);
+  --theme-surface-high: #D4C8B4;
+  --theme-surface-highest: #D4C8B4;
+  --theme-primary: #0077A3;
+  --theme-primary-dim: #00A9E0;
+  --theme-ink: #3D3A36;
+  --theme-outline: #85827C;
+  --theme-outline-variant: #D4C8B4;
 }
 
 /* Custom gradients & interactive textures */
 .scholarlyTheme .primaryButton {
-  background: linear-gradient(155deg, #5f5e5e, #535252) !important;
-  color: #faf7f6 !important;
+  background: linear-gradient(155deg, #0077A3, #005f82) !important;
+  color: #F7F3EC !important;
   border: none !important;
 }
 

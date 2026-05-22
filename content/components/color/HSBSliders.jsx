@@ -137,7 +137,7 @@ export const HSBSliders = () => {
     const onBriChange = React.useCallback((v) => updateHsb('b', v), [updateHsb]);
 
     const hexColor = (() => {
-        // HSL to hex for display purpose (using CSS variable hack or just displaying HSB is fine, 
+        // HSL to hex for display purpose (using CSS variable hack or just displaying HSB is fine,
         // but users might want to see how to use it)
         // For simplicity, we just show HSB values, but a color block is nice.
         return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
@@ -155,7 +155,7 @@ export const HSBSliders = () => {
                     unit="°"
                     value={hsb.h}
                     onChange={onHueChange}
-                    description={<><span className="font-semibold">颜色的“身份证”</span>。它决定了是红色、蓝色还是绿色。</>}
+                    description={<><span className="font-semibold">颜色的"身份证"</span>。它决定了是红色、蓝色还是绿色。</>}
                     gradient="linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)"
                 />
 
@@ -166,7 +166,7 @@ export const HSBSliders = () => {
                     unit="%"
                     value={hsb.s}
                     onChange={onSatChange}
-                    description={<><span className="font-semibold">颜色的“浓度”</span>。饱和度越低越接近灰色，越高越鲜艳。</>}
+                    description={<><span className="font-semibold">颜色的"浓度"</span>。饱和度越低越接近灰色，越高越鲜艳。</>}
                     gradient={`linear-gradient(to right, #808080, hsl(${hsb.h}, 100%, 50%))`} // Simplified visualization
                 />
 
@@ -177,7 +177,7 @@ export const HSBSliders = () => {
                     unit="%"
                     value={hsb.b}
                     onChange={onBriChange}
-                    description={<><span className="font-semibold">光照的“强弱”</span>。0% 是纯黑，100% 是最充足的光照。</>}
+                    description={<><span className="font-semibold">光照的"强弱"</span>。0% 是纯黑，100% 是最充足的光照。</>}
                     gradient={`linear-gradient(to right, #000000, hsl(${hsb.h}, ${hsb.s}%, 50%))`}
                 />
             </div>

@@ -3,7 +3,7 @@ import { getPostsByColumn } from '@/lib/post';
 import { generateColumnStaticParams, generateColumnMetadata, validateChannelColumn } from '@/lib/route-utils';
 import { generateColumnStructuredData } from '@/lib/seo-utils';
 import { CHANNELS_CONFIG } from '@/lib/channels';
-import ColumnLayout from '@/components/features/ColumnLayout';
+import FinanceColumnLayout from '@/components/finance/FinanceColumnLayout';
 import StructuredData from '@/components/StructuredData';
 import { notFound } from 'next/navigation';
 
@@ -38,12 +38,11 @@ export default async function FinanceColumnPage({ params }) {
     return (
         <>
             <StructuredData data={structuredData} id="finance-column-structured-data" />
-            <ColumnLayout
-                channelKey={CHANNEL_KEY}
+            <FinanceColumnLayout
                 channelConfig={channelConfig}
-                columnKey={columnSlug}
                 columnConfig={columnConfig}
                 posts={posts}
+                columnKey={columnSlug}
             />
         </>
     );

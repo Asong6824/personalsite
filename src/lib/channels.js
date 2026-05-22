@@ -1,7 +1,7 @@
 // src/lib/channels.js
 // 频道和专栏配置
 
-import { validateConfigInDevelopment } from './config-validator';
+import { validateConfigInDevelopment } from './config-validator.js';
 
 export const CHANNELS_CONFIG = {
     tech: {

@@ -21,7 +21,11 @@ function _getSortedPostsData() {
  * 获取所有博文的元数据，并按日期降序排序（带缓存）。
  * @returns {Array<Object>} 博文元数据数组，每个对象包含 slug 和 frontmatter 中的所有数据。
  */
-export const getSortedPostsData = withCache(_getSortedPostsData, 'sorted-posts-data', 10 * 60 * 1000); // 10分钟缓存
+const isDev = process.env.NODE_ENV === 'development';
+
+export const getSortedPostsData = isDev
+    ? _getSortedPostsData
+    : withCache(_getSortedPostsData, 'sorted-posts-data', 10 * 60 * 1000); // 10分钟缓存
 
 /**
  * 获取所有博文的 slug 列表。
@@ -77,7 +81,9 @@ function _getPostData(slug) {
  * @param {string} slug - 博文的 slug (不含文件扩展名)。
  * @returns {Promise<Object|null>} 包含 slug, frontmatter 和 content 的对象，如果找不到则返回 null。
  */
-export const getPostData = withCache(_getPostData, 'post-data', 15 * 60 * 1000);
+export const getPostData = isDev
+    ? _getPostData
+    : withCache(_getPostData, 'post-data', 15 * 60 * 1000);
 
 function _getPostSummary(slug) {
     const idx = getOrBuildPostsIndex();
@@ -86,7 +92,9 @@ function _getPostSummary(slug) {
     return { slug: hit.slug, ...hit.data };
 }
 
-export const getPostSummary = withCache(_getPostSummary, 'post-summary', 10 * 60 * 1000);
+export const getPostSummary = isDev
+    ? _getPostSummary
+    : withCache(_getPostSummary, 'post-summary', 10 * 60 * 1000);
 
 /**
  * 根据频道获取文章（原始函数，不缓存）
@@ -108,7 +116,9 @@ function _getPostsByChannel(channelKey) {
  * @param {string} channelKey - 频道key
  * @returns {Array} 文章数组
  */
-export const getPostsByChannel = withCache(_getPostsByChannel, 'posts-by-channel', 8 * 60 * 1000); // 8分钟缓存
+export const getPostsByChannel = isDev
+    ? _getPostsByChannel
+    : withCache(_getPostsByChannel, 'posts-by-channel', 8 * 60 * 1000); // 8分钟缓存
 
 /**
  * 根据专栏获取文章（原始函数，不缓存）
@@ -132,7 +142,9 @@ function _getPostsByColumn(channelKey, columnKey) {
  * @param {string} columnKey - 专栏key
  * @returns {Array} 文章数组
  */
-export const getPostsByColumn = withCache(_getPostsByColumn, 'posts-by-column', 8 * 60 * 1000); // 8分钟缓存
+export const getPostsByColumn = isDev
+    ? _getPostsByColumn
+    : withCache(_getPostsByColumn, 'posts-by-column', 8 * 60 * 1000); // 8分钟缓存
 
 export function getAllUniqueTags() {
     const allPosts = getSortedPostsData();

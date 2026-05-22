@@ -83,26 +83,27 @@ const Navbar = () => {
     // 检查是否在技术详情页或生活频道页
     const isTechPage = pathname?.startsWith('/blog/tech') || pathname?.startsWith('/blog/technology');
     const isLifePage = pathname?.startsWith('/blog/life');
+    const isFinancePage = pathname?.startsWith('/blog/finance');
     
     const navBackgroundClass = isScrolled || isMobileMenuOpen
-        ? (isTechPage ? "backdrop-blur-md shadow-lg" : "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg") // 技术页面使用特殊背景
-        : (isTechPage ? "" : "bg-transparent");
+        ? (isTechPage ? "backdrop-blur-md shadow-lg" : isFinancePage ? "backdrop-blur-md shadow-sm" : "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg")
+        : (isTechPage || isFinancePage ? "" : "bg-transparent");
 
     const textClassBase = "transition-colors duration-200 cursor-pointer";
     const textScrolledClass = isScrolled || isMobileMenuOpen
-        ? (isTechPage ? "text-foreground" : isLifePage ? "text-white hover:text-white/80" : "text-foreground hover:text-primary")
-        : (isTechPage ? "text-foreground" : isLifePage ? "text-white hover:text-white/80" : "text-foreground hover:text-primary"); // 生活页面使用白色文字
+        ? (isTechPage ? "text-foreground" : isLifePage ? "text-white hover:text-white/80" : isFinancePage ? "text-[#1a1c19] hover:text-[#506354]" : "text-foreground hover:text-primary")
+        : (isTechPage ? "text-foreground" : isLifePage ? "text-white hover:text-white/80" : isFinancePage ? "text-[#1a1c19] hover:text-[#506354]" : "text-foreground hover:text-primary");
 
     const navLinkHoverBgClass = isScrolled || isMobileMenuOpen 
-        ? (isTechPage ? "" : isLifePage ? "hover:bg-white/10" : "hover:bg-muted/50") 
-        : (isTechPage ? "" : isLifePage ? "hover:bg-white/10" : "hover:bg-accent/10 dark:hover:bg-accent/20");
+        ? (isTechPage ? "" : isLifePage ? "hover:bg-white/10" : isFinancePage ? "hover:bg-[#f4f4ef]" : "hover:bg-muted/50") 
+        : (isTechPage ? "" : isLifePage ? "hover:bg-white/10" : isFinancePage ? "hover:bg-[#f4f4ef]/60" : "hover:bg-accent/10 dark:hover:bg-accent/20");
 
-    const mobileMenuBgClass = "bg-card/95 dark:bg-card/95 backdrop-blur-md"; // 移动菜单背景
+    const mobileMenuBgClass = isFinancePage ? "bg-[#fafaf5]/95 backdrop-blur-md" : "bg-card/95 dark:bg-card/95 backdrop-blur-md";
 
     return (
         <nav 
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBackgroundClass}`}
-            style={isTechPage ? { backgroundColor: '#f8f1ee' } : {}}
+            style={isTechPage ? { backgroundColor: '#f8f1ee' } : isFinancePage ? { backgroundColor: '#fafaf5' } : {}}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
@@ -110,7 +111,7 @@ const Navbar = () => {
                         <Link
                             href="/" // Logo 指向主页根路径
                             onClick={handleLogoClick}
-                            className={`text-2xl font-bold ${textClassBase} ${textScrolledClass.replace('hover:text-primary', 'hover:text-primary/80')}`} // Logo 悬停效果可以略微不同
+                            className={`text-2xl font-bold ${textClassBase} ${textScrolledClass.replace('hover:text-primary', 'hover:text-primary/80').replace('hover:text-[#506354]', 'hover:text-[#506354]/80')}`}
                         >
                             阿松
                         </Link>
