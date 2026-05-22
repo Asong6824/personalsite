@@ -18,6 +18,23 @@
 
 ---
 
+## 字体系统
+
+站点使用分层字体栈，兼顾中西文排版：
+
+| 层级 | 字体 | 用途 |
+|------|------|------|
+| 英文无衬线 | `Inter` | 正文、UI 标签 |
+| 英文衬线 | `Newsreader` | 大标题、Display 文字 |
+| 英文等宽 | `JetBrains Mono` | 代码块、数据展示 |
+| 中文衬线 | `Noto Serif SC` | 中文标题、正文 |
+| 中文手写 | `LXGW WenKai`（霞鹜文楷） | 装饰性中文手写体 |
+| 手绘图表 | `Excalifont` / `Virgil` | Sketchy 组件库专用 |
+
+字体在 `src/app/globals.css` 中通过 `@import` 引入 Google Fonts 和 CDN 分包字体。
+
+---
+
 ## 图片与媒体
 
 `next.config.mjs` 中配置了以下远程图片域名白名单：

@@ -23,6 +23,15 @@ npm run dev
 
 打开 [http://localhost:3000](http://localhost:3000) 查看站点。
 
+## 首页
+
+首页是一个 **GSAP ScrollTrigger** 驱动的滚动体验页面（`src/components/features/HomeScrollExperience`）：
+
+- **Hero 区域**：逐字动画标语 + 3D Orb 视觉效果
+- **四频道 Scrollytelling**：滚动时左侧展示技术/创造/生活/金融四个频道的介绍，右侧切换对应的视觉组件
+
+> 旧版的首页区块组件（`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection` 等）已迁移至各自频道页使用。
+
 ## 目录说明
 
 ```

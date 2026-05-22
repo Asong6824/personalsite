@@ -55,6 +55,7 @@ npm run lint     # 代码检查
 |------|------|
 | 内容系统（MDX、Frontmatter、索引、频道） | `docs/content-system.md` |
 | 路由架构 | `docs/routing.md` |
+| 首页滚动体验 | `docs/homepage-experience.md` |
 | 组件组织与 MDX 自定义组件 | `docs/components.md` |
 | 手绘风格组件库（Sketchy） | `docs/sketchy-components.md` |
 | 数据系统（股票、数据集、Notion） | `docs/data-system.md` |
@@ -70,10 +71,15 @@ npm run lint     # 代码检查
 | `src/lib/channels.js` | 频道/专栏定义 |
 | `src/lib/post-index.js` | 文章索引构建 |
 | `src/lib/post.js` | 文章数据读取 |
-| `src/app/blog/[...slug]/page.jsx` | 文章详情页 |
+| `src/lib/seo-utils.js` | SEO 结构化数据生成 |
+| `src/lib/route-utils.js` | 专栏静态参数与路由校验 |
+| `src/lib/scrollUtils.js` | 平滑滚动工具 |
+| `src/lib/config-validator.js` | 频道配置校验（开发环境） |
+| `src/lib/api/datasets.js` | 前端数据集查询封装 |
+| `src/app/blog/[...slug]/page.jsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
 | `src/app/blog/page.jsx` | 博客主页 |
 | `scripts/build-posts-index.mjs` | 索引构建脚本 |
-| `src/app/globals.css` | 全局样式 |
+| `src/app/globals.css` | 全局样式与字体导入 |
 | `next.config.mjs` | Next.js 配置 |
 
 ---

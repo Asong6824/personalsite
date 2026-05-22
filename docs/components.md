@@ -39,8 +39,10 @@
 | `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar`、`WidthToggle` |
-| `src/components/debug/` | 调试辅助 | `PerformanceMonitor` |
+| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.js`） |
 | `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
+
+> **关于旧版首页组件**：`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版区块式首页，现随首页重构为 `HomeScrollExperience` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
 | `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*` |
 
 ---
