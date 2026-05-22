@@ -1,12 +1,47 @@
 # 组件组织
 
+## 新增组件该放哪？（决策树）
+
+```
+1. 给文章用的交互/可视化？
+   ├─ 2+ 篇文章复用 ──────→ content/components/{topic}/
+   └─ 仅一篇用 ───────────→ content/blog/{slug}/components/
+      （注：动态加载机制暂未实现，目前暂放 content/components/{topic}/）
+
+2. 给页面级区块用的？
+   ├─ 首页/频道页/专栏页 ─→ src/components/features/
+   ├─ 金融频道专属 ───────→ src/components/finance/
+   └─ 创作频道专属 ───────→ src/components/create/
+
+3. 全局 UI 原语？
+   ├─ 通用交互/展示组件 ──→ src/components/ui/
+   ├─ 布局（Navbar 等）────→ src/components/layout/
+   ├─ 特效/装饰性 ────────→ src/components/magicui/
+   └─ 调试辅助 ───────────→ src/components/debug/
+
+4. SEO / 结构化数据？
+   └─ 根级单文件 ─────────→ src/components/StructuredData.jsx
+```
+
+**核心原则**：
+- **文章组件**与站点 UI 原语**生命周期不同**。文章归档时，其组件应一并消失。`content/` 与 `src/components/` 的物理边界使这一关系显性化。
+- **页面组件**（features/）与站点共存，随页面加载而加载，不随内容归档而消失。
+
+---
+
 ## 目录职责
 
-- **`src/components/features/`**：页面级区块，如 `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout`、`StockComparisonChart`、`TripRouteChart`。
-- **`src/components/ui/`**：通用 UI 组件，如 `bento-grid`、`MusicPlayer`、`TableOfContents`、`BeforeAfter`、`Mermaid`、`globe`。
-- **`src/components/finance/`**：金融频道专属大型组件，如 `TempoHero`、`TempoGrid`、`DataWall`。
-- **`src/components/magicui/`**：特效/装饰性组件，如 `Highlighter`。
-- **`content/components/`**：文章交互组件（可视化、图表、交互演示），按主题组织。与 `src/components/ui/` 的语义边界：`ui/` 是通用 UI 原语，`content/components/` 是领域知识可视化。
+| 目录 | 职责 | 示例 |
+|------|------|------|
+| `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
+| `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`MusicPlayer`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
+| `src/components/finance/` | 金融频道专属 | `TempoHero`、`TempoGrid`、`DataWall` |
+| `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`、`GlassCard` |
+| `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
+| `src/components/layout/` | 布局组件 | `Navbar`、`WidthToggle` |
+| `src/components/debug/` | 调试辅助 | `PerformanceMonitor` |
+| `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
+| `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*` |
 
 ---
 
