@@ -42,7 +42,7 @@
 | `RAPIDAPI_KEY` | RapidAPI（Yahoo Finance）股票数据 |
 | `NOTION_TOKEN` | Notion 集成 Token |
 
-> 当前仓库中没有 `.env.local.example` 文件，添加新环境变量时请在文档（如本文件或相关 dev-docs）中同步说明。
+> 环境变量模板见 `.env.local.example`。添加新变量时请同步更新该模板及本文档。
 
 ---
 

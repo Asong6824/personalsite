@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 且听松涛
 
-## Getting Started
+个人博客与主页，基于 Next.js 15 (App Router) 构建。
 
-First, run the development server:
+## 技术栈
+
+- **框架**：Next.js 15 + React 19
+- **样式**：Tailwind CSS v4 + `next-themes`（暗色/亮色）
+- **内容**：MDX + `next-mdx-remote/rsc`
+- **动画**：Framer Motion / GSAP / Three.js
+- **图表**：ECharts / amCharts5
+- **组件库**：shadcn/ui
+
+## 本地开发
 
 ```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器（会自动构建文章索引）
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 [http://localhost:3000](http://localhost:3000) 查看站点。
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 目录说明
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+content/blog/          # MDX 文章源文件
+content/components/    # 文章交互组件（按主题）
+src/app/               # Next.js 页面与 API
+src/components/        # 站点 UI 组件
+src/lib/               # 核心逻辑（post.js, channels.js, post-index.js）
+src/data/              # 数据集与缓存
+scripts/               # 构建与数据摄入脚本
+public/                # 静态资源
+docs/                  # 项目架构文档（AI 助手参考）
+```
 
-## Learn More
+## 环境变量
 
-To learn more about Next.js, take a look at the following resources:
+复制 `.env.local.example` 为 `.env.local` 并填入实际值：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| 变量 | 说明 |
+|------|------|
+| `ALPHA_VANTAGE_API_KEY` | Alpha Vantage 股票数据 API |
+| `RAPIDAPI_KEY` | RapidAPI（Yahoo Finance）股票数据 |
+| `NOTION_TOKEN` | Notion 集成 Token |
+| `NOTION_DB_ACTIVITIES` | Notion Activities 数据库 ID |
+| `NOTION_DB_GOALS` | Notion Goals 数据库 ID |
+| `NOTION_DB_KRS` | Notion Key Results 数据库 ID |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 部署
 
-## Deploy on Vercel
+本项目为标准 Next.js 应用，推荐部署至 **Vercel**。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+构建时 `prebuild` 钩子会自动生成文章索引，无需手动操作。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 文档
+
+- AI 编码助手请优先阅读根目录 `AGENTS.md`。
+- 详细架构专题文档位于 `docs/` 目录下。

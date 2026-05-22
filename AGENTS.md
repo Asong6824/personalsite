@@ -49,6 +49,8 @@ npm run lint     # 代码检查
 
 ## 文档导航
 
+> `docs/` 目录存放项目级架构文档，供 AI 助手与人类开发者查阅。
+
 | 主题 | 文件 |
 |------|------|
 | 内容系统（MDX、Frontmatter、索引、频道） | `docs/content-system.md` |
