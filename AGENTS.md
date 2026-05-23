@@ -54,6 +54,7 @@ npm run lint     # 代码检查
 | 主题 | 文件 |
 |------|------|
 | 内容系统（MDX、Frontmatter、索引、频道） | `docs/content-system.md` |
+| 频道、专栏与设计风格 | `docs/channels-and-design.md` |
 | 路由架构 | `docs/routing.md` |
 | 首页滚动体验 | `docs/homepage-experience.md` |
 | 组件组织与 MDX 自定义组件 | `docs/components.md` |
@@ -83,6 +84,10 @@ npm run lint     # 代码检查
 | `next.config.mjs` | Next.js 配置 |
 
 ---
+
+## 协作约定
+
+- **Git 提交由用户控制**：AI 助手只负责写入/修改文件，**不自动执行 `git add` / `git commit` / `git push`**。完成一批改动后，AI 应汇报文件变更清单和建议的 commit message，由用户自行决定何时提交。
 
 ## 三条铁律
 

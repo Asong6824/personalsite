@@ -1,0 +1,161 @@
+# 频道、专栏与文章
+
+## 三层架构
+
+```
+频道（Channel）
+├── 专栏（Column）
+│   └── 文章（Article）
+```
+
+- **频道**：内容大分类，对应 `CHANNELS_CONFIG` 中的顶级 key（`tech` / `life` / `finance` / `create`）。
+- **专栏**：频道下的子主题，由 `tags` 匹配或 frontmatter 显式指定。
+- **文章**：MDX 文件，通过 `tags` 自动归入专栏，或由 `channel` / `column` 字段强制指定。
+
+归属逻辑（`src/lib/channels.js`）：
+1. 优先使用 frontmatter 中的 `channel` / `column` 字段
+2. 否则通过 `tags` 匹配专栏配置中的 `tags` 进行自动归类
+
+---
+
+## 四个频道总览
+
+| 频道 | 描述 | 专栏数 | 路由 |
+|------|------|--------|------|
+| **技术** | 技术分享与学习笔记 | 4 | `/blog/tech` |
+| **生活** | 生活感悟与旅行记录 | 3 | `/blog/life` |
+| **金融** | 投资交易与金融市场分析 | 1 | `/blog/finance` |
+| **创造** | 逻辑与感性的液态交汇 | 2 | `/blog/create` |
+
+---
+
+## 各频道专栏详情
+
+### 技术（tech）
+
+| 专栏 key | 名称 | 标签 | 封面 |
+|----------|------|------|------|
+| `go` | Golang 精进之路 | `Go`, `golang` | 自定义封面图 |
+| `general` | 通用技术 | `技术`, `programming`, `tech` | — |
+| `product` | 产品设计 | `产品`, `product`, `设计`, `UX`, `UI` | Unsplash |
+| `design` | 设计美学 | `设计`, `design`, `视觉`, `美学`, `交互` | Unsplash |
+
+**频道页设计风格**
+
+- **整体色调**：暖色调 earth tones，背景 `#f8f1ee`（米棕），卡片 `#eaddd7`（浅驼），强调色 `#a18072`（赭石）。
+- **Hero**：全屏高度，左右分栏布局。左侧大标语「探索技术前沿」（Inter 粗体，6xl），副标题「谦逊，自驱，持续」，右侧放置 `tech_cover.svg` 矢量插图。
+- **技术栈区块**：`ProgrammerDetails` 组件展示技术栈标签云与技能熟练度。
+- **专栏卡片**：左右分栏（左图右文），`rounded-2xl`，阴影 hover 放大，封面图 hover 时 `scale-105` 过渡。
+- **文章卡片**：三列网格，`bg-white rounded-xl shadow-md`，顶部叠加「置顶」（红底白字）和「专栏」（蓝底白字）标签。
+- **动效**：Framer Motion，`initial={{ opacity: 0, y: 20 }}` + `whileInView`，左右滑入错开 0.2s。
+
+---
+
+### 生活（life）
+
+| 专栏 key | 名称 | 标签 | 封面 |
+|----------|------|------|------|
+| `japan` | 日本行纪 | `日本`, `japan`, `日本旅行`, `日本文化` | Unsplash |
+| `thoughts` | 年度总结 | `年度总结`, `thoughts`, `总结`, `回顾` | 自定义 |
+| `misc` | 杂记 | `杂记`, `随想`, `记录` | 自定义 |
+
+**频道页设计风格**
+
+- **整体色调**：学术风格（`scholarlyPalette` / `scholarlyTheme`），基于 CSS 变量 `--theme-surface`、`--theme-ink`、`--theme-outline` 构建，暖灰与象牙白为主。
+- **全局背景**：`SunlitBackground` 固定全视口光晕，营造自然采光感。
+- **Hero**：全屏居中，衬线大标题「阿松的生活杂记」（`serifFont displayHeadline`，7xl，font-bold tracking-tight），副标题为等宽小字「Life & Travel」（tracking-widest uppercase），底部有 `var(--theme-outline-variant)` 细边框分隔。
+- **旅行记忆**：`TravelSection` 区块，展示旅行足迹。
+- **3D 书架**：`BookShelf3D` 独占一个 `100dvh` 区块，可交互的 3D 数字书架。
+- **专栏卡片**：几乎无圆角（`border-radius: 2px`），背景 `var(--theme-surface-high)`，1px `var(--theme-outline-variant)` 边框，无阴影。左侧封面 + 右侧内容，「阅读更多 →」按钮使用 `var(--theme-primary)` 背景色，serif 字体。
+- **文章卡片**：同样的 2px 微圆角风格，置顶标签使用 `surface-low` 背景 + `primary` 文字 + `outline-variant` 边框，无阴影。标题下方 1px 分隔线。
+- **字体**：全局 `font-light`，标题 `letter-spacing: 0.02em`，正文 `letter-spacing: 0.01em`。
+- **分隔线**：章节之间使用 12px 水平细线（`var(--theme-outline-variant)`，opacity 0.6）作为视觉休息。
+
+---
+
+### 金融（finance）
+
+| 专栏 key | 名称 | 标签 | 封面 |
+|----------|------|------|------|
+| `finance` | 财经投资 | `财经`, `finance`, `投资`, `investment` | Unsplash |
+
+**频道页设计风格**
+
+- **整体色调**：米白色 `#fafaf5`（纸质感背景），深炭灰 `#1a1c19`（主文字），深绿 `#506354`（数据标签/点缀），中灰 `#444748`（次要文字），浅灰 `#c4c7c7`（装饰线）。
+- **字体栈**：
+  - 正文：`Inter`
+  - 大标题：`Noto Serif SC`（衬线，font-black tracking-tighter，杂志感）
+  - 数据标签：`JetBrains Mono`（等宽， Insight #01、METHOD_01 等编号）
+  - 装饰引用：`Newsreader`（斜体，Footer 品牌名）
+- **Hero**：非全屏，顶部留白 `pt-32`，12 列网格（左 8 右 4）。左侧大字标语「在波动中寻找秩序，在不确定性中寻找确定性。」（Noto Serif SC，7xl，leading-[1.1]）。左下角装饰线（`h-px w-12 rgba(196,199,199,0.4)`）+ 英文斜体引言。右侧等宽数字 `0.618` + 「Market Efficiency Ratio」标签。
+- **精选专题 Bento Grid**：
+  - 大卡片（8 列）：背景图 `grayscale + mix-blend-multiply + opacity-80`，底部黑色渐变遮罩 + 白色文字，hover `scale-105`（duration-700）。标签使用琥珀色 `#ffdea5` 背景 + `#261900` 文字。
+  - 竖卡（4 列）：`#e3e3de` 背景，上下分栏（标题 + 底部日期分隔线）。
+  - 三小卡（各 4 列）：`#f4f4ef` 背景，底部 4px 彩色下划线（绿/琥珀/红半透明）。
+- **两栏归档**：左侧「财经投资」（文章列表带缩略图，灰度图 hover 恢复彩色），右侧「投资方法论」（卡片式，hover 左侧 2px 绿色边框高亮）。
+- **专栏网格**：`#f4f4ef rounded-xl p-8`，hover `shadow-lg`，顶部 JetBrains Mono 编号 `01 ::`。
+- **Newsletter CTA**：深色背景 `#1a1c19`，左侧 emoji 装饰（opacity 10%），输入框 `rgba(255,255,255,0.1)` 背景，按钮琥珀色 `#ffdea5`。
+- **Footer**：三栏网格，左侧 `Newsreader` 斜体「金融 Editorial」，中间导航与 Legal，右侧版权。hover 金色 `#d4af37`。
+- **动效**：Framer Motion `FADE_UP`（opacity 0→1, y 20→0, duration 0.6）+ `STAGGER`（staggerChildren 0.1）。
+
+---
+
+### 创造（create）
+
+| 专栏 key | 名称 | 标签 | 封面 |
+|----------|------|------|------|
+| `design` | 设计美学 | `设计`, `design`, `视觉`, `美学`, `交互` | Unsplash |
+| `product` | 产品设计 | `产品`, `product`, `设计`, `UX`, `UI` | Unsplash |
+
+**频道页设计风格**
+
+- **整体色调**：纯白 `bg-white`，极淡的环境光晕（右上角 `indigo-50/40 blur-[100px]`，左下角 `purple-50/30 blur-[100px]`），不破坏白色纯净感。
+- **标题区**：居中对齐。上方标签「Creation Channel」（等宽字体，tracking-[0.3em] uppercase，`rounded-full border border-neutral-200`）。主标题「创造」（`text-6xl sm:text-7xl md:text-8xl font-extralight tracking-tight text-neutral-900`）。副标题「逻辑与感性的液态交汇」（`text-lg md:text-xl text-neutral-500 font-light`）。
+- **分隔线**：`w-24 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent`，scaleX 从 0 展开的入场动画。
+- **专栏卡片**：核心视觉元素。
+  - 尺寸固定 `300×200 px`，`rounded-[32px]`。
+  - **液态玻璃效果**：使用 `LiquidGlassWrapper`，鼠标跟随的折射/模糊/色散效果。
+  - 参数：`displacementScale=60`，`blurAmount=0.3`，`saturation=140`，`aberrationIntensity=2`，`elasticity=0.15`，`cornerRadius=32`。
+  - Fallback 状态：`rounded-[32px] border border-neutral-200/50 shadow-sm`。
+  - Hover：外部叠加一层 `pointer-events-none` 的边框，`opacity-0 group-hover:opacity-100 transition-opacity duration-500`。
+- **卡片内容**：序号（等宽 01/02）、专栏名（2xl semibold）、描述（sm neutral-500）、「进入专栏 →」（hover translate-x-1）。
+- **底部导航**：返回博客主页按钮，`rounded-full border border-neutral-200 hover:border-neutral-300`。
+- **动效**：Framer Motion，标题 `y: -30 → 0`，卡片 `opacity: 0, y: 40 → 1, 0`（错开 0.15s），分隔线 `scaleX: 0 → 1`。
+
+---
+
+## 专栏页独特设计
+
+### 日本行纪（`/blog/life/japan`）— MUJI 风格
+
+日本专栏拥有全站最独特的设计风格，完全独立于站点默认主题：
+
+- **CSS 作用域**：`.theme-muji`，变量定义在 `globals.css` 中（`--muji-bg`、`--muji-wood`、`--muji-paper`、`--muji-taupe`、`--muji-border`、`--muji-accent`）。
+- **配色**：原木色 + 米白 + 纸质纹理，无阴影、无圆角或极小圆角（2px）。
+- **布局**：12 列网格，左侧 7 列日本地图（sticky 定位），右侧 5 列竖排文字。
+- **排版**：竖排文字（`writing-mode: vertical-rl`，`textOrientation: upright`），使用 `Yu Mincho` / `Hiragino Mincho ProN` / `Noto Serif JP` 日系衬线体，`font-weight: 300`，`letter-spacing: 0.06em`。三行标语错落排列（上下偏移 10%~14%）：
+  - 上：「風の音」
+  - 中：「道にまかせて」
+  - 下：「日本みる」
+- **交互**：日本地图 SVG（`InlineSvgWithHover`），hover 时 `stroke: var(--muji-wood)` + `brightness(1.05)`，点击都道府县可高亮并在左下角显示名称标签（`var(--muji-paper)` 背景 + `var(--muji-wood)` 文字 + `var(--muji-border)` 边框）。
+- **文章列表**：`muji-card`，hover `shadow-lg`，标题 `font-light`，标签使用 `#F0EBE5` 背景 + `var(--muji-wood)` 文字 + `var(--muji-border)` 边框。
+- **分隔线**：12px 水平线，`var(--muji-accent)`，opacity 0.6。
+
+### 财经投资（`/blog/finance/finance`）— 杂志式 Editorial
+
+金融专栏页与金融频道页共享同一套 Editorial 设计语言，但布局更聚焦：
+
+- **面包屑**：首页 › 博客 › 金融 › 专栏名（`text-sm`，`#444748`，hover `#1a1c19`）。
+- **列标题区**：Flex 左右对齐。左侧 `Noto Serif SC` 大标题（5xl~6xl，font-black tracking-tighter）+ 描述段落。右侧「Editorial Column」（JetBrains Mono，uppercase tracking-widest，深绿色 `#506354`）+ 底部黑色粗线（`h-1 w-24 #1a1c19`）。
+- **标签过滤**：顶部 Pill 按钮栏，`rounded-full px-5 py-2`。Active 状态：`#1a1c19` 背景 + 白字。Inactive 状态：`#f4f4ef` 背景 + 黑字。
+- **主内容区（8 列）**：文章列表为左图右文卡片。左侧 1/3 灰度图（`grayscale`，hover `grayscale-0 transition-all duration-700`），右侧标题带 `#ffdea5` 下划线装饰色，底部「READ ARTICLE →」（uppercase tracking-widest）。
+- **侧边栏（4 列）**：
+  - **专栏洞察**：`#f4f4ef` 背景卡片，含文章数量 / 作者数 / 最近更新（JetBrains Mono 数据）+「订阅此专栏」按钮（`#1a1c19` 背景白字）。
+  - **热点议题**：前 3 篇文章标题列表，编号 `01 / TOPIC`（JetBrains Mono）。
+  - **引用卡片**：深色背景 `#1a1c19`，aspect-[3/4]，底部 Buffett 名言（Noto Serif SC 斜体）。
+- **空状态**：📭 图标 + 居中提示「该专栏暂无文章」。
+- **Footer**：同金融频道页，三栏网格，Newsreader 斜体品牌名。
+
+### 其他专栏
+
+技术、生活（除日本外）、创造频道的专栏页统一使用 `ColumnLayout` 组件，采用标准站点主题，无额外特殊设计。

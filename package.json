@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-posts-index.mjs",
+    "predev": "tsx scripts/build-posts-index.ts",
     "dev": "next dev",
-    "prebuild": "node scripts/build-posts-index.mjs",
+    "prebuild": "tsx scripts/build-posts-index.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "ingest:stocks": "node scripts/ingest-stocks.mjs"
+    "ingest:stocks": "tsx scripts/ingest-stocks.ts",
+    "ingest:datasets": "tsx scripts/ingest-datasets.ts"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.14.4",
@@ -65,10 +66,15 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
+    "@types/echarts": "^4.9.22",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
     "@types/three": "^0.179.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "tw-animate-css": "^1.3.2",
     "typescript": "^5.8.3"
   }
