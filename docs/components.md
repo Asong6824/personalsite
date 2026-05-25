@@ -39,6 +39,7 @@
 | `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar`、`WidthToggle` |
+| `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 2×2 展开详情 + 顶级筛选） |
 | `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.js`） |
 | `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
 

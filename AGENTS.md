@@ -75,10 +75,15 @@ npm run lint     # 代码检查
 | `src/lib/seo-utils.js` | SEO 结构化数据生成 |
 | `src/lib/route-utils.js` | 专栏静态参数与路由校验 |
 | `src/lib/scrollUtils.js` | 平滑滚动工具 |
-| `src/lib/config-validator.js` | 频道配置校验（开发环境） |
+| `src/lib/config-validator.ts` | 频道配置校验（开发环境） |
 | `src/lib/api/datasets.js` | 前端数据集查询封装 |
+| `vitest.config.ts` | 测试框架配置 |
+| `scripts/gate-check.ts` | 总门禁脚本（lint + test + build + 索引验证） |
 | `src/app/blog/[...slug]/page.jsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
 | `src/app/blog/page.jsx` | 博客主页 |
+| `src/app/blog/life/japan/stamps/page.tsx` | 车站印章收藏页 |
+| `src/components/stamps/StampsPageClient.tsx` | 印章页客户端组件（无限画布 + Bento 环绕布局 + 滚轮/触摸滑动） |
+| `src/data/stamps.ts` | 印章收藏数据（车站信息、TOS 图片 URL、故事） |
 | `scripts/build-posts-index.mjs` | 索引构建脚本 |
 | `src/app/globals.css` | 全局样式与字体导入 |
 | `next.config.mjs` | Next.js 配置 |

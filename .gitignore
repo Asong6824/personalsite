@@ -47,6 +47,8 @@ next-env.d.ts
 
 # secrets
 .mcp.json
+AccessKey.txt
+oss/
 
 # large / binary files
 *.zip

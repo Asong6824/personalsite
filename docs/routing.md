@@ -16,6 +16,7 @@
 | `/blog/create` | 创作频道页 |
 | `/blog/create/[columnSlug]` | 创作频道专栏页 |
 | `/blog/[...slug]` | 文章详情页（通用，匹配一个或多个路径段） |
+| `/blog/life/japan/stamps` | 日本车站印章收藏页（无限画布布局，可滚轮/触摸滑动） |
 | `/dev/datasets-demo` | 数据集/股票图表演示页 |
 
 > 注：`/blog/tech/design` 等路径由动态路由 `[columnSlug]` 统一处理，不再使用独立的固定路由文件。

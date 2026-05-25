@@ -73,10 +73,46 @@
 
 ## 测试
 
-当前项目没有自动化测试套件（无 Jest/Vitest/Playwright 配置）。`dev-docs/test-cases.md` 中记录了手动测试清单，覆盖以下方面：
+项目使用 **Vitest** 作为测试框架，配置见 `vitest.config.ts`。
+
+### 运行测试
+
+```bash
+npm run test        # 运行全部测试（CI 模式）
+npm run test:watch  # 监听模式
+npm run test:ui     # UI 界面模式
+```
+
+### 测试覆盖范围
+
+| 模块 | 测试文件 | 说明 |
+|------|----------|------|
+| `config-validator` | `src/lib/__tests__/config-validator.test.ts` | 频道/专栏配置校验、文章分类验证 |
+| `channels` | `src/lib/__tests__/channels.test.ts` | 频道配置结构、tags 归类逻辑 |
+| `cache` | `src/lib/__tests__/cache.test.ts` | 内存缓存命中/过期/清理 |
+| `route-utils` | `src/lib/__tests__/route-utils.test.ts` | 静态参数生成、路由验证 |
+
+### 总门禁脚本
+
+```bash
+npm run gate
+```
+
+门禁脚本按顺序执行以下检查，**全部通过才能部署**：
+
+1. **ESLint** — 代码风格与规则检查
+2. **单元测试** — `vitest run`
+3. **文章索引验证** — `scripts/build-posts-index.ts`（路由冲突、slug 合法性、配置有效性）
+4. **Next.js 构建** — 编译与静态页面生成
+
+> 门禁脚本是 Harness 的"反馈"核心：把"是否完成"从 AI 的主观汇报变成可检查的客观结果。
+
+### 手动测试清单（补充）
+
+自动化测试无法覆盖的视觉/交互项，部署前仍需手动验证：
 
 - 全局导航与布局（Navbar、Footer）
-- 首页各区块（Hero、About Me、Footprints、Active Days）
+- 首页各区块（Hero、Scrollytelling、Orb 效果）
 - 博客列表与文章详情
 - 频道页与专栏页
 - 股票对比图表交互
