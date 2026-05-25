@@ -4,8 +4,12 @@ import matter from "gray-matter";
 import { globSync } from "glob";
 
 const ROOT = process.cwd();
-const POSTS_DIR = path.join(ROOT, "content", "blog");
-const INDEX_DIR = path.join(ROOT, "src", "data", "posts");
+const POSTS_DIR = process.env.TEST_POSTS_DIR
+  ? path.resolve(process.env.TEST_POSTS_DIR)
+  : path.join(ROOT, "content", "blog");
+const INDEX_DIR = process.env.TEST_INDEX_DIR
+  ? path.resolve(process.env.TEST_INDEX_DIR)
+  : path.join(ROOT, "src", "data", "posts");
 const INDEX_FP = path.join(INDEX_DIR, "index.json");
 
 interface IndexItem {

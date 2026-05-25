@@ -60,6 +60,24 @@ export default function JapanColumnLayout({ channelKey, channelConfig, columnKey
           <div className="text-center mb-10 mt-36 lg:mt-48 xl:mt-56 2xl:mt-64">
             <h1 className="text-4xl font-light" style={{ color: "var(--muji-wood)", letterSpacing: "0.02em" }}>{columnConfig?.name || "日本旅行"}</h1>
             <p className="mt-4 text-lg font-light max-w-2xl mx-auto" style={{ color: "var(--muji-taupe)", letterSpacing: "0.01em" }}>{columnConfig?.description || "日本旅行记录与文化体验"}</p>
+            <div className="mt-6">
+              <Link
+                href="/blog/life/japan/stamps"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-light transition-all duration-300 hover:shadow-md"
+                style={{
+                  backgroundColor: "var(--muji-paper)",
+                  color: "var(--muji-wood)",
+                  border: "1px solid var(--muji-border)",
+                  borderRadius: 4,
+                }}
+              >
+                <span>🚉</span>
+                <span>駅スタンプ收藏</span>
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
             <div className="mt-8 w-12 h-px mx-auto" style={{ backgroundColor: "var(--muji-accent)", opacity: 0.6 }}></div>
           </div>
 
