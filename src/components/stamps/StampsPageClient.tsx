@@ -245,28 +245,39 @@ function RailDiagramMap({
           const isCurrent = node.role === "current";
           const isCollected = node.role === "collected";
           const labelAnchor = node.x > 170 ? "end" : node.x < 55 ? "start" : "middle";
-          const labelX = labelAnchor === "start" ? node.x + 8 : labelAnchor === "end" ? node.x - 8 : node.x;
-          const labelY = node.y + (isCurrent ? 20 : node.y < 26 ? 15 : -9);
+          const labelX = isCurrent
+            ? node.x
+            : labelAnchor === "start"
+              ? node.x + 2
+              : labelAnchor === "end"
+                ? node.x - 2
+                : node.x;
+          const labelY = node.y + (isCurrent ? 20 : 0);
 
           return (
             <g key={`${node.label}-${index}`}>
-              <motion.circle
-                cx={node.x}
-                cy={node.y}
-                r={isCurrent ? 6.5 : isCollected ? 4.6 : 3.2}
-                fill={isCurrent ? "currentColor" : isCollected ? "#ffffff" : "currentColor"}
-                stroke="currentColor"
-                strokeWidth={isCollected ? 2 : 0}
-                className={isCurrent ? "text-neutral-950 dark:text-white" : isCollected ? "text-blue-600" : "text-neutral-400 dark:text-neutral-500"}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: isCollected || isCurrent ? 1 : 0.75 }}
-                transition={{ duration: 0.22, delay: 0.36 + index * 0.045 }}
-              />
+              {(isCurrent || isCollected) && (
+                <motion.circle
+                  cx={node.x}
+                  cy={node.y}
+                  r={isCurrent ? 6.5 : 4.6}
+                  fill={isCurrent ? "currentColor" : "#ffffff"}
+                  stroke="currentColor"
+                  strokeWidth={isCollected ? 2 : 0}
+                  className={isCurrent ? "text-neutral-950 dark:text-white" : "text-blue-600"}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.22, delay: 0.36 + index * 0.045 }}
+                />
+              )}
               <motion.text
                 x={labelX}
                 y={labelY}
                 textAnchor={labelAnchor}
-                className={isCurrent ? "fill-neutral-950 text-[12px] font-semibold dark:fill-white" : isCollected ? "fill-neutral-800 text-[10px] font-medium dark:fill-neutral-200" : "fill-neutral-500 text-[9px] dark:fill-neutral-400"}
+                className={isCurrent ? "fill-neutral-950 text-[12px] font-semibold dark:fill-white" : isCollected ? "fill-neutral-800 text-[10px] font-medium dark:fill-neutral-200" : "fill-neutral-500 text-[8.5px] font-medium dark:fill-neutral-400"}
+                stroke={isCurrent ? "none" : "rgba(246,246,242,0.86)"}
+                strokeWidth={isCurrent ? 0 : 3}
+                paintOrder="stroke"
                 initial={{ opacity: 0, y: labelY + 3 }}
                 animate={{ opacity: 1, y: labelY }}
                 transition={{ duration: 0.2, delay: 0.48 + index * 0.045 }}
@@ -635,24 +646,14 @@ function StampCard({
                 </p>
               )}
             </div>
-            <div className="grid min-h-0 flex-1 grid-cols-[0.85fr_1.15fr] gap-4">
-              <div className="flex min-h-0 flex-col gap-3">
-                <div className="relative min-h-0 flex-1">
-                  <StampImage
-                    stamp={stamp}
-                    imageFailed={imageFailed}
-                    onImageFailed={() => setImageFailed(true)}
-                    expanded
-                  />
-                </div>
-                <div className="rounded-xl bg-neutral-100/55 p-3 dark:bg-neutral-900/55">
-                  <p className="mb-1 text-[10px] font-mono uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
-                    story
-                  </p>
-                  <p className="line-clamp-4 text-xs leading-relaxed text-neutral-700 dark:text-neutral-300">
-                    {story}
-                  </p>
-                </div>
+            <div className="grid min-h-0 flex-1 grid-cols-[0.75fr_1.25fr] gap-4">
+              <div className="min-h-0 rounded-xl bg-neutral-100/55 p-4 dark:bg-neutral-900/55">
+                <p className="mb-2 text-[10px] font-mono uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                  story
+                </p>
+                <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+                  {story}
+                </p>
               </div>
               <div className="min-h-0">
                 <StampRouteMap stamp={stamp} stamps={stamps} />
