@@ -39,44 +39,82 @@ type ResolvedConnection = {
   target: Stamp;
 };
 
-/** 根据印章数量动态计算卡片位置 */
-function generateStampPositions(count: number) {
-  const halfCard = CARD_SIZE / 2;
-  const stepX = UNIT + GAP;
-  const stepY = UNIT + GAP;
-  const colX = [-1.5, -0.5, 0.5, 1.5].map((col) => col * stepX);
-  const rowY = (row: number) => row * stepY;
+function getGridSize(count: number) {
+  const totalCells = count + 2;
+  const targetAspect = 1.35;
+  let best = { cols: 2, rows: Math.ceil(totalCells / 2), score: Number.POSITIVE_INFINITY };
 
-  const positions: { x: number; y: number }[] = [
-    ...colX.map((x) => ({ x, y: rowY(-1) })),
-    { x: colX[0], y: 0 },
-    { x: colX[3], y: 0 },
-    ...colX.map((x) => ({ x, y: rowY(1) })),
-    { x: colX[1], y: rowY(2) },
-    { x: colX[2], y: rowY(2) },
-  ];
+  for (let rows = 2; rows <= totalCells; rows += 1) {
+    const cols = Math.max(2, Math.ceil(totalCells / rows));
+    const emptyCells = cols * rows - totalCells;
+    const aspectPenalty = Math.abs(cols / rows - targetAspect);
+    const score = emptyCells * 8 + aspectPenalty;
 
-  let row = 3;
-  while (positions.length < count) {
-    positions.push(...colX.map((x) => ({ x, y: rowY(row) })));
-    row += 1;
+    if (score < best.score) {
+      best = { cols, rows, score };
+    }
   }
 
-  return positions.slice(0, count);
+  return best;
+}
+
+/** 根据印章数量动态计算紧凑矩形布局 */
+function getStampLayout(count: number) {
+  const stepX = UNIT + GAP;
+  const stepY = UNIT + GAP;
+  const { cols, rows } = getGridSize(count);
+  const heroCol = Math.max(0, Math.min(cols - 2, Math.floor((cols - 2) / 2)));
+  const heroRow = Math.min(rows - 1, Math.floor(rows * 0.58));
+
+  const toPosition = (col: number, row: number) => {
+    return {
+      x: (col - (cols - 1) / 2) * stepX,
+      y: (row - (rows - 1) / 2) * stepY,
+    };
+  };
+  const isHeroCell = (col: number, row: number) =>
+    row === heroRow && (col === heroCol || col === heroCol + 1);
+
+  const positions: { x: number; y: number }[] = [];
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      if (isHeroCell(col, row)) continue;
+      positions.push(toPosition(col, row));
+      if (positions.length >= count) break;
+    }
+    if (positions.length >= count) break;
+  }
+
+  return {
+    stampPositions: positions,
+    heroPosition: {
+      x: (heroCol + 0.5 - (cols - 1) / 2) * stepX,
+      y: (heroRow - (rows - 1) / 2) * stepY,
+    },
+    cols,
+    rows,
+  };
+}
+
+/** 根据印章数量动态计算卡片位置 */
+function generateStampPositions(count: number) {
+  return getStampLayout(count).stampPositions.slice(0, count);
 }
 
 /** 根据印章数量计算内容边界 */
 function getContentBounds(count: number) {
-  const positions = generateStampPositions(count);
+  const layout = getStampLayout(count);
+  const positions = layout.stampPositions;
+  const heroPosition = layout.heroPosition;
   const horizontalEdges = [
     ...positions.flatMap((p) => [p.x - CARD_SIZE / 2, p.x + CARD_SIZE / 2]),
-    -HERO_WIDTH / 2,
-    HERO_WIDTH / 2,
+    heroPosition.x - HERO_WIDTH / 2,
+    heroPosition.x + HERO_WIDTH / 2,
   ];
   const verticalEdges = [
     ...positions.flatMap((p) => [p.y - CARD_SIZE / 2, p.y + CARD_SIZE / 2]),
-    -HERO_HEIGHT / 2,
-    HERO_HEIGHT / 2,
+    heroPosition.y - HERO_HEIGHT / 2,
+    heroPosition.y + HERO_HEIGHT / 2,
   ];
 
   return {
@@ -600,7 +638,7 @@ function StampCard({
       <div
         role="button"
         tabIndex={0}
-        className="relative bg-[#f6f6f2] dark:bg-[#1e1e1c] rounded-2xl h-full w-full transition-all duration-300 hover:shadow-md overflow-hidden cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 dark:focus-visible:ring-white/40"
+        className="relative bg-white dark:bg-[#1e1e1c] rounded-2xl h-full w-full transition-all duration-300 hover:shadow-md overflow-hidden cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 dark:focus-visible:ring-white/40"
         onClick={(event) => {
           event.stopPropagation();
           if (!isActive) onOpen();
@@ -615,9 +653,8 @@ function StampCard({
       >
         <div className="pointer-events-none absolute left-4 right-4 top-3 z-10 flex items-center justify-between text-[10px] font-mono tracking-wide text-neutral-500/70 dark:text-neutral-400/65">
           <span>{stamp.date}</span>
-          <span className="flex items-center gap-3">
-            <span>ID</span>
-            <span>{stamp.id}</span>
+          <span className="truncate text-[11px] font-medium text-neutral-500/80 dark:text-neutral-400/75">
+            {stamp.station.name}
           </span>
         </div>
         {isActive ? (
@@ -662,16 +699,13 @@ function StampCard({
           </div>
         ) : (
           <>
-            <div className="absolute inset-0 flex items-center justify-center px-5 pb-7 pt-9">
+            <div className="absolute inset-0 flex items-center justify-center px-4 pb-4 pt-8">
               <StampImage
                 stamp={stamp}
                 imageFailed={imageFailed}
                 onImageFailed={() => setImageFailed(true)}
               />
             </div>
-            <p className="pointer-events-none absolute bottom-3 left-4 right-4 truncate text-[11px] font-medium text-neutral-500/80 dark:text-neutral-400/75">
-              {stamp.station.name}
-            </p>
           </>
         )}
       </div>
@@ -830,6 +864,7 @@ export default function StampsPageClient({
 
   const validNavLinks = getValidLinks(navLinks);
   const operatorFilters = useMemo(() => getOperatorFilters(stamps), [stamps]);
+  const heroPosition = useMemo(() => getStampLayout(stamps.length).heroPosition, [stamps.length]);
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#e8e8e4] dark:bg-neutral-950 relative select-none">
@@ -866,15 +901,15 @@ export default function StampsPageClient({
             style={{
               width: HERO_WIDTH,
               height: HERO_HEIGHT,
-              left: `calc(50% - ${HERO_WIDTH / 2}px)`,
-              top: `calc(50% - ${HERO_HEIGHT / 2}px)`,
+              left: `calc(50% + ${heroPosition.x}px - ${HERO_WIDTH / 2}px)`,
+              top: `calc(50% + ${heroPosition.y}px - ${HERO_HEIGHT / 2}px)`,
             }}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="bg-[#f7f7f4] dark:bg-[#1a1a18] rounded-2xl px-6 py-5 h-full w-full flex flex-col justify-between overflow-hidden shadow-sm"
+              className="bg-white dark:bg-[#1a1a18] rounded-2xl px-6 py-5 h-full w-full flex flex-col justify-between overflow-hidden shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">

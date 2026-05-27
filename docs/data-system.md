@@ -134,7 +134,7 @@ interface StationRailDiagram {
     stationId?: string;
     x: number;
     y: number;
-    role: "current" | "collected" | "direction";
+    role: "current" | "collected" | "direction"; // direction 只作为方向标签，不画站点圆点
   }[];
   badges?: { label: string; color: string }[];
 }
@@ -194,7 +194,7 @@ interface StampImages {
 
 ### 页面布局
 
-- **无限画布设计**：`StampsPageClient` 使用 3600×3600 的大画布，Hero 居中，占 2×1 网格，印章以紧密 Bento 网格环绕。
+- **无限画布设计**：`StampsPageClient` 使用 3600×3600 的大画布；布局先根据印章数量计算一个尽量紧凑的矩形网格，再把 2×1 Hero 作为普通网格块嵌入其中，新增印章会优先补齐矩形边界，而不是向单一方向追加。
 - **滑动交互**：桌面端滚轮/触摸板平移，移动端单指滑动，带惯性衰减。
 - **滑动边界**：四个方向以最外围印章边缘外再延伸 180px 为界。
 - **卡片尺寸**：渲染时统一为 280×280 的 1:1 正方形，圆角 `rounded-2xl`，卡片间距 6px。
