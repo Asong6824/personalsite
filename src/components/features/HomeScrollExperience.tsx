@@ -13,10 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 // ── Constants ──
 const STORY_LINES = [
-  'Building digital experiences',
-  'with curiosity and precision,',
-  'trading insights for clarity,',
-  'crafting stories that endure.'
+  '阿松的个人网站',
+  '记录生活、技术、设计与投资',
+  '把学习写成文章',
+  '把经历做成作品'
 ];
 
 const HERO_END = 0.45; // Hero 动画在 timeline 45% 处结束
@@ -126,7 +126,7 @@ export default function HomeScrollExperience() {
         gsap.set(orb, { scale: 1, x: 0, y: 0 });
         gsap.set(story, { opacity: 0 });
         gsap.set(scrollHint, { opacity: 0.6 });
-        gsap.set(lines, { opacity: 0, y: 30, filter: 'blur(10px)' });
+        gsap.set(lines, { opacity: 0.06, filter: 'blur(6px)', scale: 0.99 });
         gsap.set(card, { y: '100vh', opacity: 0, width: '75vw', height: '75vh', borderRadius: '32px' });
         if (cardContent) gsap.set(cardContent, { opacity: 1 });
         letters.forEach((l) => gsap.set(l, { opacity: 1, marginLeft: '0em', marginRight: '0em' }));
@@ -179,12 +179,21 @@ export default function HomeScrollExperience() {
         tl.fromTo(letter, { opacity: 1 }, { opacity: 0, ease: 'power2.in', duration: H * 0.16 }, H * 0.20);
       });
 
-      // ── Phase 4 (30~78%): 文案逐行浮现 ──
+      // ── Phase 4 (30~78%): 文案容器淡入 + 单句聚焦式书页翻阅 ──
+      tl.fromTo(story, { opacity: 0 }, { opacity: 1, ease: 'none', duration: H * 0.01 }, H * 0.30);
       lines.forEach((line, i) => {
+        const inStart = H * (0.30 + i * 0.10);
+        const outStart = H * (0.36 + i * 0.10);
+        // 显影：从朦胧到清晰
         tl.fromTo(line,
-          { opacity: 0, y: 30, filter: 'blur(10px)' },
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: H * 0.08 },
-          H * (0.30 + i * 0.07)
+          { opacity: 0.06, scale: 0.99, filter: 'blur(6px)' },
+          { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: H * 0.06 },
+          inStart
+        );
+        // 消隐：从清晰退回朦胧，只留极淡痕迹
+        tl.to(line,
+          { opacity: 0.06, scale: 0.99, filter: 'blur(4px)', ease: 'none', duration: H * 0.06 },
+          outStart
         );
       });
 
