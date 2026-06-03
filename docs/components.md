@@ -44,7 +44,7 @@
 | `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
 
 > **关于旧版首页组件**：`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版区块式首页，现随首页重构为 `HomeScrollExperience` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
-| `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*` |
+| `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*`、`travel/*` |
 
 ---
 
@@ -58,6 +58,7 @@
 - `Highlighter` — 文本高亮特效
 - `HSBSliders` / `ColorWheelSteps` / `RotatableColorWheel` — 色彩工具（位于 `content/components/color/`）
 - `DualTimeline` / `RAGFlowDiagram` — RAG 专用交互组件（位于 `content/components/rag/`）
+- `TravelRouteMap` — 旅行路线手绘地图（位于 `content/components/travel/`）
 
 ---
 
@@ -119,6 +120,97 @@ import { DualTimeline } from '@content/components/rag/DualTimeline';
 | `SketchyRAGOverview` | `<SketchyRAGOverview />` | RAG 四大发展阶段概览图 |
 | `Word2VecVectorSpace` | `<Word2VecVectorSpace />` | Word2Vec 向量空间示意（King-Queen 示例） |
 | `InContextLearningChart` | `<InContextLearningChart />` | 上下文学习性能曲线图 |
+
+### 旅行路线地图（`content/components/travel/`）
+
+| 组件 | 用法 | 说明 |
+|------|------|------|
+| `TravelRouteMap` | `<TravelRouteMap region="japan" places={[...]} />` | 真实 GeoJSON 底图 + Rough.js 手绘风格路线 |
+| `CityWalkMap` | `<CityWalkMap center={{lat,lng}} places={[...]} />` | 街区级步行地图。Leaflet + OSM 瓦片，带真实路网 |
+
+**完整示例（城际路线）：**
+
+`fit="places"` 自动 zoom 到地点范围，适合显示跨城市路线：
+
+```mdx
+<TravelRouteMap
+  region="japan"
+  fit="places"
+  places={[
+    { name: "京都", lat: 35.01, lng: 135.76, day: 1 },
+    { name: "金泽", lat: 36.58, lng: 136.65, day: 2 },
+  ]}
+  showLabels={true}
+  routeColor="#8B7355"
+  markerColor="#c83830"
+  height={420}
+  placesPaddingRatio={0.4}
+/>
+```
+
+**完整示例（市内步行路线）：**
+
+```mdx
+<CityWalkMap
+  center={{ lat: 36.565, lng: 136.655 }}
+  zoom={15}
+  places={[
+    { name: "金泽站", lat: 36.5781, lng: 136.6482 },
+    { name: "近江町市场", lat: 36.5713, lng: 136.6566 },
+    { name: "尾崎神社", lat: 36.5614, lng: 136.6560 },
+    { name: "金泽城公园", lat: 36.5616, lng: 136.6590 },
+  ]}
+  routeColor="#8B7355"
+  markerColor="#c83830"
+  height={450}
+/>
+```
+
+**Props：**
+
+| Prop | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `region` | `string` | 否（与 city 二选一） | — | 预设区域：`japan`、`world`、`china`、`europe`、`usa` |
+| `city` | `string` | 否（与 region 二选一） | — | 预设城市：`kanazawa` |
+| `customGeoJSON` | `object` | 否 | — | 自定义 GeoJSON FeatureCollection，优先级最高 |
+| `fit` | `string` | 否 | `"places"` | 视野适配：`"region"` 显示整个区域，`"places"` 自动 zoom 到地点范围 |
+| `places` | `Place[]` | 是 | — | `{ name, lat, lng, day?, note? }` |
+| `placesPaddingRatio` | `number` | 否 | `0.35` | `fit="places"` 时的视野留白比例（0~1） |
+| `showLabels` | `boolean` | 否 | `true` | 显示地点名称标签 |
+| `animate` | `boolean` | 否 | `false` | 按 `day` 顺序动画呈现路线（预留） |
+| `routeColor` | `string` | 否 | `#8B7355` | 路线颜色 |
+| `markerColor` | `string` | 否 | `#c83830` | 标记点颜色 |
+| `landColor` | `string` | 否 | `#e8e0d5` | 陆地填充色 |
+| `waterColor` | `string` | 否 | `#f5f5f5` | 水域背景色 |
+| `height` | `number` | 否 | `450` | SVG 高度 |
+| `roughness` | `number` | 否 | `0.8` | 底图轮廓手绘程度 |
+| `routeRoughness` | `number` | 否 | `1.5` | 路线手绘程度 |
+
+**地图数据来源：**
+
+- **国家/大洲级**：`@amcharts/amcharts5-geodata`（内置 200+ 国家和地区）
+- **城市级**：项目内置 `content/components/travel/*.geo.json`（当前支持 `kanazawa`）
+- **自定义**：通过 `customGeoJSON` prop 传入任意 GeoJSON
+
+**如何添加新城市：**
+
+1. 从 [Nominatim](https://nominatim.openstreetmap.org) 获取城市边界 GeoJSON：
+   ```bash
+   curl -s "https://nominatim.openstreetmap.org/search?q=城市英文名,国家&format=geojson&polygon_geojson=1&limit=1" \
+     -H "User-Agent: YourSite/1.0" > city.raw.json
+   ```
+2. 简化坐标点（目标 200~500 个点）：
+   ```bash
+   npx mapshaper city.raw.json -simplify 10% -o city.geo.json
+   ```
+   或手动用 [mapshaper.org](https://mapshaper.org) 可视化简化。
+3. 放入 `content/components/travel/` 目录
+4. 在 `TravelRouteMap.jsx` 的 `CITY_MODULES` 中注册新城市
+5. 在 MDX 中使用 `city="新城市英文名"`
+
+**技术栈：** `@amcharts/amcharts5-geodata` / 自定义 GeoJSON + `d3-geo`（投影）+ `roughjs`（手绘渲染）。
+
+---
 
 ### 手绘风格组件库（`content/components/sketchy/`）
 

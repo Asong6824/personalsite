@@ -33,6 +33,7 @@ import {
     SketchyDashedLine,
     SketchyText,
 } from '@content/components/sketchy';
+import { TravelRouteMap, CityWalkMap } from '@content/components/travel';
 
 // 导入 remark/rehype 插件 (用于 MDXRemote 的 options)
 import remarkGfm from 'remark-gfm'; // 支持 GitHub Flavored Markdown (表格、删除线等)
@@ -136,6 +137,8 @@ export default async function PostPage({ params }) {
         SketchyPath: SketchyPath,
         SketchyDashedLine: SketchyDashedLine,
         SketchyText: SketchyText,
+        TravelRouteMap: TravelRouteMap,
+        CityWalkMap: CityWalkMap,
         h2: ({ children, ...props }) => (
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props}>
                 {children}
