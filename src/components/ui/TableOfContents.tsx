@@ -10,8 +10,8 @@ export function TableOfContents() {
   const [activeId, setActiveId] = useState('');
 
   useEffect(() => {
-    // 获取页面中所有的标题元素
-    const headingElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    // 目录只呈现正文层级，文章标题由页面头部承担。
+    const headingElements = document.querySelectorAll('article .prose h2, article .prose h3, article .prose h4');
     const headingData = Array.from(headingElements).map((heading, index) => {
       // 清理标题文本，移除末尾的#符号
       let cleanText = heading.textContent.trim();
@@ -89,16 +89,20 @@ export function TableOfContents() {
     return null;
   }
 
+  const borderColor = 'var(--channel-border, rgb(229 229 229))';
+  const activeColor = 'var(--channel-ink, rgb(23 23 23))';
+  const mutedColor = 'var(--channel-muted, rgb(115 115 115))';
+
   return (
     <nav className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
-      <div className="pl-4 border-l border-neutral-200 dark:border-neutral-800">
-        <h3 className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-4">
+      <div className="pl-4 border-l" style={{ borderColor }}>
+        <h3 className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: mutedColor }}>
           目录
         </h3>
-        <ul className="space-y-2 text-xs"> {/* Changed to text-xs (12px) */}
+        <ul className="space-y-2.5 text-[13px] leading-5">
           {headings.map((heading, index) => {
             const isActive = activeId === heading.id;
-            const paddingLeft = `${(heading.level - 2) * 0.5}rem`; // Reduced indentation
+            const paddingLeft = `${Math.max(heading.level - 2, 0) * 0.6}rem`;
 
             return (
               <li key={`${heading.id}-${index}`}>
@@ -107,11 +111,15 @@ export function TableOfContents() {
                   className={`
                     block w-full text-left transition-colors duration-200 border-l-2 -ml-[17px] pl-[13px]
                     ${isActive
-                      ? 'border-neutral-900 dark:border-white text-neutral-900 dark:text-white font-medium'
-                      : 'border-transparent text-neutral-500 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                      ? 'font-medium'
+                      : 'border-transparent hover:opacity-80'
                     }
                   `}
-                  style={{ paddingLeft: `calc(${paddingLeft} + 13px)` }} // Adjust padding to account for the border alignment
+                  style={{
+                    paddingLeft: `calc(${paddingLeft} + 13px)`,
+                    borderColor: isActive ? activeColor : 'transparent',
+                    color: isActive ? activeColor : mutedColor,
+                  }}
                   title={heading.text}
                 >
                   <span className="block overflow-hidden text-ellipsis whitespace-nowrap">{heading.text}</span>

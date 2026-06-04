@@ -17,7 +17,7 @@ export default function BlogIndexPage() {
         // 简化为仅展示频道名称，取消副文以符合参考风格
         href: `/blog/${key}`,
         image: (Object.values(config.columns) as any[])?.[0]?.cover || config.icon,
-        accent: ({ tech: 'rgb(56 189 248)', life: '#8B7355', finance: '#10b981' }[key]) || 'rgb(56 189 248)'
+        accent: ({ tech: '#141413', life: '#141413', finance: '#10b981' }[key]) || 'rgb(56 189 248)'
     }));
 
     // 获取所有文章数据并按年份分组

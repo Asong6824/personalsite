@@ -1,43 +1,43 @@
 /* src/app/home.module.css */
 .scholarlyTheme {
   /* Override global Tailwind variables within this scope */
-  --background: #EBE3D5;
-  --foreground: #3D3A36;
+  --background: #F0EEE7;
+  --foreground: #141413;
 
   --primary: #0077A3;
-  --primary-foreground: #F7F3EC;
+  --primary-foreground: #F0EEE7;
 
-  --card: #EBE3D5;
-  --card-foreground: #3D3A36;
+  --card: #E2DBCE;
+  --card-foreground: #141413;
 
-  --secondary: #A9A6A0;
-  --secondary-foreground: #3D3A36;
+  --secondary: #E2DBCE;
+  --secondary-foreground: #141413;
 
-  --muted: #D4C8B4;
-  --muted-foreground: #85827C;
+  --muted: #E2DBCE;
+  --muted-foreground: #68645d;
 
-  --accent: #D4C8B4;
-  --accent-foreground: #3D3A36;
+  --accent: #E2DBCE;
+  --accent-foreground: #141413;
 
-  --border: #D4C8B4;
-  --input: #D4C8B4;
+  --border: #D8D0C3;
+  --input: #D8D0C3;
   --ring: #00A9E0;
 
   --radius: 0.5rem;
 
   /* Custom Theme Tokens for easy access */
-  --theme-surface: #EBE3D5; /* Blond Wood */
-  --theme-surface-low: rgba(212, 200, 180, 0.4); /* Tertiary with opacity for subtle cards */
-  --theme-surface-high: #D4C8B4; /* Darker wood */
-  --theme-surface-highest: #D4C8B4; /* Darker wood */
+  --theme-surface: #F0EEE7;
+  --theme-surface-low: rgba(226, 219, 206, 0.48);
+  --theme-surface-high: #E2DBCE;
+  --theme-surface-highest: #D8D0C3;
 
   --theme-primary: #0077A3; /* Deep Blue Bottle Blue */
   --theme-primary-dim: #00A9E0; /* Blue Bottle Blue */
 
-  --theme-ink: #3D3A36; /* Fog Grey */
+  --theme-ink: #141413;
 
-  --theme-outline: #85827C; /* Neutral 500 */
-  --theme-outline-variant: #D4C8B4; /* Darker wood */
+  --theme-outline: #68645d;
+  --theme-outline-variant: #D8D0C3;
 
   /* Base styling */
   background-color: var(--theme-surface);
@@ -74,15 +74,15 @@
 
 /* Palette-only class for channel pages that want the color system without the global overrides */
 .scholarlyPalette {
-  --theme-surface: #EBE3D5;
-  --theme-surface-low: rgba(212, 200, 180, 0.4);
-  --theme-surface-high: #D4C8B4;
-  --theme-surface-highest: #D4C8B4;
+  --theme-surface: #F0EEE7;
+  --theme-surface-low: rgba(226, 219, 206, 0.48);
+  --theme-surface-high: #E2DBCE;
+  --theme-surface-highest: #D8D0C3;
   --theme-primary: #0077A3;
   --theme-primary-dim: #00A9E0;
-  --theme-ink: #3D3A36;
-  --theme-outline: #85827C;
-  --theme-outline-variant: #D4C8B4;
+  --theme-ink: #141413;
+  --theme-outline: #68645d;
+  --theme-outline-variant: #D8D0C3;
 }
 
 /* Custom gradients & interactive textures */

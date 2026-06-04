@@ -42,13 +42,13 @@ const travelExperiences = [
 
 export default function TravelSection() {
     return (
-        <section id="travel-stories" className="py-16 md:py-24" style={{ backgroundColor: '#F5F3F0' }}>
+        <section id="travel-stories" className="py-16 md:py-24" style={{ backgroundColor: 'var(--theme-surface)' }}>
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12 md:mb-16">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold" style={{ color: 'var(--theme-ink)' }}>
                         旅行记忆
                     </h2>
-                    <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                    <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto" style={{ color: 'var(--theme-outline)' }}>
                         每一次出发，都是对世界新的探索与发现。
                     </p>
                 </div>

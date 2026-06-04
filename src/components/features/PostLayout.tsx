@@ -124,7 +124,7 @@ export default async function PostLayout({
     return (
         <div
             className="min-h-screen"
-            style={isTechChannel ? { backgroundColor: '#f8f1ee' } : isLifeChannel ? { backgroundColor: '#F5F3F0' } : {}}
+            style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)' } : {}}
             {...(isTechChannel && { 'data-tech-page': true })}
             {...(isLifeChannel && { 'data-life-page': true })}
         >
@@ -132,31 +132,31 @@ export default async function PostLayout({
                 {/* 面包屑导航 */}
                 <nav className="mb-8 text-sm">
                     <Link href="/" className="transition-colors hover:opacity-80"
-                        style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>首页</Link>
-                    <span className="mx-2" style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>{'>'}</span>
+                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>首页</Link>
+                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
                     <Link href="/blog" className="transition-colors hover:opacity-80"
-                        style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>博客</Link>
-                    <span className="mx-2" style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>{'>'}</span>
+                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>博客</Link>
+                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
                     <Link href={`/blog/${channelKey}`} className="transition-colors hover:opacity-80"
-                        style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>{channelConfig.name}</Link>
-                    <span className="mx-2" style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>{'>'}</span>
+                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{channelConfig.name}</Link>
+                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
                     <Link href={`/blog/${channelKey}/${columnKey}`} className="transition-colors hover:opacity-80"
-                        style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>{columnConfig.name}</Link>
-                    <span className="mx-2" style={isLifeChannel ? { color: '#B8A690' } : { color: '#6b7280' }}>{'>'}</span>
-                    <span style={isLifeChannel ? { color: '#8B7355' } : { color: '#eaddd7' }}>{frontmatter.title}</span>
+                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{columnConfig.name}</Link>
+                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
+                    <span style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : { color: '#eaddd7' }}>{frontmatter.title}</span>
                 </nav>
 
                 <div className="max-w-4xl mx-auto">
                     {/* 文章头部 */}
                     <header className="mb-12 text-center">
                         <h1 className={`text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight ${isLifeChannel ? 'font-light' : 'font-bold text-gray-900 dark:text-white'}`}
-                            style={isLifeChannel ? { color: '#8B7355', letterSpacing: '0.02em' } : {}}>
+                            style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)', letterSpacing: '0.02em' } : {}}>
                             {frontmatter.title}
                         </h1>
 
                         {frontmatter.excerpt && (
                             <p className={`text-lg mb-8 max-w-2xl mx-auto ${isLifeChannel ? 'font-light' : 'text-gray-600 dark:text-gray-400'}`}
-                                style={isLifeChannel ? { color: '#A0927D', letterSpacing: '0.01em' } : {}}>
+                                style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)', letterSpacing: '0.01em' } : {}}>
                                 {frontmatter.excerpt}
                             </p>
                         )}
@@ -184,7 +184,7 @@ export default async function PostLayout({
                         {frontmatter.tags && frontmatter.tags.length > 0 && (
                             <div className="flex flex-wrap justify-center gap-2 mb-8">
                                 {frontmatter.tags.map(tag => (
-                                    <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm">
+                                    <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-card)', color: 'var(--channel-ink)' } : {}}>
                                         #{tag}
                                     </span>
                                 ))}

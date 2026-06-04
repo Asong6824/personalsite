@@ -38,7 +38,7 @@
 | `src/components/finance/` | 金融频道专属 | `TempoHero`、`TempoGrid`、`DataWall` |
 | `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
-| `src/components/layout/` | 布局组件 | `Navbar`、`WidthToggle` |
+| `src/components/layout/` | 布局组件 | `Navbar` |
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 2×2 展开详情 + 顶级筛选） |
 | `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.js`） |
 | `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
@@ -94,8 +94,8 @@ import { DualTimeline } from '@content/components/rag/DualTimeline';
 | `MusicPlayer` | `<MusicPlayer />` | 播放 frontmatter `music` 字段配置的音频；也可传 `playlist={[{title, artist, src}]}` |
 | `BeforeAfter` | `<BeforeAfter before={<div>A</div>} after={<div>B</div>} beforeLabel="之前" afterLabel="之后" />` | 左右对比布局，支持自定义标签 |
 | `Highlighter` | `<Highlighter color="#ffd1dc">文本</Highlighter>` | 基于 Rough Notation 的手绘高亮，支持 `action`（highlight/underline/circle/box）、`animationDuration`、`isView`（滚动触发） |
+| `RAGSidesOverview` | `<RAGSidesOverview />` | RAG 索引侧与检索侧的手绘风格对照总览，用作文章中的概念视觉锚点 |
 | `Mermaid` | `<Mermaid chart="graph TD; A-->B;" />` | 渲染 Mermaid 图表，传 `chart` 字符串 |
-| `WidthToggle` | `<WidthToggle />` | 文章页宽屏/窄屏阅读切换按钮 |
 
 ### 布局组件
 

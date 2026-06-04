@@ -42,11 +42,12 @@
 
 **频道页设计风格**
 
-- **整体色调**：暖色调 earth tones，背景 `#f8f1ee`（米棕），卡片 `#eaddd7`（浅驼），强调色 `#a18072`（赭石）。
+- **整体色调**：warm editorial 主题，背景 `#F0EEE7`，卡片 `#E2DBCE`，正文/标题 `#141413`。频道页、专栏页、文章详情页通过 `data-tech-page` / `data-life-page` 下的 `--channel-*` 变量保持一致。
 - **Hero**：全屏高度，左右分栏布局。左侧大标语「探索技术前沿」（Inter 粗体，6xl），副标题「谦逊，自驱，持续」，右侧放置 `tech_cover.svg` 矢量插图。
 - **技术栈区块**：`ProgrammerDetails` 组件展示技术栈标签云与技能熟练度。
-- **专栏卡片**：左右分栏（左图右文），`rounded-2xl`，阴影 hover 放大，封面图 hover 时 `scale-105` 过渡。
-- **文章卡片**：三列网格，`bg-white rounded-xl shadow-md`，顶部叠加「置顶」（红底白字）和「专栏」（蓝底白字）标签。
+- **专栏卡片**：左右分栏（左图右文），`rounded-2xl`，背景 `var(--channel-card)`，边框 `var(--channel-border)`，封面图 hover 时 `scale-105` 过渡。
+- **文章卡片**：三列网格，背景 `var(--channel-card)`，正文 `var(--channel-muted)`，标题 `var(--channel-ink)`，顶部叠加「置顶」和「专栏」标签。
+- **文章详情页**：采用「顶部信息区 → 独立媒体区 → 正文阅读区」三段结构。桌面端以 `75vw` 容器和 12 栅格组织：标题/摘要占中间 6 栏，右侧基础信息占 2 栏并与标题内容块底部对齐；媒体区占中间 10 栏；正文区占中间 6 栏，目录占右侧 2 栏。目录仅在正文区右侧展示，只展示正文 H2-H4，不重复文章标题。
 - **动效**：Framer Motion，`initial={{ opacity: 0, y: 20 }}` + `whileInView`，左右滑入错开 0.2s。
 
 ---
@@ -61,13 +62,14 @@
 
 **频道页设计风格**
 
-- **整体色调**：学术风格（`scholarlyPalette` / `scholarlyTheme`），基于 CSS 变量 `--theme-surface`、`--theme-ink`、`--theme-outline` 构建，暖灰与象牙白为主。
+- **整体色调**：与技术频道共享 warm editorial 基础配色，背景 `#F0EEE7`，卡片 `#E2DBCE`，正文/标题 `#141413`。`scholarlyPalette` / `scholarlyTheme` 中的 `--theme-surface`、`--theme-surface-high`、`--theme-ink`、`--theme-outline` 映射到该色系。
 - **全局背景**：`SunlitBackground` 固定全视口光晕，营造自然采光感。
 - **Hero**：全屏居中，衬线大标题「阿松的生活杂记」（`serifFont displayHeadline`，7xl，font-bold tracking-tight），副标题为等宽小字「Life & Travel」（tracking-widest uppercase），底部有 `var(--theme-outline-variant)` 细边框分隔。
 - **旅行记忆**：`TravelSection` 区块，展示旅行足迹。
 - **3D 书架**：`BookShelf3D` 独占一个 `100dvh` 区块，可交互的 3D 数字书架。
 - **专栏卡片**：几乎无圆角（`border-radius: 2px`），背景 `var(--theme-surface-high)`，1px `var(--theme-outline-variant)` 边框，无阴影。左侧封面 + 右侧内容，「阅读更多 →」按钮使用 `var(--theme-primary)` 背景色，serif 字体。
 - **文章卡片**：同样的 2px 微圆角风格，置顶标签使用 `surface-low` 背景 + `primary` 文字 + `outline-variant` 边框，无阴影。标题下方 1px 分隔线。
+- **文章详情页**：沿用技术频道的三段式阅读版式，顶部信息与媒体先于正文出现，桌面端使用同一套 `75vw` 容器与 12 栅格比例，目录仅在正文区右侧展示。
 - **字体**：全局 `font-light`，标题 `letter-spacing: 0.02em`，正文 `letter-spacing: 0.01em`。
 - **分隔线**：章节之间使用 12px 水平细线（`var(--theme-outline-variant)`，opacity 0.6）作为视觉休息。
 

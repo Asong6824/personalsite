@@ -18,9 +18,9 @@ const C_MUTED = "#6b7280";    // 辅助文字
 
 export function SketchyRAGOverview() {
   return (
-    <div className="my-8 not-prose overflow-x-auto">
-      <div className="min-w-[1000px]">
-        <SketchySvg width={1000} height={380} viewBox="0 0 1000 380">
+    <div className="my-8 not-prose overflow-hidden">
+      <div className="w-full">
+        <SketchySvg width={1000} height={380} viewBox="0 0 1000 380" className="w-full h-auto">
           {/* ===== 时代背景分区 ===== */}
           <SketchyDashedLine x1={50} y1={16} x2={260} y2={16} dashArray={[6, 4]} />
           <SketchyDashedLine x1={260} y1={16} x2={410} y2={16} dashArray={[6, 4]} />
@@ -141,9 +141,9 @@ export function SketchyRAGOverview() {
           <SketchyLine x1={920} y1={140} x2={920} y2={215} />
         </SketchySvg>
 
-        <div className="text-center text-gray-400 mt-2 text-xs space-y-1">
+        <div className="text-center mt-2 text-xs space-y-1" style={{ color: "var(--channel-muted, #6b7280)" }}>
           <p>鼠标悬停在线条、节点上查看交互效果</p>
-          <p className="text-gray-300">
+          <p style={{ color: "var(--channel-muted, #9ca3af)", opacity: 0.72 }}>
             <span className="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1" />自然语言生成
             <span className="inline-block w-2 h-2 rounded-full bg-amber-400 mx-1 ml-3" />大模型系统工程
             <span className="inline-block w-2 h-2 rounded-full bg-orange-400 mx-1 ml-3" />RAG 工程

@@ -88,24 +88,24 @@ const Navbar = () => {
     const isStampsPage = pathname?.startsWith('/blog/life/japan/stamps');
     
     const navBackgroundClass = isScrolled || isMobileMenuOpen
-        ? (isTechPage ? "backdrop-blur-md shadow-lg" : isFinancePage ? "backdrop-blur-md shadow-sm" : isStampsPage ? "bg-[#f7f7f4]/80 dark:bg-[#1a1a18]/90 backdrop-blur-md shadow-sm" : "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg")
-        : (isTechPage || isFinancePage || isStampsPage ? "" : "bg-transparent");
+        ? (isTechPage || isLifePage ? "backdrop-blur-md shadow-sm" : isFinancePage ? "backdrop-blur-md shadow-sm" : isStampsPage ? "bg-[#f7f7f4]/80 dark:bg-[#1a1a18]/90 backdrop-blur-md shadow-sm" : "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg")
+        : (isTechPage || isLifePage || isFinancePage || isStampsPage ? "" : "bg-transparent");
 
     const textClassBase = "transition-colors duration-200 cursor-pointer";
     const textScrolledClass = isScrolled || isMobileMenuOpen
-        ? (isTechPage ? "text-foreground" : isStampsPage ? "text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white" : isLifePage ? "text-white hover:text-white/80" : isFinancePage ? "text-[#1a1c19] hover:text-[#506354]" : "text-foreground hover:text-primary")
-        : (isTechPage ? "text-foreground" : isStampsPage ? "text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white" : isLifePage ? "text-white hover:text-white/80" : isFinancePage ? "text-[#1a1c19] hover:text-[#506354]" : "text-foreground hover:text-primary");
+        ? (isTechPage || isLifePage ? "text-[#141413] hover:text-[#68645d]" : isStampsPage ? "text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white" : isFinancePage ? "text-[#1a1c19] hover:text-[#506354]" : "text-foreground hover:text-primary")
+        : (isTechPage || isLifePage ? "text-[#141413] hover:text-[#68645d]" : isStampsPage ? "text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white" : isFinancePage ? "text-[#1a1c19] hover:text-[#506354]" : "text-foreground hover:text-primary");
 
     const navLinkHoverBgClass = isScrolled || isMobileMenuOpen 
-        ? (isTechPage ? "" : isStampsPage ? "hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50" : isLifePage ? "hover:bg-white/10" : isFinancePage ? "hover:bg-[#f4f4ef]" : "hover:bg-muted/50") 
-        : (isTechPage ? "" : isStampsPage ? "hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40" : isLifePage ? "hover:bg-white/10" : isFinancePage ? "hover:bg-[#f4f4ef]/60" : "hover:bg-accent/10 dark:hover:bg-accent/20");
+        ? (isTechPage || isLifePage ? "hover:bg-[#E2DBCE]" : isStampsPage ? "hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50" : isFinancePage ? "hover:bg-[#f4f4ef]" : "hover:bg-muted/50") 
+        : (isTechPage || isLifePage ? "hover:bg-[#E2DBCE]/70" : isStampsPage ? "hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40" : isFinancePage ? "hover:bg-[#f4f4ef]/60" : "hover:bg-accent/10 dark:hover:bg-accent/20");
 
-    const mobileMenuBgClass = isFinancePage ? "bg-[#fafaf5]/95 backdrop-blur-md" : isStampsPage ? "bg-[#f7f7f4]/95 dark:bg-[#1a1a18]/95 backdrop-blur-md" : "bg-card/95 dark:bg-card/95 backdrop-blur-md";
+    const mobileMenuBgClass = isTechPage || isLifePage ? "bg-[#F0EEE7]/95 backdrop-blur-md" : isFinancePage ? "bg-[#fafaf5]/95 backdrop-blur-md" : isStampsPage ? "bg-[#f7f7f4]/95 dark:bg-[#1a1a18]/95 backdrop-blur-md" : "bg-card/95 dark:bg-card/95 backdrop-blur-md";
 
     return (
         <nav 
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBackgroundClass}`}
-            style={isTechPage ? { backgroundColor: '#f8f1ee' } : isFinancePage ? { backgroundColor: '#fafaf5' } : isStampsPage ? { backgroundColor: 'transparent' } : {}}
+            style={isTechPage || isLifePage ? { backgroundColor: '#F0EEE7' } : isFinancePage ? { backgroundColor: '#fafaf5' } : isStampsPage ? { backgroundColor: 'transparent' } : {}}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
@@ -162,7 +162,7 @@ const Navbar = () => {
                                 key={linkItem.label}
                                 href={linkItem.href}
                                 onClick={(e) => handleNavLinkClick(e, linkItem.href, linkItem.type)}
-                                className={`block px-3 py-2 rounded-md text-base font-medium ${textClassBase} ${isStampsPage ? 'text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50' : isLifePage ? 'text-white hover:text-white/80 hover:bg-white/10' : 'text-foreground'} ${isTechPage ? '' : isStampsPage ? '' : isLifePage ? '' : 'hover:text-primary hover:bg-muted/50'}`}
+                                className={`block px-3 py-2 rounded-md text-base font-medium ${textClassBase} ${isStampsPage ? 'text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50' : isLifePage || isTechPage ? 'text-[#141413] hover:text-[#68645d] hover:bg-[#E2DBCE]' : 'text-foreground'} ${isTechPage ? '' : isStampsPage ? '' : isLifePage ? '' : 'hover:text-primary hover:bg-muted/50'}`}
                             >
                                 {linkItem.label}
                             </Link>

@@ -19,20 +19,20 @@ export default function ColumnsPageClient({ allColumnsData }) {
             cardBg: 'bg-white dark:bg-neutral-900'
         },
         tech: {
-            background: 'bg-[#f8f1ee]',
-            title: 'text-[rgb(139,90,60)]',
-            filterBg: 'bg-[#eaddd7]/80',
-            activeButton: 'bg-[rgb(139,90,60)] text-white',
-            timelineBg: 'bg-[#f8f1ee]',
-            cardBg: 'bg-[#eaddd7]'
+            background: 'bg-[#F0EEE7]',
+            title: 'text-[#141413]',
+            filterBg: 'bg-[#E2DBCE]/80',
+            activeButton: 'bg-[#141413] text-[#F0EEE7]',
+            timelineBg: 'bg-[#F0EEE7]',
+            cardBg: 'bg-[#E2DBCE]'
         },
         life: {
-            background: 'bg-[#F5F3F0]',
-            title: 'text-[#8B7355]',
-            filterBg: 'bg-[#FEFCFA]/80',
-            activeButton: 'bg-[#8B7355] text-white',
-            timelineBg: 'bg-[#F5F3F0]',
-            cardBg: 'bg-[#FEFCFA]'
+            background: 'bg-[#F0EEE7]',
+            title: 'text-[#141413]',
+            filterBg: 'bg-[#E2DBCE]/80',
+            activeButton: 'bg-[#141413] text-[#F0EEE7]',
+            timelineBg: 'bg-[#F0EEE7]',
+            cardBg: 'bg-[#E2DBCE]'
         },
         finance: {
             background: 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800',

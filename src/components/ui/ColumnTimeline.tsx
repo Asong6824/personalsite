@@ -29,8 +29,8 @@ export const ColumnTimeline = ({
   
   // 根据主题获取时间轴渐变色
   const getTimelineGradient = () => {
-    if (theme?.activeButton?.includes('rgb(139,90,60)')) {
-      return 'bg-gradient-to-t from-amber-700 via-amber-600 to-transparent';
+    if (theme?.activeButton?.includes('#141413')) {
+      return 'bg-gradient-to-t from-[#141413] via-[#68645d] to-transparent';
     }
     if (theme?.activeButton?.includes('#81d8d0')) {
       return 'bg-gradient-to-t from-teal-500 via-teal-400 to-transparent';
@@ -102,7 +102,7 @@ export const ColumnTimeline = ({
                                 <span className="font-medium">{column.articleCount || 0} 篇文章</span>
                                 <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${
                                   column.channel === '生活' 
-                                    ? 'bg-[#8B7355]/10 text-[#8B7355]' 
+                                    ? 'bg-[#F0EEE7] text-[#141413]' 
                                     : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
                                 }`}>
                                   {column.channel}
@@ -127,7 +127,7 @@ export const ColumnTimeline = ({
                               <span className="font-medium">{column.articleCount || 0} 篇文章</span>
                               <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${
                                 column.channel === '生活' 
-                                  ? 'bg-[#8B7355]/10 text-[#8B7355]' 
+                                  ? 'bg-[#F0EEE7] text-[#141413]' 
                                   : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
                               }`}>
                                 {column.channel}

@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function JapanColumnLayout({ channelKey, channelConfig, columnKey, columnConfig, posts }) {
   const [selectedPref, setSelectedPref] = useState(null)
   return (
-    <div className="min-h-screen theme-muji overflow-x-hidden" style={{ backgroundColor: "var(--muji-bg)" }}>
+    <div className="min-h-screen theme-muji overflow-x-hidden" style={{ backgroundColor: "var(--muji-bg)" }} data-life-page>
       <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-8xl mx-auto px-4 pt-24 lg:pt-32 xl:pt-36 2xl:pt-40 pb-16">
         
 
@@ -99,10 +99,10 @@ export default function JapanColumnLayout({ channelKey, channelConfig, columnKey
                         {post.tags && post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-4">
                             {post.tags.slice(0, 4).map(tag => (
-                              <span key={tag} className="px-2 py-1 text-xs" style={{ backgroundColor: "#F0EBE5", color: "var(--muji-wood)", border: "1px solid var(--muji-border)" }}>#{tag}</span>
+                              <span key={tag} className="px-2 py-1 text-xs" style={{ backgroundColor: "var(--muji-bg)", color: "var(--muji-wood)", border: "1px solid var(--muji-border)" }}>#{tag}</span>
                             ))}
                             {post.tags.length > 4 && (
-                              <span className="px-2 py-1 text-xs" style={{ backgroundColor: "#F0EBE5", color: "var(--muji-taupe)", border: "1px solid var(--muji-border)" }}>+{post.tags.length - 4}</span>
+                              <span className="px-2 py-1 text-xs" style={{ backgroundColor: "var(--muji-bg)", color: "var(--muji-taupe)", border: "1px solid var(--muji-border)" }}>+{post.tags.length - 4}</span>
                             )}
                           </div>
                         )}

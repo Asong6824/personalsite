@@ -36,14 +36,14 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
     const featuredPosts = posts.slice(0, 6);
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: '#f8f1ee' }} data-tech-page>
+        <div className="min-h-screen" style={{ backgroundColor: 'var(--channel-bg)' }} data-tech-page>
             {/* Hero Section */}
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
                 className="relative min-h-screen flex items-center justify-center py-16 md:py-20 mt-8 md:mt-12 lg:mt-16"
-                style={{ backgroundColor: '#f8f1ee' }}
+                style={{ backgroundColor: 'var(--channel-bg)' }}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 md:gap-12">
@@ -54,13 +54,13 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                             transition={{ delay: 0.3 }}
                             className="flex-1 flex flex-col justify-center text-center lg:text-left"
                         >
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight" style={{ color: 'var(--channel-ink)' }}>
                                 探索技术前沿
                             </h1>
-                            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-6 md:mb-8 leading-relaxed">
+                            <p className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8 leading-relaxed" style={{ color: 'var(--channel-muted)' }}>
                                 谦逊，自驱，持续
                             </p>
-                            <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto lg:mx-0">
+                            <p className="text-base md:text-lg max-w-2xl mx-auto lg:mx-0" style={{ color: 'var(--channel-muted)' }}>
                                 在这里，我们深入探讨前端开发、后端架构、数据库设计等技术领域，
                                 分享实战经验与最佳实践，与你一起在技术的道路上不断前行。
                             </p>
@@ -100,10 +100,10 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                         transition={{ duration: 0.6 }}
                         className="text-center mb-8 md:mb-12"
                     >
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4" style={{ color: 'var(--channel-ink)' }}>
                             精选专栏
                         </h2>
-                        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+                        <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'var(--channel-muted)' }}>
                             深入探索各个技术领域，分享实战经验与最佳实践
                         </p>
                     </motion.div>
@@ -115,8 +115,8 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                 initial={{ opacity: 0, x: -50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.2, duration: 0.6 }}
-                                className="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                style={{ backgroundColor: '#eaddd7' }}
+                                className="rounded-2xl overflow-hidden transition-shadow duration-300"
+                                style={{ backgroundColor: 'var(--channel-card)', border: '1px solid var(--channel-border)' }}
                             >
                                 <div className="flex flex-col md:flex-row h-auto md:h-64">
                                     {/* 左侧图片 */}
@@ -132,27 +132,27 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                <span className="text-gray-400 text-sm">专栏首图占位 (16:9)</span>
+                                                <span className="text-sm" style={{ color: 'var(--channel-muted)' }}>专栏首图占位 (16:9)</span>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* 右侧内容 */}
                                     <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
-                                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
+                                        <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4" style={{ color: 'var(--channel-ink)' }}>
                                             {config.name}
                                         </h3>
-                                        <p className="text-gray-600 mb-4 md:mb-6 line-clamp-3 text-sm md:text-base">
+                                        <p className="mb-4 md:mb-6 line-clamp-3 text-sm md:text-base" style={{ color: 'var(--channel-muted)' }}>
                                             {config.description}
                                         </p>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs md:text-sm text-gray-500">
+                                            <span className="text-xs md:text-sm" style={{ color: 'var(--channel-muted)' }}>
                                                 {columnPosts.length} 篇文章
                                             </span>
                                             <Link
                                                 href={`/blog/${channelKey}/${columnKey}`}
                                                 className="font-medium text-sm md:text-base"
-                                                style={{ color: '#a18072' }}
+                                                style={{ color: 'var(--channel-ink)' }}
                                             >
                                                 Read More →
                                             </Link>
@@ -166,7 +166,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
             </section>
 
             {/* 精选文章 */}
-            <section className="py-12 md:py-16 lg:py-24" style={{ backgroundColor: '#f8f1ee' }}>
+            <section className="py-12 md:py-16 lg:py-24" style={{ backgroundColor: 'var(--channel-bg)' }}>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -174,10 +174,10 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                         transition={{ duration: 0.6 }}
                         className="text-center mb-8 md:mb-12"
                     >
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4" style={{ color: 'var(--channel-ink)' }}>
                             精选文章
                         </h2>
-                        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+                        <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'var(--channel-muted)' }}>
                             最新的技术洞察与实践分享
                         </p>
                     </motion.div>
@@ -191,7 +191,8 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                     initial={{ opacity: 0, y: 30 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1, duration: 0.6 }}
-                                    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+                                    className="rounded-xl transition-shadow duration-300 overflow-hidden"
+                                    style={{ backgroundColor: 'var(--channel-card)', border: '1px solid var(--channel-border)' }}
                                 >
                                     <Link href={`/blog/${post.slug}`}>
                                         {/* 文章图片 */}
@@ -204,7 +205,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                 />
                                             ) : (
                                                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                    <span className="text-gray-400 text-xs sm:text-sm">文章首图占位 (16:9)</span>
+                                                    <span className="text-xs sm:text-sm" style={{ color: 'var(--channel-muted)' }}>文章首图占位 (16:9)</span>
                                                 </div>
                                             )}
 
@@ -225,16 +226,16 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
 
                                         {/* 文章内容 */}
                                         <div className="p-4 sm:p-6">
-                                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 line-clamp-2">
+                                            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 line-clamp-2" style={{ color: 'var(--channel-ink)' }}>
                                                 {post.title}
                                             </h3>
                                             {post.excerpt && (
-                                                <p className="text-gray-600 mb-3 sm:mb-4 line-clamp-3 text-sm sm:text-base">
+                                                <p className="mb-3 sm:mb-4 line-clamp-3 text-sm sm:text-base" style={{ color: 'var(--channel-muted)' }}>
                                                     {post.excerpt}
                                                 </p>
                                             )}
 
-                                            <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                                            <div className="flex items-center justify-between text-xs sm:text-sm" style={{ color: 'var(--channel-muted)' }}>
                                                 <span>{post.author || '阿松'}</span>
                                                 <time dateTime={post.date}>
                                                     {format(parseISO(post.date), 'yyyy年MM月dd日', { locale: zhCN })}

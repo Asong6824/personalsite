@@ -38,7 +38,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
     const featuredPosts = posts.slice(0, 6);
 
     return (
-        <div className={`min-h-screen ${styles.scholarlyPalette}`}>
+        <div className={`min-h-screen ${styles.scholarlyPalette}`} data-life-page>
             {/* Global Fixed Viewport Spanning Background */}
             <SunlitBackground />
 

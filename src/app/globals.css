@@ -1035,18 +1035,38 @@
   --color-5-new: oklch(0.60 0.18 220);
 }
 
+[data-tech-page],
+[data-life-page],
+.theme-warm-editorial {
+  --channel-bg: #F0EEE7;
+  --channel-card: #E2DBCE;
+  --channel-card-hover: #D8D0C3;
+  --channel-ink: #141413;
+  --channel-muted: #68645d;
+  --channel-border: #D8D0C3;
+  --channel-accent: #141413;
+  color: var(--channel-ink);
+}
+
 .theme-muji {
-  --muji-bg: #F7F4EF;
-  --muji-paper: #FEFCFA;
-  --muji-ink: #4A4A4A;
-  --muji-taupe: #A0927D;
-  --muji-wood: #8B7355;
-  --muji-border: #E5DDD5;
-  --muji-accent: #C8B99C;
-  --muji-map-visited: #EAE3D8;
-  --muji-map-stayed: #CBB89B;
-  --muji-map-lived: #8B7355;
-  --muji-map-unvisited: #CDC6BD;
+  --muji-bg: #F0EEE7;
+  --muji-paper: #E2DBCE;
+  --muji-ink: #141413;
+  --muji-taupe: #68645d;
+  --muji-wood: #141413;
+  --muji-border: #D8D0C3;
+  --muji-accent: #D8D0C3;
+  --muji-map-visited: #E2DBCE;
+  --muji-map-stayed: #D8D0C3;
+  --muji-map-lived: #141413;
+  --muji-map-unvisited: #CFC7B9;
+  --channel-bg: #F0EEE7;
+  --channel-card: #E2DBCE;
+  --channel-card-hover: #D8D0C3;
+  --channel-ink: #141413;
+  --channel-muted: #68645d;
+  --channel-border: #D8D0C3;
+  --channel-accent: #141413;
 }
 
 .theme-muji #JP-01 {
@@ -1217,45 +1237,57 @@
   fill: var(--muji-map-visited);
 }
 
-/* ===== 文章宽度切换过渡与宽屏优化 ===== */
+/* ===== 文章阅读版式 ===== */
 
-/* 文章区域宽度过渡 */
 article {
-  transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 文章页容器宽度控制 */
 .article-container {
-  max-width: 80rem; /* 1280px */
-  transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.article-wide .article-container {
-  max-width: 96rem; /* 1536px */
+  max-width: 92rem; /* 1472px */
 }
 
-/* 宽屏模式：增加内边距让内容更舒展 */
-.article-wide article {
-  padding-left: 1rem;
-  padding-right: 1rem;
+.article-reading-prose {
+  font-size: 1.0625rem;
+  line-height: 1.95;
 }
 
-/* 宽屏模式： prose 内容增加段落间距 */
-.article-wide .prose p {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
+.article-reading-prose p,
+.article-reading-prose li {
+  letter-spacing: 0;
 }
 
-/* 宽屏模式：表格和图片充分利用宽度 */
-.article-wide .prose table,
-.article-wide .prose img,
-.article-wide .prose video {
+.article-reading-prose p {
+  margin-top: 1.15em;
+  margin-bottom: 1.15em;
+}
+
+.article-reading-prose h2 {
+  border-top: 1px solid var(--channel-border, transparent);
+  padding-top: 1.35em;
+}
+
+.article-reading-prose h2:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.article-figure-bleed {
+  width: min(100vw - 2.5rem, 900px);
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.article-interactive-map {
   width: 100%;
 }
 
-/* 宽屏模式：代码块阴影更明显 */
-.article-wide .prose pre {
-  box-shadow: inset 2px 2px 8px rgba(0,0,0,0.06), inset -1px -1px 3px rgba(255,255,255,0.5);
+@media (min-width: 1280px) {
+  .article-figure-bleed {
+    margin-left: 0;
+    margin-right: 0;
+    transform: translateX(calc(760px - 100%));
+  }
 }
 
 /* 图表容器过渡 */
@@ -1263,11 +1295,6 @@ article {
 .sketchy-rag-overview svg {
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
               height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 宽屏模式下的图表更大 */
-.article-wide .rag-flow-diagram svg {
-  max-width: 100%;
 }
 
 /* 技术选型面板过渡 */
