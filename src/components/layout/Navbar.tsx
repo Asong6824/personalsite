@@ -9,11 +9,11 @@ import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
 
 // 1. 更新 navLinks 数组，添加 type 并修正 href
 const navLinks = [
-    { label: '首页', href: '/#hero', type: 'scroll' }, // 使用 /#hero 格式确保从任何页面都能跳转
-    { label: '关于我', href: '/#about', type: 'scroll' },
-    { label: '技术栈', href: '/#programmer-details', type: 'scroll' },
-    { label: '足迹', href: '/#footprints', type: 'scroll' },
+    { label: '首页', href: '/', type: 'page' },
     { label: '博客', href: '/blog', type: 'page' },     // 明确为页面链接到 /blog
+    { label: '技术', href: '/blog/tech', type: 'page' },
+    { label: '生活', href: '/blog/life', type: 'page' },
+    { label: '金融', href: '/blog/finance', type: 'page' },
     { label: '印章', href: '/blog/life/japan/stamps', type: 'page' },   // 日本车站印章收藏
     // { label: '联系我', href: '#contact', type: 'scroll' }, // 如果需要可以加回来
 ];
@@ -79,6 +79,10 @@ const Navbar = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
+    if (pathname === '/') {
+        return null;
+    }
 
     // 4. 应用全局样式 (使用 CSS 变量对应的 Tailwind 类)
     // 检查是否在技术详情页或生活频道页

@@ -9,7 +9,8 @@
       （注：动态加载机制暂未实现，目前暂放 content/components/{topic}/）
 
 2. 给页面级区块用的？
-   ├─ 首页/频道页/专栏页 ─→ src/components/features/
+   ├─ 首页 3D 体验 ───────→ src/components/home/
+   ├─ 频道页/专栏页 ──────→ src/components/features/
    ├─ 金融频道专属 ───────→ src/components/finance/
    └─ 创作频道专属 ───────→ src/components/create/
 
@@ -33,6 +34,7 @@
 
 | 目录 | 职责 | 示例 |
 |------|------|------|
+| `src/components/home/` | 首页 3D WebGL 体验 | `HomeExperienceClient` |
 | `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
 | `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`MusicPlayer`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
 | `src/components/finance/` | 金融频道专属 | `TempoHero`、`TempoGrid`、`DataWall` |
@@ -43,7 +45,7 @@
 | `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.js`） |
 | `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
 
-> **关于旧版首页组件**：`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版区块式首页，现随首页重构为 `HomeScrollExperience` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
+> **关于旧版首页组件**：`HomeScrollExperience`、`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版首页，现随首页重构为 `HomeExperienceClient` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
 | `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*`、`travel/*` |
 
 ---
