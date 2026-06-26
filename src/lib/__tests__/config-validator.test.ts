@@ -9,7 +9,7 @@ import {
 } from "../config-validator";
 import type { ChannelsConfig, Post } from "@/types";
 
-const VALID_CONFIG: ChannelsConfig = {
+const VALID_CONFIG = {
   tech: {
     name: "技术",
     description: "技术分享",
@@ -23,7 +23,7 @@ const VALID_CONFIG: ChannelsConfig = {
       },
     },
   },
-};
+} as unknown as ChannelsConfig;
 
 describe("validateChannelsConfig", () => {
   it("通过有效配置", () => {

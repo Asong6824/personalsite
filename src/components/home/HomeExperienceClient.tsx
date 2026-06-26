@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -8,21 +9,37 @@ import { MotionPathPlugin } from "gsap/dist/MotionPathPlugin";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
-import { ArrowRight } from "lucide-react";
 import ObserveSignalField from "./ObserveSignalField";
 import ExpressConnectionField from "./ExpressConnectionField";
 import CreateRingField from "./CreateRingField";
+import { CREATE_RING_SCROLL_OFFSET, CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
+import { SITE_WARM_BACKGROUND, SITE_WARM_BACKGROUND_THREE } from "@/lib/site-theme";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 }
 
-const CREATE_RING_SCROLL_OFFSET = 620;
+const expressConnectionScroll = {
+  start: 875,
+  end: 1230 + CREATE_STAGE_SCROLL_OFFSET,
+};
+
+const channelEntryScroll = {
+  start: 2040 + CREATE_RING_SCROLL_OFFSET,
+  end: 2340 + CREATE_RING_SCROLL_OFFSET,
+};
+
+const channelEntries = [
+  { id: "tech", label: "TECH", href: "/blog/tech", svg: "/home-experience/svgtitle/channel-tech.svg", scale: 0.00115 },
+  { id: "life", label: "LIFE", href: "/blog/life", svg: "/home-experience/svgtitle/channel-life.svg", scale: 0.00125 },
+  { id: "finance", label: "FINANCE", href: "/blog/finance", svg: "/home-experience/svgtitle/channel-finance.svg", scale: 0.00078 },
+  { id: "design", label: "DESIGN", href: "/blog/create", svg: "/home-experience/svgtitle/channel-design.svg", scale: 0.00088 },
+] as const;
 
 // Coordinate arrays for camera and look-at targets.
 // The first three post-hero beats are Observe -> Express -> Create; the
-// path changes after Create as the page enters the reel/reviews/awards area.
+// path changes after Create as the page enters the about/channels/contact area.
 const cameraStages = [
   {
     name: "observe",
@@ -42,7 +59,7 @@ const cameraStages = [
     name: "create",
     from: { x: 0.783, y: 14.749, z: 13.3 },
     to: { x: 4.024, y: 22.301, z: 7.031 },
-    scrollRange: { start: 1245, end: 1440 },
+    scrollRange: { start: 1245 + CREATE_STAGE_SCROLL_OFFSET, end: 1440 + CREATE_STAGE_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
@@ -53,38 +70,23 @@ const cameraStages = [
     ease: "power2.inOut",
   },
   {
-    name: "video",
+    name: "about",
     from: { x: 23.346, y: 20.432, z: 2.102 },
-    to: {
-      desktop: { x: 23.321, y: 15.607, z: 3.911 },
-      mobile: { x: 23.346, y: 20.432, z: 2.102 }
-    },
+    to: { x: 23.346, y: 18.432, z: 2.102 },
     scrollRange: { start: 1745 + CREATE_RING_SCROLL_OFFSET, end: 1990 + CREATE_RING_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
-    name: "reviews",
-    from: {
-      desktop: { x: 23.321, y: 15.607, z: 3.911 },
-      mobile: { x: 23.346, y: 20.432, z: 2.102 }
-    },
-    to: {
-      desktop: { x: 23.312, y: 14.16, z: 4.024 },
-      mobile: { x: 23.346, y: 20.432, z: 2.102 }
-    },
+    name: "channels",
+    from: { x: 23.346, y: 18.432, z: 2.102 },
+    to: { x: 23.346, y: 18.432, z: 2.102 },
     scrollRange: { start: 2040 + CREATE_RING_SCROLL_OFFSET, end: 2240 + CREATE_RING_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
-    name: "awards",
-    from: {
-      desktop: { x: 23.312, y: 14.16, z: 4.024 },
-      mobile: { x: 23.346, y: 20.432, z: 2.102 }
-    },
-    to: {
-      desktop: { x: 23.292, y: 11.443, z: 4.236 },
-      mobile: { x: 23.346, y: 20.432, z: 2.102 }
-    },
+    name: "contact",
+    from: { x: 23.346, y: 18.432, z: 2.102 },
+    to: { x: 23.346, y: 18.432, z: 2.102 },
     scrollRange: { start: 2340 + CREATE_RING_SCROLL_OFFSET, end: 2540 + CREATE_RING_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
@@ -109,7 +111,7 @@ const targetStages = [
     name: "create",
     from: { x: 15.777, y: 12.603, z: -0.428 },
     to: { x: 17.443, y: 20.712, z: 0.431 },
-    scrollRange: { start: 1245, end: 1440 },
+    scrollRange: { start: 1245 + CREATE_STAGE_SCROLL_OFFSET, end: 1440 + CREATE_STAGE_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
@@ -120,38 +122,23 @@ const targetStages = [
     ease: "power2.inOut",
   },
   {
-    name: "video",
+    name: "about",
     from: { x: 23.342, y: 20.293, z: 1.263 },
-    to: {
-      desktop: { x: 23.301, y: 15.457, z: 1.984 },
-      mobile: { x: 23.342, y: 20.293, z: 1.263 }
-    },
+    to: { x: 23.342, y: 18.293, z: 1.263 },
     scrollRange: { start: 1745 + CREATE_RING_SCROLL_OFFSET, end: 1990 + CREATE_RING_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
-    name: "reviews",
-    from: {
-      desktop: { x: 23.301, y: 15.457, z: 1.984 },
-      mobile: { x: 23.342, y: 20.293, z: 1.263 }
-    },
-    to: {
-      desktop: { x: 23.292, y: 14.01, z: 2.097 },
-      mobile: { x: 23.342, y: 20.293, z: 1.263 }
-    },
+    name: "channels",
+    from: { x: 23.342, y: 18.293, z: 1.263 },
+    to: { x: 23.342, y: 18.293, z: 1.263 },
     scrollRange: { start: 2040 + CREATE_RING_SCROLL_OFFSET, end: 2240 + CREATE_RING_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
-    name: "awards",
-    from: {
-      desktop: { x: 23.292, y: 14.01, z: 2.097 },
-      mobile: { x: 23.342, y: 20.293, z: 1.263 }
-    },
-    to: {
-      desktop: { x: 23.272, y: 11.293, z: 2.309 },
-      mobile: { x: 23.342, y: 20.293, z: 1.263 }
-    },
+    name: "contact",
+    from: { x: 23.342, y: 18.293, z: 1.263 },
+    to: { x: 23.342, y: 18.293, z: 1.263 },
     scrollRange: { start: 2340 + CREATE_RING_SCROLL_OFFSET, end: 2540 + CREATE_RING_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
@@ -211,7 +198,7 @@ export default function HomeExperienceClient() {
     // 1. Initialise Three.js Components
     const clock = new THREE.Clock();
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xcad1fc);
+    scene.background = new THREE.Color(SITE_WARM_BACKGROUND_THREE);
 
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.01, 1000);
     camera.position.set(2.093, -4.505, 44.601);
@@ -271,6 +258,7 @@ export default function HomeExperienceClient() {
     let createGroup: THREE.Group | null = null;
     let expressGroup: THREE.Group | null = null;
     let observeGroup: THREE.Group | null = null;
+    let channelTitleGroup: THREE.Group | null = null;
     let videoMesh: THREE.Mesh | null = null;
     let reviewGroup: THREE.Group | null = null;
     let awardsGroup: THREE.Group | null = null;
@@ -304,6 +292,57 @@ export default function HomeExperienceClient() {
           }
         });
         parent.add(group);
+      });
+    };
+
+    const createSvgTextModel = (data: { paths: any[] }, scale: number, color = 0x0a0c20) => {
+      const group = new THREE.Group();
+      const materials: THREE.MeshStandardMaterial[] = [];
+
+      data.paths.forEach((path) => {
+        const shapes = SVGLoader.createShapes(path);
+        shapes.forEach((shape) => {
+          const geometry = new THREE.ExtrudeGeometry(shape, {
+            depth: 10,
+            bevelEnabled: true,
+            bevelThickness: 0.8,
+            bevelSize: 0.8,
+            bevelSegments: 1,
+          });
+          const material = new THREE.MeshStandardMaterial({
+            color,
+            roughness: 0.42,
+            metalness: 0.08,
+            transparent: true,
+            opacity: 0,
+          });
+          const mesh = new THREE.Mesh(geometry, material);
+          group.add(mesh);
+          materials.push(material);
+        });
+      });
+
+      const bounds = new THREE.Box3().setFromObject(group);
+      const center = bounds.getCenter(new THREE.Vector3());
+      group.children.forEach((child) => {
+        child.position.x -= center.x;
+        child.position.y -= center.y;
+        child.position.z -= center.z;
+      });
+      group.scale.set(scale, -scale, scale);
+      group.userData.materials = materials;
+      return group;
+    };
+
+    const loadSvgTextModel = (
+      url: string,
+      scale: number,
+      onLoad: (model: THREE.Group) => void,
+      color = 0x0a0c20
+    ) => {
+      const loader = new SVGLoader();
+      loader.load(url, (data) => {
+        onLoad(createSvgTextModel(data, scale, color));
       });
     };
 
@@ -353,8 +392,13 @@ export default function HomeExperienceClient() {
     });
 
     const loadModels = () => {
+      // The former showcase/reviews/awards scenes remain in this file only as a
+      // temporary migration reference. They are not loaded while the three
+      // replacement stages are intentionally content-empty.
+      const shouldLoadLegacyFinalStageVisuals = false;
+
       // 1. Cyclorama Background Plane
-      const bgTex = textureLoader.load("/home-experience/backTexture/beckground_04min.jpeg");
+      const bgTex = textureLoader.load("/home-experience/backTexture/background-f0eee7.png");
       bgTex.colorSpace = THREE.SRGBColorSpace;
       glbLoader.load("/home-experience/models/BG2.glb", (gltf) => {
         const bgScene = gltf.scene;
@@ -425,8 +469,8 @@ export default function HomeExperienceClient() {
           ease: "power2.inOut",
           scrollTrigger: {
             trigger: "body",
-            start: () => getScrollDepth(1445) + " top",
-            end: () => getScrollDepth(1525) + " top",
+            start: () => getScrollDepth(1445 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+            end: () => getScrollDepth(1525 + CREATE_STAGE_SCROLL_OFFSET) + " top",
             scrub: true,
             invalidateOnRefresh: true,
           }
@@ -441,8 +485,8 @@ export default function HomeExperienceClient() {
           ease: "power2.inOut",
           scrollTrigger: {
             trigger: "body",
-            start: () => getScrollDepth(1445) + " top",
-            end: () => getScrollDepth(1525) + " top",
+            start: () => getScrollDepth(1445 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+            end: () => getScrollDepth(1525 + CREATE_STAGE_SCROLL_OFFSET) + " top",
             scrub: true,
             invalidateOnRefresh: true,
           }
@@ -456,8 +500,8 @@ export default function HomeExperienceClient() {
           immediateRender: false,
           scrollTrigger: {
             trigger: "body",
-            start: () => getScrollDepth(1950) + " top",
-            end: () => getScrollDepth(2035) + " top",
+            start: () => getScrollDepth(1950 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+            end: () => getScrollDepth(2035 + CREATE_STAGE_SCROLL_OFFSET) + " top",
             scrub: true,
             invalidateOnRefresh: true,
           }
@@ -473,8 +517,8 @@ export default function HomeExperienceClient() {
           immediateRender: false,
           scrollTrigger: {
             trigger: "body",
-            start: () => getScrollDepth(1950) + " top",
-            end: () => getScrollDepth(2035) + " top",
+            start: () => getScrollDepth(1950 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+            end: () => getScrollDepth(2035 + CREATE_STAGE_SCROLL_OFFSET) + " top",
             scrub: true,
             invalidateOnRefresh: true,
           }
@@ -545,8 +589,8 @@ export default function HomeExperienceClient() {
       const expressTl = gsap.timeline({
         scrollTrigger: {
           trigger: "body",
-          start: () => getScrollDepth(875) + " top",
-          end: () => getScrollDepth(1230) + " top",
+          start: () => getScrollDepth(expressConnectionScroll.start) + " top",
+          end: () => getScrollDepth(expressConnectionScroll.end) + " top",
           scrub: true,
           invalidateOnRefresh: true,
         }
@@ -560,7 +604,7 @@ export default function HomeExperienceClient() {
         .to(".express-node-level-2", { autoAlpha: 1, scale: 1, duration: 0.16, stagger: 0.035, ease: "power1.out" }, 0.56)
         .to(".express-edge-level-3", { strokeDashoffset: 0, opacity: 0.72, duration: 0.22, stagger: 0.04, ease: "power1.inOut" }, 0.72)
         .to(".express-legend", { autoAlpha: 1, x: 0, duration: 0.16, ease: "power1.out" }, 0.78)
-        .to(".express-connection-field", { autoAlpha: 0, duration: 0.1, ease: "none" }, 0.96);
+        .to(".express-connection-field", { autoAlpha: 0, duration: 0.1, ease: "none" }, 1.18);
 
       // 5. Stage 1 title: Observe
       observeGroup = new THREE.Group();
@@ -681,14 +725,103 @@ export default function HomeExperienceClient() {
           }, timing.start + timing.live);
       });
 
-      // 8. Stage 5 Motion Plane Showcase (videoPlane)
+      // 6. Channel entry titles: SVG-derived 3D word marks that rotate into
+      // a neutral center pose while the channel stage scrolls past.
+      channelTitleGroup = new THREE.Group();
+      channelTitleGroup.position.set(
+        isDesktop ? 23.34 : 23.28,
+        isDesktop ? 18.24 : 18.08,
+        isDesktop ? -1.72 : -1.38
+      );
+      channelTitleGroup.rotation.set(-0.0776, 0.0103, 0.0008);
+      channelTitleGroup.visible = false;
+      scene.add(channelTitleGroup);
+
+      const channelTitleModels = channelEntries.map((entry) => ({
+        ...entry,
+        model: null as THREE.Group | null,
+      }));
+      const channelActiveColor = new THREE.Color(0x0a0c20);
+      const channelMutedColor = new THREE.Color(0x687084);
+      const channelSpacing = isDesktop ? 1.82 : 1.28;
+
+      const updateChannelTitleModels = (progress: number) => {
+        const activeIndex = progress * (channelTitleModels.length - 1);
+
+        channelTitleModels.forEach((entry, index) => {
+          if (!entry.model) return;
+
+          const distanceFromCenter = index - activeIndex;
+          const absoluteDistance = Math.abs(distanceFromCenter);
+          const centerWeight = THREE.MathUtils.clamp(1 - absoluteDistance, 0, 1);
+          const opacity = THREE.MathUtils.clamp(1 - absoluteDistance * 0.48, 0.08, 0.95);
+          const scale = entry.scale * (isDesktop ? 1 : 0.74) * (1 + centerWeight * 0.08);
+          const color = new THREE.Color().lerpColors(channelMutedColor, channelActiveColor, centerWeight);
+
+          entry.model.visible = absoluteDistance < 1.7;
+          entry.model.position.set(
+            isDesktop ? distanceFromCenter * -0.08 : 0,
+            -distanceFromCenter * channelSpacing,
+            distanceFromCenter * -0.16
+          );
+          entry.model.rotation.set(
+            -0.045 + absoluteDistance * 0.08,
+            distanceFromCenter * 0.08,
+            distanceFromCenter * -0.23
+          );
+          entry.model.scale.set(scale, -scale, scale);
+          (entry.model.userData.materials as THREE.MeshStandardMaterial[]).forEach((material) => {
+            material.opacity = opacity;
+            material.color.copy(color);
+          });
+        });
+      };
+
+      channelTitleModels.forEach((entry) => {
+        const entryScale = entry.scale * (isDesktop ? 1 : 0.74);
+
+        loadSvgTextModel(entry.svg, entryScale, (model) => {
+          model.name = `channel-title-${entry.id}`;
+          model.visible = false;
+          channelTitleGroup!.add(model);
+          entry.model = model;
+          updateChannelTitleModels(0);
+        });
+      });
+
+      updateChannelTitleModels(0);
+      ScrollTrigger.create({
+        trigger: "body",
+        start: () => getScrollDepth(channelEntryScroll.start) + " top",
+        end: () => getScrollDepth(channelEntryScroll.end) + " top",
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          updateChannelTitleModels(self.progress);
+        },
+        onEnter: () => {
+          if (channelTitleGroup) channelTitleGroup.visible = true;
+        },
+        onEnterBack: () => {
+          if (channelTitleGroup) channelTitleGroup.visible = true;
+        },
+        onLeave: () => {
+          if (channelTitleGroup) channelTitleGroup.visible = false;
+        },
+        onLeaveBack: () => {
+          if (channelTitleGroup) channelTitleGroup.visible = false;
+        },
+      });
+
+      if (shouldLoadLegacyFinalStageVisuals) {
+      // 8. Legacy Stage 5 Motion Plane Showcase (disabled)
       const reelCanvas = document.createElement("canvas");
       reelCanvas.width = 1600;
       reelCanvas.height = 900;
       const reelCtx = reelCanvas.getContext("2d");
       if (reelCtx) {
         const gradient = reelCtx.createLinearGradient(0, 0, 1600, 900);
-        gradient.addColorStop(0, "#cad1fc");
+        gradient.addColorStop(0, SITE_WARM_BACKGROUND);
         gradient.addColorStop(0.5, "#f7d7e9");
         gradient.addColorStop(1, "#0a0c20");
         reelCtx.fillStyle = gradient;
@@ -1320,6 +1453,8 @@ export default function HomeExperienceClient() {
       );
     };
 
+      }
+
     // 11. Core Camera + focusTarget Scroll Timelines
     const masterCamTimeline = gsap.timeline({
       scrollTrigger: {
@@ -1387,6 +1522,30 @@ export default function HomeExperienceClient() {
         }
       );
     });
+
+    // Final information stages are viewport-fixed overlays. Their visibility is
+    // tied to logical scroll ranges so they cannot drift through Create.
+    const createInfoStageTimeline = (selector: string, start: number, end: number) => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: "body",
+          start: () => getScrollDepth(start) + " top",
+          end: () => getScrollDepth(end) + " top",
+          scrub: true,
+          invalidateOnRefresh: true,
+        }
+      })
+        .fromTo(selector,
+          { autoAlpha: 0, y: 24 },
+          { autoAlpha: 1, y: 0, duration: 0.12, ease: "power1.out" }
+        )
+        .to(selector, { autoAlpha: 1, y: 0, duration: 0.76, ease: "none" })
+        .to(selector, { autoAlpha: 0, y: -24, duration: 0.12, ease: "power1.in" });
+    };
+
+    createInfoStageTimeline(".home-about-stage", 1745 + CREATE_RING_SCROLL_OFFSET, 1990 + CREATE_RING_SCROLL_OFFSET);
+    createInfoStageTimeline(".home-channels-stage", channelEntryScroll.start, channelEntryScroll.end);
+    createInfoStageTimeline(".home-contact-stage", 2340 + CREATE_RING_SCROLL_OFFSET, 2940 + CREATE_RING_SCROLL_OFFSET);
 
     // 12. Main Render Tick Loop
     let animationFrameId: number;
@@ -1483,7 +1642,10 @@ export default function HomeExperienceClient() {
 
   if (!mounted) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#cad1fc]">
+      <div
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+        style={{ backgroundColor: SITE_WARM_BACKGROUND }}
+      >
         <span className="text-xs font-semibold tracking-widest text-[#0a0c20] uppercase animate-pulse">
           Initializing WebGL...
         </span>
@@ -1495,7 +1657,10 @@ export default function HomeExperienceClient() {
     <div className="relative w-full text-[#0a0c20]">
       {/* 1. LOADING SCREEN */}
       {isLoading && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#cad1fc] transition-opacity duration-700">
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-700"
+          style={{ backgroundColor: SITE_WARM_BACKGROUND }}
+        >
           <div className="w-64 h-1 bg-slate-300/40 rounded-full overflow-hidden relative">
             <div 
               className="absolute left-0 top-0 h-full bg-[#0a0c20] transition-all duration-300 ease-out" 
@@ -1521,7 +1686,7 @@ export default function HomeExperienceClient() {
       <CreateRingField />
 
       {/* 4. SCROLL CONTAINER TRACK */}
-      <div ref={scrollContainerRef} className="relative z-10 w-full h-[3600vh]">
+      <div ref={scrollContainerRef} className="relative z-10 w-full h-[3800vh]">
         {/* Stage 0: Hero Overlay */}
         <section className="sticky top-0 w-full h-screen flex flex-col justify-end p-12 md:p-24 pointer-events-none">
           <div className="max-w-xl text-left transform translate-y-[-20%] pointer-events-auto hero-text opacity-0">
@@ -1540,61 +1705,69 @@ export default function HomeExperienceClient() {
         <div className="h-[200vh]" />
         <section className="sticky top-0 w-full h-screen pointer-events-none" />
 
-        {/* Stage 4: Video Showcases Section */}
+        {/* Stage 4: About */}
         <div className="h-[200vh]" />
-        <section className="sticky top-0 w-full h-screen pointer-events-none" />
-
-        {/* Stage 5: Testimonials Reviews Section */}
-        <div className="h-[920vh]" />
-        <section className="sticky top-0 w-full h-screen flex items-center justify-start p-12 md:p-24 pointer-events-none">
-          <div className="w-full max-w-2xl bg-white/10 p-8 rounded-3xl border border-white/15 backdrop-blur-lg shadow-xl pointer-events-auto flex flex-col gap-6 testimonails-text">
-            <span className="text-xs font-bold tracking-wider text-rose-700 uppercase">Reviews</span>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white/40 p-5 rounded-2xl border border-white/20 backdrop-blur-md">
-                <p className="text-xs italic text-slate-800">
-                  &ldquo;A personal site can be more than an archive. It can be a living interface for ideas, projects, and the discipline behind them.&rdquo;
-                </p>
-                <div className="mt-3">
-                  <h4 className="text-xs font-bold text-[#0a0c20]">Wallis Mills</h4>
-                  <span className="text-[10px] text-slate-600">Director of Marketing, Network Tech</span>
-                </div>
-              </div>
-              <div className="bg-white/40 p-5 rounded-2xl border border-white/20 backdrop-blur-md">
-                <p className="text-xs italic text-slate-800">
-                  &ldquo;The best digital notebooks make thinking visible. They invite readers to explore, compare, and come back with better questions.&rdquo;
-                </p>
-                <div className="mt-3">
-                  <h4 className="text-xs font-bold text-[#0a0c20]">David Grau</h4>
-                  <span className="text-[10px] text-slate-600">Director Global Product Design, Cadence</span>
-                </div>
-              </div>
-            </div>
+        <section
+          aria-labelledby="home-about-title"
+          className="home-about-stage invisible fixed inset-0 z-20 flex h-screen w-full items-center p-8 opacity-0 md:p-16 lg:p-24 pointer-events-none"
+        >
+          <div className="w-full rounded-[2rem] border border-[#0a0c20]/10 bg-white/10 p-8 backdrop-blur-sm md:p-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">About</p>
+            <h2 id="home-about-title" className="mt-2 text-3xl font-semibold tracking-tight md:text-5xl">自我介绍</h2>
+            <div className="mt-10 min-h-40" aria-hidden="true" />
           </div>
         </section>
 
-        {/* Stage 6: Awards & Footer */}
+        {/* Stage 5: Channels */}
+        <div className="h-[920vh]" />
+        <section
+          aria-labelledby="home-channels-title"
+          className="home-channels-stage invisible fixed inset-0 z-20 flex h-screen w-full flex-col items-start justify-end gap-8 px-8 pb-10 pt-24 opacity-0 pointer-events-none md:flex-row md:items-end md:justify-between md:px-16 md:pb-14 lg:px-24 lg:pb-20"
+        >
+          <div className="max-w-xs text-[#0a0c20]">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">Channels</p>
+            <h2 id="home-channels-title" className="mt-3 text-2xl font-semibold tracking-tight md:text-4xl">频道入口</h2>
+          </div>
+
+          <nav aria-label="首页频道入口" className="pointer-events-auto flex max-w-[18rem] flex-wrap gap-x-5 gap-y-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#0a0c20]/55 md:max-w-none md:justify-end">
+            {channelEntries.map((entry) => (
+              <Link key={entry.id} className="transition-colors hover:text-[#0a0c20]" href={entry.href}>
+                {entry.label}
+              </Link>
+            ))}
+          </nav>
+        </section>
+
+        {/* Stage 6: Contact */}
         <div className="h-[200vh]" />
-        <section className="sticky top-0 w-full h-screen flex flex-col justify-between p-12 md:p-24 pointer-events-none">
-          <div className="max-w-md bg-white/10 p-8 rounded-3xl border border-white/15 backdrop-blur-lg shadow-xl pointer-events-auto">
-            <span className="text-xs font-bold tracking-wider text-yellow-700 uppercase">Accolades</span>
-            <h2 className="text-3xl font-extrabold tracking-tight mt-2 uppercase text-[#0a0c20]">
-              Awwwards & Webby
-            </h2>
-            <p className="mt-4 text-sm text-slate-700">
-              Honored with Webby design awards, Red Dot recognition, and Awwwards trophies for our forward-looking digital craftsmanship.
-            </p>
-          </div>
-          
-          <div className="w-full bg-[#0a0c20] text-white p-8 rounded-3xl border border-white/10 pointer-events-auto flex flex-col md:flex-row justify-between items-center gap-6 mt-12">
-            <div className="text-left">
-              <h3 className="text-xl font-bold tracking-tight uppercase">Let&apos;s create together</h3>
-              <p className="text-xs text-slate-400 mt-1">A personal WebGL homepage for writing, experiments, and long-term notes.</p>
+        <section
+          aria-labelledby="home-contact-title"
+          className="home-contact-stage invisible fixed inset-0 z-20 flex h-screen w-full items-end px-8 pb-10 pt-24 opacity-0 pointer-events-none md:px-16 md:pb-14 lg:px-24 lg:pb-20"
+        >
+          <footer className="w-full text-[#0a0c20]">
+            <div className="grid gap-10 border-t border-[#0a0c20]/15 pt-8 md:grid-cols-[1.2fr_0.8fr_0.8fr] md:gap-12">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">Contact</p>
+                <h2 id="home-contact-title" className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">且听松涛</h2>
+                <p className="mt-4 max-w-xl text-sm leading-6 text-[#0a0c20]/65 md:text-base">
+                  写作、技术实验与长期观察的个人站点。感谢你读到这里。
+                </p>
+              </div>
+
+              <nav aria-label="首页页脚导航" className="pointer-events-auto flex flex-col gap-3 text-sm text-[#0a0c20]/70">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0a0c20]/45">Explore</p>
+                <Link className="transition-colors hover:text-[#0a0c20]" href="/blog">博客</Link>
+                <Link className="transition-colors hover:text-[#0a0c20]" href="/blog/tech">技术</Link>
+                <Link className="transition-colors hover:text-[#0a0c20]" href="/blog/life">生活</Link>
+              </nav>
+
+              <div className="text-sm leading-6 text-[#0a0c20]/65">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0a0c20]/45">Connect</p>
+                <p className="mt-3">欢迎从文章、项目和日常记录里继续认识我。</p>
+                <p className="mt-6 text-xs uppercase tracking-[0.18em] text-[#0a0c20]/45">© 2026 Asong</p>
+              </div>
             </div>
-            <button className="flex items-center gap-2 px-6 py-3 bg-white text-[#0a0c20] text-xs font-bold uppercase tracking-widest rounded-full hover:bg-slate-100 transition-colors duration-300">
-              <span>Start Project</span>
-              <ArrowRight size={12} />
-            </button>
-          </div>
+          </footer>
         </section>
       </div>
     </div>

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 const FADE_UP = {
     hidden: { opacity: 0, y: 20 },
@@ -40,7 +41,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
     const uniqueAuthors = [...new Set(posts.map(p => p.author).filter(Boolean))];
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: '#fafaf5', color: '#1a1c19', fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
+        <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             <main className="max-w-7xl mx-auto px-6 pt-24 pb-12">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center space-x-2 text-sm mb-8" style={{ color: '#444748' }}>

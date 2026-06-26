@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
@@ -97,7 +97,7 @@ describe("post-index", () => {
   describe("索引读写", () => {
     it("索引写入后可以被读取", () => {
       const testIndex = {
-        items: [{ slug: "test", rel: "test.mdx", data: { title: "Test" } }],
+        items: [{ slug: "test", rel: "test.mdx", data: { title: "Test", date: "2026-01-01" } }],
         updatedAt: "2026-01-01T00:00:00.000Z",
       };
       postIndex.writePostsIndex(testIndex);

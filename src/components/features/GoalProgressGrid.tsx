@@ -3,27 +3,7 @@
 import React from "react"
 import { AnimatedCircularProgressBar } from "@/components/ui/animated-circular-progress-bar"
 
-export default function GoalProgressGrid({ days = 7, height = 220 }) {
-  const [data, setData] = React.useState({ goals: [], krs: [], entries: [] })
-  const [loading, setLoading] = React.useState(true)
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/notion/heatmap?days=${days}`, { cache: "no-store" })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const json = await res.json()
-        const d = json?.days || []
-        const entries = d.flatMap(x => x?.entries || [])
-        setData({ goals: json?.goals || [], krs: json?.krs || [], entries })
-      } catch (err) {
-        console.error("GoalProgressGrid fetch error", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [days])
+export default function GoalProgressGrid({ data = { goals: [], krs: [], entries: [] } }) {
 
   const { goals, krs, entries } = data
   const totalMinutes = entries.reduce((s, e) => s + (Number(e.effMinutes || e.minutes || 0) || 0), 0)
@@ -61,7 +41,6 @@ export default function GoalProgressGrid({ days = 7, height = 220 }) {
     <div className="rounded-xl border bg-background text-foreground p-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base md:text-lg font-medium">OKR 目标进度（上一周）</h3>
-        {loading && <span className="text-sm text-muted-foreground">加载中…</span>}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {goals.map(g => {
@@ -85,8 +64,8 @@ export default function GoalProgressGrid({ days = 7, height = 220 }) {
             </div>
           )
         })}
-        {goals.length === 0 && !loading && (
-          <div className="text-sm text-muted-foreground">未检测到目标，请检查 Notion 数据或同步设置。</div>
+        {goals.length === 0 && (
+          <div className="text-sm text-muted-foreground">暂无目标进度数据。</div>
         )}
       </div>
     </div>

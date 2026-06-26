@@ -1,4 +1,23 @@
-export async function listDatasets(params: any = {}) {
+import type { Dataset } from "@/types";
+
+export interface DatasetListQuery {
+  type?: string;
+  tag?: string;
+  q?: string;
+}
+
+export interface DatasetDetailQuery {
+  type?: string;
+  from?: string;
+  to?: string;
+  series?: string[];
+}
+
+export interface DatasetListResponse {
+  metas: Array<Pick<Dataset, "id" | "type" | "name" | "tags" | "createdAt" | "updatedAt" | "version">>;
+}
+
+export async function listDatasets(params: DatasetListQuery = {}): Promise<DatasetListResponse> {
   const usp = new URLSearchParams()
   if (params.type) usp.set('type', params.type)
   if (params.tag) usp.set('tag', params.tag)
@@ -9,7 +28,7 @@ export async function listDatasets(params: any = {}) {
   return res.json()
 }
 
-export async function getDataset(id: any, params: any = {}) {
+export async function getDataset(id: string, params: DatasetDetailQuery = {}): Promise<Dataset> {
   const usp = new URLSearchParams()
   if (params.type) usp.set('type', params.type)
   if (params.from) usp.set('from', params.from)
@@ -22,4 +41,3 @@ export async function getDataset(id: any, params: any = {}) {
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.json()
 }
-

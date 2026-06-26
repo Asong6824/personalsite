@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { CHANNELS_CONFIG, getChannelByTags, getColumnByTags, getAllChannels } from "../channels";
-import type { Post } from "@/types";
+import type { ColumnConfig, Post } from "@/types";
 
 describe("CHANNELS_CONFIG 结构", () => {
   it("包含 4 个频道", () => {
@@ -23,7 +23,7 @@ describe("CHANNELS_CONFIG 结构", () => {
 
   it("每个专栏都有必填字段", () => {
     for (const [chKey, chConfig] of Object.entries(CHANNELS_CONFIG)) {
-      for (const [colKey, colConfig] of Object.entries(chConfig.columns)) {
+      for (const [colKey, colConfig] of Object.entries(chConfig.columns) as [string, ColumnConfig][]) {
         expect(colConfig.name, `${chKey}.${colKey} 缺少 name`).toBeDefined();
         expect(colConfig.description, `${chKey}.${colKey} 缺少 description`).toBeDefined();
         expect(Array.isArray(colConfig.tags), `${chKey}.${colKey} tags 不是数组`).toBe(true);

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { fetchStockComparison } from '../../../lib/stocks/fetch'
 import { buildStorageKey, loadStoredPayload, saveStoredPayload } from '../../../lib/stocks/store'
 
+const canWriteApiFiles = process.env.ALLOW_API_FILE_WRITES === '1'
+
 function parseQuery(req) {
   const { searchParams } = new URL(req.url)
   const symbolsParam = searchParams.get('symbols') || ''
@@ -10,7 +12,7 @@ function parseQuery(req) {
   const rangeId = searchParams.get('rangeId') || 'default'
   const source = (searchParams.get('source') || 'alpha').toLowerCase()
   const prefer = (searchParams.get('prefer') || '').toLowerCase()
-  const save = (searchParams.get('save') || '1') === '1'
+  const save = searchParams.get('save') === '1'
   const symbols = symbolsParam
     .split(',')
     .map(s => s.trim())
@@ -45,8 +47,8 @@ export async function GET(req) {
     }
 
     const payload = await fetchStockComparison(params)
-    // 将结果持久化（默认开启，可用 save=0 关闭）
-    if (params.save) {
+    // API 默认不写入仓库文件；仅本地显式开启时用于刷新缓存。
+    if (params.save && canWriteApiFiles) {
       try { saveStoredPayload(storageKey, payload) } catch (e) { /* ignore write errors */ }
     }
     const res = NextResponse.json(payload, { status: 200 })

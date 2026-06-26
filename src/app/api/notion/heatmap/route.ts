@@ -3,6 +3,8 @@ import { Client } from '@notionhq/client';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const archivedNotionApiEnabled = process.env.ENABLE_ARCHIVED_NOTION_API === '1';
+
 function toDateString(d: any) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -187,6 +189,13 @@ async function queryAllByDate(client: any, database_id: any, dateProp: any, useC
 
 export async function GET(req: any) {
   try {
+    if (!archivedNotionApiEnabled) {
+      return NextResponse.json(
+        { error: 'Notion integration is archived. Set ENABLE_ARCHIVED_NOTION_API=1 to run the legacy endpoint locally.' },
+        { status: 410 }
+      );
+    }
+
     const url = new URL(req.url);
     const daysParam = url.searchParams.get('days');
     const DAYS = Math.round((daysParam ? Number(daysParam) : 365) / 7) * 7;

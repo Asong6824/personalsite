@@ -21,7 +21,7 @@
    └─ 调试辅助 ───────────→ src/components/debug/
 
 4. SEO / 结构化数据？
-   └─ 根级单文件 ─────────→ src/components/StructuredData.jsx
+   └─ 根级单文件 ─────────→ src/components/StructuredData.tsx
 ```
 
 **核心原则**：
@@ -37,22 +37,24 @@
 | `src/components/home/` | 首页 3D WebGL 体验 | `HomeExperienceClient` |
 | `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
 | `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`MusicPlayer`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
-| `src/components/finance/` | 金融频道专属 | `TempoHero`、`TempoGrid`、`DataWall` |
+| `src/components/finance/` | 金融频道专属 | `FinanceHomeClient`、`FinanceColumnLayout` |
 | `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar` |
-| `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 2×2 展开详情 + 顶级筛选） |
-| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.js`） |
-| `src/components/StructuredData.jsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
+| `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
+| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.tsx`） |
+| `src/components/StructuredData.tsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
+| `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*`、`travel/*` |
 
 > **关于旧版首页组件**：`HomeScrollExperience`、`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版首页，现随首页重构为 `HomeExperienceClient` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
-| `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*`、`travel/*` |
+
+> **关于金融频道实验组件**：`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`TempoBackground`、`DataWall`、`DebugPanel` 当前没有被 `/blog/finance` 挂载。金融频道真实入口是 `src/app/blog/finance/page.tsx` → `FinanceHomeClient`，金融专栏页是 `src/app/blog/finance/[columnSlug]/page.tsx` → `FinanceColumnLayout`。
 
 ---
 
 ## MDX 自定义组件
 
-`src/app/blog/[...slug]/page.jsx` 中通过 `next-mdx-remote/rsc` 注入自定义组件，供文章直接使用：
+`src/app/blog/[...slug]/page.tsx` 中通过 `next-mdx-remote/rsc` 注入自定义组件，供文章直接使用：
 
 - `InlineExplanation` — 行内解释提示
 - `BentoGrid` / `BentoGridItem` — 网格布局
@@ -72,11 +74,11 @@
 - 预计被 **2+ 篇文章复用** → `content/components/{topic}/`
   - 例：`content/components/color/HSBSliders.jsx`（被 create 和 tech 两篇文章共用）
 - **严格单篇专属**且不可能复用 → `content/blog/{slug}/components/`
-  - （需 `page.jsx` 支持动态加载；当前尚未实现，暂放 `content/components/{topic}/`）
+  - （需 `page.tsx` 支持动态加载；当前尚未实现，暂放 `content/components/{topic}/`）
 
 **理由：** 文章组件与 UI 原语生命周期不同。文章归档时，其组件应一并消失。`content/` 与 `src/components/` 的物理边界使这一关系显性化。
 
-**路径别名：** `jsconfig.json` 中 `@content/*` 映射到 `./content/*`。在 `page.jsx` 中导入：
+**路径别名：** `tsconfig.json` 中 `@content/*` 映射到 `./content/*`。在 `page.tsx` 中导入：
 ```js
 import { DualTimeline } from '@content/components/rag/DualTimeline';
 ```
@@ -85,19 +87,18 @@ import { DualTimeline } from '@content/components/rag/DualTimeline';
 
 ## 文章可用组件速查
 
-以下组件在 `src/app/blog/[...slug]/page.jsx` 中已注册，可在任意 MDX 文章中直接使用。
+以下组件在 `src/app/blog/[...slug]/page.tsx` 的 `mdxComponents` 中已注册，可在任意 MDX 文章中直接使用。
 
 ### 通用交互组件
 
 | 组件 | 用法示例 | 说明 |
 |------|---------|------|
 | `InlineExplanation` | `<InlineExplanation explanation="详细说明...">关键词</InlineExplanation>` | 点击关键词展开/收起行内解释块 |
-| `TableOfContents` | `<TableOfContents />` | 自动读取文章标题生成可点击目录，无 props |
-| `MusicPlayer` | `<MusicPlayer />` | 播放 frontmatter `music` 字段配置的音频；也可传 `playlist={[{title, artist, src}]}` |
 | `BeforeAfter` | `<BeforeAfter before={<div>A</div>} after={<div>B</div>} beforeLabel="之前" afterLabel="之后" />` | 左右对比布局，支持自定义标签 |
 | `Highlighter` | `<Highlighter color="#ffd1dc">文本</Highlighter>` | 基于 Rough Notation 的手绘高亮，支持 `action`（highlight/underline/circle/box）、`animationDuration`、`isView`（滚动触发） |
 | `RAGSidesOverview` | `<RAGSidesOverview />` | RAG 索引侧与检索侧的手绘风格对照总览，用作文章中的概念视觉锚点 |
-| `Mermaid` | `<Mermaid chart="graph TD; A-->B;" />` | 渲染 Mermaid 图表，传 `chart` 字符串 |
+
+`TableOfContents` 与 `MusicPlayer` 由文章页面根据正文和 frontmatter 自动渲染，不是 MDX 标签。`Mermaid` 组件存在于 `src/components/ui/Mermaid.tsx`，但当前没有注册到 `mdxComponents`，因此不能直接在文章中使用。
 
 ### 布局组件
 

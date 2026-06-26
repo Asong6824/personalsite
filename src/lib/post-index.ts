@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { globSync } from "glob";
+import type { Post, PostFrontmatter } from "@/types";
 
 const ROOT = process.cwd();
 const POSTS_DIR = process.env.TEST_POSTS_DIR
@@ -15,7 +16,7 @@ const INDEX_FP = path.join(INDEX_DIR, "index.json");
 interface IndexItem {
   slug: string;
   rel: string;
-  data: Record<string, unknown>;
+  data: PostFrontmatter;
 }
 
 interface PostsIndex {
@@ -55,7 +56,7 @@ function buildIndexFromFS(): PostsIndex {
           slug = dir === "." ? fmSlug : `${dir}/${fmSlug}`;
         }
       }
-      items.push({ slug, rel, data });
+      items.push({ slug, rel, data: data as PostFrontmatter });
     } catch (e) {
       console.error(`[PostIndex] Error reading ${rel}:`, e);
     }
@@ -143,9 +144,28 @@ export function findPostPathBySlug(slug: string): string | null {
   return hit ? path.join(POSTS_DIR, hit.rel) : null;
 }
 
-export function listIndexedPosts(): Array<Record<string, unknown> & { slug: string }> {
+function toPost(item: IndexItem): Post {
+  return {
+    slug: item.slug,
+    title: item.data.title,
+    date: item.data.date,
+    author: item.data.author,
+    tags: Array.isArray(item.data.tags) ? item.data.tags : [],
+    excerpt: item.data.excerpt,
+    coverImage: item.data.coverImage,
+    pinned: item.data.pinned ?? false,
+    channel: item.data.channel,
+    column: item.data.column,
+    columnSlug: item.data.columnSlug,
+    music: item.data.music,
+    hidden: item.data.hidden,
+    rel: item.rel,
+  };
+}
+
+export function listIndexedPosts(): Post[] {
   const idx = getOrBuildPostsIndex();
-  return idx.items.map((i: IndexItem) => ({ ...i.data, slug: i.slug }));
+  return idx.items.map(toPost);
 }
 
 export function listIndexedSlugs(): string[] {

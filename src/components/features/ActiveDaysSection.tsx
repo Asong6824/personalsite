@@ -3,7 +3,6 @@
 import React from "react";
 import CircadianChart from "./CircadianChart";
 // import SankeyChart from "./SankeyChart";
-import GoalProgressGrid from "./GoalProgressGrid";
 
 function CodingActivityPeriods() {
   const [mounted, setMounted] = React.useState(false);
@@ -198,31 +197,10 @@ export default function ActiveDaysSection() {
     const w = buildWeeks({ totalCells: TOTAL_CELLS });
     setWeeks(w);
     setMonthLabels(buildMonthLabels(w));
-    const load = async () => {
-      try {
-        const res = await fetch(`/api/notion/heatmap?days=${TOTAL_CELLS}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        const map = new Map();
-        let totalScore = 0;
-        (json.days || []).forEach(d => {
-          const score = Number.isFinite(d?.score) ? d.score : 0;
-          const hasPositiveEff = Array.isArray(d?.entries) && d.entries.some(e => (e?.effMinutes || 0) > 0);
-          const count = score > 0 ? score : (hasPositiveEff ? 1 : 0);
-          map.set(d.date, count);
-          totalScore += count;
-        });
-        setDataMap(map);
-        setTotal(totalScore);
-      } catch (err) {
-        const { map, total } = generateSampleData(w);
-        setDataMap(map);
-        setTotal(total);
-        console.error('Failed to load Notion heatmap API, using sample data', err);
-      }
-    };
-    load();
-  }, []);
+    const sample = generateSampleData(w);
+    setDataMap(sample.map);
+    setTotal(sample.total);
+  }, [TOTAL_CELLS]);
 
   React.useEffect(() => {
     const el = scrollRef.current;
@@ -346,9 +324,6 @@ export default function ActiveDaysSection() {
 
           {/* Sankey chart under the calendar heatmap (暂时注释掉 OKR 展示) */}
           {/* <SankeyChart height={360} /> */}
-
-          {/* Goals progress grid using animated circular progress bar */}
-          <GoalProgressGrid days={7} height={220} />
 
           {/* Day/Night circadian chart below OKR progress */}
           <CodingActivityPeriods />

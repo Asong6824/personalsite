@@ -11,12 +11,12 @@ export default function ColumnsPageClient({ allColumnsData }) {
     // 频道主题配置
     const channelThemes = {
         all: {
-            background: 'bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900',
+            background: 'bg-[#F0EEE7]',
             title: 'text-gray-900 dark:text-white',
-            filterBg: 'bg-white/80 dark:bg-gray-800/80',
-            activeButton: 'bg-blue-500 text-white',
-            timelineBg: 'bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900',
-            cardBg: 'bg-white dark:bg-neutral-900'
+            filterBg: 'bg-[#E2DBCE]/80 dark:bg-gray-800/80',
+            activeButton: 'bg-[#141413] text-[#F0EEE7]',
+            timelineBg: 'bg-[#F0EEE7]',
+            cardBg: 'bg-[#E2DBCE] dark:bg-neutral-900'
         },
         tech: {
             background: 'bg-[#F0EEE7]',
@@ -35,12 +35,20 @@ export default function ColumnsPageClient({ allColumnsData }) {
             cardBg: 'bg-[#E2DBCE]'
         },
         finance: {
-            background: 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800',
-            title: 'text-[#002fa7]',
-            filterBg: 'bg-blue-100/80 dark:bg-gray-800/80',
-            activeButton: 'bg-[#002fa7] text-white',
-            timelineBg: 'bg-blue-50 dark:bg-gray-900',
-            cardBg: 'bg-blue-100 dark:bg-gray-800'
+            background: 'bg-[#F0EEE7]',
+            title: 'text-[#1a1c19]',
+            filterBg: 'bg-[#E2DBCE]/80 dark:bg-gray-800/80',
+            activeButton: 'bg-[#506354] text-white',
+            timelineBg: 'bg-[#F0EEE7]',
+            cardBg: 'bg-[#f4f4ef] dark:bg-gray-800'
+        },
+        create: {
+            background: 'bg-[#F0EEE7]',
+            title: 'text-[#141413]',
+            filterBg: 'bg-[#E2DBCE]/80',
+            activeButton: 'bg-[#141413] text-[#F0EEE7]',
+            timelineBg: 'bg-[#F0EEE7]',
+            cardBg: 'bg-[#E2DBCE]'
         }
     };
     

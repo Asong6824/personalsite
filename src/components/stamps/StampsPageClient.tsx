@@ -16,19 +16,27 @@ interface StampsPageClientProps {
 const CANVAS_SIZE = 3600;
 const UNIT = 280;
 const GAP = 6;
-const CARD_SIZE = UNIT;
-const HERO_WIDTH = UNIT * 2 + GAP;
-const HERO_HEIGHT = UNIT;
-const EXPANDED_SIZE = UNIT * 2 + GAP;
+const EXPANDED_COLS = 3;
+const EXPANDED_ROWS = 2;
 const MARGIN = 180;
-const FILTER_MODES = [
-  { key: "time", label: "时间" },
-  { key: "journey", label: "旅程" },
+const GROUP_MODES = [
+  { key: "line", label: "线路" },
+  { key: "region", label: "地域" },
   { key: "operator", label: "铁路公司" },
 ] as const;
 
-type FilterMode = (typeof FILTER_MODES)[number]["key"];
+type GroupMode = (typeof GROUP_MODES)[number]["key"];
 type GeoPoint = { lng: number; lat: number };
+type LayoutRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  col: number;
+  row: number;
+  colSpan: number;
+  rowSpan: number;
+};
 type ResolvedConnection = {
   stationId: string;
   routeType?: string;
@@ -39,13 +47,18 @@ type ResolvedConnection = {
   target: Stamp;
 };
 
-function getGridSize(count: number) {
-  const totalCells = count + 2;
+function getSpanSize(span: number) {
+  return span * UNIT + (span - 1) * GAP;
+}
+
+function getGridSize(count: number, hasActive = false) {
+  const totalCells = count + 2 + (hasActive ? EXPANDED_COLS * EXPANDED_ROWS - 1 : 0);
   const targetAspect = 1.35;
-  let best = { cols: 2, rows: Math.ceil(totalCells / 2), score: Number.POSITIVE_INFINITY };
+  const minCols = Math.max(2, hasActive ? EXPANDED_COLS : 2);
+  let best = { cols: minCols, rows: Math.ceil(totalCells / minCols), score: Number.POSITIVE_INFINITY };
 
   for (let rows = 2; rows <= totalCells; rows += 1) {
-    const cols = Math.max(2, Math.ceil(totalCells / rows));
+    const cols = Math.max(minCols, Math.ceil(totalCells / rows));
     const emptyCells = cols * rows - totalCells;
     const aspectPenalty = Math.abs(cols / rows - targetAspect);
     const score = emptyCells * 8 + aspectPenalty;
@@ -58,63 +71,109 @@ function getGridSize(count: number) {
   return best;
 }
 
-/** 根据印章数量动态计算紧凑矩形布局 */
-function getStampLayout(count: number) {
-  const stepX = UNIT + GAP;
-  const stepY = UNIT + GAP;
-  const { cols, rows } = getGridSize(count);
-  const heroCol = Math.max(0, Math.min(cols - 2, Math.floor((cols - 2) / 2)));
-  const heroRow = Math.min(rows - 1, Math.floor(rows * 0.58));
+function createOccupancy(rows: number, cols: number) {
+  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => false));
+}
 
-  const toPosition = (col: number, row: number) => {
-    return {
-      x: (col - (cols - 1) / 2) * stepX,
-      y: (row - (rows - 1) / 2) * stepY,
-    };
-  };
-  const isHeroCell = (col: number, row: number) =>
-    row === heroRow && (col === heroCol || col === heroCol + 1);
+function canPlace(occupied: boolean[][], col: number, row: number, colSpan: number, rowSpan: number) {
+  const rows = occupied.length;
+  const cols = occupied[0]?.length ?? 0;
+  if (col + colSpan > cols || row + rowSpan > rows) return false;
 
-  const positions: { x: number; y: number }[] = [];
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      if (isHeroCell(col, row)) continue;
-      positions.push(toPosition(col, row));
-      if (positions.length >= count) break;
+  for (let y = row; y < row + rowSpan; y += 1) {
+    for (let x = col; x < col + colSpan; x += 1) {
+      if (occupied[y][x]) return false;
     }
-    if (positions.length >= count) break;
   }
 
+  return true;
+}
+
+function reserveCells(occupied: boolean[][], col: number, row: number, colSpan: number, rowSpan: number) {
+  for (let y = row; y < row + rowSpan; y += 1) {
+    for (let x = col; x < col + colSpan; x += 1) {
+      occupied[y][x] = true;
+    }
+  }
+}
+
+function findOpenSlot(occupied: boolean[][], colSpan: number, rowSpan: number) {
+  for (let row = 0; row < occupied.length; row += 1) {
+    for (let col = 0; col < occupied[row].length; col += 1) {
+      if (canPlace(occupied, col, row, colSpan, rowSpan)) {
+        return { col, row };
+      }
+    }
+  }
+
+  return null;
+}
+
+function toLayoutRect(col: number, row: number, colSpan: number, rowSpan: number, cols: number, rows: number): LayoutRect {
+  const stepX = UNIT + GAP;
+  const stepY = UNIT + GAP;
+
   return {
-    stampPositions: positions,
-    heroPosition: {
-      x: (heroCol + 0.5 - (cols - 1) / 2) * stepX,
-      y: (heroRow - (rows - 1) / 2) * stepY,
-    },
+    x: (col + colSpan / 2 - cols / 2) * stepX,
+    y: (row + rowSpan / 2 - rows / 2) * stepY,
+    width: getSpanSize(colSpan),
+    height: getSpanSize(rowSpan),
+    col,
+    row,
+    colSpan,
+    rowSpan,
+  };
+}
+
+/** 根据印章数量动态计算紧凑矩形布局，展开态会真实占用网格空间 */
+function getStampLayout(count: number, activeIndex: number | null = null) {
+  const hasActive = activeIndex !== null;
+  let { cols, rows } = getGridSize(count, hasActive);
+  const heroCol = Math.max(0, Math.min(cols - 2, Math.floor((cols - 2) / 2)));
+  const heroRow = Math.min(rows - 1, Math.floor(rows * 0.58));
+  let occupied = createOccupancy(rows, cols);
+  reserveCells(occupied, heroCol, heroRow, 2, 1);
+
+  const placements: Array<{ col: number; row: number; colSpan: number; rowSpan: number }> = [];
+  for (let index = 0; index < count; index += 1) {
+    const colSpan = index === activeIndex ? EXPANDED_COLS : 1;
+    const rowSpan = index === activeIndex ? EXPANDED_ROWS : 1;
+    let slot = findOpenSlot(occupied, colSpan, rowSpan);
+
+    while (!slot) {
+      rows += 1;
+      occupied = [...occupied, Array.from({ length: cols }, () => false)];
+      slot = findOpenSlot(occupied, colSpan, rowSpan);
+    }
+
+    reserveCells(occupied, slot.col, slot.row, colSpan, rowSpan);
+    placements.push({ col: slot.col, row: slot.row, colSpan, rowSpan });
+  }
+  const stampRects = placements.map((placement) =>
+    toLayoutRect(placement.col, placement.row, placement.colSpan, placement.rowSpan, cols, rows)
+  );
+
+  return {
+    stampPositions: stampRects.map((rect) => ({ x: rect.x, y: rect.y })),
+    stampRects,
+    heroRect: toLayoutRect(heroCol, heroRow, 2, 1, cols, rows),
     cols,
     rows,
   };
 }
 
-/** 根据印章数量动态计算卡片位置 */
-function generateStampPositions(count: number) {
-  return getStampLayout(count).stampPositions.slice(0, count);
-}
-
 /** 根据印章数量计算内容边界 */
-function getContentBounds(count: number) {
-  const layout = getStampLayout(count);
-  const positions = layout.stampPositions;
-  const heroPosition = layout.heroPosition;
+function getContentBounds(count: number, activeIndex: number | null = null) {
+  const layout = getStampLayout(count, activeIndex);
   const horizontalEdges = [
-    ...positions.flatMap((p) => [p.x - CARD_SIZE / 2, p.x + CARD_SIZE / 2]),
-    heroPosition.x - HERO_WIDTH / 2,
-    heroPosition.x + HERO_WIDTH / 2,
+    ...layout.stampRects.flatMap((rect) => [rect.x - rect.width / 2, rect.x + rect.width / 2]),
+    layout.heroRect.x - layout.heroRect.width / 2,
+    layout.heroRect.x + layout.heroRect.width / 2,
   ];
   const verticalEdges = [
-    ...positions.flatMap((p) => [p.y - CARD_SIZE / 2, p.y + CARD_SIZE / 2]),
-    heroPosition.y - HERO_HEIGHT / 2,
-    heroPosition.y + HERO_HEIGHT / 2,
+    ...layout.stampRects.flatMap((rect) => [rect.y - rect.height / 2, rect.y + rect.height / 2]),
+    layout.heroRect.y - layout.heroRect.height / 2,
+    layout.heroRect.y + layout.heroRect.height / 2,
   ];
 
   return {
@@ -594,7 +653,7 @@ function StampImage({
 function StampCard({
   stamp,
   index,
-  totalCount,
+  layoutRect,
   stamps,
   isActive,
   hasActive,
@@ -604,7 +663,7 @@ function StampCard({
 }: {
   stamp: Stamp;
   index: number;
-  totalCount: number;
+  layoutRect: LayoutRect;
   stamps: Stamp[];
   isActive: boolean;
   hasActive: boolean;
@@ -612,10 +671,7 @@ function StampCard({
   onOpen: () => void;
   onClose: () => void;
 }) {
-  const positions = useMemo(() => generateStampPositions(totalCount), [totalCount]);
-  const pos = positions[index];
   const [imageFailed, setImageFailed] = useState(false);
-  const size = isActive ? EXPANDED_SIZE : CARD_SIZE;
   const story = stamp.story ?? "这枚印章还没有写下故事。等下一次整理旅途照片时，再把当时的天气、路线和心情补上。";
 
   return (
@@ -624,12 +680,12 @@ function StampCard({
       animate={{
         opacity: isActive ? 1 : hasActive ? 0.38 : isFilteredOut ? 0.18 : 1,
         scale: hasActive && !isActive ? 0.985 : 1,
-        width: size,
-        height: size,
-        left: `calc(50% + ${pos.x}px - ${size / 2}px)`,
-        top: `calc(50% + ${pos.y}px - ${size / 2}px)`,
+        width: layoutRect.width,
+        height: layoutRect.height,
+        left: `calc(50% + ${layoutRect.x}px - ${layoutRect.width / 2}px)`,
+        top: `calc(50% + ${layoutRect.y}px - ${layoutRect.height / 2}px)`,
       }}
-      transition={{ duration: 0.42, delay: isActive ? 0 : 0.22 + index * 0.045, ease: "easeOut" }}
+      transition={{ duration: 0.42, ease: "easeOut" }}
       className="absolute"
       style={{
         zIndex: isActive ? 30 : hasActive ? 1 : 2,
@@ -718,18 +774,61 @@ function getValidLinks(links: { label: string; href: string }[]) {
   return links.filter((link) => link.href && link.href !== "#");
 }
 
-function getOperatorFilters(stamps: Stamp[]) {
-  const operators = stamps
-    .map((stamp) => stamp.station.operator)
-    .filter((operator): operator is string => Boolean(operator));
-  return Array.from(new Set(operators));
+function getStampGroupValue(stamp: Stamp, mode: GroupMode) {
+  if (mode === "line") return stamp.station.line;
+  if (mode === "region") return stamp.station.region;
+  return stamp.station.operator ?? null;
 }
 
-function formatOperatorLabel(operator: string) {
-  return operator
-    .replace("JR", "")
-    .replace("沖縄都市モノレール", "モノレール")
-    .trim();
+function formatGroupLabel(mode: GroupMode, value: string) {
+  if (mode === "operator") {
+    return value
+      .replace("JR", "")
+      .replace("沖縄都市モノレール", "モノレール")
+      .trim();
+  }
+
+  return value;
+}
+
+function getGroupOptions(stamps: Stamp[], mode: GroupMode) {
+  const counts = new Map<string, number>();
+
+  stamps.forEach((stamp) => {
+    const value = getStampGroupValue(stamp, mode);
+    if (!value) return;
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  });
+
+  return Array.from(counts.entries())
+    .map(([value, count]) => ({
+      value,
+      label: formatGroupLabel(mode, value),
+      count,
+    }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "ja"));
+}
+
+function reorderStampsByGroup(stamps: Stamp[], mode: GroupMode, selectedValue: string | null) {
+  return stamps
+    .map((stamp, index) => {
+      const value = getStampGroupValue(stamp, mode) ?? "";
+      return {
+        stamp,
+        index,
+        value,
+        sortValue: value || "\uffff",
+        isMatch: selectedValue !== null && value === selectedValue,
+      };
+    })
+    .sort((a, b) => {
+      if (selectedValue !== null && a.isMatch !== b.isMatch) {
+        return Number(b.isMatch) - Number(a.isMatch);
+      }
+
+      return a.sortValue.localeCompare(b.sortValue, "ja") || a.index - b.index;
+    })
+    .map(({ stamp }) => stamp);
 }
 
 export default function StampsPageClient({
@@ -740,8 +839,8 @@ export default function StampsPageClient({
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [ready, setReady] = useState(false);
   const [activeStampId, setActiveStampId] = useState<string | null>(null);
-  const [filterMode, setFilterMode] = useState<FilterMode>("time");
-  const [selectedOperator, setSelectedOperator] = useState<string | null>(null);
+  const [groupMode, setGroupMode] = useState<GroupMode>("line");
+  const [selectedGroupValue, setSelectedGroupValue] = useState<string | null>(null);
 
   const isTouching = useRef(false);
   const touchStartPos = useRef({ x: 0, y: 0 });
@@ -750,6 +849,20 @@ export default function StampsPageClient({
   const lastPos = useRef({ x: 0, y: 0 });
   const rafId = useRef<number | undefined>(undefined);
   const offsetRef = useRef({ x: 0, y: 0 });
+  const groupOptions = useMemo(() => getGroupOptions(stamps, groupMode), [groupMode, stamps]);
+  const orderedStamps = useMemo(
+    () => reorderStampsByGroup(stamps, groupMode, selectedGroupValue),
+    [groupMode, selectedGroupValue, stamps]
+  );
+  const activeIndex = useMemo(
+    () => (activeStampId ? orderedStamps.findIndex((stamp) => stamp.id === activeStampId) : null),
+    [activeStampId, orderedStamps]
+  );
+  const activeLayoutIndex = activeIndex !== null && activeIndex >= 0 ? activeIndex : null;
+  const layout = useMemo(
+    () => getStampLayout(orderedStamps.length, activeLayoutIndex),
+    [activeLayoutIndex, orderedStamps.length]
+  );
 
   // 保持 offsetRef 与 offset 同步
   useEffect(() => {
@@ -760,7 +873,7 @@ export default function StampsPageClient({
   const clampOffset = useCallback((x: number, y: number) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const bounds = getContentBounds(stamps.length);
+    const bounds = getContentBounds(orderedStamps.length, activeLayoutIndex);
     const minX = vw - bounds.right;
     const maxX = -bounds.left;
     const minY = vh - bounds.bottom;
@@ -769,26 +882,32 @@ export default function StampsPageClient({
       x: Math.min(maxX, Math.max(minX, x)),
       y: Math.min(maxY, Math.max(minY, y)),
     };
-  }, [stamps.length]);
+  }, [activeLayoutIndex, orderedStamps.length]);
 
   useEffect(() => {
+    if (ready) return;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     setOffset(clampOffset(-(CANVAS_SIZE - vw) / 2, -(CANVAS_SIZE - vh) / 2));
     setReady(true);
-  }, [clampOffset]);
+  }, [clampOffset, ready]);
+
+  useEffect(() => {
+    if (!ready) return;
+    setOffset((prev) => clampOffset(prev.x, prev.y));
+  }, [activeLayoutIndex, clampOffset, ready]);
 
   useEffect(() => {
     if (!activeStampId) return;
-    const activeIndex = stamps.findIndex((stamp) => stamp.id === activeStampId);
-    if (activeIndex < 0) return;
+    if (activeLayoutIndex === null) return;
 
-    const positions = generateStampPositions(stamps.length);
-    const pos = positions[activeIndex];
-    const targetX = CANVAS_SIZE / 2 + pos.x;
-    const targetY = CANVAS_SIZE / 2 + pos.y;
+    const rect = layout.stampRects[activeLayoutIndex];
+    if (!rect) return;
+
+    const targetX = CANVAS_SIZE / 2 + rect.x;
+    const targetY = CANVAS_SIZE / 2 + rect.y;
     setOffset(clampOffset(window.innerWidth / 2 - targetX, window.innerHeight / 2 - targetY));
-  }, [activeStampId, clampOffset, stamps]);
+  }, [activeLayoutIndex, activeStampId, clampOffset, layout.stampRects]);
 
   // --- 桌面端：滚轮/触摸板滑动 ---
   const handleWheel = useCallback(
@@ -863,11 +982,13 @@ export default function StampsPageClient({
   }, []);
 
   const validNavLinks = getValidLinks(navLinks);
-  const operatorFilters = useMemo(() => getOperatorFilters(stamps), [stamps]);
-  const heroPosition = useMemo(() => getStampLayout(stamps.length).heroPosition, [stamps.length]);
+  const heroRect = layout.heroRect;
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#e8e8e4] dark:bg-neutral-950 relative select-none">
+    <div
+      className="theme-muji relative h-screen w-screen select-none overflow-hidden dark:bg-neutral-950"
+      style={{ backgroundColor: "var(--muji-bg)" }}
+    >
       {!ready && (
         <div className="h-full w-full flex items-center justify-center">
           <div className="w-8 h-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 border-t-neutral-900 dark:border-t-white animate-spin" />
@@ -899,10 +1020,10 @@ export default function StampsPageClient({
           <div
             className="absolute"
             style={{
-              width: HERO_WIDTH,
-              height: HERO_HEIGHT,
-              left: `calc(50% + ${heroPosition.x}px - ${HERO_WIDTH / 2}px)`,
-              top: `calc(50% + ${heroPosition.y}px - ${HERO_HEIGHT / 2}px)`,
+              width: heroRect.width,
+              height: heroRect.height,
+              left: `calc(50% + ${heroRect.x}px - ${heroRect.width / 2}px)`,
+              top: `calc(50% + ${heroRect.y}px - ${heroRect.height / 2}px)`,
             }}
           >
             <motion.div
@@ -938,15 +1059,15 @@ export default function StampsPageClient({
               <div className="flex items-end justify-between gap-4">
                 <div className="min-w-0" onClick={(event) => event.stopPropagation()}>
                   <div className="flex items-center gap-1.5">
-                    {FILTER_MODES.map((mode) => {
-                      const isSelected = filterMode === mode.key;
+                    {GROUP_MODES.map((mode) => {
+                      const isSelected = groupMode === mode.key;
                       return (
                         <button
                           key={mode.key}
                           type="button"
                           onClick={() => {
-                            setFilterMode(mode.key);
-                            setSelectedOperator(null);
+                            setGroupMode(mode.key);
+                            setSelectedGroupValue(null);
                             setActiveStampId(null);
                           }}
                           className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${
@@ -960,44 +1081,43 @@ export default function StampsPageClient({
                       );
                     })}
                   </div>
-                  {filterMode === "operator" && (
-                    <div className="mt-2 flex max-w-[360px] flex-wrap items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedOperator(null);
-                          setActiveStampId(null);
-                        }}
-                        className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                          selectedOperator === null
-                            ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                            : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                        }`}
-                      >
-                        All
-                      </button>
-                      {operatorFilters.map((operator) => {
-                        const isSelected = selectedOperator === operator;
-                        return (
-                          <button
-                            key={operator}
-                            type="button"
-                            onClick={() => {
-                              setSelectedOperator(isSelected ? null : operator);
-                              setActiveStampId(null);
-                            }}
-                            className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                              isSelected
-                                ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                                : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                            }`}
-                          >
-                            {formatOperatorLabel(operator)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
+                  <div className="mt-2 flex max-h-[76px] max-w-[390px] flex-wrap items-center gap-1.5 overflow-y-auto pr-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedGroupValue(null);
+                        setActiveStampId(null);
+                      }}
+                      className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                        selectedGroupValue === null
+                          ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                          : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      All
+                    </button>
+                    {groupOptions.map((option) => {
+                      const isSelected = selectedGroupValue === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            setSelectedGroupValue(isSelected ? null : option.value);
+                            setActiveStampId(null);
+                          }}
+                          className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                            isSelected
+                              ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                              : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                          }`}
+                          title={`${option.value} · ${option.count}`}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-mono text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
                   <span>東京 JST</span>
@@ -1007,19 +1127,18 @@ export default function StampsPageClient({
             </motion.div>
           </div>
 
-          {stamps.map((stamp, index) => (
+          {orderedStamps.map((stamp, index) => (
             <StampCard
               key={stamp.id}
               stamp={stamp}
               index={index}
-              totalCount={stamps.length}
-              stamps={stamps}
+              layoutRect={layout.stampRects[index]}
+              stamps={orderedStamps}
               isActive={activeStampId === stamp.id}
               hasActive={activeStampId !== null}
               isFilteredOut={
-                filterMode === "operator" &&
-                selectedOperator !== null &&
-                stamp.station.operator !== selectedOperator
+                selectedGroupValue !== null &&
+                getStampGroupValue(stamp, groupMode) !== selectedGroupValue
               }
               onOpen={() => setActiveStampId(stamp.id)}
               onClose={() => setActiveStampId(null)}

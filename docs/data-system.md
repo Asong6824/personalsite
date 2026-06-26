@@ -4,11 +4,11 @@
 
 `src/lib/stocks/` 采用多提供商架构：
 
-- `fetch.js` — 入口，负责路由到不同提供商、缓存、降级处理。
-- `providers/alpha.js` — Alpha Vantage（需 `ALPHA_VANTAGE_API_KEY`）。
-- `providers/yahoo.js` — Yahoo Finance（需 `RAPIDAPI_KEY`）。
-- `providers/mock.js` — 降级 mock 数据（无 API Key 时自动回退）。
-- `store.js` — 本地缓存读写（基于存储 key）。
+- `fetch.ts` — 入口，负责路由到不同提供商、缓存、降级处理。
+- `providers/alpha.ts` — Alpha Vantage（需 `ALPHA_VANTAGE_API_KEY`）。
+- `providers/yahoo.ts` — Yahoo Finance（需 `RAPIDAPI_KEY`）。
+- `providers/mock.ts` — 降级 mock 数据（无 API Key 时自动回退）。
+- `store.ts` — 本地缓存读写（基于存储 key）。
 
 ---
 
@@ -26,13 +26,13 @@
 |------|------|------|------|
 | `GET` | `/api/datasets` | `?type=&tag=&q=` | 列表与过滤，返回 `{ metas: [] }` |
 | `GET` | `/api/datasets/:id` | `?type=&from=&to=&series=` | 详情与时间裁剪，`series` 为多选（逗号分隔） |
-| `PUT` | `/api/datasets/:id/series/:key` | Body: `{ t, v }` 或 `{ points: [{t,v}] }` | 追加点位到指定序列 |
+| `PUT` | `/api/datasets/:id/series/:key` | Body: `{ points: [{t,v}] }` | 本地维护接口；默认禁用写入，需 `ALLOW_API_FILE_WRITES=1` |
 
-缓存策略：`Cache-Control: public, s-maxage=300, stale-while-revalidate=86400`
+缓存策略：两个 GET 接口使用 `public, s-maxage=300, stale-while-revalidate=86400`；PUT 响应使用 `public, s-maxage=60, stale-while-revalidate=300`。
 
 ### 前端封装
 
-`src/lib/api/datasets.js` 提供：
+`src/lib/api/datasets.ts` 提供：
 
 ```js
 import { listDatasets, getDataset } from '@/lib/api/datasets'
@@ -54,7 +54,7 @@ const dataset = await getDataset('my-dataset', {
 
 | 方法 | 路由 | 参数 | 说明 |
 |------|------|------|------|
-| `GET` | `/api/stocks` | `?symbols=AAPL,MSFT&start=&end=&rangeId=&source=alpha&prefer=&save=1` | 股票对比数据 |
+| `GET` | `/api/stocks` | `?symbols=AAPL,MSFT&start=&end=&rangeId=&source=alpha&prefer=&save=1` | 股票对比数据；默认不写本地缓存 |
 
 参数说明：
 - `symbols` — 逗号分隔的股票代码（必填）
@@ -62,16 +62,20 @@ const dataset = await getDataset('my-dataset', {
 - `rangeId` — 预设范围 ID，默认 `default`
 - `source` — 数据源：`alpha` 或 `yahoo`，默认 `alpha`
 - `prefer` — 优先使用的提供商回退策略
-- `save` — 是否保存到本地缓存，`1` 或 `0`，默认 `1`
+- `save` — 是否保存到本地缓存，`1` 或 `0`，默认 `0`；只有 `ALLOW_API_FILE_WRITES=1` 时 `save=1` 才会写入仓库文件
 
-多提供商架构：`src/lib/stocks/fetch.js` 会按 `source` 路由到对应提供商，无 API Key 时自动降级到 `mock.js`。
+多提供商架构：`src/lib/stocks/fetch.ts` 会按 `source` 路由到对应提供商，无 API Key 时自动降级到 `mock.ts`。
 
 ---
 
 ## Notion 集成
 
-- `src/app/api/notion/` 提供 Notion 数据查询接口。
-- 使用 `@notionhq/client` 作为官方 SDK。
+> **状态：暂时封存。** 当前站点不再使用 Notion 内容，相关 API、环境变量和本地数据只为保留历史实现，默认开发与部署流程不依赖它们。
+
+- 历史实现位于 `src/app/api/notion/`，使用 `@notionhq/client`；默认返回 `410 Gone`，只有 `ENABLE_ARCHIVED_NOTION_API=1` 时才执行旧逻辑。
+- `src/data/notion/` 中的数据不属于当前活跃内容源。
+- 不应继续为 Notion 集成新增功能、页面依赖或必填配置。
+- 若未来重新启用，应先重新验证 API 权限、数据库字段映射、缓存策略和部署环境变量，再移除封存标记。
 
 ---
 
@@ -88,9 +92,9 @@ const dataset = await getDataset('my-dataset', {
 设计原则：
 
 - **收藏墙优先**：默认状态保持高密度、低文字权重，日期、ID、站名只作为边角辅助信息。
-- **空间记忆优先**：筛选时不重排卡片，只弱化不匹配项，避免用户失去位置感。
+- **组织模式优先**：按线路、地域或铁路公司切换时允许 Bento 重排，让同类印章聚集；选中具体分类值后，匹配卡片前置，非匹配卡片弱化。
 - **铁路关系优先于表格信息**：可达站用 SVG 线路示意表达，不做地理精确地图。
-- **故事在展开层承载**：卡片本体不塞长文，点击后通过 2×2 大卡展示故事和线路。
+- **故事在展开层承载**：卡片本体不塞长文，点击后通过 3×2 重排详情卡展示故事和线路。
 
 ### 存储位置
 
@@ -112,6 +116,7 @@ interface StationInfo {
   line: string;        // 线路名
   city: string;        // 城市
   prefecture: string;  // 都道府県
+  region: "北海道" | "東北" | "関東" | "甲信越" | "東海" | "近畿" | "北陸" | "中国" | "四国" | "九州" | "沖縄"; // 地域区分
   operator?: string;   // 运营公司（JR東日本 等）
   address?: string;    // 详细地址
   lat?: number;        // 纬度（预留地图用）
@@ -198,9 +203,9 @@ interface StampImages {
 - **滑动交互**：桌面端滚轮/触摸板平移，移动端单指滑动，带惯性衰减。
 - **滑动边界**：四个方向以最外围印章边缘外再延伸 180px 为界。
 - **卡片尺寸**：渲染时统一为 280×280 的 1:1 正方形，圆角 `rounded-2xl`，卡片间距 6px。
-- **展开交互**：点击印章卡后，当前卡片原地展开为 2×2 详情卡，展示车站信息、故事文本与基于 `connections` 的 SVG 可达线路动画。
+- **展开交互**：点击印章卡后，当前卡片作为真实网格项扩张为 3×2 详情卡，其他印章卡重新排布让出空间，而不是被展开卡覆盖；详情卡展示车站信息、故事文本与基于 `connections` 的 SVG 可达线路动画。
 - **线路示意动画**：展开卡右侧优先使用 `station.railDiagram` 渲染无底图铁路线路示意图，表达真实方向、线路品牌色和关键收藏节点。未配置 `railDiagram` 的车站会退回到 `lat/lng` 小范围投影路线图；后续也可把 Overpass / OSM 导出的真实线路点写入 `stationRoutes.geometry`。
-- **筛选交互**：Hero 卡片底部提供「时间 / 旅程 / 铁路公司」三类顶级筛选入口；选择「铁路公司」后显示公司子筛选，筛选时保持原有 Bento 位置，只弱化不匹配的卡片，避免重排造成空间记忆丢失。
+- **组织交互**：Hero 卡片底部提供「线路 / 地域 / 铁路公司」三类并列组织入口；切换入口时按对应字段整体分组重排，选中具体线路、地域或铁路公司后，该组卡片前置聚集，其他印章卡片变暗。
 
 ### 交互分层
 
@@ -214,37 +219,37 @@ interface StampImages {
 
 #### 展开卡片
 
-点击印章卡后，卡片原地展开为 2×2：
+点击印章卡后，卡片参与 Bento reflow 并展开为 3×2：
 
 - 左上展示车站名、线路、都道府县、运营公司和收集地点。
-- 左侧保留印章图片/占位。
 - 左下展示 `story`，用于承载“我和这个车站的故事”。
 - 右侧展示 `connections` 驱动的 SVG 可达线路动画和可达站列表。
 - 展开靠近视口边缘的卡片时，画布会自动平移，让详情卡尽量进入可见区域。
+- 其他印章卡按同一网格算法重排，让展开卡拥有真实占位，避免覆盖式弹层破坏收藏墙结构。
 
-#### Hero 筛选
+#### Hero 组织
 
-Hero 卡片是页面的控制中心，当前顶级筛选为：
+Hero 卡片是页面的控制中心，当前顶级组织方式为：
 
-- **时间**：默认入口。当前版本只作为模式状态，不重排卡片。
-- **旅程**：预留给未来 `tripId` / 行程分组视图。
-- **铁路公司**：展示公司子筛选，当前已可用。
+- **线路**：按 `stamp.station.line` 生成分类按钮，切换到该模式后按线路分组重排。
+- **地域**：按 `stamp.station.region` 生成分类按钮，地域值使用日文汉字（如 `関東`、`近畿`、`北陸`、`九州`）。
+- **铁路公司**：按 `stamp.station.operator` 生成分类按钮。
 
-铁路公司筛选通过派生后的 `stamp.station.operator` 自动生成按钮。选中公司后，不匹配的卡片透明度降低，匹配卡片保持原位高亮。
+三类组织方式是并列入口。选中具体分类值后，匹配卡片会稳定前置并保持正常显示，其他卡片降低透明度；展开详情仍继续使用 3×2 Bento reflow。
 
 ### 组织策略
 
-当收藏增长到 100+ 后，不建议只按时间或只按铁路公司排列：
+当收藏增长到 100+ 后，不建议只按时间或只按单一铁路公司排列：
 
 - **时间**适合回看收集进度，但大量数据会变成流水账。
 - **铁路公司**适合档案筛选，但会拆散同一次旅行的体验。
-- **区域 / 线路 / 旅程**更适合作为默认空间组织方式。
+- **地域 / 线路 / 旅程**更适合作为默认空间组织方式。
 
 推荐长期策略：
 
-1. 默认视图使用 **Atlas View**：按区域或主要线路形成多个 Bento cluster。
+1. 默认视图使用 **Atlas View**：按地域或主要线路形成多个 Bento cluster。
 2. 时间作为 **Timeline View**：按年份/月展示收集进度。
-3. 铁路公司作为 **Operator Filter**：在原布局上高亮/弱化，不作为默认重排规则。
+3. 铁路公司作为 **Operator View**：按运营公司分组重排，并支持选中某个公司后高亮/弱化。
 4. 旅程作为 **Trip View**：按一次旅行或一条路线聚焦展示。
 
 ### 后续规划
@@ -257,22 +262,21 @@ Hero 卡片是页面的控制中心，当前顶级筛选为：
 
 #### P1：扩展数据模型
 
-基础数据已经拆成 `stations`、`stampRecords`、`stationRoutes`。下一步为 100+ 收藏规模继续增加组织字段：
+基础数据已经拆成 `stations`、`stampRecords`、`stationRoutes`，并已在 `StationInfo` 落地日文汉字地域字段。下一步为 100+ 收藏规模继续增加组织字段：
 
 ```typescript
-region?: "hokkaido" | "tohoku" | "kanto" | "chubu" | "kansai" | "chugoku" | "shikoku" | "kyushu" | "okinawa";
 operatorGroup?: "JR北海道" | "JR東日本" | "JR東海" | "JR西日本" | "JR九州" | "私鉄" | "地下鉄" | "その他";
 routeOrder?: number;
 tripId?: string;
 ```
 
-这些字段用于后续实现区域 cluster、旅程视图和更稳定的线路顺序。
+这些字段用于后续实现旅程视图、operator group 合并和更稳定的线路顺序。
 
 #### P2：实现真正的顶级视图
 
 - **时间**：按年份/月组织，展示收集进度。
 - **旅程**：按 `tripId` 聚焦一次旅行，展示该旅程中的站点路径。
-- **铁路公司**：保留当前高亮/弱化策略，并支持 operator group 合并。
+- **地域 / 线路 / 铁路公司**：当前已支持字段级分组重排；后续补 `operatorGroup`、`routeOrder` 后升级为更稳定的顶级视图。
 
 #### P3：增强线路动画
 
@@ -283,8 +287,8 @@ tripId?: string;
 
 #### P4：移动端适配
 
-- 桌面保持原地 2×2 展开。
-- 移动端可切换为近全屏展开卡或 bottom sheet，避免 2×2 卡片被裁切。
+- 桌面保持 3×2 Bento reflow 展开。
+- 移动端可切换为近全屏展开卡或 bottom sheet，避免 3×2 卡片被裁切。
 
 ### 与博客内容的关联
 

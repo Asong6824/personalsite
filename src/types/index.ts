@@ -6,7 +6,11 @@ export interface PostFrontmatter {
   author?: string;
   tags?: string[];
   excerpt?: string;
+  description?: string;
+  brief?: string;
   coverImage?: string;
+  heroVideo?: string;
+  videoUrl?: string;
   pinned?: boolean;
   channel?: 'tech' | 'life' | 'finance' | 'create';
   column?: string;
@@ -83,7 +87,9 @@ export interface DatasetPoint {
 
 export interface DatasetSeries {
   key: string;
+  label?: string;
   name?: string;
+  unit?: string;
   points: DatasetPoint[];
 }
 
@@ -95,6 +101,7 @@ export interface Dataset {
   createdAt?: string;
   updatedAt?: string;
   version?: number;
+  granularity?: string;
   series?: DatasetSeries[];
   items?: Array<{
     key: string;

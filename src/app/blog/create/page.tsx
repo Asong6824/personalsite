@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, Palette } from 'lucide-react';
 import { CHANNELS_CONFIG } from '@/lib/channels';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 const createConfig = CHANNELS_CONFIG.create;
 const CARD_W = 300;
@@ -90,11 +91,14 @@ export default function CreatePage() {
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-white">
-            {/* 极淡的环境光晕 — 不破坏白色纯净感 */}
+        <div
+            className="relative min-h-screen overflow-hidden"
+            style={{ backgroundColor: SITE_WARM_BACKGROUND }}
+        >
+            {/* 极淡的环境光晕 — 不破坏米色纸感 */}
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] rounded-full bg-indigo-50/40 blur-[100px]" />
-                <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full bg-purple-50/30 blur-[100px]" />
+                <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] rounded-full bg-white/35 blur-[100px]" />
+                <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full bg-[#E2DBCE]/45 blur-[100px]" />
             </div>
 
             <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-20">

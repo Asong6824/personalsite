@@ -20,6 +20,8 @@ export default function TripRouteChart({
   const mapRef = useRef(null)
   const pointSeriesRef = useRef(null)
   const serpentineSeriesRef = useRef(null)
+  const pointsKey = JSON.stringify(points)
+  const mapConfigKey = JSON.stringify(mapConfig)
 
   useEffect(() => {
     let mapRoot
@@ -211,7 +213,7 @@ export default function TripRouteChart({
       try { if (mapRoot) mapRoot.dispose() } catch {}
       try { if (serpRoot) serpRoot.dispose() } catch {}
     }
-  }, [JSON.stringify(points), mainColor, secondaryColor, height, layout, JSON.stringify(mapConfig)])
+  }, [pointsKey, mainColor, secondaryColor, height, layout, mapConfigKey, points, mapConfig])
 
   const split = layout === "split"
   return (

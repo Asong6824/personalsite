@@ -1,5 +1,5 @@
 import { validateConfigInDevelopment } from "./config-validator";
-import type { ChannelsConfig, Post } from "@/types";
+import type { ChannelConfig, ChannelsConfig, ColumnConfig, Post } from "@/types";
 
 export const CHANNELS_CONFIG: ChannelsConfig = {
   tech: {
@@ -18,6 +18,24 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         description: "通用技术分享",
         tags: ["技术", "programming", "tech"],
         cover: "",
+      },
+      devtools: {
+        name: "开发工具",
+        description: "工程工具、版本控制与开发效率实践",
+        tags: ["Git", "版本控制", "工具", "devtools"],
+        cover: "",
+      },
+      nlp: {
+        name: "自然语言处理",
+        description: "自然语言处理、AI 与大模型相关技术",
+        tags: ["NLP", "AI", "自然语言处理", "大模型"],
+        cover: "",
+      },
+      photography: {
+        name: "计算摄影",
+        description: "摄影技术、移动影像与后期工作流",
+        tags: ["摄影", "photography", "影像"],
+        cover: "https://blog-assets-asong.tos-cn-beijing.volces.com/tech/proraw-lightroom/cover.jpg",
       },
       product: {
         name: "产品设计",
@@ -69,6 +87,12 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         tags: ["财经", "finance", "投资", "investment"],
         cover: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop",
       },
+      "investment-methodology": {
+        name: "投资方法论",
+        description: "投资哲学、价值投资与长期决策框架",
+        tags: ["价值投资", "第一性原理", "方法论"],
+        cover: "",
+      },
     },
   },
   create: {
@@ -108,7 +132,7 @@ export function getChannelByTags(
     if (!tags || !Array.isArray(tags)) return null;
 
     for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-      for (const column of Object.values(channel.columns) as any[]) {
+      for (const column of Object.values(channel.columns) as ColumnConfig[]) {
         if (tags.some((tag) => column.tags.includes(tag))) {
           return channelKey;
         }
@@ -121,7 +145,7 @@ export function getChannelByTags(
   if (!tags) return null;
 
   for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-    for (const column of Object.values(channel.columns) as any[]) {
+    for (const column of Object.values(channel.columns) as ColumnConfig[]) {
       if (tags.some((tag) => column.tags.includes(tag))) {
         return channelKey;
       }
@@ -140,7 +164,7 @@ export function getColumnByTags(
   ) {
     const post = postOrTags as Post;
     if (post.channel && post.column) {
-      const channelConfig = CHANNELS_CONFIG[post.channel as keyof ChannelsConfig];
+      const channelConfig = CHANNELS_CONFIG[post.channel as keyof ChannelsConfig] as ChannelConfig | undefined;
       if (channelConfig && channelConfig.columns[post.column]) {
         return { channelKey: post.channel, columnKey: post.column };
       }
@@ -150,7 +174,7 @@ export function getColumnByTags(
     if (!tags || !Array.isArray(tags)) return null;
 
     for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-      for (const [columnKey, column] of Object.entries(channel.columns) as [string, any][]) {
+      for (const [columnKey, column] of Object.entries(channel.columns) as [string, ColumnConfig][]) {
         if (tags.some((tag) => column.tags.includes(tag))) {
           return { channelKey, columnKey };
         }
@@ -163,7 +187,7 @@ export function getColumnByTags(
   if (!tags) return null;
 
   for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-    for (const [columnKey, column] of Object.entries(channel.columns) as [string, any][]) {
+    for (const [columnKey, column] of Object.entries(channel.columns) as [string, ColumnConfig][]) {
       if (tags.some((tag) => column.tags.includes(tag))) {
         return { channelKey, columnKey };
       }

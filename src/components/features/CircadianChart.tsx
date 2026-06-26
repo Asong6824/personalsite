@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import * as echarts from 'echarts/core';
 import { GridComponent, TooltipComponent, GraphicComponent } from 'echarts/components';
 import { LineChart, ScatterChart, BarChart, CustomChart } from 'echarts/charts';
@@ -26,16 +26,16 @@ export default function CircadianChart({ hourly = [], height = 200, latitude = 3
   const AMPLITUDE = 1.15;
 
   // Build data: x from 6..30 (inclusive), y = sine, val from hourly[0..23]
-  const xHours = Array.from({ length: 25 }, (_, i) => 6 + i); // 6 .. 30
-  const activityVals = Array.from({ length: 25 }, (_, i) => hourly[(6 + i) % 24] ?? 0);
-  const lineData = xHours.map((x) => [x, sineY(x, AMPLITUDE)]);
-  const scatterData = xHours
+  const xHours = useMemo(() => Array.from({ length: 25 }, (_, i) => 6 + i), []);
+  const activityVals = useMemo(() => Array.from({ length: 25 }, (_, i) => hourly[(6 + i) % 24] ?? 0), [hourly]);
+  const lineData = useMemo(() => xHours.map((x) => [x, sineY(x, AMPLITUDE)]), [xHours]);
+  const scatterData = useMemo(() => xHours
     .map((x, idx) => {
       const val = activityVals[idx];
       const opacity = Math.min(0.95, 0.40 + (val || 0) / 150);
       return { value: [x, sineY(x, AMPLITUDE), val], itemStyle: { opacity } };
     })
-    .filter(d => ![6, 18, 30].includes(d.value[0]));
+    .filter(d => ![6, 18, 30].includes(d.value[0])), [activityVals, xHours]);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -259,7 +259,7 @@ export default function CircadianChart({ hourly = [], height = 200, latitude = 3
       chart.dispose();
       chartRef.current = null;
     };
-  }, [hourly]);
+  }, [activityVals, height, lineData, scatterData]);
 
   return (
     <div ref={ref} style={{ width: '100%', height }} />

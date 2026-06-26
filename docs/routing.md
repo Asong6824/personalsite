@@ -35,4 +35,7 @@
 | `/api/datasets` | 数据集列表 API（支持过滤） |
 | `/api/datasets/:id` | 数据集详情 API（支持时间裁剪） |
 | `/api/datasets/:id/series/:key` | 数据集时间序列点位追加（PUT） |
-| `/api/notion/...` | Notion 集成 API |
+| `/api/notion/heatmap` | 已封存的 Notion 活跃数据接口；当前站点不依赖 |
+| `/api/notion/list-dbs` | 已封存的 Notion 数据库发现接口；仅保留历史实现 |
+
+> Notion 集成当前处于封存状态。路由代码仍保留，但不属于活跃产品能力，也不应成为新功能依赖。

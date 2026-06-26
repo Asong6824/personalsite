@@ -9,10 +9,10 @@ import {
   getOrBuildPostsIndex,
 } from "./post-index";
 import { getChannelByTags, getColumnByTags } from "./channels";
-import type { Post } from "@/types";
+import type { Post, PostFrontmatter } from "@/types";
 
 function _getSortedPostsData(): Post[] {
-  return listIndexedPosts().filter((post) => !(post as any).hidden) as unknown as Post[];
+  return listIndexedPosts().filter((post) => !post.hidden);
 }
 
 const isDev = process.env.NODE_ENV === "development";
@@ -28,12 +28,11 @@ export function getAllPostSlugs(): Array<{ slug: string[] }> {
 
 interface PostData {
   slug: string;
-  frontmatter: Record<string, any>;
+  frontmatter: PostFrontmatter;
   content: string;
 }
 
 function _getPostData(slug: string): PostData | null {
-  console.log(`[Debug] _getPostData called for slug: ${slug}`);
   let fullPath = findPostPathBySlug(slug);
   if (!fullPath) {
     getOrBuildPostsIndex();
@@ -43,15 +42,12 @@ function _getPostData(slug: string): PostData | null {
     }
   }
   try {
-    console.log(`[Debug] Reading file: ${fullPath}`);
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
     if (data.hidden) {
-      console.log(`[Debug] Post hidden: ${slug}`);
       return null;
     }
-    console.log(`[Debug] Successfully read post: ${slug}`);
-    return { slug, frontmatter: data, content };
+    return { slug, frontmatter: data as PostFrontmatter, content };
   } catch (error) {
     console.error(
       `Error reading or parsing post with slug "${slug}":`,
@@ -67,7 +63,7 @@ export const getPostData = isDev
 
 function _getPostSummary(slug: string) {
   const idx = getOrBuildPostsIndex();
-  const hit = idx.items.find((i: { slug: string }) => i.slug === slug);
+  const hit = idx.items.find((i) => i.slug === slug);
   if (!hit) return null;
   return { slug: hit.slug, ...hit.data };
 }

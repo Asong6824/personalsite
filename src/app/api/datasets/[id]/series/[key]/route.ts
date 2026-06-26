@@ -4,8 +4,16 @@ import { appendSeriesPoints, loadDataset } from '../../../../../../lib/datasets/
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
+const canWriteApiFiles = process.env.ALLOW_API_FILE_WRITES === '1'
+
 export async function PUT(req, ctx) {
   try {
+    if (!canWriteApiFiles) {
+      return NextResponse.json(
+        { error: 'Dataset mutation API is disabled. Use local ingest scripts or set ALLOW_API_FILE_WRITES=1 for local maintenance.' },
+        { status: 403 }
+      )
+    }
     const { id, key } = (await ctx?.params) || {}
     if (!id || !key) return NextResponse.json({ error: 'Missing id/key' }, { status: 400 })
     const body = await req.json()

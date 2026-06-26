@@ -1,9 +1,30 @@
 #!/usr/bin/env node
 import { fetchStockComparison } from '../src/lib/stocks/fetch'
 import { saveDataset } from '../src/lib/datasets/store'
+import type { Dataset } from '../src/types'
 
-function parseArgs(argv: string[]): Record<string, any> {
-  const args: Record<string, any> = {}
+type CliArgs = Record<string, string | boolean | undefined>
+
+interface StockPointPayload {
+  timestamp: string
+  price: number
+}
+
+interface StockSeriesPayload {
+  symbol: string
+  name?: string
+  points: StockPointPayload[]
+}
+
+interface StockComparisonPayload {
+  meta?: {
+    title?: string
+  }
+  series?: StockSeriesPayload[]
+}
+
+function parseArgs(argv: string[]): CliArgs {
+  const args: CliArgs = {}
   for (const a of argv.slice(2)) {
     const [k, v] = a.split('=')
     args[k.replace(/^--/, '')] = v ?? true
@@ -11,7 +32,7 @@ function parseArgs(argv: string[]): Record<string, any> {
   return args
 }
 
-function toDatasetFromStocks(payload: any, { id, name, tags }: { id: string, name?: string, tags?: string[] }) {
+function toDatasetFromStocks(payload: StockComparisonPayload, { id, name, tags }: { id: string, name?: string, tags?: string[] }): Dataset {
   const series = (payload?.series || []).map(s => ({
     key: s.symbol,
     label: s.name,
@@ -20,7 +41,7 @@ function toDatasetFromStocks(payload: any, { id, name, tags }: { id: string, nam
   }))
   return {
     id,
-    type: 'timeseries',
+    type: 'timeseries' as const,
     name: name || payload?.meta?.title || id,
     tags: Array.isArray(tags) ? tags : ['stocks'],
     series,
@@ -30,25 +51,25 @@ function toDatasetFromStocks(payload: any, { id, name, tags }: { id: string, nam
 
 async function main() {
   const args = parseArgs(process.argv)
-  const domain = (args.domain || 'stocks').toLowerCase()
-  const id = args.id
+  const domain = String(args.domain || 'stocks').toLowerCase()
+  const id = String(args.id || '')
   if (!id) {
     console.error('Usage: npm run ingest:datasets -- --id=<dataset-id> --domain=stocks --symbols=AAPL,MSFT --start=2024-01-01 --end=2024-12-31 --source=yahoo')
     process.exit(1)
   }
   if (domain === 'stocks') {
-    const symbols = (args.symbols || '').split(',').map(s => s.trim()).filter(Boolean)
-    const start = args.start
-    const end = args.end
-    const rangeId = args.rangeId || 'default'
-    const source = (args.source || 'yahoo').toLowerCase()
+    const symbols = String(args.symbols || '').split(',').map(s => s.trim()).filter(Boolean)
+    const start = String(args.start || '')
+    const end = String(args.end || '')
+    const rangeId = String(args.rangeId || 'default')
+    const source = String(args.source || 'yahoo').toLowerCase()
     if (!symbols.length || !start || !end) {
       console.error('Missing required args: symbols,start,end')
       process.exit(1)
     }
     const params = { symbols, range: { id: rangeId, start, end }, source }
     console.log('[ingest/datasets] fetching stocks', params)
-    const payload = await fetchStockComparison(params)
+    const payload = await fetchStockComparison(params) as StockComparisonPayload
     const ds = toDatasetFromStocks(payload, { id, name: `${symbols.join(' vs ')} (${start}~${end})`, tags: ['stocks'] })
     const saved = saveDataset(ds)
     console.log('[ingest/datasets] saved', `src/data/datasets/${saved.id}.json`)
@@ -62,4 +83,3 @@ main().catch(err => {
   console.error('[ingest/datasets] error:', err)
   process.exit(1)
 })
-

@@ -38,8 +38,8 @@ export const ColumnTimeline = ({
     if (theme?.activeButton?.includes('yellow')) {
       return 'bg-gradient-to-t from-yellow-500 via-amber-500 to-transparent';
     }
-    if (theme?.activeButton?.includes('#002fa7')) {
-      return 'bg-gradient-to-t from-blue-800 via-blue-700 to-transparent';
+    if (theme?.activeButton?.includes('#506354')) {
+      return 'bg-gradient-to-t from-[#506354] via-[#747878] to-transparent';
     }
     return 'bg-gradient-to-t from-purple-500 via-blue-500 to-transparent';
   };
@@ -101,9 +101,11 @@ export const ColumnTimeline = ({
                               <div className="flex items-center justify-between text-xs md:text-sm text-gray-500 dark:text-gray-400">
                                 <span className="font-medium">{column.articleCount || 0} 篇文章</span>
                                 <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${
-                                  column.channel === '生活' 
-                                    ? 'bg-[#F0EEE7] text-[#141413]' 
-                                    : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                                  ['技术', '生活', '创造'].includes(column.channel)
+                                    ? 'bg-[#F0EEE7] text-[#141413]'
+                                    : column.channel === '金融'
+                                      ? 'bg-[#E2DBCE] text-[#506354]'
+                                      : 'bg-[#E2DBCE] text-[#141413]'
                                 }`}>
                                   {column.channel}
                                 </span>
@@ -126,9 +128,11 @@ export const ColumnTimeline = ({
                             <div className="flex items-center justify-between text-xs md:text-sm text-gray-500 dark:text-gray-400">
                               <span className="font-medium">{column.articleCount || 0} 篇文章</span>
                               <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${
-                                column.channel === '生活' 
-                                  ? 'bg-[#F0EEE7] text-[#141413]' 
-                                  : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                                ['技术', '生活', '创造'].includes(column.channel)
+                                  ? 'bg-[#F0EEE7] text-[#141413]'
+                                  : column.channel === '金融'
+                                    ? 'bg-[#E2DBCE] text-[#506354]'
+                                    : 'bg-[#E2DBCE] text-[#141413]'
                               }`}>
                                 {column.channel}
                               </span>

@@ -56,7 +56,8 @@ npm run lint     # 代码检查
 | 内容系统（MDX、Frontmatter、索引、频道） | `docs/content-system.md` |
 | 频道、专栏与设计风格 | `docs/channels-and-design.md` |
 | 路由架构 | `docs/routing.md` |
-| 首页滚动体验 | `docs/homepage-experience.md` |
+| 首页实现总览 | `docs/homepage-experience.md` |
+| 首页阶段、视觉与性能设计 | `docs/homepage-design.md` |
 | 组件组织与 MDX 自定义组件 | `docs/components.md` |
 | 手绘风格组件库（Sketchy） | `docs/sketchy-components.md` |
 | 数据系统（股票、数据集、Notion） | `docs/data-system.md` |
@@ -69,30 +70,31 @@ npm run lint     # 代码检查
 
 | 文件 | 职责 |
 |------|------|
-| `src/lib/channels.js` | 频道/专栏定义 |
-| `src/lib/post-index.js` | 文章索引构建 |
-| `src/lib/post.js` | 文章数据读取 |
-| `src/lib/seo-utils.js` | SEO 结构化数据生成 |
-| `src/lib/route-utils.js` | 专栏静态参数与路由校验 |
-| `src/lib/scrollUtils.js` | 平滑滚动工具 |
+| `src/lib/channels.ts` | 频道/专栏定义 |
+| `src/lib/post-index.ts` | 文章索引构建 |
+| `src/lib/post.ts` | 文章数据读取 |
+| `src/lib/seo-utils.ts` | SEO 结构化数据生成 |
+| `src/lib/route-utils.ts` | 专栏静态参数与路由校验 |
+| `src/lib/scrollUtils.ts` | 平滑滚动工具 |
 | `src/lib/config-validator.ts` | 频道配置校验（开发环境） |
-| `src/lib/api/datasets.js` | 前端数据集查询封装 |
+| `src/lib/api/datasets.ts` | 前端数据集查询封装 |
 | `vitest.config.ts` | 测试框架配置 |
 | `scripts/gate-check.ts` | 总门禁脚本（lint + test + build + 索引验证） |
-| `src/app/blog/[...slug]/page.jsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
-| `src/app/blog/page.jsx` | 博客主页 |
+| `src/app/blog/[...slug]/page.tsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
+| `src/app/blog/page.tsx` | 博客主页 |
 | `src/app/blog/life/japan/stamps/page.tsx` | 车站印章收藏页 |
-| `src/components/stamps/StampsPageClient.tsx` | 印章页客户端组件（无限画布 + Bento 环绕布局 + 滚轮/触摸滑动） |
+| `src/components/stamps/StampsPageClient.tsx` | 印章页客户端组件（无限画布 + Bento 重排展开 + 线路/地域/铁路公司组织筛选 + 滚轮/触摸滑动） |
 | `src/data/stamps.ts` | 印章收藏数据（车站信息、TOS 图片 URL、故事） |
-| `scripts/build-posts-index.mjs` | 索引构建脚本 |
+| `scripts/build-posts-index.ts` | 索引构建脚本 |
 | `src/app/globals.css` | 全局样式与字体导入 |
-| `next.config.mjs` | Next.js 配置 |
+| `next.config.ts` | Next.js 配置（远程图片白名单等） |
 
 ---
 
 ## 协作约定
 
 - **Git 提交由用户控制**：AI 助手只负责写入/修改文件，**不自动执行 `git add` / `git commit` / `git push`**。完成一批改动后，AI 应汇报文件变更清单和建议的 commit message，由用户自行决定何时提交。
+- **Notion 集成暂时封存**：相关 API、环境变量和历史数据保留，但当前站点不依赖；除非用户明确要求重新启用，否则不新增 Notion 功能或依赖。
 
 ## 三条铁律
 

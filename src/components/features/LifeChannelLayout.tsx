@@ -38,15 +38,21 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
     const featuredPosts = posts.slice(0, 6);
 
     return (
-        <div className={`min-h-screen ${styles.scholarlyPalette}`} data-life-page>
-            {/* Global Fixed Viewport Spanning Background */}
-            <SunlitBackground />
-
+        <div
+            className={`min-h-screen ${styles.scholarlyPalette}`}
+            style={{ backgroundColor: '#F0EEE7' }}
+            data-life-page
+        >
             {/* Content Layers */}
             <div className="relative z-10">
                 {/* Hero Section — 复制首页 Hero 结构 */}
-                <section id="hero" className={`min-h-screen w-full flex items-center justify-center border-b border-[var(--theme-outline-variant)] ${styles.scholarlyTheme}`}>
-                    <div className="flex flex-col items-center justify-center text-center">
+                <section
+                    id="hero"
+                    className={`relative min-h-screen w-full overflow-hidden flex items-center justify-center ${styles.scholarlyTheme}`}
+                    style={{ backgroundColor: 'transparent' }}
+                >
+                    <SunlitBackground />
+                    <div className="relative z-10 flex flex-col items-center justify-center text-center">
                         <h1 className="serifFont displayHeadline text-5xl md:text-7xl font-bold tracking-tight text-[var(--theme-ink)] mb-4 drop-shadow-sm">
                             阿松的生活杂记
                         </h1>

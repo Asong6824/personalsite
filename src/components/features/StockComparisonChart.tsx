@@ -22,6 +22,7 @@ export default function StockComparisonChart({
   const [error, setError] = useState(null)
   const chartRef = useRef(null)
   const chartInstanceRef = useRef(null)
+  const symbolsKey = useMemo(() => symbols.join(','), [symbols])
 
   useEffect(() => {
     if (!selectedRange || symbols.length === 0) return
@@ -32,7 +33,7 @@ export default function StockComparisonChart({
         setError(null)
         if (datasetId) {
           const usp = new URLSearchParams({ from: selectedRange.start, to: selectedRange.end })
-          if (symbols.length) usp.set('series', symbols.join(','))
+          if (symbols.length) usp.set('series', symbolsKey)
           const res = await fetch(`/api/datasets/${encodeURIComponent(datasetId)}?${usp.toString()}`, { signal: controller.signal })
           if (!res.ok) throw new Error(`HTTP ${res.status}`)
           const ds = await res.json()
@@ -52,7 +53,7 @@ export default function StockComparisonChart({
           }
         } else {
           const params = new URLSearchParams({
-            symbols: symbols.join(','),
+            symbols: symbolsKey,
             start: selectedRange.start,
             end: selectedRange.end,
             rangeId: selectedRange.id,
@@ -71,7 +72,7 @@ export default function StockComparisonChart({
     }
     fetchData()
     return () => controller.abort()
-  }, [symbols.join(','), selectedRangeId, source, datasetId])
+  }, [datasetId, selectedRange, source, symbols.length, symbolsKey])
 
   useEffect(() => {
     if (!chartRef.current) return

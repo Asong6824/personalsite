@@ -12,9 +12,11 @@
 - **专栏**：频道下的子主题，由 `tags` 匹配或 frontmatter 显式指定。
 - **文章**：MDX 文件，通过 `tags` 自动归入专栏，或由 `channel` / `column` 字段强制指定。
 
-归属逻辑（`src/lib/channels.js`）：
+归属逻辑（`src/lib/channels.ts`）：
 1. 优先使用 frontmatter 中的 `channel` / `column` 字段
 2. 否则通过 `tags` 匹配专栏配置中的 `tags` 进行自动归类
+
+显式填写的 `channel` / `column` 必须存在于配置中。索引脚本目前只对无效专栏发出 warning，因此内容迁移时仍需人工处理告警。
 
 ---
 
@@ -22,10 +24,29 @@
 
 | 频道 | 描述 | 专栏数 | 路由 |
 |------|------|--------|------|
-| **技术** | 技术分享与学习笔记 | 4 | `/blog/tech` |
+| **技术** | 技术分享与学习笔记 | 7 | `/blog/tech` |
 | **生活** | 生活感悟与旅行记录 | 3 | `/blog/life` |
-| **金融** | 投资交易与金融市场分析 | 1 | `/blog/finance` |
+| **金融** | 投资交易与金融市场分析 | 2 | `/blog/finance` |
 | **创造** | 逻辑与感性的液态交汇 | 2 | `/blog/create` |
+
+---
+
+## 全站设计基线
+
+当前站点已收敛到统一的 warm editorial 视觉基线：主背景为米色纸感 `#F0EEE7`，主文字为深炭灰 `#141413`，卡片/分隔层级使用 `#E2DBCE` / `#D8D0C3`，弱化文字使用 `#68645d`。首页、频道页、专栏页与文章详情页可以在此基线之上做频道差异化，但不应重新引入独立的深色、渐变或高饱和主题作为默认页面风格。
+
+**代码来源**
+
+- `src/lib/site-theme.ts`：导出 `SITE_WARM_BACKGROUND` / `SITE_WARM_BACKGROUND_THREE` 作为页面与 Three.js 场景的统一背景常量。
+- `src/app/globals.css`：`[data-tech-page]`、`[data-life-page]`、`.theme-warm-editorial` 共享 `--channel-*` 变量；`.theme-muji` 也映射到同一套米色纸感 token。
+- `src/app/home.module.css`：`scholarlyTheme` / `scholarlyPalette` 的 `--theme-*` 变量与 warm editorial token 对齐，供生活频道和首页旧式叙事组件复用。
+
+**频道差异化边界**
+
+- 技术、生活、金融、创造频道共享米色纸感背景，只在排版、卡片形态、动效和局部强调色上区分。
+- 日本行纪专栏使用 `.theme-muji`，是生活频道内的特殊表达，但仍复用同一组背景、纸张、边框和文字 token。
+- 创造频道可以使用液态玻璃和极淡光晕，但主背景仍来自 `SITE_WARM_BACKGROUND`。
+- 金融频道当前主实现是杂志式 Editorial 页面；`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`DataWall`、`DebugPanel` 属于未挂载的历史/实验实现，不能作为频道默认风格依据。
 
 ---
 
@@ -37,6 +58,9 @@
 |----------|------|------|------|
 | `go` | Golang 精进之路 | `Go`, `golang` | 自定义封面图 |
 | `general` | 通用技术 | `技术`, `programming`, `tech` | — |
+| `devtools` | 开发工具 | `Git`, `版本控制`, `工具`, `devtools` | — |
+| `nlp` | 自然语言处理 | `NLP`, `AI`, `自然语言处理`, `大模型` | — |
+| `photography` | 计算摄影 | `摄影`, `photography`, `影像` | 自定义 |
 | `product` | 产品设计 | `产品`, `product`, `设计`, `UX`, `UI` | Unsplash |
 | `design` | 设计美学 | `设计`, `design`, `视觉`, `美学`, `交互` | Unsplash |
 
@@ -80,10 +104,11 @@
 | 专栏 key | 名称 | 标签 | 封面 |
 |----------|------|------|------|
 | `finance` | 财经投资 | `财经`, `finance`, `投资`, `investment` | Unsplash |
+| `investment-methodology` | 投资方法论 | `价值投资`, `第一性原理`, `方法论` | — |
 
 **频道页设计风格**
 
-- **整体色调**：米白色 `#fafaf5`（纸质感背景），深炭灰 `#1a1c19`（主文字），深绿 `#506354`（数据标签/点缀），中灰 `#444748`（次要文字），浅灰 `#c4c7c7`（装饰线）。
+- **整体色调**：站点统一米色 `#F0EEE7`（纸质感主背景），深炭灰 `#1a1c19`（主文字），深绿 `#506354`（数据标签/点缀），中灰 `#444748`（次要文字），浅灰 `#c4c7c7`（装饰线）。组件卡片仍使用 `#f4f4ef` / `#e3e3de` 做层次区分。
 - **字体栈**：
   - 正文：`Inter`
   - 大标题：`Noto Serif SC`（衬线，font-black tracking-tighter，杂志感）
@@ -111,7 +136,7 @@
 
 **频道页设计风格**
 
-- **整体色调**：纯白 `bg-white`，极淡的环境光晕（右上角 `indigo-50/40 blur-[100px]`，左下角 `purple-50/30 blur-[100px]`），不破坏白色纯净感。
+- **整体色调**：站点统一米色 `#F0EEE7` 作为频道主背景，叠加极淡的白色与 `#E2DBCE` 环境光晕，保持液态玻璃的轻盈感但不脱离全站背景体系。
 - **标题区**：居中对齐。上方标签「Creation Channel」（等宽字体，tracking-[0.3em] uppercase，`rounded-full border border-neutral-200`）。主标题「创造」（`text-6xl sm:text-7xl md:text-8xl font-extralight tracking-tight text-neutral-900`）。副标题「逻辑与感性的液态交汇」（`text-lg md:text-xl text-neutral-500 font-light`）。
 - **分隔线**：`w-24 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent`，scaleX 从 0 展开的入场动画。
 - **专栏卡片**：核心视觉元素。
@@ -160,4 +185,8 @@
 
 ### 其他专栏
 
-技术、生活（除日本外）、创造频道的专栏页统一使用 `ColumnLayout` 组件，采用标准站点主题，无额外特殊设计。
+技术、生活（除日本外）、创造频道的专栏页统一使用 `ColumnLayout` 组件，但会按频道保留轻量差异：
+
+- 技术、生活专栏页通过 `data-tech-page` / `data-life-page` 使用 `--channel-*` warm editorial 变量。
+- 创造专栏页使用 `SITE_WARM_BACKGROUND` 作为页面背景，文章列表卡片使用 `GlassCard` 的深色玻璃表达。
+- 金融专栏页不走 `ColumnLayout`，而是使用 `FinanceColumnLayout`，与金融频道首页共享杂志式 Editorial 语言。

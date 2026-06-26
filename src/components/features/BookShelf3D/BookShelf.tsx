@@ -363,7 +363,7 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
              className="absolute inset-0 bg-[#faf9f6] flex flex-col px-10 py-12 shadow-2xl items-center justify-start text-center border-l shadow-[-10px_0_20px_rgba(0,0,0,0.05)] border-gray-200"
            >
               <h3 className="text-[11px] font-bold tracking-[0.25em] text-gray-400 mb-8 uppercase line-clamp-1 text-black">{book.title}</h3>
-              <img src={book.coverUrl} referrerPolicy="no-referrer" className="w-full h-56 object-cover mb-8 rounded-sm shadow-inner grayscale contrast-125 opacity-90" />
+              <img src={book.coverUrl} alt={`${book.title} cover`} referrerPolicy="no-referrer" className="w-full h-56 object-cover mb-8 rounded-sm shadow-inner grayscale contrast-125 opacity-90" />
               <p className="text-gray-600 leading-relaxed text-[13px] font-serif text-justify line-clamp-4 text-black">
                 {book.description}
               </p>
@@ -379,7 +379,7 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
              }}
            >
              <div className="absolute inset-0 bg-white" style={{ backfaceVisibility: 'hidden' }}>
-                <img src={book.coverUrl} referrerPolicy="no-referrer" className="w-full h-full object-cover shadow-2xl" />
+                <img src={book.coverUrl} alt={`${book.title} cover`} referrerPolicy="no-referrer" className="w-full h-full object-cover shadow-2xl" />
              </div>
              <div className="absolute inset-0 bg-[#e8e8e8]" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
            </div>
@@ -394,7 +394,7 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
              }}
            >
              <div className="absolute inset-0 bg-white border-r border-[#f0f0f0]" style={{ backfaceVisibility: 'hidden' }}>
-                <img src={book.coverUrl} referrerPolicy="no-referrer" className="w-full h-full object-cover opacity-10" />
+                <img src={book.coverUrl} alt="" aria-hidden="true" referrerPolicy="no-referrer" className="w-full h-full object-cover opacity-10" />
              </div>
              <div className="absolute inset-0 bg-[#faf9f6]" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
            </div>

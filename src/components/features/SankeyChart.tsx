@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
@@ -128,104 +127,7 @@ export default function SankeyChart() {
       )
     }
 
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/notion/heatmap?days=7', { cache: 'no-store' })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const json = await res.json()
-
-        const days = json?.days || []
-        const entries = days.flatMap(d => d?.entries || [])
-
-        const goals = json?.goals || []
-        const krs = json?.krs || []
-
-        const goalTitles = new Map(goals.map(g => [g.id, g.title || g.id]))
-        const krTitles = new Map(krs.map(k => [k.id, k.title || k.id]))
-        const krGoalMap = new Map<string, string>(krs.map(k => [k.id, k.goalId || '']))
-        const goalWeight = new Map<string, number>(goals.map(g => [g.id, Number(g.weight) || 1]))
-        const krWeight = new Map<string, number>(krs.map(k => [k.id, Number(k.weight) || 1]))
-
-        // 左系列：Goals→KRs（权重）
-        const nodesLeftSet = new Set()
-        goals.forEach(g => nodesLeftSet.add(`G:${g.id}`))
-        krs.forEach(k => nodesLeftSet.add(`KRw:${k.id}`))
-        const nodesLeft = Array.from(nodesLeftSet).map(name => ({ name }))
-
-        const krsByGoal = new Map<string, any[]>()
-        krs.forEach(k => {
-          const gid = krGoalMap.get(k.id) || ''
-          if (!gid) return
-          const arr = krsByGoal.get(gid) || []
-          arr.push(k)
-          krsByGoal.set(gid, arr)
-        })
-        const linksLeft: any[] = []
-        goals.forEach(g => {
-          const gid = g.id
-          const group = krsByGoal.get(gid) || []
-          if (group.length === 0) return
-          const sumKw = group.reduce((s, k) => s + (krWeight.get(k.id) || 0), 0)
-          const gW = goalWeight.get(gid) || 1
-          group.forEach(k => {
-            const kW = krWeight.get(k.id) || 0
-            const share = sumKw > 0 ? (kW / sumKw) : (1 / group.length)
-            const value = gW * share
-            linksLeft.push({ source: `G:${gid}`, target: `KRw:${k.id}`, value })
-          })
-        })
-
-        // 右系列：KRs→Activities（分钟）
-        const nodesRightSet = new Set()
-        krs.forEach(k => nodesRightSet.add(`KRm:${k.id}`))
-        const activityValueMap = new Map()
-        entries.forEach(e => {
-          const aKey = `A:${e.name || 'Unnamed Activity'}`
-          const v = Number(e.effMinutes || e.minutes || 0)
-          activityValueMap.set(aKey, (activityValueMap.get(aKey) || 0) + v)
-          nodesRightSet.add(aKey)
-        })
-        const nodesRight = Array.from(nodesRightSet).map(name => ({ name }))
-
-        const kraMap = new Map()
-        entries.forEach(e => {
-          const kid = e.krId || ''
-          const aName = e.name || 'Unnamed Activity'
-          if (!kid) return
-          const key = `${kid}|${aName}`
-          const v = Number(e.effMinutes || e.minutes || 0)
-          kraMap.set(key, (kraMap.get(key) || 0) + v)
-        })
-        const linksRight = Array.from(kraMap.entries()).map(([key, value]) => {
-          const [kid, aName] = key.split('|')
-          return { source: `KRm:${kid}`, target: `A:${aName}`, value }
-        })
-
-        const formatLabel = (name) => {
-          if (name.startsWith('G:')) {
-            const id = name.slice(2)
-            return goalTitles.get(id) || id
-          }
-          if (name.startsWith('KRw:') || name.startsWith('KRm:')) {
-            const id = name.slice(4)
-            return krTitles.get(id) || id
-          }
-          if (name.startsWith('A:')) return name.slice(2)
-          return name
-        }
-
-        renderOptionDual(
-          { data: nodesLeft, links: linksLeft },
-          { data: nodesRight, links: linksRight },
-          formatLabel
-        )
-      } catch (err) {
-        console.error('Sankey fetch/render error', err)
-        renderSample()
-      }
-    }
-
-    fetchData()
+    renderSample()
     const handleResize = () => chart.resize()
     window.addEventListener('resize', handleResize)
     return () => {

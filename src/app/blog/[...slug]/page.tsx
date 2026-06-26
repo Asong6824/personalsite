@@ -15,6 +15,7 @@ import { MusicPlayer, defaultPlaylist } from '@/components/ui/MusicPlayer'; // �
 import { Highlighter } from '@/components/magicui/highlighter';
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { BeforeAfter } from '@/components/ui/BeforeAfter'; // 导入BeforeAfter组件
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 import { HSBSliders } from '@content/components/color/HSBSliders';
 import { ColorWheelSteps } from '@content/components/color/ColorWheelSteps';
 import { RotatableColorWheel } from '@content/components/color/RotatableColorWheel';
@@ -115,6 +116,7 @@ export default async function PostPage({ params }) {
     const channelStyles = {
         tech: {
             containerBg: 'bg-[#F0EEE7]',
+            containerStyle: undefined,
             prose: 'prose-headings:text-[#141413] prose-p:text-[#141413] prose-li:text-[#141413] prose-a:text-[#141413] hover:prose-a:text-[#68645d] prose-strong:text-[#141413] prose-blockquote:border-l-[#141413] prose-blockquote:text-[#68645d]',
             headerTitle: 'text-[#141413]',
             headerMeta: 'text-[#68645d]',
@@ -122,20 +124,23 @@ export default async function PostPage({ params }) {
         },
         life: {
             containerBg: 'bg-[#F0EEE7]',
+            containerStyle: undefined,
             prose: 'prose-headings:text-[#141413] prose-p:text-[#141413] prose-li:text-[#141413] prose-a:text-[#141413] hover:prose-a:text-[#68645d] prose-strong:text-[#141413] prose-blockquote:border-l-[#141413] prose-blockquote:text-[#68645d]',
             headerTitle: 'text-[#141413]',
             headerMeta: 'text-[#68645d]',
             tagBg: 'bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413]',
         },
         create: {
-            containerBg: 'bg-[#0a0a1a]',
-            prose: 'prose-headings:text-white prose-a:text-purple-300 hover:prose-a:text-purple-200 prose-strong:text-purple-200 prose-blockquote:border-l-purple-400/60 prose-blockquote:text-white/70',
-            headerTitle: 'text-white',
-            headerMeta: 'text-white/40',
-            tagBg: 'bg-white/5 hover:bg-white/10 text-white/60 border border-white/10',
+            containerBg: '',
+            containerStyle: { backgroundColor: SITE_WARM_BACKGROUND },
+            prose: 'prose-headings:text-[#141413] prose-a:text-purple-700 hover:prose-a:text-purple-900 prose-strong:text-[#141413] prose-blockquote:border-l-purple-500/60 prose-blockquote:text-[#68645d] prose-p:text-[#141413] prose-li:text-[#141413]',
+            headerTitle: 'text-[#141413]',
+            headerMeta: 'text-[#68645d]',
+            tagBg: 'bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413] border border-[#D8D0C3]',
         },
         finance: {
-            containerBg: 'bg-[#fafaf5]',
+            containerBg: 'bg-[#F0EEE7]',
+            containerStyle: undefined,
             prose: 'prose-headings:text-[#1a1c19] prose-a:text-[#506354] hover:prose-a:text-[#1a1c19] prose-strong:text-[#1a1c19] prose-blockquote:border-l-[#506354] prose-blockquote:text-[#444748] prose-p:text-[#444748]',
             headerTitle: 'text-[#1a1c19]',
             headerMeta: 'text-[#747878]',
@@ -143,6 +148,7 @@ export default async function PostPage({ params }) {
         },
         default: {
             containerBg: 'bg-white dark:bg-neutral-950',
+            containerStyle: undefined,
             prose: 'prose-headings:text-neutral-800 dark:prose-headings:text-sky-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:text-blue-500 dark:hover:prose-a:text-blue-300 prose-strong:text-neutral-900 dark:prose-strong:text-neutral-100 prose-blockquote:border-l-sky-500 prose-blockquote:text-neutral-600 dark:prose-blockquote:text-neutral-300',
             headerTitle: 'text-neutral-900 dark:text-white',
             headerMeta: 'text-neutral-400',
@@ -237,6 +243,7 @@ export default async function PostPage({ params }) {
     return (
         <div
             className={`min-h-screen ${currentStyle.containerBg}`}
+            style={currentStyle.containerStyle}
             {...(isTechChannel && { 'data-tech-page': true })}
             {...(isLifeChannel && { 'data-life-page': true })}
         >

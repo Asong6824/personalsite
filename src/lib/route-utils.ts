@@ -74,7 +74,7 @@ export function generatePostMetadata(
   const url =
     channelKey && columnSlug
       ? `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/blog/${channelKey}/${columnSlug}/${post.slug}`
-      : `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/posts/${post.slug}`;
+      : `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/blog/${post.slug}`;
   const tags = [
     ...(tagsArr || []),
     ...(channelConfig ? [channelConfig.name] : []),

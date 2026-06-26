@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { GlassCard } from '@/components/create/GlassCard';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 export default function ColumnLayout({ channelKey, channelConfig, columnKey, columnConfig, posts }) {
     // 检查频道类型
@@ -58,7 +59,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
     return (
         <div
             className="min-h-screen"
-            style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)' } : isCreateChannel ? { backgroundColor: '#0a0a1a' } : {}}
+            style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)' } : isCreateChannel ? { backgroundColor: SITE_WARM_BACKGROUND } : {}}
             {...(isTechChannel && { 'data-tech-page': true })}
             {...(isLifeChannel && { 'data-life-page': true })}
         >

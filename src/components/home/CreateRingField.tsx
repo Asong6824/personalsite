@@ -4,93 +4,287 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const CARD_ITEMS = [
-  { title: "Essays", meta: "writing", color: "#f45f46" },
-  { title: "Interfaces", meta: "tools", color: "#f7f7f2" },
-  { title: "Images", meta: "visual", color: "#f7f7f2" },
-  { title: "Systems", meta: "structure", color: "#f45f46" },
-  { title: "Station Stamps", meta: "life", color: "#f7f7f2" },
-  { title: "Market Method", meta: "finance", color: "#f7f7f2" },
-  { title: "Notion Zen", meta: "product", color: "#f45f46" },
-  { title: "Post Index", meta: "archive", color: "#f7f7f2" },
-];
+const GALLERY_ITEM_COUNT = 8;
+const GALLERY_ASPECT_RATIO = 0.8;
 
-type CardPose = {
-  x: number;
-  y: number;
-  z: number;
-  rotationX: number;
-  rotationY: number;
-  rotationZ: number;
-  opacity: number;
-};
+const GALLERY_IMAGE_URLS = Array.from(
+  { length: GALLERY_ITEM_COUNT },
+  () => "/home-experience/gallery-images/daying-ruochong-poster.png",
+);
 
-function createCardTexture(item: (typeof CARD_ITEMS)[number], isBack = false) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 640;
-  const ctx = canvas.getContext("2d")!;
-  const isRed = item.color !== "#f7f7f2";
+const DESKTOP_GALLERY_SCALE = 0.67;
+const MOBILE_GALLERY_SCALE = 0.72;
+const DESKTOP_GALLERY_Y_OFFSET = -0.5;
+const MOBILE_GALLERY_Y_OFFSET = -0.36;
 
-  ctx.fillStyle = item.color;
-  ctx.beginPath();
-  ctx.roundRect(0, 0, canvas.width, canvas.height, 54);
-  ctx.fill();
+const vertexShader = [
+  "varying vec2 vUv;",
+  "void main() {",
+  "  vUv = uv;",
+  "  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);",
+  "}",
+].join("\n");
 
-  ctx.fillStyle = isRed ? "rgba(255, 244, 239, 0.2)" : "rgba(10, 12, 32, 0.06)";
-  ctx.beginPath();
-  ctx.roundRect(38, 38, canvas.width - 76, canvas.height - 168, 42);
-  ctx.fill();
+const fragmentShader = [
+  "uniform sampler2D uTexture;",
+  "uniform float uOpacity;",
+  "uniform float uBorderRadius;",
+  "uniform float uAspect;",
+  "varying vec2 vUv;",
+  "",
+  "float roundedBoxSDF(vec2 p, vec2 b, float r) {",
+  "  vec2 q = abs(p) - b + r;",
+  "  return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;",
+  "}",
+  "",
+  "void main() {",
+  "  vec4 texel = texture2D(uTexture, vUv);",
+  "",
+  "  vec2 centered = vUv - 0.5;",
+  "  centered.x *= uAspect;",
+  "",
+  "  vec2 boxSize = vec2(0.5 * uAspect, 0.5);",
+  "  float d = roundedBoxSDF(centered, boxSize, uBorderRadius);",
+  "  float alpha = 1.0 - step(0.0, d);",
+  "",
+  "  gl_FragColor = vec4(texel.rgb, texel.a * alpha * uOpacity);",
+  "}",
+].join("\n");
 
-  if (isBack) {
-    ctx.strokeStyle = isRed ? "rgba(255, 244, 239, 0.28)" : "rgba(10, 12, 32, 0.08)";
-    ctx.lineWidth = 10;
-    ctx.beginPath();
-    ctx.roundRect(62, 62, canvas.width - 124, canvas.height - 124, 48);
-    ctx.stroke();
-  } else {
-    ctx.fillStyle = isRed ? "#fff4ef" : "#0a0c20";
-    ctx.font = "600 76px Arial";
-    ctx.fillText(item.title, 64, 492);
-
-    ctx.fillStyle = isRed ? "rgba(255, 244, 239, 0.72)" : "rgba(10, 12, 32, 0.44)";
-    ctx.font = "600 30px Arial";
-    ctx.fillText(item.meta.toUpperCase(), 68, 548);
-  }
-
-  ctx.fillStyle = isRed ? "rgba(255, 244, 239, 0.28)" : "rgba(10, 12, 32, 0.08)";
-  ctx.beginPath();
-  ctx.arc(854, 126, 56, 0, Math.PI * 2);
-  ctx.fill();
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 8;
-  return texture;
+interface GalleryStageValues {
+  appear: number;
+  zoom: number;
+  vertical: number;
 }
 
-function lerp(from: number, to: number, progress: number) {
-  return from + (to - from) * progress;
+type GalleryShaderMaterial = THREE.ShaderMaterial & {
+  uniforms: {
+    uTexture: { value: THREE.Texture };
+    uOpacity: { value: number };
+    uBorderRadius: { value: number };
+    uAspect: { value: number };
+  };
+};
+
+function easeOutCubic(value: number) {
+  return 1 - Math.pow(1 - value, 3);
 }
 
 function clamp01(value: number) {
-  return gsap.utils.clamp(0, 1, value);
+  return THREE.MathUtils.clamp(value, 0, 1);
 }
 
-function applyPose(card: THREE.Object3D, pose: CardPose) {
-  card.position.set(pose.x, pose.y, pose.z);
-  card.rotation.set(pose.rotationX, pose.rotationY, pose.rotationZ);
-  card.traverse((child) => {
-    if ((child as THREE.Mesh).isMesh) {
-      const material = (child as THREE.Mesh).material as THREE.MeshBasicMaterial;
-      material.opacity = pose.opacity;
+function mapRange(value: number, inMin: number, inMax: number, outMin = 0, outMax = 1) {
+  const normalized = clamp01((value - inMin) / (inMax - inMin));
+  return outMin + (outMax - outMin) * normalized;
+}
+
+function easeInOutCubic(value: number) {
+  const t = clamp01(value);
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function galleryStageFromProgress(progress: number): GalleryStageValues {
+  const p = clamp01(progress);
+  const earlyAppear = mapRange(p, 0, 0.08, 0, 0.1);
+  const fullAppear = mapRange(p, 0.2, 0.58, 0.1, 1);
+  const appear = p < 0.2 ? earlyAppear : fullAppear;
+
+  return {
+    appear: clamp01(appear),
+    zoom: easeInOutCubic(mapRange(p, 0.34, 0.82)),
+    vertical: easeInOutCubic(mapRange(p, 0.76, 1)),
+  };
+}
+
+class GalleryStage {
+  private readonly renderer: THREE.WebGLRenderer;
+  private readonly camera: THREE.PerspectiveCamera;
+  private readonly scene: THREE.Scene;
+  private readonly displayGroup: THREE.Group;
+  private readonly tiltGroup: THREE.Group;
+  private readonly group: THREE.Group;
+  private readonly meshes: THREE.Mesh<THREE.PlaneGeometry, GalleryShaderMaterial>[] = [];
+  private readonly textures: THREE.Texture[] = [];
+  private readonly radius = 2.05;
+  private time = 0;
+  private uAppear = 0;
+  private uZoom = 0;
+  private curMouseX = 0;
+  private curMouseY = 0;
+  private verticalOffset = 0;
+  private loaded = false;
+
+  constructor(renderer: THREE.WebGLRenderer, width: number, height: number) {
+    this.renderer = renderer;
+    this.camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 100);
+    this.camera.position.set(0, 0, 10);
+    this.scene = new THREE.Scene();
+    this.displayGroup = new THREE.Group();
+    this.tiltGroup = new THREE.Group();
+    this.group = new THREE.Group();
+
+    this.scene.add(this.displayGroup);
+    this.displayGroup.add(this.tiltGroup);
+    this.tiltGroup.add(this.group);
+    this.applyViewportFrame(width);
+  }
+
+  async init() {
+    const textureLoader = new THREE.TextureLoader();
+
+    const textures = await Promise.all(
+      GALLERY_IMAGE_URLS.map(
+        (url) =>
+          new Promise<THREE.Texture>((resolve, reject) => {
+            textureLoader.load(
+              url,
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                texture.generateMipmaps = false;
+                resolve(texture);
+              },
+              undefined,
+              reject,
+            );
+          }),
+      ),
+    );
+
+    this.textures.push(...textures);
+
+    for (let index = 0; index < GALLERY_ITEM_COUNT; index += 1) {
+      const panelWidth = (2 * Math.PI * this.radius) / GALLERY_ITEM_COUNT;
+      const panelHeight = panelWidth / GALLERY_ASPECT_RATIO;
+      const geometry = new THREE.PlaneGeometry(panelWidth, panelHeight, 32, 1);
+      geometry.computeVertexNormals();
+
+      const material = new THREE.ShaderMaterial({
+        transparent: true,
+        side: THREE.DoubleSide,
+        uniforms: {
+          uTexture: { value: this.textures[index] },
+          uOpacity: { value: 0 },
+          uBorderRadius: { value: 0.07 },
+          uAspect: { value: panelWidth / panelHeight },
+        },
+        vertexShader,
+        fragmentShader,
+      }) as GalleryShaderMaterial;
+
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.frustumCulled = false;
+
+      const angle = (index / GALLERY_ITEM_COUNT) * Math.PI * 2;
+      mesh.position.x = Math.sin(angle) * this.radius;
+      mesh.position.z = -Math.cos(angle) * this.radius;
+      mesh.lookAt(0, 0, 0);
+      mesh.userData.index = index;
+      mesh.userData.distFromCenter = Math.min(index, GALLERY_ITEM_COUNT - index);
+
+      this.group.add(mesh);
+      this.meshes.push(mesh);
     }
-  });
+
+    this.loaded = true;
+    this.layout(this.uAppear);
+  }
+
+  layout(value = 0) {
+    if (!this.loaded) return;
+
+    const appear = THREE.MathUtils.clamp(value, 0, 1);
+    const firstPanelDuration = 0.1;
+    const panelFadeDuration = 0.08;
+    const panelStagger = 0.06;
+
+    this.meshes.forEach((mesh) => {
+      const distFromCenter = Number(mesh.userData.distFromCenter);
+      let opacity = 0;
+
+      if (distFromCenter === 0) opacity = appear / firstPanelDuration;
+      else if (appear > firstPanelDuration) {
+        const revealProgress = (appear - firstPanelDuration) / (1 - firstPanelDuration);
+        const delay = (distFromCenter - 1) * panelStagger;
+        opacity = (revealProgress - delay) / panelFadeDuration;
+      }
+
+      mesh.material.uniforms.uOpacity.value = THREE.MathUtils.clamp(opacity, 0, 1);
+    });
+  }
+
+  setBorderRadius(value: number) {
+    this.meshes.forEach((mesh) => {
+      mesh.material.uniforms.uBorderRadius.value = value;
+    });
+  }
+
+  setZoom(value: number) {
+    const fromFov = 70;
+    const toFov = 66.5;
+    this.camera.fov = fromFov - (fromFov - toFov) * value;
+    this.camera.updateProjectionMatrix();
+  }
+
+  setVerticalOffset(value: number) {
+    this.verticalOffset = value;
+    const fov = this.camera.fov * (Math.PI / 180);
+    const cameraZ = this.camera.position.z;
+    const viewportHeight = 2 * Math.tan(fov / 2) * cameraZ;
+    this.tiltGroup.position.y = value * viewportHeight;
+  }
+
+  update(delta: number, mouse: THREE.Vector2, appear: number, zoom: number, rotation = 1) {
+    if (!this.loaded) return;
+
+    this.time += delta;
+    this.uAppear = appear;
+    this.uZoom = zoom;
+    this.curMouseX = THREE.MathUtils.lerp(this.curMouseX, mouse.x, 0.08);
+    this.curMouseY = THREE.MathUtils.lerp(this.curMouseY, mouse.y, 0.08);
+
+    this.layout(this.uAppear);
+    this.camera.position.z = THREE.MathUtils.lerp(0, 8, this.uZoom);
+    this.tiltGroup.rotation.x = THREE.MathUtils.lerp(0, rotation, easeOutCubic(this.uZoom));
+    this.tiltGroup.rotation.y = THREE.MathUtils.lerp(0, Math.PI, easeOutCubic(this.uZoom)) + this.verticalOffset * Math.PI;
+  }
+
+  onResize(width: number, height: number) {
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.applyViewportFrame(width);
+  }
+
+  render() {
+    if (!this.loaded) return;
+    this.renderer.clearDepth();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  dispose() {
+    this.meshes.forEach((mesh) => {
+      mesh.geometry.dispose();
+      mesh.material.dispose();
+    });
+    this.textures.forEach((texture) => texture.dispose());
+  }
+
+  private applyViewportFrame(width: number) {
+    const isDesktop = width >= 1024;
+    const scale = isDesktop ? DESKTOP_GALLERY_SCALE : MOBILE_GALLERY_SCALE;
+    const yOffset = isDesktop ? DESKTOP_GALLERY_Y_OFFSET : MOBILE_GALLERY_Y_OFFSET;
+
+    this.displayGroup.scale.set(scale, scale, 1);
+    this.displayGroup.position.set(0, yOffset, 0);
+  }
 }
 
 export default function CreateRingField() {
@@ -99,220 +293,105 @@ export default function CreateRingField() {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const container = containerRef.current;
     let width = window.innerWidth;
     let height = window.innerHeight;
     const getScrollDepth = (percent: number) => Math.min(width * (percent / 100), height * (percent / 100));
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-    camera.position.set(0, 0, 11);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(width, height);
-    containerRef.current.appendChild(renderer.domElement);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    container.appendChild(renderer.domElement);
 
-    const ringGroup = new THREE.Group();
-    ringGroup.position.set(0.15, -0.22, -1.05);
-    scene.add(ringGroup);
-
-    const geometry = new THREE.PlaneGeometry(2.7, 1.68, 1, 1);
-    const edgeGeometry = new THREE.BoxGeometry(2.72, 1.7, 0.055);
-    const cards = CARD_ITEMS.map((item, index) => {
-      const group = new THREE.Group();
-      const frontMaterial = new THREE.MeshBasicMaterial({
-        map: createCardTexture(item),
-        transparent: true,
-        opacity: 0,
-        side: THREE.FrontSide,
-        depthTest: true,
-        depthWrite: true,
-      });
-      const backMaterial = new THREE.MeshBasicMaterial({
-        map: createCardTexture(item, true),
-        transparent: true,
-        opacity: 0,
-        side: THREE.FrontSide,
-        depthTest: true,
-        depthWrite: true,
-      });
-      const edgeMaterial = new THREE.MeshBasicMaterial({
-        color: item.color,
-        transparent: true,
-        opacity: 0,
-        depthTest: true,
-        depthWrite: true,
-      });
-      const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
-      const front = new THREE.Mesh(geometry, frontMaterial);
-      const back = new THREE.Mesh(geometry, backMaterial);
-      front.position.z = 0.031;
-      back.position.z = -0.031;
-      back.rotation.y = Math.PI;
-      group.add(edge, front, back);
-      group.renderOrder = index;
-      ringGroup.add(group);
-      return group;
-    });
-
-    const updateCards = (progress: number) => {
-      const easeInOut = gsap.parseEase("power2.inOut");
-      const easeOut = gsap.parseEase("power2.out");
-      const rotate = clamp01((progress - 0.58) / 0.24);
-      const ringRadius = width > 1024 ? 4.05 : 2.6;
-      const streamStartX = width > 1024 ? -8.7 : -5.4;
-      const curlGateX = width > 1024 ? 2.65 : 1.25;
-      const exitX = width > 1024 ? 8.8 : 5.4;
-      const enterBase = 0.02;
-      const enterStagger = 0.035;
-      const enterDuration = 0.22;
-      const curlBase = 0.34;
-      const curlStagger = 0.04;
-      const curlDuration = 0.18;
-      const lastCurlEnd = curlBase + (CARD_ITEMS.length - 1) * curlStagger + curlDuration;
-      const exitBase = lastCurlEnd + 0.025;
-      const exitStagger = 0.012;
-      const exitDuration = 0.09;
-
-      ringGroup.rotation.y = easeInOut(rotate) * Math.PI * 2;
-
-      cards.forEach((card, index) => {
-        const enter = clamp01((progress - (enterBase + index * enterStagger)) / enterDuration);
-        const curl = clamp01((progress - (curlBase + index * curlStagger)) / curlDuration);
-        const exit = clamp01((progress - (exitBase + index * exitStagger)) / exitDuration);
-        const enterEase = easeOut(enter);
-        const curlEase = easeInOut(curl);
-        const exitEase = easeInOut(exit);
-        const normalized = index / CARD_ITEMS.length;
-        const angle = normalized * Math.PI * 2 - Math.PI / 2;
-        const streamOffset = index * (width > 1024 ? 0.12 : 0.06);
-        const approachX = lerp(streamStartX, curlGateX + streamOffset, enterEase);
-        const ringX = Math.cos(angle) * ringRadius;
-        const ringZ = Math.sin(angle) * ringRadius;
-        const ringRotationY = -angle + Math.PI / 2;
-        const outX = exitX + index * 0.18;
-
-        const approachPose: CardPose = {
-          x: approachX,
-          y: 0,
-          z: 0,
-          rotationX: 0,
-          rotationY: 0,
-          rotationZ: lerp(-0.05, 0, enterEase),
-          opacity: clamp01(enter * 1.35),
-        };
-
-        const ringPose: CardPose = {
-          x: ringX,
-          y: Math.sin(angle * 2) * 0.12,
-          z: ringZ,
-          rotationX: 0,
-          rotationY: ringRotationY,
-          rotationZ: 0,
-          opacity: 1,
-        };
-
-        const exitPose: CardPose = {
-          x: outX,
-          y: 0,
-          z: 0,
-          rotationX: 0,
-          rotationY: 0,
-          rotationZ: 0.035,
-          opacity: 0,
-        };
-
-        const curledPose: CardPose = {
-          x: lerp(approachPose.x, ringPose.x, curlEase),
-          y: lerp(approachPose.y, ringPose.y, curlEase),
-          z: lerp(approachPose.z, ringPose.z, curlEase),
-          rotationX: 0,
-          rotationY: lerp(approachPose.rotationY, ringPose.rotationY, curlEase),
-          rotationZ: lerp(approachPose.rotationZ, ringPose.rotationZ, curlEase),
-          opacity: approachPose.opacity,
-        };
-
-        const finalPose: CardPose = {
-          x: lerp(curledPose.x, exitPose.x, exitEase),
-          y: lerp(curledPose.y, exitPose.y, exitEase),
-          z: lerp(curledPose.z, exitPose.z, exitEase),
-          rotationX: 0,
-          rotationY: lerp(curledPose.rotationY, exitPose.rotationY, exitEase),
-          rotationZ: lerp(curledPose.rotationZ, exitPose.rotationZ, exitEase),
-          opacity: lerp(curledPose.opacity, exitPose.opacity, exitEase),
-        };
-
-        card.traverse((child) => {
-          child.renderOrder = Math.round(1000 - finalPose.z * 100);
-        });
-        applyPose(card, finalPose);
-      });
-    };
-
-    updateCards(0);
-
+    const gallery = new GalleryStage(renderer, width, height);
+    const clock = new THREE.Clock();
+    const mouse = new THREE.Vector2(0, 0);
     const scrollState = { progress: 0 };
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: "body",
-        start: () => getScrollDepth(1525) + " top",
-        end: () => getScrollDepth(1925) + " top",
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => updateCards(self.progress),
-      },
-    });
-    timeline.to(scrollState, { progress: 1, duration: 1, ease: "none" });
-
-    gsap.set(containerRef.current, { autoAlpha: 0 });
-    const visibilityTrigger = ScrollTrigger.create({
-      trigger: "body",
-      start: () => getScrollDepth(1500) + " top",
-      end: () => getScrollDepth(1950) + " top",
-      onEnter: () => gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.16, ease: "none" }),
-      onEnterBack: () => gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.16, ease: "none" }),
-      onLeave: () => gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.16, ease: "none" }),
-      onLeaveBack: () => gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.16, ease: "none" }),
-      invalidateOnRefresh: true,
-    });
-
     let frame = 0;
+    let disposed = false;
+    let timeline: gsap.core.Timeline | null = null;
+    let visibilityTrigger: ScrollTrigger | null = null;
+
     const render = () => {
+      if (disposed) return;
+
+      const delta = clock.getDelta();
+      const stage = galleryStageFromProgress(scrollState.progress);
+      gallery.setVerticalOffset(stage.vertical);
+      gallery.update(delta, mouse, stage.appear, stage.zoom, 1);
+      gallery.render();
       frame = requestAnimationFrame(render);
-      renderer.render(scene, camera);
     };
-    render();
+
+    gallery
+      .init()
+      .then(() => {
+        if (disposed) return;
+
+        gallery.setBorderRadius(0);
+        gallery.setZoom(1);
+
+        timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: "body",
+            start: () => getScrollDepth(1525 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+            end: () => getScrollDepth(1925 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+            scrub: true,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              scrollState.progress = self.progress;
+            },
+          },
+        });
+        timeline.to(scrollState, { progress: 1, duration: 1, ease: "none" });
+
+        gsap.set(container, { autoAlpha: 0 });
+        visibilityTrigger = ScrollTrigger.create({
+          trigger: "body",
+          start: () => getScrollDepth(1500 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+          end: () => getScrollDepth(1950 + CREATE_STAGE_SCROLL_OFFSET) + " top",
+          onEnter: () => gsap.to(container, { autoAlpha: 1, duration: 0.16, ease: "none" }),
+          onEnterBack: () => gsap.to(container, { autoAlpha: 1, duration: 0.16, ease: "none" }),
+          onLeave: () => gsap.to(container, { autoAlpha: 0, duration: 0.16, ease: "none" }),
+          onLeaveBack: () => gsap.to(container, { autoAlpha: 0, duration: 0.16, ease: "none" }),
+          invalidateOnRefresh: true,
+        });
+
+        render();
+      })
+      .catch((error) => {
+        console.error("Failed to load create gallery stage:", error);
+      });
+
+    const handlePointerMove = (event: PointerEvent) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
 
     const handleResize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      gallery.onResize(width, height);
       ScrollTrigger.refresh();
     };
+
+    window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("resize", handleResize);
 
     return () => {
+      disposed = true;
+      window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(frame);
-      timeline.kill();
-      visibilityTrigger.kill();
-      geometry.dispose();
-      edgeGeometry.dispose();
-      cards.forEach((card) => {
-        card.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const material = (child as THREE.Mesh).material as THREE.MeshBasicMaterial;
-            material.map?.dispose();
-            material.dispose();
-          }
-        });
-      });
+      timeline?.kill();
+      visibilityTrigger?.kill();
+      gallery.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };

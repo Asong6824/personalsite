@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import Image from 'next/image';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 const FADE_UP = {
     hidden: { opacity: 0, y: 20 },
@@ -40,7 +41,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
     ).slice(0, 3);
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: '#fafaf5', color: '#1a1c19', fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
+        <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             {/* Hero Section */}
             <header className="max-w-7xl mx-auto px-6 pt-32 pb-16 md:pt-40 md:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
                 <motion.div

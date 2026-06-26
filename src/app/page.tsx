@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import HomeExperienceClient from "@/components/home/HomeExperienceClient";
+import { SITE_WARM_BACKGROUND } from "@/lib/site-theme";
 
 export const metadata: Metadata = {
     title: "且听松涛 | 阿松的个人主页",
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
     return (
-        <main className="min-h-screen w-full bg-[#cad1fc] text-slate-900 overflow-x-hidden">
+        <main
+            className="min-h-screen w-full text-slate-900 overflow-x-hidden"
+            style={{ backgroundColor: SITE_WARM_BACKGROUND }}
+        >
             <HomeExperienceClient />
         </main>
     );

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 // import { useRouter } from 'next/navigation'; // 可选，用于更复杂的导航后操作
 
 // 1. 更新 navLinks 数组，添加 type 并修正 href
@@ -104,12 +105,12 @@ const Navbar = () => {
         ? (isTechPage || isLifePage ? "hover:bg-[#E2DBCE]" : isStampsPage ? "hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50" : isFinancePage ? "hover:bg-[#f4f4ef]" : "hover:bg-muted/50") 
         : (isTechPage || isLifePage ? "hover:bg-[#E2DBCE]/70" : isStampsPage ? "hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40" : isFinancePage ? "hover:bg-[#f4f4ef]/60" : "hover:bg-accent/10 dark:hover:bg-accent/20");
 
-    const mobileMenuBgClass = isTechPage || isLifePage ? "bg-[#F0EEE7]/95 backdrop-blur-md" : isFinancePage ? "bg-[#fafaf5]/95 backdrop-blur-md" : isStampsPage ? "bg-[#f7f7f4]/95 dark:bg-[#1a1a18]/95 backdrop-blur-md" : "bg-card/95 dark:bg-card/95 backdrop-blur-md";
+    const mobileMenuBgClass = isTechPage || isLifePage || isFinancePage ? "bg-[#F0EEE7]/95 backdrop-blur-md" : isStampsPage ? "bg-[#f7f7f4]/95 dark:bg-[#1a1a18]/95 backdrop-blur-md" : "bg-card/95 dark:bg-card/95 backdrop-blur-md";
 
     return (
         <nav 
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBackgroundClass}`}
-            style={isTechPage || isLifePage ? { backgroundColor: '#F0EEE7' } : isFinancePage ? { backgroundColor: '#fafaf5' } : isStampsPage ? { backgroundColor: 'transparent' } : {}}
+            style={isTechPage || isLifePage || isFinancePage ? { backgroundColor: SITE_WARM_BACKGROUND } : isStampsPage ? { backgroundColor: 'transparent' } : {}}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
