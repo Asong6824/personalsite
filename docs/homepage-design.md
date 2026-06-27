@@ -6,16 +6,16 @@
 
 ## 一、设计定位
 
-首页不是传统频道导航页，而是一段由滚动驱动的 WebGL 叙事。视觉主线是「观察 → 表达 → 创造」，随后进入自我介绍、频道入口与联系方式。
+首页不是传统频道导航页，而是一段由滚动驱动的 WebGL 叙事。视觉主线是「观察 → 表达 → 创造」，随后进入自我介绍、频道入口、探索更多专题内容与联系方式。
 
-- 品牌：且听松涛
+- 品牌：大盈若冲
 - 基础背景：站点统一米色 `#F0EEE7`。首页 WebGL 背景贴图使用 `public/home-experience/backTexture/background-f0eee7.png`，页面外层、加载遮罩与 Three.js `scene.background` 也必须使用同一背景色常量。
 - 主文字：深蓝黑 `#0a0c20`
 - 渲染技术：Three.js
 - 时间线与滚动：GSAP + ScrollTrigger
 - 资源类型：GLB、SVG、HDRI、位图与运行时 CanvasTexture
 
-全局 `Navbar` 在 `/` 隐藏，首页只保留左上角品牌标识，避免常规站点导航破坏沉浸感。
+首页显示全局透明 `Navbar`，左右入口贴近视口两侧；WebGL 舞台不再额外渲染左上角品牌标识，避免重复导航入口。
 
 ---
 
@@ -30,17 +30,19 @@ src/app/page.tsx
     │   ├── ObserveSignalField
     │   ├── ExpressConnectionField
     │   └── CreateRingField
-    └── 3800vh 滚动轨道
+    ├── homeTimeline.ts 阶段配置
+    └── 4500vh 滚动轨道
         ├── Hero
         ├── Observe
         ├── Express
         ├── Create
         ├── 自我介绍
         ├── 频道入口
+        ├── 探索更多专题内容
         └── 联系方式
 ```
 
-WebGL Canvas 固定覆盖视口；长滚动容器只提供时间轴进度。大部分空间变化通过移动相机、look-at 目标和场景对象完成，而不是切换普通页面区块。
+WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 DOM section 的真实文档流位置。大部分空间变化通过移动相机、look-at 目标和场景对象完成；需要承载正文、列表或链接的阶段优先使用普通 DOM 文档流。
 
 ---
 
@@ -73,25 +75,32 @@ WebGL Canvas 固定覆盖视口；长滚动容器只提供时间轴进度。大�
 
 ### 自我介绍
 
-- 复用原 Showcase 阶段的镜头区间，展示 HTML 留白容器。
+- 复用原 Showcase 阶段的镜头区间，展示个人简介排版。
 - Create → 自我介绍的横向过场完成后，相机与观察目标继续同步下移 2 个世界单位，避开视口顶部残留的 Create 标题；到达自我介绍终点后，后续阶段不再移动视角。
-- 自我介绍卡片固定在视口内，只在逻辑区间 `2505–2750` 显示，不参与文档流滚动。
-- 当前只显示阶段名称，不填充个人简介正文。
+- 自我介绍是普通文档流中的 `min-h-screen` section，不使用 GSAP fixed overlay 或 pin；它的 DOM 起点由 `homeTimeline.ts` 对齐到逻辑深度 `2505`，避免在 Express / Create 阶段提前出现。
+- 当前文案以「我是阿松」为身份标题，正文说明对新技术、旅行、收集和数字花园的关注。
 - 原 showreel 平面及播放、静音模型已停用。
 
 ### 频道入口
 
 - 复用原 Reviews 阶段的镜头区间，在主 WebGL 场景中展示频道文字队列。
-- 频道入口固定在视口内，在逻辑区间 `2800–3100` 显示。
+- 频道入口 3D 文字队列在逻辑区间 `2560–2860` 显示。
 - 四个频道入口为 `TECH`、`LIFE`、`FINANCE`、`DESIGN`，其中 `DESIGN` 暂时链接到现有 `/blog/create` 路由，不在本阶段迁移频道 key。
-- 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。滚动时每个词依次经过视口中心，中心态 rotation 归正、透明度增强，离开中心后继续倾斜。
-- HTML 层只保留轻量标题和频道链接，不再使用卡片容器。
+- 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 从 `y=6.5` 上移到 `18`，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
+- HTML 层使用普通文档流 section 显示「Channels / 进入不同内容路径」，内部 sticky 居中停留，标题样式与「Columns / 探索更多专题内容」一致；不再显示右下频道链接，避免与 3D 频道文字重复。
 - 原评价标题、3D 评价卡与评价文案已停用。
+
+### 探索更多专题内容
+
+- 移植 noomo awards list 的列表阶段，用于展示本站配置为 `featured: true` 的专栏。
+- 探索更多专题内容是普通文档流中的 `h-screen` section，不使用 GSAP fixed overlay 或 pin；它前面保留真实滚动间隔，并由频道入口 WebGL 组在末段继续上移、整体淡出，避免重叠。
+- 数据来自 `CHANNELS_CONFIG`，每一行链接到 `/blog/{channelKey}/{columnKey}`；当前精选为 `tech/nlp`、`life/japan` 与 `create/design`。
+- hover 或键盘 focus 列表条目时，在列表容器内显示并移动对应专栏 `cover` / `coverImage`；未配置专栏首图时回退到频道 `icon` 或站内占位图。
 
 ### 联系方式
 
-- 复用原 Awards 阶段的镜头区间，作为滚动叙事终点。
-- 页脚固定在视口底部，在逻辑区间 `3100–3700` 显示。
+- 作为滚动叙事终点，复用频道入口完成后的固定视角。
+- 页脚固定在视口底部，在逻辑区间 `3800–4400` 显示。
 - 不使用卡片容器；品牌、导航、联系说明和版权直接排版在背景上。
 - 原奖项图片、奖杯模型、漂浮装饰及 Footer CTA 已停用。
 
@@ -99,7 +108,7 @@ WebGL Canvas 固定覆盖视口；长滚动容器只提供时间轴进度。大�
 
 ## 四、滚动与动画系统
 
-下表是首页唯一的滚动时间线说明。表内区间是传给 `getScrollDepth()` 的**逻辑深度**，不是直接的 `vh`。实际触发位置按 `min(viewportWidth × n / 100, viewportHeight × n / 100)` 换算为像素。代码中的 `CREATE_RING_SCROLL_OFFSET = 760` 已在表内展开。
+下表是首页唯一的 WebGL 滚动时间线说明。表内区间是传给 `getScrollDepth()` 的**逻辑深度**，不是直接的 `vh`。实际触发位置按 `min(viewportWidth × n / 100, viewportHeight × n / 100)` 换算为像素。代码中的 `CREATE_RING_SCROLL_OFFSET = 760` 已在表内展开。
 
 相机坐标格式为 `(x, y, z)`；“观察目标”是每帧传给 `camera.lookAt()` 的 `lookTarget`。除特别注明外，滚动动画均为 `scrub: true`，相机与观察目标使用 `power2.inOut`。
 
@@ -117,11 +126,13 @@ WebGL Canvas 固定覆盖视口；长滚动容器只提供时间轴进度。大�
 | Create：Gallery 运动 | `1665–2065` | 400 | 固定 | 固定 | 图片面板按 `appear / zoom / vertical` 三段参数显现、环绕旋转并向上退出；该阶段使用子组件自己的 Three.js 相机。 |
 | Create：标题复位 | `2090–2175` | 85 | 固定 | 固定 | `createGroup` 从停靠位置回到主位置并恢复为 1 倍缩放。 |
 | Create → 自我介绍：过场镜头 | `2305–2500` | 195 | `(4.024, 22.301, 7.031)` → `(23.346, 20.432, 2.102)` | `(17.443, 20.712, 0.431)` → `(23.342, 20.293, 1.263)` | 对应源码 `1545–1740 + 760`，横向跨越场景进入个人信息区域。 |
-| 自我介绍：向下调整 | `2505–2750` | 245 | `(23.346, 20.432, 2.102)` → `(23.346, 18.432, 2.102)` | `(23.342, 20.293, 1.263)` → `(23.342, 18.293, 1.263)` | 相机与观察目标同步下移，保持观察角度；HTML 层当前只保留标题与留白容器。 |
-| 频道入口：频道文字队列 | `2800–3100` | 300 | 固定 `(23.346, 18.432, 2.102)` | 固定 `(23.342, 18.293, 1.263)` | `TECH`、`LIFE`、`FINANCE`、`DESIGN` 四个 SVG 3D 文字依次经过中心；中心态归正并增强，不在本阶段加载频道中心 3D 模型。 |
-| 联系方式：固定视角 | `3100–3300` | 200 | 固定 `(23.346, 18.432, 2.102)` | 固定 `(23.342, 18.293, 1.263)` | HTML 层显示贴底页脚，文字直接排版在背景上。 |
+| 自我介绍：向下调整 | `2505–2555` | 50 | `(23.346, 20.432, 2.102)` → `(23.346, 18.432, 2.102)` | `(23.342, 20.293, 1.263)` → `(23.342, 18.293, 1.263)` | 相机与观察目标同步下移，保持观察角度；HTML 层的个人简介作为一屏文档流 section 自然滑过。 |
+| 频道入口：接近频道队列 | `2555–2560` | 5 | `(23.346, 18.432, 2.102)` → `(23.312, 14.160, 4.024)` | `(23.342, 18.293, 1.263)` → `(23.292, 14.010, 2.097)` | 在个人简介尾段开始切入频道文字队列，避免 DOM 文案提前而 WebGL 模型仍留在旧位置。 |
+| 频道入口：频道文字队列 | `2560–2860` | 300 | `(23.312, 14.160, 4.024)` → `(23.292, 11.443, 4.236)` | `(23.292, 14.010, 2.097)` → `(23.272, 11.293, 2.309)` | `TECH`、`LIFE`、`FINANCE`、`DESIGN` 四个 SVG 3D 文字按固定 rail 位置 `0 / -2 / -4.5 / -7` 排布；整体 rail 上移，每个词在独立中心窗口内归正并增强。 |
+| 探索更多专题内容：自然滚动列表 | 文档流 | 100vh | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | HTML 层显示 `featured: true` 的专栏列表；不使用 GSAP overlay 时间线，hover 或 focus 条目时显示专栏首图。 |
+| 联系方式：固定视角 | `3800–4000` | 200 | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | HTML 层显示贴底页脚，文字直接排版在背景上；页脚 overlay 持续显示至逻辑区间 `4400` 后淡出。 |
 
-相机区间之间没有插值时，相机和 `lookTarget` 保持上一阶段终点。所有视口执行 Observe、Express、Create、post-create 和自我介绍五段位移；自我介绍完成向下调整后，频道入口与联系方式固定在该终点，HTML 阶段仍按滚动顺序出现。
+相机区间之间没有插值时，相机和 `lookTarget` 保持上一阶段终点。所有视口执行 Observe、Express、Create、post-create、自我介绍与频道入口位移；频道入口完成后，探索更多专题内容与联系方式复用该固定视角，其中探索更多专题内容按文档流自然滑过，联系方式仍使用固定 overlay。
 
 ### CreateRingField 子相机时间线
 
@@ -138,7 +149,19 @@ WebGL Canvas 固定覆盖视口；长滚动容器只提供时间轴进度。大�
 
 `setZoom(1)` 会把子相机 FOV 从 `70` 收到 `66.5`，作为该子场景的常态视角；随后 `update()` 每帧按 `zoom` 修改相机 Z 轴位置和 `tiltGroup` 旋转。也就是说，Create Gallery 的运动主要来自子场景相机与 `tiltGroup`，而不是移动首页主相机或逐张移动海报面板。
 
-当前 DOM 滚动轨道为 `3800vh`，而逻辑深度使用 `getScrollDepth()` 转换，两者不是同一个单位系统。修改任一区间时，需要同时检查：`cameraStages`、`targetStages`、对象 ScrollTrigger、显隐阈值、`CreateRingField` 子时间线和 `h-[3800vh]` 容器高度。
+当前 DOM 滚动轨道为 `4500vh`，而逻辑深度使用 `getScrollDepth()` 转换，两者不是同一个单位系统。阶段边界、DOM spacer 与轨道高度集中在 `src/components/home/homeTimeline.ts`；修改任一区间时，需要同时检查：`homeTimeline.ts`、`cameraStages`、`targetStages`、对象 ScrollTrigger、显隐阈值和 `CreateRingField` 子时间线。
+
+### DOM 文档流对齐
+
+普通 DOM 阶段不靠 GSAP 显隐，而是靠真实文档流进入视口。当前对齐关系如下：
+
+| DOM 阶段 | 文档流起点 | 对应 WebGL 区间 | 维护字段 |
+|---|---:|---:|---|
+| 自我介绍 | `2505vh` | `2505–2605` DOM，`2505–2555` WebGL | `HOME_DOM_LAYOUT.aboutLeadSpacerVh`、`aboutSectionVh` 与 `HOME_STAGE_SCROLL.about` |
+| 频道入口标题 | `2560vh` 视觉入场，`2610vh` 文档流起点 | `2560–2820` DOM，`2560–2860` WebGL | `HOME_DOM_LAYOUT.channelLeadSpacerVh`、`channelIntroOverlapVh`、`channelIntroSectionVh` 与 `HOME_STAGE_SCROLL.channels` |
+| 探索更多专题内容 | `2910vh` | 文档流 | `HOME_DOM_LAYOUT.channelRailSpacerVh` 与 `HOME_DOM_STAGE_START.columns` |
+
+自我介绍 section 应与实际文字可见窗口匹配；其后的 `channelLeadSpacerVh` 只保留极短镜头切换距离。频道入口标题通过 `channelIntroOverlapVh` 向上重叠一段，减少个人简介尾部到频道标题之间的视觉空白；后续 `channelRailSpacerVh` 抵消这个重叠量，保证探索更多专题内容仍按预期接入。新增普通 DOM section 时，先确定它要对应哪个 WebGL 逻辑区间，再在 `homeTimeline.ts` 中调整前置 spacer；不要只在 JSX 中插入 `h-[...]` 或 fixed overlay。
 
 ---
 
@@ -176,6 +199,7 @@ public/home-experience/
 - WebGL Canvas 不接收常规指针事件；只有明确的 HTML 交互层和场景点击逻辑处理输入。
 - 组件卸载时必须杀死 ScrollTrigger、取消动画帧、移除监听器并释放 Three.js 资源。
 - 首页依赖浏览器 API，核心组件及其 Three.js 子组件必须保持为 Client Component。
+- 移动端不应强行复刻桌面长 WebGL 叙事。后续新增阶段优先提供普通 DOM 表达，WebGL 只保留轻量背景或氛围元素，避免地址栏高度变化导致 `vh` 时间线错位。
 
 ---
 
@@ -183,11 +207,13 @@ public/home-experience/
 
 | 需求 | 文件 |
 |------|------|
+| 调整阶段边界、DOM 起点和轨道高度 | `src/components/home/homeTimeline.ts` |
 | 调整相机路径、模型、主时间线 | `src/components/home/HomeExperienceClient.tsx` |
+| 调整探索更多专题内容列表 | `src/components/home/HomeColumnsListStage.tsx` |
 | 调整观察阶段叠加层 | `src/components/home/ObserveSignalField.tsx` |
 | 调整表达阶段关系网络 | `src/components/home/ExpressConnectionField.tsx` |
 | 调整创造阶段环形卡片 | `src/components/home/CreateRingField.tsx` |
 | 调整首页元数据与外层背景 | `src/app/page.tsx` |
 | 调整本地 3D/贴图/SVG 资源 | `public/home-experience/` |
 
-修改后至少验证桌面和移动视口下的加载遮罩、滚动阶段衔接、resize、页面离开后的资源清理以及首页无全局 Navbar。
+修改后至少验证桌面和移动视口下的加载遮罩、全局 Navbar、滚动阶段衔接、resize 与页面离开后的资源清理。

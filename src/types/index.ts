@@ -44,6 +44,7 @@ export interface ColumnConfig {
   tags: string[];
   cover?: string;
   coverImage?: string;
+  featured?: boolean;
 }
 
 export interface ChannelConfig {

@@ -81,10 +81,6 @@ const Navbar = () => {
         };
     }, []);
 
-    if (pathname === '/') {
-        return null;
-    }
-
     // 4. 应用全局样式 (使用 CSS 变量对应的 Tailwind 类)
     // 检查是否在技术详情页或生活频道页
     const isTechPage = pathname?.startsWith('/blog/tech') || pathname?.startsWith('/blog/technology');
@@ -92,9 +88,7 @@ const Navbar = () => {
     const isFinancePage = pathname?.startsWith('/blog/finance');
     const isStampsPage = pathname?.startsWith('/blog/life/japan/stamps');
     
-    const navBackgroundClass = isScrolled || isMobileMenuOpen
-        ? (isTechPage || isLifePage ? "backdrop-blur-md shadow-sm" : isFinancePage ? "backdrop-blur-md shadow-sm" : isStampsPage ? "bg-[#f7f7f4]/80 dark:bg-[#1a1a18]/90 backdrop-blur-md shadow-sm" : "bg-card/80 dark:bg-card/90 backdrop-blur-md shadow-lg")
-        : (isTechPage || isLifePage || isFinancePage || isStampsPage ? "" : "bg-transparent");
+    const navBackgroundClass = "bg-transparent";
 
     const textClassBase = "transition-colors duration-200 cursor-pointer";
     const textScrolledClass = isScrolled || isMobileMenuOpen
@@ -110,9 +104,9 @@ const Navbar = () => {
     return (
         <nav 
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBackgroundClass}`}
-            style={isTechPage || isLifePage || isFinancePage ? { backgroundColor: SITE_WARM_BACKGROUND } : isStampsPage ? { backgroundColor: 'transparent' } : {}}
+            style={{ backgroundColor: 'transparent' }}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full px-8 sm:px-10 lg:px-16 xl:px-24">
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
                         <Link
@@ -120,7 +114,7 @@ const Navbar = () => {
                             onClick={handleLogoClick}
                             className={`text-2xl font-bold ${textClassBase} ${textScrolledClass.replace('hover:text-primary', 'hover:text-primary/80').replace('hover:text-[#506354]', 'hover:text-[#506354]/80')}`}
                         >
-                            阿松
+                            大盈若冲
                         </Link>
                     </div>
 

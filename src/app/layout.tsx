@@ -4,7 +4,7 @@ import PerformanceMonitor from '@/components/debug/PerformanceMonitor';
 import './globals.css'; // 您的全局样式
 
 export const metadata = {
-    title: '且听松涛',
+    title: '大盈若冲',
     description: '阿松个人主页',
 };
 

@@ -30,6 +30,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         description: "自然语言处理、AI 与大模型相关技术",
         tags: ["NLP", "AI", "自然语言处理", "大模型"],
         cover: "",
+        featured: true,
       },
       photography: {
         name: "计算摄影",
@@ -61,6 +62,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         description: "以此记录 2023-2025 的日本生活",
         tags: ["日本", "japan", "日本旅行", "日本文化"],
         cover: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop",
+        featured: true,
       },
       thoughts: {
         name: "年度总结",
@@ -105,6 +107,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         description: "像素、逻辑与美学的交汇",
         tags: ["设计", "design", "视觉", "美学", "交互"],
         cover: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop",
+        featured: true,
       },
       product: {
         name: "产品设计",

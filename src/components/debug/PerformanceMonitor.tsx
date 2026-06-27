@@ -15,7 +15,7 @@ export default function PerformanceMonitor() {
             const stats = new Stats();
             stats.showPanel(0); // 0: fps, 1: ms, 2: mb
             stats.dom.style.position = 'fixed';
-            stats.dom.style.top = '0px';
+            stats.dom.style.top = '84px';
             stats.dom.style.left = '0px';
             stats.dom.style.zIndex = '9999';
             document.body.appendChild(stats.dom);

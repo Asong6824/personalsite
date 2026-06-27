@@ -12,6 +12,8 @@ import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import ObserveSignalField from "./ObserveSignalField";
 import ExpressConnectionField from "./ExpressConnectionField";
 import CreateRingField from "./CreateRingField";
+import { HomeColumnsListStage } from "./HomeColumnsListStage";
+import { HOME_DOM_LAYOUT, HOME_SCROLL_TRACK_VH, HOME_STAGE_SCROLL } from "./homeTimeline";
 import { CREATE_RING_SCROLL_OFFSET, CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
 import { SITE_WARM_BACKGROUND, SITE_WARM_BACKGROUND_THREE } from "@/lib/site-theme";
 
@@ -23,11 +25,6 @@ if (typeof window !== "undefined") {
 const expressConnectionScroll = {
   start: 875,
   end: 1230 + CREATE_STAGE_SCROLL_OFFSET,
-};
-
-const channelEntryScroll = {
-  start: 2040 + CREATE_RING_SCROLL_OFFSET,
-  end: 2340 + CREATE_RING_SCROLL_OFFSET,
 };
 
 const channelEntries = [
@@ -73,21 +70,28 @@ const cameraStages = [
     name: "about",
     from: { x: 23.346, y: 20.432, z: 2.102 },
     to: { x: 23.346, y: 18.432, z: 2.102 },
-    scrollRange: { start: 1745 + CREATE_RING_SCROLL_OFFSET, end: 1990 + CREATE_RING_SCROLL_OFFSET },
+    scrollRange: HOME_STAGE_SCROLL.about,
+    ease: "power2.inOut",
+  },
+  {
+    name: "channel-approach",
+    from: { x: 23.346, y: 18.432, z: 2.102 },
+    to: { x: 23.312, y: 14.16, z: 4.024 },
+    scrollRange: { start: HOME_STAGE_SCROLL.about.end, end: HOME_STAGE_SCROLL.channels.start },
     ease: "power2.inOut",
   },
   {
     name: "channels",
-    from: { x: 23.346, y: 18.432, z: 2.102 },
-    to: { x: 23.346, y: 18.432, z: 2.102 },
-    scrollRange: { start: 2040 + CREATE_RING_SCROLL_OFFSET, end: 2240 + CREATE_RING_SCROLL_OFFSET },
+    from: { x: 23.312, y: 14.16, z: 4.024 },
+    to: { x: 23.292, y: 11.443, z: 4.236 },
+    scrollRange: HOME_STAGE_SCROLL.channels,
     ease: "power2.inOut",
   },
   {
     name: "contact",
-    from: { x: 23.346, y: 18.432, z: 2.102 },
-    to: { x: 23.346, y: 18.432, z: 2.102 },
-    scrollRange: { start: 2340 + CREATE_RING_SCROLL_OFFSET, end: 2540 + CREATE_RING_SCROLL_OFFSET },
+    from: { x: 23.292, y: 11.443, z: 4.236 },
+    to: { x: 23.292, y: 11.443, z: 4.236 },
+    scrollRange: { start: HOME_STAGE_SCROLL.contact.start, end: HOME_STAGE_SCROLL.contact.start + 200 },
     ease: "power2.inOut",
   },
 ];
@@ -125,21 +129,28 @@ const targetStages = [
     name: "about",
     from: { x: 23.342, y: 20.293, z: 1.263 },
     to: { x: 23.342, y: 18.293, z: 1.263 },
-    scrollRange: { start: 1745 + CREATE_RING_SCROLL_OFFSET, end: 1990 + CREATE_RING_SCROLL_OFFSET },
+    scrollRange: HOME_STAGE_SCROLL.about,
+    ease: "power2.inOut",
+  },
+  {
+    name: "channel-approach",
+    from: { x: 23.342, y: 18.293, z: 1.263 },
+    to: { x: 23.292, y: 14.01, z: 2.097 },
+    scrollRange: { start: HOME_STAGE_SCROLL.about.end, end: HOME_STAGE_SCROLL.channels.start },
     ease: "power2.inOut",
   },
   {
     name: "channels",
-    from: { x: 23.342, y: 18.293, z: 1.263 },
-    to: { x: 23.342, y: 18.293, z: 1.263 },
-    scrollRange: { start: 2040 + CREATE_RING_SCROLL_OFFSET, end: 2240 + CREATE_RING_SCROLL_OFFSET },
+    from: { x: 23.292, y: 14.01, z: 2.097 },
+    to: { x: 23.272, y: 11.293, z: 2.309 },
+    scrollRange: HOME_STAGE_SCROLL.channels,
     ease: "power2.inOut",
   },
   {
     name: "contact",
-    from: { x: 23.342, y: 18.293, z: 1.263 },
-    to: { x: 23.342, y: 18.293, z: 1.263 },
-    scrollRange: { start: 2340 + CREATE_RING_SCROLL_OFFSET, end: 2540 + CREATE_RING_SCROLL_OFFSET },
+    from: { x: 23.272, y: 11.293, z: 2.309 },
+    to: { x: 23.272, y: 11.293, z: 2.309 },
+    scrollRange: { start: HOME_STAGE_SCROLL.contact.start, end: HOME_STAGE_SCROLL.contact.start + 200 },
     ease: "power2.inOut",
   },
 ];
@@ -159,6 +170,10 @@ const getResponsivePos = (pos: any, isDesktop: boolean) => {
     z: getResponsiveVal(pos.z, isDesktop),
   };
 };
+
+const ScrollSpacer = ({ vh }: { vh: number }) => (
+  <div aria-hidden="true" style={{ height: `${vh}vh` }} />
+);
 
 export default function HomeExperienceClient() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -606,6 +621,22 @@ export default function HomeExperienceClient() {
         .to(".express-legend", { autoAlpha: 1, x: 0, duration: 0.16, ease: "power1.out" }, 0.78)
         .to(".express-connection-field", { autoAlpha: 0, duration: 0.1, ease: "none" }, 1.18);
 
+      ScrollTrigger.create({
+        trigger: "body",
+        start: () => getScrollDepth(expressConnectionScroll.end + 20) + " top",
+        end: () => getScrollDepth(HOME_STAGE_SCROLL.about.start) + " top",
+        invalidateOnRefresh: true,
+        onEnter: () => {
+          if (expressGroup) expressGroup.visible = false;
+        },
+        onEnterBack: () => {
+          if (expressGroup) expressGroup.visible = false;
+        },
+        onLeaveBack: () => {
+          if (expressGroup) expressGroup.visible = true;
+        },
+      });
+
       // 5. Stage 1 title: Observe
       observeGroup = new THREE.Group();
       observeGroup.position.set(3.1, 1.6, 14);
@@ -725,54 +756,65 @@ export default function HomeExperienceClient() {
           }, timing.start + timing.live);
       });
 
-      // 6. Channel entry titles: SVG-derived 3D word marks that rotate into
-      // a neutral center pose while the channel stage scrolls past.
+      // 6. Channel entry titles: adapted from the original Noomo awards rail.
+      // Each item has a fixed authored position; the rail itself travels upward.
       channelTitleGroup = new THREE.Group();
       channelTitleGroup.position.set(
-        isDesktop ? 23.34 : 23.28,
-        isDesktop ? 18.24 : 18.08,
-        isDesktop ? -1.72 : -1.38
+        isDesktop ? 23.15 : 23.16,
+        isDesktop ? 6.5 : 18.04,
+        isDesktop ? -10 : -1.46
       );
       channelTitleGroup.rotation.set(-0.0776, 0.0103, 0.0008);
       channelTitleGroup.visible = false;
       scene.add(channelTitleGroup);
 
+      const channelRailStartY = isDesktop ? 6.5 : 18.04;
+      const channelRailEndY = isDesktop ? 18 : 18.04;
+      const channelItemLayout = [
+        { x: 0, y: 0, z: 0, center: 0.22 },
+        { x: 0, y: -2, z: 0, center: 0.38 },
+        { x: -0.1, y: -4.5, z: 0, center: 0.58 },
+        { x: 0, y: -7, z: 0, center: 0.78 },
+      ] as const;
+      const channelCenterWindow = 0.18;
       const channelTitleModels = channelEntries.map((entry) => ({
         ...entry,
         model: null as THREE.Group | null,
+        layout: channelItemLayout[channelEntries.findIndex((item) => item.id === entry.id)],
       }));
       const channelActiveColor = new THREE.Color(0x0a0c20);
-      const channelMutedColor = new THREE.Color(0x687084);
-      const channelSpacing = isDesktop ? 1.82 : 1.28;
+      const channelMutedColor = new THREE.Color(0x6f7685);
 
       const updateChannelTitleModels = (progress: number) => {
-        const activeIndex = progress * (channelTitleModels.length - 1);
+        if (channelTitleGroup) {
+          channelTitleGroup.position.y = THREE.MathUtils.lerp(channelRailStartY, channelRailEndY, progress);
+        }
 
-        channelTitleModels.forEach((entry, index) => {
+        channelTitleModels.forEach((entry) => {
           if (!entry.model) return;
 
-          const distanceFromCenter = index - activeIndex;
-          const absoluteDistance = Math.abs(distanceFromCenter);
-          const centerWeight = THREE.MathUtils.clamp(1 - absoluteDistance, 0, 1);
-          const opacity = THREE.MathUtils.clamp(1 - absoluteDistance * 0.48, 0.08, 0.95);
-          const scale = entry.scale * (isDesktop ? 1 : 0.74) * (1 + centerWeight * 0.08);
+          const distanceFromCenter = Math.abs(progress - entry.layout.center);
+          const centerWeight = THREE.MathUtils.clamp(1 - distanceFromCenter / channelCenterWindow, 0, 1);
+          const opacity = THREE.MathUtils.clamp(0.16 + centerWeight * 0.82, 0.08, 0.98);
+          const scale = entry.scale * (isDesktop ? 1 : 0.72) * (0.82 + centerWeight * 0.3);
           const color = new THREE.Color().lerpColors(channelMutedColor, channelActiveColor, centerWeight);
 
-          entry.model.visible = absoluteDistance < 1.7;
+          entry.model.visible = opacity > 0.01;
           entry.model.position.set(
-            isDesktop ? distanceFromCenter * -0.08 : 0,
-            -distanceFromCenter * channelSpacing,
-            distanceFromCenter * -0.16
+            isDesktop ? entry.layout.x : entry.layout.x * 0.5,
+            isDesktop ? entry.layout.y : entry.layout.y * 0.72,
+            isDesktop ? entry.layout.z : entry.layout.z
           );
           entry.model.rotation.set(
-            -0.045 + absoluteDistance * 0.08,
-            distanceFromCenter * 0.08,
-            distanceFromCenter * -0.23
+            THREE.MathUtils.degToRad(THREE.MathUtils.lerp(-2, 0, centerWeight)),
+            THREE.MathUtils.degToRad(THREE.MathUtils.lerp(40, 0, centerWeight)),
+            THREE.MathUtils.degToRad(THREE.MathUtils.lerp(-5, 0, centerWeight))
           );
           entry.model.scale.set(scale, -scale, scale);
           (entry.model.userData.materials as THREE.MeshStandardMaterial[]).forEach((material) => {
             material.opacity = opacity;
             material.color.copy(color);
+            material.roughness = 0.36 - centerWeight * 0.08;
           });
         });
       };
@@ -790,10 +832,46 @@ export default function HomeExperienceClient() {
       });
 
       updateChannelTitleModels(0);
+
+      const addChannelAccent = (url: string, locations: Array<{ x: number; y: number; z: number; rx: number; ry: number; rz: number; scale?: number }>) => {
+        glbLoader.load(url, (gltf) => {
+          locations.forEach((loc) => {
+            const clone = gltf.scene.clone();
+            const scale = (loc.scale ?? 0.12) * (isDesktop ? 1 : 0.72);
+            clone.scale.set(scale, scale, scale);
+            clone.position.set(loc.x, loc.y, loc.z);
+            clone.rotation.set(loc.rx, loc.ry, loc.rz);
+            clone.traverse((child) => {
+              if ((child as THREE.Mesh).isMesh) {
+                (child as THREE.Mesh).material = glass;
+              }
+            });
+            channelTitleGroup!.add(clone);
+            floatObjects.push({ mesh: clone, baseHeight: loc.y, speed: 0.9 + Math.abs(loc.x) * 0.18, range: 0.035 });
+          });
+        });
+      };
+
+      addChannelAccent("/home-experience/models/Like.glb", [
+        { x: 1.38, y: 0.42, z: -0.62, rx: 0.73, ry: 3.17, rz: 6.06 },
+        { x: -1.18, y: -2.08, z: -0.84, rx: 4.57, ry: 0.3, rz: 1.37 },
+        { x: 1.12, y: -4.38, z: -0.72, rx: 2.3, ry: 1.17, rz: 2.27 },
+      ]);
+      addChannelAccent("/home-experience/models/heart.glb", [
+        { x: -1.32, y: -0.78, z: -0.66, rx: 2.29, ry: 6.11, rz: 2.287, scale: 0.105 },
+        { x: 1.42, y: -3.02, z: -0.9, rx: 1.072, ry: 1.49, rz: 3.47, scale: 0.105 },
+        { x: -1.16, y: -5.56, z: -0.7, rx: 2.78, ry: 4.69, rz: 0.2, scale: 0.105 },
+      ]);
+      addChannelAccent("/home-experience/models/goblet.glb", [
+        { x: -1.48, y: 0.2, z: -0.82, rx: 4.47, ry: 2.36, rz: 2.02, scale: 0.1 },
+        { x: 1.58, y: -1.72, z: -0.88, rx: 3.53, ry: 3.75, rz: 2.33, scale: 0.1 },
+        { x: -1.52, y: -4.78, z: -0.9, rx: 2.436, ry: 5.86, rz: 5.66, scale: 0.1 },
+      ]);
+
       ScrollTrigger.create({
         trigger: "body",
-        start: () => getScrollDepth(channelEntryScroll.start) + " top",
-        end: () => getScrollDepth(channelEntryScroll.end) + " top",
+        start: () => getScrollDepth(HOME_STAGE_SCROLL.channels.start) + " top",
+        end: () => getScrollDepth(HOME_STAGE_SCROLL.channels.end) + " top",
         scrub: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
@@ -834,7 +912,7 @@ export default function HomeExperienceClient() {
         }
         reelCtx.fillStyle = "#0a0c20";
         reelCtx.font = "700 82px Arial";
-        reelCtx.fillText("且听松涛", 120, 710);
+        reelCtx.fillText("大盈若冲", 120, 710);
         reelCtx.font = "500 34px Arial";
         reelCtx.fillText("Interactive notes on code, design, life and markets", 124, 770);
       }
@@ -1523,8 +1601,8 @@ export default function HomeExperienceClient() {
       );
     });
 
-    // Final information stages are viewport-fixed overlays. Their visibility is
-    // tied to logical scroll ranges so they cannot drift through Create.
+    // Remaining fixed information overlays. The about and columns stages stay
+    // in normal document flow so they scroll naturally with the page.
     const createInfoStageTimeline = (selector: string, start: number, end: number) => {
       gsap.timeline({
         scrollTrigger: {
@@ -1543,9 +1621,7 @@ export default function HomeExperienceClient() {
         .to(selector, { autoAlpha: 0, y: -24, duration: 0.12, ease: "power1.in" });
     };
 
-    createInfoStageTimeline(".home-about-stage", 1745 + CREATE_RING_SCROLL_OFFSET, 1990 + CREATE_RING_SCROLL_OFFSET);
-    createInfoStageTimeline(".home-channels-stage", channelEntryScroll.start, channelEntryScroll.end);
-    createInfoStageTimeline(".home-contact-stage", 2340 + CREATE_RING_SCROLL_OFFSET, 2940 + CREATE_RING_SCROLL_OFFSET);
+    createInfoStageTimeline(".home-contact-stage", HOME_STAGE_SCROLL.contact.start, HOME_STAGE_SCROLL.contact.end);
 
     // 12. Main Render Tick Loop
     let animationFrameId: number;
@@ -1673,12 +1749,6 @@ export default function HomeExperienceClient() {
         </div>
       )}
 
-      <div className="fixed top-6 left-6 z-40">
-        <span className="font-bold tracking-tighter text-lg text-[#0a0c20]">
-          且听松涛
-        </span>
-      </div>
-
       {/* 3. WEBGL STAGE CANVAS CONTAINER */}
       <div ref={containerRef} id="main-scene" className="fixed inset-0 z-0 pointer-events-none opacity-0" />
       <ObserveSignalField />
@@ -1686,60 +1756,83 @@ export default function HomeExperienceClient() {
       <CreateRingField />
 
       {/* 4. SCROLL CONTAINER TRACK */}
-      <div ref={scrollContainerRef} className="relative z-10 w-full h-[3800vh]">
+      <div ref={scrollContainerRef} className="relative z-10 w-full" style={{ height: `${HOME_SCROLL_TRACK_VH}vh` }}>
         {/* Stage 0: Hero Overlay */}
-        <section className="sticky top-0 w-full h-screen flex flex-col justify-end p-12 md:p-24 pointer-events-none">
+        <section id="hero" className="sticky top-0 w-full h-screen flex flex-col justify-end p-12 md:p-24 pointer-events-none">
           <div className="max-w-xl text-left transform translate-y-[-20%] pointer-events-auto hero-text opacity-0">
             {/* Stage 0 texts removed per request */}
           </div>
         </section>
 
         {/* Stage 1: Observe content placeholder. */}
-        <div className="h-[200vh]" />
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.observeSpacerVh} />
 
         {/* Stage 2: Express content placeholder. */}
-        <div className="h-[600vh]" />
-        <section className="sticky top-0 w-full h-screen pointer-events-none" />
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.expressSpacerVh} />
+        <section
+          className="sticky top-0 w-full pointer-events-none"
+          style={{ height: `${HOME_DOM_LAYOUT.expressStickyVh}vh` }}
+        />
 
         {/* Stage 3: Create content placeholder. */}
-        <div className="h-[200vh]" />
-        <section className="sticky top-0 w-full h-screen pointer-events-none" />
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.createSpacerVh} />
+        <section
+          className="sticky top-0 w-full pointer-events-none"
+          style={{ height: `${HOME_DOM_LAYOUT.createStickyVh}vh` }}
+        />
 
         {/* Stage 4: About */}
-        <div className="h-[200vh]" />
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.aboutLeadSpacerVh} />
         <section
           aria-labelledby="home-about-title"
-          className="home-about-stage invisible fixed inset-0 z-20 flex h-screen w-full items-center p-8 opacity-0 md:p-16 lg:p-24 pointer-events-none"
+          className="home-about-stage relative z-20 flex min-h-screen w-full items-center p-8 md:p-16 lg:p-24 pointer-events-none"
+          style={{ minHeight: `${HOME_DOM_LAYOUT.aboutSectionVh}vh` }}
         >
-          <div className="w-full rounded-[2rem] border border-[#0a0c20]/10 bg-white/10 p-8 backdrop-blur-sm md:p-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">About</p>
-            <h2 id="home-about-title" className="mt-2 text-3xl font-semibold tracking-tight md:text-5xl">自我介绍</h2>
-            <div className="mt-10 min-h-40" aria-hidden="true" />
+          <div className="w-full text-left text-[#0a0c20]">
+            <div className="space-y-7 text-2xl font-medium leading-[1.35] tracking-tight md:space-y-9 md:text-4xl lg:space-y-10 lg:text-5xl">
+              <h2 id="home-about-title">
+                我是阿松
+              </h2>
+              <p>
+                我致力于探索新技术，让生活变得更有趣、更丰富、更有质感。
+              </p>
+              <p>我喜欢旅行、收集，也享受接触新事物的过程。</p>
+              <p>这里是我的数字花园，记录我想记录的内容。</p>
+            </div>
           </div>
         </section>
 
         {/* Stage 5: Channels */}
-        <div className="h-[920vh]" />
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.channelLeadSpacerVh} />
         <section
           aria-labelledby="home-channels-title"
-          className="home-channels-stage invisible fixed inset-0 z-20 flex h-screen w-full flex-col items-start justify-end gap-8 px-8 pb-10 pt-24 opacity-0 pointer-events-none md:flex-row md:items-end md:justify-between md:px-16 md:pb-14 lg:px-24 lg:pb-20"
+          className="home-channels-intro-stage relative z-20 w-full overflow-visible pointer-events-none"
+          style={{
+            height: `${HOME_DOM_LAYOUT.channelIntroSectionVh}vh`,
+            marginTop: `-${HOME_DOM_LAYOUT.channelIntroOverlapVh}vh`,
+          }}
         >
-          <div className="max-w-xs text-[#0a0c20]">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">Channels</p>
-            <h2 id="home-channels-title" className="mt-3 text-2xl font-semibold tracking-tight md:text-4xl">频道入口</h2>
+          <div className="sticky top-0 z-10 flex h-screen items-center justify-center px-8 text-center text-[#0a0c20] md:px-12 lg:px-16">
+            <div className="max-w-5xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">
+                Channels
+              </p>
+              <h2
+                id="home-channels-title"
+                className="mt-2 text-3xl font-semibold uppercase leading-[0.95] tracking-tight md:text-4xl lg:text-5xl"
+              >
+                进入不同内容路径
+              </h2>
+            </div>
           </div>
-
-          <nav aria-label="首页频道入口" className="pointer-events-auto flex max-w-[18rem] flex-wrap gap-x-5 gap-y-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#0a0c20]/55 md:max-w-none md:justify-end">
-            {channelEntries.map((entry) => (
-              <Link key={entry.id} className="transition-colors hover:text-[#0a0c20]" href={entry.href}>
-                {entry.label}
-              </Link>
-            ))}
-          </nav>
         </section>
 
-        {/* Stage 6: Contact */}
-        <div className="h-[200vh]" />
+        {/* Stage 6: Columns list */}
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.channelRailSpacerVh} />
+        <HomeColumnsListStage />
+
+        {/* Stage 7: Contact */}
+        <ScrollSpacer vh={HOME_DOM_LAYOUT.contactLeadSpacerVh} />
         <section
           aria-labelledby="home-contact-title"
           className="home-contact-stage invisible fixed inset-0 z-20 flex h-screen w-full items-end px-8 pb-10 pt-24 opacity-0 pointer-events-none md:px-16 md:pb-14 lg:px-24 lg:pb-20"
@@ -1748,7 +1841,7 @@ export default function HomeExperienceClient() {
             <div className="grid gap-10 border-t border-[#0a0c20]/15 pt-8 md:grid-cols-[1.2fr_0.8fr_0.8fr] md:gap-12">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">Contact</p>
-                <h2 id="home-contact-title" className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">且听松涛</h2>
+                <h2 id="home-contact-title" className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">大盈若冲</h2>
                 <p className="mt-4 max-w-xl text-sm leading-6 text-[#0a0c20]/65 md:text-base">
                   写作、技术实验与长期观察的个人站点。感谢你读到这里。
                 </p>
