@@ -7,7 +7,7 @@ import { ArrowRight, Sparkles, Palette } from 'lucide-react';
 import { CHANNELS_CONFIG } from '@/lib/channels';
 import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
-const createConfig = CHANNELS_CONFIG.create;
+const creativeConfig = CHANNELS_CONFIG.creative;
 const CARD_W = 300;
 const CARD_H = 200;
 
@@ -39,7 +39,7 @@ function CardFallback({ children }) {
     );
 }
 
-import { LiquidGlassWrapper } from '@/components/create/LiquidGlassWrapper';
+import { LiquidGlassWrapper } from '@/components/creative/LiquidGlassWrapper';
 
 function ColumnCard({ columnKey, column, index, icon }) {
     const cardRef = useRef(null);
@@ -53,7 +53,7 @@ function ColumnCard({ columnKey, column, index, icon }) {
             className="relative"
             style={{ width: CARD_W, height: CARD_H }}
         >
-            <Link href={`/blog/create/${columnKey}`} className="block group">
+            <Link href={`/blog/creative/${columnKey}`} className="block group">
                 <LiquidGlassWrapper
                     mouseContainer={cardRef}
                     displacementScale={60}
@@ -82,8 +82,8 @@ function ColumnCard({ columnKey, column, index, icon }) {
     );
 }
 
-export default function CreatePage() {
-    const columns = Object.entries(createConfig.columns);
+export default function CreativePage() {
+    const columns = Object.entries(creativeConfig.columns);
 
     const columnIconMap = {
         design: <Palette className="w-6 h-6" />,
@@ -110,10 +110,10 @@ export default function CreatePage() {
                     className="text-center mb-6"
                 >
                     <span className="inline-block px-4 py-1.5 mb-6 text-xs font-mono tracking-[0.3em] uppercase text-neutral-400 border border-neutral-200 rounded-full">
-                        Creation Channel
+                        Creative Channel
                     </span>
                     <h1 className="text-6xl sm:text-7xl md:text-8xl font-extralight tracking-tight text-neutral-900 mb-4">
-                        创造
+                        创意
                     </h1>
                     <p className="text-lg md:text-xl text-neutral-500 font-light tracking-wide">
                         逻辑与感性的液态交汇

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { GlassCard } from '@/components/create/GlassCard';
+import { GlassCard } from '@/components/creative/GlassCard';
 import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 export default function ColumnLayout({ channelKey, channelConfig, columnKey, columnConfig, posts }) {
@@ -14,7 +14,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
     const isTechChannel = channelKey === 'tech';
     const isLifeChannel = channelKey === 'life';
     const isFinanceChannel = channelKey === 'finance';
-    const isCreateChannel = channelKey === 'create';
+    const isCreativeChannel = channelKey === 'creative';
 
     // 根据频道定义主题色
     const getChannelTheme = () => {
@@ -37,7 +37,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                     primaryHover: '#22c55e',
                     cardRadius: 'rounded-2xl',
                 };
-            case 'create':
+            case 'creative':
                 return {
                     primary: 'rgb(167, 139, 250)', // 浅紫色
                     primaryHover: '#a78bfa',
@@ -59,7 +59,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
     return (
         <div
             className="min-h-screen"
-            style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)' } : isCreateChannel ? { backgroundColor: SITE_WARM_BACKGROUND } : {}}
+            style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)' } : isCreativeChannel ? { backgroundColor: SITE_WARM_BACKGROUND } : {}}
             {...(isTechChannel && { 'data-tech-page': true })}
             {...(isLifeChannel && { 'data-life-page': true })}
         >
@@ -112,7 +112,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                     className="group"
                                 >
                                     <Link href={`/blog/${post.slug}`}>
-                                        {isCreateChannel ? (
+                                        {isCreativeChannel ? (
                                             <GlassCard hover className="p-6 md:p-8">
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div className="flex-1 min-w-0">

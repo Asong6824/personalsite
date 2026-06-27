@@ -8,7 +8,7 @@ describe("CHANNELS_CONFIG 结构", () => {
     expect(keys).toContain("tech");
     expect(keys).toContain("life");
     expect(keys).toContain("finance");
-    expect(keys).toContain("create");
+    expect(keys).toContain("creative");
     expect(keys).toHaveLength(4);
   });
 

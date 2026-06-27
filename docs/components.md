@@ -12,7 +12,7 @@
    ├─ 首页 3D 体验 ───────→ src/components/home/
    ├─ 频道页/专栏页 ──────→ src/components/features/
    ├─ 金融频道专属 ───────→ src/components/finance/
-   └─ 创作频道专属 ───────→ src/components/create/
+   └─ 创意频道专属 ───────→ src/components/creative/
 
 3. 全局 UI 原语？
    ├─ 通用交互/展示组件 ──→ src/components/ui/
@@ -38,7 +38,7 @@
 | `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
 | `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`MusicPlayer`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
 | `src/components/finance/` | 金融频道专属 | `FinanceHomeClient`、`FinanceColumnLayout` |
-| `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`、`GlassCard` |
+| `src/components/creative/` | 创意频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar` |
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
@@ -72,7 +72,7 @@
 
 **原则：**
 - 预计被 **2+ 篇文章复用** → `content/components/{topic}/`
-  - 例：`content/components/color/HSBSliders.jsx`（被 create 和 tech 两篇文章共用）
+  - 例：`content/components/color/HSBSliders.jsx`（被 creative 和 tech 两篇文章共用）
 - **严格单篇专属**且不可能复用 → `content/blog/{slug}/components/`
   - （需 `page.tsx` 支持动态加载；当前尚未实现，暂放 `content/components/{topic}/`）
 

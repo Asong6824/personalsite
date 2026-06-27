@@ -11,7 +11,7 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import ObserveSignalField from "./ObserveSignalField";
 import ExpressConnectionField from "./ExpressConnectionField";
-import CreateRingField from "./CreateRingField";
+import CreativeRingField from "./CreativeRingField";
 import { HomeColumnsListStage } from "./HomeColumnsListStage";
 import { HOME_DOM_LAYOUT, HOME_SCROLL_TRACK_VH, HOME_STAGE_SCROLL } from "./homeTimeline";
 import { CREATE_RING_SCROLL_OFFSET, CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
@@ -31,7 +31,7 @@ const channelEntries = [
   { id: "tech", label: "TECH", href: "/blog/tech", svg: "/home-experience/svgtitle/channel-tech.svg", scale: 0.00115 },
   { id: "life", label: "LIFE", href: "/blog/life", svg: "/home-experience/svgtitle/channel-life.svg", scale: 0.00125 },
   { id: "finance", label: "FINANCE", href: "/blog/finance", svg: "/home-experience/svgtitle/channel-finance.svg", scale: 0.00078 },
-  { id: "design", label: "DESIGN", href: "/blog/create", svg: "/home-experience/svgtitle/channel-design.svg", scale: 0.00088 },
+  { id: "design", label: "DESIGN", href: "/blog/creative", svg: "/home-experience/svgtitle/channel-design.svg", scale: 0.00088 },
 ] as const;
 
 // Coordinate arrays for camera and look-at targets.
@@ -53,14 +53,14 @@ const cameraStages = [
     ease: "power2.inOut",
   },
   {
-    name: "create",
+    name: "creative",
     from: { x: 0.783, y: 14.749, z: 13.3 },
     to: { x: 4.024, y: 22.301, z: 7.031 },
     scrollRange: { start: 1245 + CREATE_STAGE_SCROLL_OFFSET, end: 1440 + CREATE_STAGE_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
-    name: "post-create",
+    name: "post-creative",
     from: { x: 4.024, y: 22.301, z: 7.031 },
     to: { x: 23.346, y: 20.432, z: 2.102 },
     scrollRange: { start: 1545 + CREATE_RING_SCROLL_OFFSET, end: 1740 + CREATE_RING_SCROLL_OFFSET },
@@ -112,14 +112,14 @@ const targetStages = [
     ease: "power2.inOut",
   },
   {
-    name: "create",
+    name: "creative",
     from: { x: 15.777, y: 12.603, z: -0.428 },
     to: { x: 17.443, y: 20.712, z: 0.431 },
     scrollRange: { start: 1245 + CREATE_STAGE_SCROLL_OFFSET, end: 1440 + CREATE_STAGE_SCROLL_OFFSET },
     ease: "power2.inOut",
   },
   {
-    name: "post-create",
+    name: "post-creative",
     from: { x: 17.443, y: 20.712, z: 0.431 },
     to: { x: 23.342, y: 20.293, z: 1.263 },
     scrollRange: { start: 1545 + CREATE_RING_SCROLL_OFFSET, end: 1740 + CREATE_RING_SCROLL_OFFSET },
@@ -456,7 +456,7 @@ export default function HomeExperienceClient() {
       // Load Title SVG for Hero (Chinese text left-aligned, right side up with positive Y scale)
       loadSvg("/home-experience/svgtitle/startTitle.svg", [0.008, 0.008, 0.008], [-0.13, -7.35, 20], [-0.05675, -0.04535, -0.00257]);
 
-      // 3. Stage 3 title: Create
+      // 3. Stage 3 title: Creative
       createGroup = new THREE.Group();
       const createHomePosition = isDesktop
         ? { x: 20, y: 19.5, z: -1 }
@@ -469,7 +469,7 @@ export default function HomeExperienceClient() {
       createGroup.position.set(createHomePosition.x, createHomePosition.y, createHomePosition.z);
       scene.add(createGroup);
 
-      loadSvg("/home-experience/svgtitle/create.svg",
+      loadSvg("/home-experience/svgtitle/creative.svg",
         isDesktop ? [0.009, -0.009, 0.009] : [0.004, -0.004, 0.004],
         isDesktop ? [3.8722, 2.3926, -6.0889] : [0, 1.3, -3],
         [-0.23628, -1.1024, -0.21163],
@@ -1753,7 +1753,7 @@ export default function HomeExperienceClient() {
       <div ref={containerRef} id="main-scene" className="fixed inset-0 z-0 pointer-events-none opacity-0" />
       <ObserveSignalField />
       <ExpressConnectionField />
-      <CreateRingField />
+      <CreativeRingField />
 
       {/* 4. SCROLL CONTAINER TRACK */}
       <div ref={scrollContainerRef} className="relative z-10 w-full" style={{ height: `${HOME_SCROLL_TRACK_VH}vh` }}>

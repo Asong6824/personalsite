@@ -1,4 +1,4 @@
-// src/app/blog/create/[columnSlug]/page.jsx
+// src/app/blog/creative/[columnSlug]/page.jsx
 import { getPostsByColumn } from '@/lib/post';
 import { generateColumnStaticParams, generateColumnMetadata, validateChannelColumn } from '@/lib/route-utils';
 import { generateColumnStructuredData } from '@/lib/seo-utils';
@@ -7,7 +7,7 @@ import ColumnLayout from '@/components/features/ColumnLayout';
 import StructuredData from '@/components/StructuredData';
 import { notFound } from 'next/navigation';
 
-const CHANNEL_KEY = 'create';
+const CHANNEL_KEY = 'creative';
 
 // 生成静态参数
 export async function generateStaticParams() {
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
     return generateColumnMetadata(CHANNEL_KEY, columnSlug, posts);
 }
 
-export default async function CreateColumnPage({ params }) {
+export default async function CreativeColumnPage({ params }) {
     const { columnSlug } = await params;
     const validation = validateChannelColumn(CHANNEL_KEY, columnSlug);
 
@@ -37,7 +37,7 @@ export default async function CreateColumnPage({ params }) {
 
     return (
         <>
-            <StructuredData data={structuredData} id="create-column-structured-data" />
+            <StructuredData data={structuredData} id="creative-column-structured-data" />
             <ColumnLayout
                 channelKey={CHANNEL_KEY}
                 channelConfig={channelConfig}

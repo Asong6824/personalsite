@@ -15,10 +15,10 @@ export const SECTIONS = [
         href: '/blog/tech'
     },
     {
-        id: 'create',
+        id: 'creative',
         stepNumber: '02',
-        title: '创造',
-        subtitle: 'Create',
+        title: '创意',
+        subtitle: 'Creative',
         description: '设计是一种解决问题的思维方式',
         subPoints: [
             { label: '设计美学', text: '像素与逻辑的交汇' },
@@ -26,7 +26,7 @@ export const SECTIONS = [
             { label: '工具工作流', text: '效率即创造力' }
         ],
         status: '探索中',
-        href: '/blog/create'
+        href: '/blog/creative'
     },
     {
         id: 'life',

@@ -16,10 +16,10 @@ export const TechVisual = () => (
     </div>
 );
 
-export const CreateVisual = () => (
+export const CreativeVisual = () => (
     <div className="w-full h-full bg-[var(--theme-surface)] border border-[var(--theme-outline-variant)] p-8 flex flex-col">
         <div className="border-b border-[var(--theme-outline-variant)] pb-4 mb-6 flex justify-between items-center">
-            <h4 className="font-mono text-xs uppercase tracking-widest text-[var(--theme-outline)]">创造</h4>
+            <h4 className="font-mono text-xs uppercase tracking-widest text-[var(--theme-outline)]">创意</h4>
             <div className="flex gap-2">
                 <div className="w-2 h-2 bg-[#84816a] opacity-40"></div>
                 <div className="w-2 h-2 bg-[#84816a] opacity-40"></div>
@@ -106,7 +106,7 @@ export const FinanceVisual = () => (
 
 export const VISUALS = {
     tech: TechVisual,
-    create: CreateVisual,
+    creative: CreativeVisual,
     life: LifeVisual,
     finance: FinanceVisual
 };

@@ -29,7 +29,7 @@ src/app/page.tsx
     ├── HTML/SVG 叠加层
     │   ├── ObserveSignalField
     │   ├── ExpressConnectionField
-    │   └── CreateRingField
+    │   └── CreativeRingField
     ├── homeTimeline.ts 阶段配置
     └── 4500vh 滚动轨道
         ├── Hero
@@ -68,10 +68,10 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 
 ### Create
 
-- `CreateRingField` 使用独立 Three.js 场景展示 8 张 4:5 海报面板组成的 Gallery 环。
+- `CreativeRingField` 使用独立 Three.js 场景展示 8 张 4:5 海报面板组成的 Gallery 环。
 - 当前海报资源为 `public/home-experience/gallery-images/daying-ruochong-poster.png`。
 - 主场景中的 Create 标题会缩放并暂时停靠，为后续展示让出空间。
-- 对应标题资源为 `create.svg`。
+- 对应标题资源为 `creative.svg`。
 
 ### 自我介绍
 
@@ -85,7 +85,7 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 
 - 复用原 Reviews 阶段的镜头区间，在主 WebGL 场景中展示频道文字队列。
 - 频道入口 3D 文字队列在逻辑区间 `2560–2860` 显示。
-- 四个频道入口为 `TECH`、`LIFE`、`FINANCE`、`DESIGN`，其中 `DESIGN` 暂时链接到现有 `/blog/create` 路由，不在本阶段迁移频道 key。
+- 四个频道入口为 `TECH`、`LIFE`、`FINANCE`、`DESIGN`，其中 `DESIGN` 链接到 `/blog/creative`。
 - 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 从 `y=6.5` 上移到 `18`，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
 - HTML 层使用普通文档流 section 显示「Channels / 进入不同内容路径」，内部 sticky 居中停留，标题样式与「Columns / 探索更多专题内容」一致；不再显示右下频道链接，避免与 3D 频道文字重复。
 - 原评价标题、3D 评价卡与评价文案已停用。
@@ -94,7 +94,7 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 
 - 移植 noomo awards list 的列表阶段，用于展示本站配置为 `featured: true` 的专栏。
 - 探索更多专题内容是普通文档流中的 `h-screen` section，不使用 GSAP fixed overlay 或 pin；它前面保留真实滚动间隔，并由频道入口 WebGL 组在末段继续上移、整体淡出，避免重叠。
-- 数据来自 `CHANNELS_CONFIG`，每一行链接到 `/blog/{channelKey}/{columnKey}`；当前精选为 `tech/nlp`、`life/japan` 与 `create/design`。
+- 数据来自 `CHANNELS_CONFIG`，每一行链接到 `/blog/{channelKey}/{columnKey}`；当前精选为 `tech/nlp`、`life/japan` 与 `creative/design`。
 - hover 或键盘 focus 列表条目时，在列表容器内显示并移动对应专栏 `cover` / `coverImage`；未配置专栏首图时回退到频道 `icon` 或站内占位图。
 
 ### 联系方式
@@ -122,7 +122,7 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 | Express：关系网络 | `875–1370` | 495 | 固定 | 固定 | `ExpressConnectionField` 按层级绘制中心节点、边、外围节点和图例；图完全展开后保留一段完整态停顿，再淡出。 |
 | Create：主镜头 | `1385–1580` | 195 | `(0.783, 14.749, 13.300)` → `(4.024, 22.301, 7.031)` | `(15.777, 12.603, -0.428)` → `(17.443, 20.712, 0.431)` | 镜头继续上移并进入 Create 标题与卡片区域。 |
 | Create：标题停靠 | `1585–1665` | 80 | 保持上一镜头终点 | 保持上一目标终点 | `createGroup` 移至停靠坐标并缩放；桌面缩至 `0.54`，移动端缩至 `0.68`。 |
-| Create：Gallery 可见 | `1640–2090` | 450 | 固定 | 固定 | `CreateRingField` 进入时淡入、离开时淡出。 |
+| Create：Gallery 可见 | `1640–2090` | 450 | 固定 | 固定 | `CreativeRingField` 进入时淡入、离开时淡出。 |
 | Create：Gallery 运动 | `1665–2065` | 400 | 固定 | 固定 | 图片面板按 `appear / zoom / vertical` 三段参数显现、环绕旋转并向上退出；该阶段使用子组件自己的 Three.js 相机。 |
 | Create：标题复位 | `2090–2175` | 85 | 固定 | 固定 | `createGroup` 从停靠位置回到主位置并恢复为 1 倍缩放。 |
 | Create → 自我介绍：过场镜头 | `2305–2500` | 195 | `(4.024, 22.301, 7.031)` → `(23.346, 20.432, 2.102)` | `(17.443, 20.712, 0.431)` → `(23.342, 20.293, 1.263)` | 对应源码 `1545–1740 + 760`，横向跨越场景进入个人信息区域。 |
@@ -134,9 +134,9 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 
 相机区间之间没有插值时，相机和 `lookTarget` 保持上一阶段终点。所有视口执行 Observe、Express、Create、post-create、自我介绍与频道入口位移；频道入口完成后，探索更多专题内容与联系方式复用该固定视角，其中探索更多专题内容按文档流自然滑过，联系方式仍使用固定 overlay。
 
-### CreateRingField 子相机时间线
+### CreativeRingField 子相机时间线
 
-`CreateRingField` 在固定 HTML 叠加层内创建独立 Three.js 场景，不使用首页主相机。它的子相机初始为 `PerspectiveCamera(70, viewportAspect, 0.01, 100)`，初始位置为 `(0, 0, 10)`；画面构图由 `displayGroup` 统一处理，桌面端当前缩放为 `(0.67, 0.67, 1)`，位置为 `(0, -0.5, 0)`。
+`CreativeRingField` 在固定 HTML 叠加层内创建独立 Three.js 场景，不使用首页主相机。它的子相机初始为 `PerspectiveCamera(70, viewportAspect, 0.01, 100)`，初始位置为 `(0, 0, 10)`；画面构图由 `displayGroup` 统一处理，桌面端当前缩放为 `(0.67, 0.67, 1)`，位置为 `(0, -0.5, 0)`。
 
 滚动进度先由 `ScrollTrigger` 折算为 `progress: 0–1`，再进入 `galleryStageFromProgress(progress)` 拆为 `appear / zoom / vertical`。对应源码区间是 `1525–1925 + CREATE_STAGE_SCROLL_OFFSET`，即主表中的 `1665–2065`。
 
@@ -149,7 +149,7 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 
 `setZoom(1)` 会把子相机 FOV 从 `70` 收到 `66.5`，作为该子场景的常态视角；随后 `update()` 每帧按 `zoom` 修改相机 Z 轴位置和 `tiltGroup` 旋转。也就是说，Create Gallery 的运动主要来自子场景相机与 `tiltGroup`，而不是移动首页主相机或逐张移动海报面板。
 
-当前 DOM 滚动轨道为 `4500vh`，而逻辑深度使用 `getScrollDepth()` 转换，两者不是同一个单位系统。阶段边界、DOM spacer 与轨道高度集中在 `src/components/home/homeTimeline.ts`；修改任一区间时，需要同时检查：`homeTimeline.ts`、`cameraStages`、`targetStages`、对象 ScrollTrigger、显隐阈值和 `CreateRingField` 子时间线。
+当前 DOM 滚动轨道为 `4500vh`，而逻辑深度使用 `getScrollDepth()` 转换，两者不是同一个单位系统。阶段边界、DOM spacer 与轨道高度集中在 `src/components/home/homeTimeline.ts`；修改任一区间时，需要同时检查：`homeTimeline.ts`、`cameraStages`、`targetStages`、对象 ScrollTrigger、显隐阈值和 `CreativeRingField` 子时间线。
 
 ### DOM 文档流对齐
 
@@ -212,7 +212,7 @@ public/home-experience/
 | 调整探索更多专题内容列表 | `src/components/home/HomeColumnsListStage.tsx` |
 | 调整观察阶段叠加层 | `src/components/home/ObserveSignalField.tsx` |
 | 调整表达阶段关系网络 | `src/components/home/ExpressConnectionField.tsx` |
-| 调整创造阶段环形卡片 | `src/components/home/CreateRingField.tsx` |
+| 调整创造阶段环形卡片 | `src/components/home/CreativeRingField.tsx` |
 | 调整首页元数据与外层背景 | `src/app/page.tsx` |
 | 调整本地 3D/贴图/SVG 资源 | `public/home-experience/` |
 

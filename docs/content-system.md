@@ -31,7 +31,7 @@ tags: string[]              # 标签数组，用于频道/专栏归类
 excerpt: string             # 摘要
 coverImage: string          # 封面图 URL
 pinned: boolean             # 可选，置顶文章（排序优先）
-channel: string             # 可选，显式指定频道（tech/life/finance/create）
+channel: string             # 可选，显式指定频道（tech/life/finance/creative）
 column: string              # 可选，显式指定专栏
 columnSlug: string          # 可选，显式指定专栏 slug
 music: string | string[]    # 可选，背景音乐 URL（数组支持多首）
@@ -48,7 +48,7 @@ hidden: boolean             # 设为 true 则文章不在列表展示，详情�
 - **tech**（技术）：Golang 精进之路、通用技术、产品设计、设计美学
 - **life**（生活）：日本行纪、年度总结、杂记
 - **finance**（金融）：财经投资
-- **create**（创造）：设计美学、产品设计
+- **creative**（创意）：设计美学、产品设计
 
 每篇文章的频道与专栏归属逻辑：优先使用 frontmatter 中的 `channel`/`column` 字段，否则通过 `tags` 匹配专栏配置中的 `tags` 进行自动归类。
 

@@ -287,7 +287,7 @@ class GalleryStage {
   }
 }
 
-export default function CreateRingField() {
+export default function CreativeRingField() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -365,7 +365,7 @@ export default function CreateRingField() {
         render();
       })
       .catch((error) => {
-        console.error("Failed to load create gallery stage:", error);
+        console.error("Failed to load creative gallery stage:", error);
       });
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -400,7 +400,7 @@ export default function CreateRingField() {
   return (
     <div
       ref={containerRef}
-      className="create-ring-field fixed inset-0 z-20 pointer-events-none opacity-0"
+      className="creative-ring-field fixed inset-0 z-20 pointer-events-none opacity-0"
       aria-hidden="true"
     />
   );

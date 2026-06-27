@@ -12,7 +12,7 @@ export interface PostFrontmatter {
   heroVideo?: string;
   videoUrl?: string;
   pinned?: boolean;
-  channel?: 'tech' | 'life' | 'finance' | 'create';
+  channel?: 'tech' | 'life' | 'finance' | 'creative';
   column?: string;
   columnSlug?: string;
   music?: string | string[];
@@ -58,7 +58,7 @@ export interface ChannelsConfig {
   tech: ChannelConfig;
   life: ChannelConfig;
   finance: ChannelConfig;
-  create: ChannelConfig;
+  creative: ChannelConfig;
 }
 
 export interface PostIndexEntry {

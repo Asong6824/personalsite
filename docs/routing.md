@@ -13,8 +13,8 @@
 | `/blog/life/[columnSlug]` | 生活频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
 | `/blog/finance` | 金融频道页 |
 | `/blog/finance/[columnSlug]` | 金融频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
-| `/blog/create` | 创作频道页 |
-| `/blog/create/[columnSlug]` | 创作频道专栏页 |
+| `/blog/creative` | 创意频道页 |
+| `/blog/creative/[columnSlug]` | 创意频道专栏页 |
 | `/blog/[...slug]` | 文章详情页（通用，匹配一个或多个路径段） |
 | `/blog/life/japan/stamps` | 日本车站印章收藏页（无限画布布局，可滚轮/触摸滑动） |
 | `/dev/datasets-demo` | 数据集/股票图表演示页 |

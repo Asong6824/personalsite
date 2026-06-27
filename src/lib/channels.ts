@@ -97,8 +97,8 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
       },
     },
   },
-  create: {
-    name: "创造",
+  creative: {
+    name: "创意",
     description: "逻辑与感性的液态交汇",
     icon: "/placeholder-image.svg",
     columns: {

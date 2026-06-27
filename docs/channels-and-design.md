@@ -8,7 +8,7 @@
 │   └── 文章（Article）
 ```
 
-- **频道**：内容大分类，对应 `CHANNELS_CONFIG` 中的顶级 key（`tech` / `life` / `finance` / `create`）。
+- **频道**：内容大分类，对应 `CHANNELS_CONFIG` 中的顶级 key（`tech` / `life` / `finance` / `creative`）。
 - **专栏**：频道下的子主题，由 `tags` 匹配或 frontmatter 显式指定。
 - **文章**：MDX 文件，通过 `tags` 自动归入专栏，或由 `channel` / `column` 字段强制指定。
 
@@ -27,7 +27,7 @@
 | **技术** | 技术分享与学习笔记 | 7 | `/blog/tech` |
 | **生活** | 生活感悟与旅行记录 | 3 | `/blog/life` |
 | **金融** | 投资交易与金融市场分析 | 2 | `/blog/finance` |
-| **创造** | 逻辑与感性的液态交汇 | 2 | `/blog/create` |
+| **创意** | 逻辑与感性的液态交汇 | 2 | `/blog/creative` |
 
 ---
 
@@ -127,7 +127,7 @@
 
 ---
 
-### 创造（create）
+### 创意（creative）
 
 | 专栏 key | 名称 | 标签 | 封面 |
 |----------|------|------|------|
@@ -137,7 +137,7 @@
 **频道页设计风格**
 
 - **整体色调**：站点统一米色 `#F0EEE7` 作为频道主背景，叠加极淡的白色与 `#E2DBCE` 环境光晕，保持液态玻璃的轻盈感但不脱离全站背景体系。
-- **标题区**：居中对齐。上方标签「Creation Channel」（等宽字体，tracking-[0.3em] uppercase，`rounded-full border border-neutral-200`）。主标题「创造」（`text-6xl sm:text-7xl md:text-8xl font-extralight tracking-tight text-neutral-900`）。副标题「逻辑与感性的液态交汇」（`text-lg md:text-xl text-neutral-500 font-light`）。
+- **标题区**：居中对齐。上方标签「Creative Channel」（等宽字体，tracking-[0.3em] uppercase，`rounded-full border border-neutral-200`）。主标题「创意」（`text-6xl sm:text-7xl md:text-8xl font-extralight tracking-tight text-neutral-900`）。副标题「逻辑与感性的液态交汇」（`text-lg md:text-xl text-neutral-500 font-light`）。
 - **分隔线**：`w-24 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent`，scaleX 从 0 展开的入场动画。
 - **专栏卡片**：核心视觉元素。
   - 尺寸固定 `300×200 px`，`rounded-[32px]`。

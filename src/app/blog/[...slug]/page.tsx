@@ -110,7 +110,7 @@ export default async function PostPage({ params }) {
     const { frontmatter, content } = postData;
     const isTechChannel = frontmatter.channel === 'tech';
     const isLifeChannel = frontmatter.channel === 'life';
-    const isCreateChannel = frontmatter.channel === 'create';
+    const isCreativeChannel = frontmatter.channel === 'creative';
     const isFinanceChannel = frontmatter.channel === 'finance';
 
     const channelStyles = {
@@ -130,7 +130,7 @@ export default async function PostPage({ params }) {
             headerMeta: 'text-[#68645d]',
             tagBg: 'bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413]',
         },
-        create: {
+        creative: {
             containerBg: '',
             containerStyle: { backgroundColor: SITE_WARM_BACKGROUND },
             prose: 'prose-headings:text-[#141413] prose-a:text-purple-700 hover:prose-a:text-purple-900 prose-strong:text-[#141413] prose-blockquote:border-l-purple-500/60 prose-blockquote:text-[#68645d] prose-p:text-[#141413] prose-li:text-[#141413]',
@@ -156,7 +156,7 @@ export default async function PostPage({ params }) {
         }
     };
 
-    const currentStyle = isTechChannel ? channelStyles.tech : isLifeChannel ? channelStyles.life : isCreateChannel ? channelStyles.create : isFinanceChannel ? channelStyles.finance : channelStyles.default;
+    const currentStyle = isTechChannel ? channelStyles.tech : isLifeChannel ? channelStyles.life : isCreativeChannel ? channelStyles.creative : isFinanceChannel ? channelStyles.finance : channelStyles.default;
     const mdxComponents = {
         // 添加InlineExplanation组件
         InlineExplanation: InlineExplanation,

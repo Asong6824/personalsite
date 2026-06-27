@@ -35,7 +35,7 @@ HomeExperienceClient
 - **组件目录**：`src/components/home/`
 - **渲染方式**：客户端组件内初始化 Three.js，浏览器 API 必须隔离在 `"use client"` 组件中
 - **加载状态**：`THREE.LoadingManager` 控制首屏加载遮罩，资源加载完成后隐藏
-- **Create Gallery 资源**：`CreateRingField` 使用 `public/home-experience/gallery-images/daying-ruochong-poster.png` 作为 8 张 4:5 海报面板的纹理
+- **Create Gallery 资源**：`CreativeRingField` 使用 `public/home-experience/gallery-images/daying-ruochong-poster.png` 作为 8 张 4:5 海报面板的纹理
 - **外部资源原则**：首页不应保留临时参考站点的品牌、文案或资源 URL
 
 ---
@@ -47,7 +47,7 @@ HomeExperienceClient
 - 自我介绍、频道入口标题与探索更多专题内容使用普通文档流，像正常页面一样滑过；频道入口的 3D 文字队列和联系方式 overlay 仍由 ScrollTrigger 控制对应逻辑区间。
 - `src/components/home/homeTimeline.ts` 是阶段边界的维护入口。普通 DOM section 的真实文档流位置必须在这里与 WebGL 逻辑区间对齐，避免内容提前进入上一段 3D 场景。
 - 旧 Showcase、Reviews、Awards 的 WebGL 内容已停用，不再加载 showreel、评价卡、奖项图片与奖杯模型；Create → 自我介绍的横向过场结束后，相机与观察目标继续同步下移，再固定用于后续阶段。
-- `DESIGN` 是首页频道入口的展示名，当前仍链接到 `/blog/create`；如需把 `create` 频道 key 和路由整体迁移为 `design`，需要另行处理配置、路由、文章 frontmatter、测试和重定向。
+- `DESIGN` 是首页频道入口的展示名，链接到 `/blog/creative`。
 - 顶部品牌由全局透明 `Navbar` 提供，使用「大盈若冲」，不显示临时实现名。
 - 全局 `Navbar` 在首页、频道和博客页统一显示；首页 WebGL 舞台不再额外渲染左上角品牌标识。
 - 旧临时实验路由已移除，首页统一使用 `/`。
