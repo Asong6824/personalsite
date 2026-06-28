@@ -6,6 +6,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/dist/MotionPathPlugin";
+import { TextPlugin } from "gsap/dist/TextPlugin";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -13,13 +14,16 @@ import ObserveSignalField from "./ObserveSignalField";
 import ExpressConnectionField from "./ExpressConnectionField";
 import CreativeRingField from "./CreativeRingField";
 import { HomeColumnsListStage } from "./HomeColumnsListStage";
-import { HOME_DOM_LAYOUT, HOME_SCROLL_TRACK_VH, HOME_STAGE_SCROLL } from "./homeTimeline";
+import { HomeRecentPostsStage } from "./HomeRecentPostsStage";
+import { HOME_DOM_LAYOUT, HOME_STAGE_SCROLL } from "./homeTimeline";
 import { CREATE_RING_SCROLL_OFFSET, CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
 import { SITE_WARM_BACKGROUND, SITE_WARM_BACKGROUND_THREE } from "@/lib/site-theme";
+import { NAV_LINKS } from "@/components/layout/navLinks";
+import type { Post } from "@/types";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, TextPlugin);
 }
 
 const expressConnectionScroll = {
@@ -77,21 +81,14 @@ const cameraStages = [
     name: "channel-approach",
     from: { x: 23.346, y: 18.432, z: 2.102 },
     to: { x: 23.312, y: 14.16, z: 4.024 },
-    scrollRange: { start: HOME_STAGE_SCROLL.about.end, end: HOME_STAGE_SCROLL.channels.start },
+    scrollRange: { start: HOME_STAGE_SCROLL.about.end, end: HOME_STAGE_SCROLL.channelCamera.start },
     ease: "power2.inOut",
   },
   {
     name: "channels",
     from: { x: 23.312, y: 14.16, z: 4.024 },
     to: { x: 23.292, y: 11.443, z: 4.236 },
-    scrollRange: HOME_STAGE_SCROLL.channels,
-    ease: "power2.inOut",
-  },
-  {
-    name: "contact",
-    from: { x: 23.292, y: 11.443, z: 4.236 },
-    to: { x: 23.292, y: 11.443, z: 4.236 },
-    scrollRange: { start: HOME_STAGE_SCROLL.contact.start, end: HOME_STAGE_SCROLL.contact.start + 200 },
+    scrollRange: HOME_STAGE_SCROLL.channelCamera,
     ease: "power2.inOut",
   },
 ];
@@ -136,21 +133,14 @@ const targetStages = [
     name: "channel-approach",
     from: { x: 23.342, y: 18.293, z: 1.263 },
     to: { x: 23.292, y: 14.01, z: 2.097 },
-    scrollRange: { start: HOME_STAGE_SCROLL.about.end, end: HOME_STAGE_SCROLL.channels.start },
+    scrollRange: { start: HOME_STAGE_SCROLL.about.end, end: HOME_STAGE_SCROLL.channelCamera.start },
     ease: "power2.inOut",
   },
   {
     name: "channels",
     from: { x: 23.292, y: 14.01, z: 2.097 },
     to: { x: 23.272, y: 11.293, z: 2.309 },
-    scrollRange: HOME_STAGE_SCROLL.channels,
-    ease: "power2.inOut",
-  },
-  {
-    name: "contact",
-    from: { x: 23.272, y: 11.293, z: 2.309 },
-    to: { x: 23.272, y: 11.293, z: 2.309 },
-    scrollRange: { start: HOME_STAGE_SCROLL.contact.start, end: HOME_STAGE_SCROLL.contact.start + 200 },
+    scrollRange: HOME_STAGE_SCROLL.channelCamera,
     ease: "power2.inOut",
   },
 ];
@@ -175,7 +165,15 @@ const ScrollSpacer = ({ vh }: { vh: number }) => (
   <div aria-hidden="true" style={{ height: `${vh}vh` }} />
 );
 
-export default function HomeExperienceClient() {
+const friendLinks: Array<{ label: string; href: string; description?: string }> = [
+  { label: "lprota.dev", href: "https://lprota.dev" },
+];
+
+interface HomeExperienceClientProps {
+  recentPosts?: Post[];
+}
+
+export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienceClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -691,6 +689,8 @@ export default function HomeExperienceClient() {
       const observeSignalItems = gsap.utils.toArray<HTMLElement>(".observe-signal-item");
       gsap.set(".observe-signal-field", { autoAlpha: 0 });
       gsap.set(".observe-signal-core", { opacity: 0, scale: 0.94 });
+      gsap.set(".observe-signal-core-text", { text: "" });
+      gsap.set(".observe-signal-cursor", { visibility: "hidden" });
       gsap.set(".observe-signal-crosshair", { opacity: 0 });
       gsap.set(observeSignalItems, {
         xPercent: -50,
@@ -726,6 +726,27 @@ export default function HomeExperienceClient() {
         .to(".observe-signal-field", { autoAlpha: 1, duration: 0.06, ease: "none" }, 0)
         .to(".observe-signal-crosshair", { opacity: 1, duration: 0.16, ease: "none" }, 0.03)
         .to(".observe-signal-core", { opacity: 1, scale: 1, duration: 0.16, ease: "power1.out" }, 0.1)
+        // Typewriter: 前半段「观察世界」
+        .set(".observe-signal-cursor", { visibility: "visible" }, 0.12)
+        .to(".observe-signal-core-text", {
+          text: { value: "观察世界", delimiter: "" },
+          duration: 0.28,
+          ease: "none",
+        }, 0.12)
+        .set(".observe-signal-cursor", { visibility: "hidden" }, 0.42)
+        // Typewriter: 后半段「观察自己」
+        .set(".observe-signal-cursor", { visibility: "visible" }, 0.50)
+        .to(".observe-signal-core-text", {
+          text: { value: "", delimiter: "" },
+          duration: 0.10,
+          ease: "none",
+        }, 0.50)
+        .to(".observe-signal-core-text", {
+          text: { value: "观察自己", delimiter: "" },
+          duration: 0.26,
+          ease: "none",
+        }, 0.62)
+        .set(".observe-signal-cursor", { visibility: "hidden" }, 0.90)
         .to(".observe-signal-core", { opacity: 0, scale: 0.86, duration: 0.16, ease: "power1.in" }, 0.9)
         .to(".observe-signal-crosshair", { opacity: 0, duration: 0.12, ease: "none" }, 0.92)
         .to(".observe-signal-field", { autoAlpha: 0, duration: 0.08, ease: "none" }, 0.97);
@@ -768,8 +789,9 @@ export default function HomeExperienceClient() {
       channelTitleGroup.visible = false;
       scene.add(channelTitleGroup);
 
-      const channelRailStartY = isDesktop ? 6.5 : 18.04;
-      const channelRailEndY = isDesktop ? 18 : 18.04;
+      const channelRailYCalibration = 1.8;
+      const channelRailStartY = isDesktop ? 6.5 + channelRailYCalibration : 18.04;
+      const channelRailEndY = isDesktop ? 18 + channelRailYCalibration : 18.04;
       const channelItemLayout = [
         { x: 0, y: 0, z: 0, center: 0.22 },
         { x: 0, y: -2, z: 0, center: 0.38 },
@@ -1601,28 +1623,6 @@ export default function HomeExperienceClient() {
       );
     });
 
-    // Remaining fixed information overlays. The about and columns stages stay
-    // in normal document flow so they scroll naturally with the page.
-    const createInfoStageTimeline = (selector: string, start: number, end: number) => {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: "body",
-          start: () => getScrollDepth(start) + " top",
-          end: () => getScrollDepth(end) + " top",
-          scrub: true,
-          invalidateOnRefresh: true,
-        }
-      })
-        .fromTo(selector,
-          { autoAlpha: 0, y: 24 },
-          { autoAlpha: 1, y: 0, duration: 0.12, ease: "power1.out" }
-        )
-        .to(selector, { autoAlpha: 1, y: 0, duration: 0.76, ease: "none" })
-        .to(selector, { autoAlpha: 0, y: -24, duration: 0.12, ease: "power1.in" });
-    };
-
-    createInfoStageTimeline(".home-contact-stage", HOME_STAGE_SCROLL.contact.start, HOME_STAGE_SCROLL.contact.end);
-
     // 12. Main Render Tick Loop
     let animationFrameId: number;
     const animate = () => {
@@ -1756,7 +1756,7 @@ export default function HomeExperienceClient() {
       <CreativeRingField />
 
       {/* 4. SCROLL CONTAINER TRACK */}
-      <div ref={scrollContainerRef} className="relative z-10 w-full" style={{ height: `${HOME_SCROLL_TRACK_VH}vh` }}>
+      <div ref={scrollContainerRef} className="relative z-10 w-full">
         {/* Stage 0: Hero Overlay */}
         <section id="hero" className="sticky top-0 w-full h-screen flex flex-col justify-end p-12 md:p-24 pointer-events-none">
           <div className="max-w-xl text-left transform translate-y-[-20%] pointer-events-auto hero-text opacity-0">
@@ -1830,34 +1830,79 @@ export default function HomeExperienceClient() {
         {/* Stage 6: Columns list */}
         <ScrollSpacer vh={HOME_DOM_LAYOUT.channelRailSpacerVh} />
         <HomeColumnsListStage />
+        <HomeRecentPostsStage posts={recentPosts} />
 
         {/* Stage 7: Contact */}
-        <ScrollSpacer vh={HOME_DOM_LAYOUT.contactLeadSpacerVh} />
         <section
           aria-labelledby="home-contact-title"
-          className="home-contact-stage invisible fixed inset-0 z-20 flex h-screen w-full items-end px-8 pb-10 pt-24 opacity-0 pointer-events-none md:px-16 md:pb-14 lg:px-24 lg:pb-20"
+          className="home-contact-stage relative z-20 w-full px-8 pb-10 pt-16 md:px-12 md:pb-14 md:pt-20 lg:px-16 lg:pb-16"
         >
-          <footer className="w-full text-[#0a0c20]">
-            <div className="grid gap-10 border-t border-[#0a0c20]/15 pt-8 md:grid-cols-[1.2fr_0.8fr_0.8fr] md:gap-12">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">Contact</p>
-                <h2 id="home-contact-title" className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">大盈若冲</h2>
-                <p className="mt-4 max-w-xl text-sm leading-6 text-[#0a0c20]/65 md:text-base">
-                  写作、技术实验与长期观察的个人站点。感谢你读到这里。
-                </p>
+          <footer className="min-h-[420px] w-full text-[#0a0c20] md:min-h-[460px]">
+            <div className="grid min-h-[inherit] gap-16 pt-8 md:grid-cols-2 md:gap-12 md:pt-10">
+              <div className="flex min-h-[320px] flex-col justify-between md:min-h-0">
+                <nav
+                  aria-label="页脚主导航"
+                  className="pointer-events-auto flex flex-col items-start gap-3 text-xl font-medium leading-none tracking-tight md:text-2xl"
+                >
+                  {NAV_LINKS.map((linkItem) => (
+                    <Link
+                      key={linkItem.label}
+                      href={linkItem.href}
+                      className="transition-colors hover:text-[#0a0c20]/55"
+                    >
+                      {linkItem.label}
+                    </Link>
+                  ))}
+                </nav>
+
+                <div>
+                  <h2 id="home-contact-title" className="text-3xl font-semibold tracking-tight md:text-4xl">
+                    大盈若冲
+                  </h2>
+                  <p className="mt-3 max-w-md text-sm leading-6 text-[#0a0c20]/60 md:text-base">
+                    写作、技术实验与长期观察的个人站点。
+                  </p>
+                </div>
               </div>
 
-              <nav aria-label="首页页脚导航" className="pointer-events-auto flex flex-col gap-3 text-sm text-[#0a0c20]/70">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0a0c20]/45">Explore</p>
-                <Link className="transition-colors hover:text-[#0a0c20]" href="/blog">博客</Link>
-                <Link className="transition-colors hover:text-[#0a0c20]" href="/blog/tech">技术</Link>
-                <Link className="transition-colors hover:text-[#0a0c20]" href="/blog/life">生活</Link>
-              </nav>
+              <div className="flex min-h-[320px] flex-col justify-between md:min-h-0 md:items-end md:text-right">
+                <div className="md:w-[min(22rem,100%)]">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/45">
+                      Friends
+                    </p>
+                  </div>
 
-              <div className="text-sm leading-6 text-[#0a0c20]/65">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0a0c20]/45">Connect</p>
-                <p className="mt-3">欢迎从文章、项目和日常记录里继续认识我。</p>
-                <p className="mt-6 text-xs uppercase tracking-[0.18em] text-[#0a0c20]/45">© 2026 Asong</p>
+                  <div className="mt-5">
+                    {friendLinks.length > 0 ? (
+                      <nav
+                        aria-label="友情链接"
+                        className="pointer-events-auto flex flex-col items-start gap-3 text-xl font-medium leading-none tracking-tight md:items-end md:text-2xl"
+                      >
+                        {friendLinks.map((friend) => (
+                          <Link
+                            key={friend.href}
+                            href={friend.href}
+                            className="transition-colors hover:text-[#0a0c20]/55"
+                          >
+                            {friend.label}
+                          </Link>
+                        ))}
+                      </nav>
+                    ) : (
+                      <p className="max-w-xs text-xl font-medium leading-tight tracking-tight text-[#0a0c20]/45 md:text-2xl">
+                        友链整理中
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex w-full flex-col gap-3 text-sm font-medium text-[#0a0c20]/50 md:items-end">
+                  <p className="uppercase tracking-[0.18em]">© 2026 Asong</p>
+                  <Link className="pointer-events-auto transition-colors hover:text-[#0a0c20]" href="/blog">
+                    查看全部文章
+                  </Link>
+                </div>
               </div>
             </div>
           </footer>

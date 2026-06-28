@@ -19,11 +19,12 @@ HomeExperienceClient
 ├── 首次加载遮罩
 │   └── 根据 THREE.LoadingManager 进度显示「正在加载体验」
 │
-└── 滚动叙事轨道 (4500vh)
+└── 滚动叙事轨道（由 DOM 内容自然撑开）
     ├── Observe / Express / Create
     ├── 自我介绍
     ├── 频道入口
     ├── 探索更多专题内容
+    ├── 最新文章
     └── 联系方式
 ```
 
@@ -42,9 +43,9 @@ HomeExperienceClient
 
 ## 滚动叙事
 
-- 页面使用一条 `4500vh` 长滚动轨道，通过 sticky section、占位区间和 ScrollTrigger 触发 WebGL 镜头移动、模型显隐、HTML overlay 淡入淡出。
-- Create 之后的四个阶段依次承载「自我介绍」「频道入口」「探索更多专题内容」「联系方式」。自我介绍显示「我是阿松」与个人简介文案；频道入口先用普通文档流显示「进入不同内容路径」，再由 WebGL 中的 `TECH`、`LIFE`、`FINANCE`、`DESIGN` 四个 SVG 3D 文字组成频道队列；探索更多专题内容用 noomo awards list 的交互结构展示 `CHANNELS_CONFIG` 中 `featured: true` 的专栏，hover 条目时显示专栏首图；联系方式阶段显示贴底页脚。
-- 自我介绍、频道入口标题与探索更多专题内容使用普通文档流，像正常页面一样滑过；频道入口的 3D 文字队列和联系方式 overlay 仍由 ScrollTrigger 控制对应逻辑区间。
+- 页面使用由 DOM 内容自然撑开的滚动轨道，通过 sticky section、占位区间和 ScrollTrigger 触发 WebGL 镜头移动与模型显隐；承载正文、列表和链接的后段优先使用普通文档流。
+- Create 之后的阶段依次承载「自我介绍」「频道入口」「探索更多专题内容」「最新文章」「联系方式」。自我介绍显示「我是阿松」与个人简介文案；频道入口先用普通文档流显示「进入不同内容路径」，再由 WebGL 中的 `TECH`、`LIFE`、`FINANCE`、`DESIGN` 四个 SVG 3D 文字组成频道队列；探索更多专题内容用 noomo awards list 的交互结构展示 `CHANNELS_CONFIG` 中 `featured: true` 的专栏，hover 条目时显示专栏首图；最新文章移植 noomo `Our Insights` 的 DOM list 结构，展示 `getSortedPostsData()` 中按日期排序的近期文章；联系方式阶段显示贴底页脚。
+- 自我介绍、频道入口标题、探索更多专题内容、最新文章与联系方式使用普通文档流，像正常页面一样滑过；频道入口的 3D 文字队列仍由 ScrollTrigger 控制对应逻辑区间。
 - `src/components/home/homeTimeline.ts` 是阶段边界的维护入口。普通 DOM section 的真实文档流位置必须在这里与 WebGL 逻辑区间对齐，避免内容提前进入上一段 3D 场景。
 - 旧 Showcase、Reviews、Awards 的 WebGL 内容已停用，不再加载 showreel、评价卡、奖项图片与奖杯模型；Create → 自我介绍的横向过场结束后，相机与观察目标继续同步下移，再固定用于后续阶段。
 - `DESIGN` 是首页频道入口的展示名，链接到 `/blog/creative`。
@@ -65,7 +66,7 @@ HomeExperienceClient
 | `TravelSection` | `LifeChannelLayout`（生活频道页） |
 | `ActiveDaysSection` / `GoalProgressGrid` | 活跃天数统计（可能用于频道页或已废弃） |
 | `FootprintsSection` | 足迹地图（可能用于频道页或已废弃） |
-| `RecentPosts` | 最新文章列表（可能用于频道页或已废弃） |
+| `RecentPosts` | 旧版最新文章列表；首页当前使用 `src/components/home/HomeRecentPostsStage.tsx` |
 
 > 若需修改首页阶段顺序、DOM 出现位置或滚动轨道长度，先改 `src/components/home/homeTimeline.ts`；若需修改相机、模型或材质，再编辑 `src/components/home/HomeExperienceClient.tsx` 与 `public/home-experience/` 下的资源。
 

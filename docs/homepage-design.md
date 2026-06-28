@@ -6,7 +6,7 @@
 
 ## 一、设计定位
 
-首页不是传统频道导航页，而是一段由滚动驱动的 WebGL 叙事。视觉主线是「观察 → 表达 → 创造」，随后进入自我介绍、频道入口、探索更多专题内容与联系方式。
+首页不是传统频道导航页，而是一段由滚动驱动的 WebGL 叙事。视觉主线是「观察 → 表达 → 创造」，随后进入自我介绍、频道入口、探索更多专题内容、最新文章与联系方式。
 
 - 品牌：大盈若冲
 - 基础背景：站点统一米色 `#F0EEE7`。首页 WebGL 背景贴图使用 `public/home-experience/backTexture/background-f0eee7.png`，页面外层、加载遮罩与 Three.js `scene.background` 也必须使用同一背景色常量。
@@ -31,7 +31,7 @@ src/app/page.tsx
     │   ├── ExpressConnectionField
     │   └── CreativeRingField
     ├── homeTimeline.ts 阶段配置
-    └── 4500vh 滚动轨道
+    └── 由 DOM 内容自然撑开的滚动轨道
         ├── Hero
         ├── Observe
         ├── Express
@@ -39,10 +39,11 @@ src/app/page.tsx
         ├── 自我介绍
         ├── 频道入口
         ├── 探索更多专题内容
+        ├── 最新文章
         └── 联系方式
 ```
 
-WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 DOM section 的真实文档流位置。大部分空间变化通过移动相机、look-at 目标和场景对象完成；需要承载正文、列表或链接的阶段优先使用普通 DOM 文档流。
+WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并提供时间轴进度和普通 DOM section 的真实文档流位置。大部分空间变化通过移动相机、look-at 目标和场景对象完成；需要承载正文、列表或链接的阶段优先使用普通 DOM 文档流。
 
 ---
 
@@ -84,9 +85,9 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 ### 频道入口
 
 - 复用原 Reviews 阶段的镜头区间，在主 WebGL 场景中展示频道文字队列。
-- 频道入口 3D 文字队列在逻辑区间 `2560–2860` 显示。
+- 频道入口 3D 文字队列在逻辑区间 `2535–2935` 显示；相机在 `2555–2640` 进入频道视角，让提示文案之后更快接上 WebGL 模型，减少空白等待。
 - 四个频道入口为 `TECH`、`LIFE`、`FINANCE`、`DESIGN`，其中 `DESIGN` 链接到 `/blog/creative`。
-- 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 从 `y=6.5` 上移到 `18`，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
+- 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 保留 Noomo 的 `11.5` 世界单位位移幅度，并针对 SVG 字体基线增加 `+1.8` 垂直校准，因此从 `y=8.3` 上移到 `19.8`；rail 比相机更早启动，TECH 正中时相机进度约 `80%`，实际投影仍接近屏幕中心，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
 - HTML 层使用普通文档流 section 显示「Channels / 进入不同内容路径」，内部 sticky 居中停留，标题样式与「Columns / 探索更多专题内容」一致；不再显示右下频道链接，避免与 3D 频道文字重复。
 - 原评价标题、3D 评价卡与评价文案已停用。
 
@@ -97,11 +98,19 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 - 数据来自 `CHANNELS_CONFIG`，每一行链接到 `/blog/{channelKey}/{columnKey}`；当前精选为 `tech/nlp`、`life/japan` 与 `creative/design`。
 - hover 或键盘 focus 列表条目时，在列表容器内显示并移动对应专栏 `cover` / `coverImage`；未配置专栏首图时回退到频道 `icon` 或站内占位图。
 
+### 最新文章
+
+- 移植 noomo `Our Insights` 的普通 DOM list 结构，用于展示最近文章入口。
+- 数据在 `src/app/page.tsx` 中通过 `getSortedPostsData()` 获取，按 `date` 降序排序后传给 `HomeExperienceClient`；客户端展示组件不读取文件系统或文章索引。
+- 区块提示为「Articles / 抵达最新文章前沿」，标题样式与「Channels / 进入不同内容路径」和「Columns / 探索更多专题内容」保持一致；右侧提供「查看全部」入口链接到 `/blog`。
+- 每条文章使用左图右文横向布局：封面图、标签 pills、hover 时的 `Read` 遮罩、标题、专栏名与日期。无文章封面时回退到专栏封面、频道 icon 或 `placeholder-image.svg`。
+
 ### 联系方式
 
 - 作为滚动叙事终点，复用频道入口完成后的固定视角。
-- 页脚固定在视口底部，在逻辑区间 `3800–4400` 显示。
-- 不使用卡片容器；品牌、导航、联系说明和版权直接排版在背景上。
+- 页脚是普通 DOM section，直接跟在最近文章区之后，不再通过 fixed overlay 或 ScrollTrigger 延迟出现。
+- 页脚仿照 Noomo 的低密度两栏排版：左侧复用 Navbar 的主导航与站点名，右侧预留友链区域，并保留简短说明与版权信息。
+- 不使用卡片容器；导航、友链、品牌和版权直接排版在背景上。
 - 原奖项图片、奖杯模型、漂浮装饰及 Footer CTA 已停用。
 
 ---
@@ -128,11 +137,13 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 | Create → 自我介绍：过场镜头 | `2305–2500` | 195 | `(4.024, 22.301, 7.031)` → `(23.346, 20.432, 2.102)` | `(17.443, 20.712, 0.431)` → `(23.342, 20.293, 1.263)` | 对应源码 `1545–1740 + 760`，横向跨越场景进入个人信息区域。 |
 | 自我介绍：向下调整 | `2505–2555` | 50 | `(23.346, 20.432, 2.102)` → `(23.346, 18.432, 2.102)` | `(23.342, 20.293, 1.263)` → `(23.342, 18.293, 1.263)` | 相机与观察目标同步下移，保持观察角度；HTML 层的个人简介作为一屏文档流 section 自然滑过。 |
 | 频道入口：接近频道队列 | `2555–2560` | 5 | `(23.346, 18.432, 2.102)` → `(23.312, 14.160, 4.024)` | `(23.342, 18.293, 1.263)` → `(23.292, 14.010, 2.097)` | 在个人简介尾段开始切入频道文字队列，避免 DOM 文案提前而 WebGL 模型仍留在旧位置。 |
-| 频道入口：频道文字队列 | `2560–2860` | 300 | `(23.312, 14.160, 4.024)` → `(23.292, 11.443, 4.236)` | `(23.292, 14.010, 2.097)` → `(23.272, 11.293, 2.309)` | `TECH`、`LIFE`、`FINANCE`、`DESIGN` 四个 SVG 3D 文字按固定 rail 位置 `0 / -2 / -4.5 / -7` 排布；整体 rail 上移，每个词在独立中心窗口内归正并增强。 |
+| 频道入口：相机到位 | `2555–2640` | 85 | `(23.312, 14.160, 4.024)` → `(23.292, 11.443, 4.236)` | `(23.292, 14.010, 2.097)` → `(23.272, 11.293, 2.309)` | 相机在频道提示出现前后快速到位，TECH 正中时相机进度约 `80%`。 |
+| 频道入口：频道文字队列 | `2535–2935` | 400 | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | `TECH`、`LIFE`、`FINANCE`、`DESIGN` 四个 SVG 3D 文字按固定 rail 位置 `0 / -2 / -4.5 / -7` 排布；整体 rail 从 `8.3` 上移到 `19.8`，每个词在独立中心窗口内归正并增强。 |
 | 探索更多专题内容：自然滚动列表 | 文档流 | 100vh | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | HTML 层显示 `featured: true` 的专栏列表；不使用 GSAP overlay 时间线，hover 或 focus 条目时显示专栏首图。 |
-| 联系方式：固定视角 | `3800–4000` | 200 | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | HTML 层显示贴底页脚，文字直接排版在背景上；页脚 overlay 持续显示至逻辑区间 `4400` 后淡出。 |
+| 最新文章：自然滚动列表 | 文档流 | 内容自适应 | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | HTML 层显示最近文章列表；移植 noomo `Our Insights` 的标题、图片、标签与文章元信息结构。 |
+| 联系方式：普通 DOM 页脚 | 文档流 | 内容自适应 | 固定 `(23.292, 11.443, 4.236)` | 固定 `(23.272, 11.293, 2.309)` | HTML 层显示页脚，直接跟在最近文章区之后；不使用 fixed overlay 或 ScrollTrigger 显隐。 |
 
-相机区间之间没有插值时，相机和 `lookTarget` 保持上一阶段终点。所有视口执行 Observe、Express、Create、post-create、自我介绍与频道入口位移；频道入口完成后，探索更多专题内容与联系方式复用该固定视角，其中探索更多专题内容按文档流自然滑过，联系方式仍使用固定 overlay。
+相机区间之间没有插值时，相机和 `lookTarget` 保持上一阶段终点。所有视口执行 Observe、Express、Create、post-create、自我介绍与频道入口位移；频道入口完成后，探索更多专题内容、最新文章与联系方式复用该固定视角，三者都按文档流自然滑过。
 
 ### CreativeRingField 子相机时间线
 
@@ -149,7 +160,7 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 
 `setZoom(1)` 会把子相机 FOV 从 `70` 收到 `66.5`，作为该子场景的常态视角；随后 `update()` 每帧按 `zoom` 修改相机 Z 轴位置和 `tiltGroup` 旋转。也就是说，Create Gallery 的运动主要来自子场景相机与 `tiltGroup`，而不是移动首页主相机或逐张移动海报面板。
 
-当前 DOM 滚动轨道为 `4500vh`，而逻辑深度使用 `getScrollDepth()` 转换，两者不是同一个单位系统。阶段边界、DOM spacer 与轨道高度集中在 `src/components/home/homeTimeline.ts`；修改任一区间时，需要同时检查：`homeTimeline.ts`、`cameraStages`、`targetStages`、对象 ScrollTrigger、显隐阈值和 `CreativeRingField` 子时间线。
+当前 DOM 滚动轨道由实际 section 与 spacer 自然撑开，而逻辑深度使用 `getScrollDepth()` 转换，两者不是同一个单位系统。阶段边界与 DOM spacer 集中在 `src/components/home/homeTimeline.ts`；修改任一区间时，需要同时检查：`homeTimeline.ts`、`cameraStages`、`targetStages`、对象 ScrollTrigger、显隐阈值和 `CreativeRingField` 子时间线。
 
 ### DOM 文档流对齐
 
@@ -158,8 +169,10 @@ WebGL Canvas 固定覆盖视口；长滚动容器提供时间轴进度和普通 
 | DOM 阶段 | 文档流起点 | 对应 WebGL 区间 | 维护字段 |
 |---|---:|---:|---|
 | 自我介绍 | `2505vh` | `2505–2605` DOM，`2505–2555` WebGL | `HOME_DOM_LAYOUT.aboutLeadSpacerVh`、`aboutSectionVh` 与 `HOME_STAGE_SCROLL.about` |
-| 频道入口标题 | `2560vh` 视觉入场，`2610vh` 文档流起点 | `2560–2820` DOM，`2560–2860` WebGL | `HOME_DOM_LAYOUT.channelLeadSpacerVh`、`channelIntroOverlapVh`、`channelIntroSectionVh` 与 `HOME_STAGE_SCROLL.channels` |
-| 探索更多专题内容 | `2910vh` | 文档流 | `HOME_DOM_LAYOUT.channelRailSpacerVh` 与 `HOME_DOM_STAGE_START.columns` |
+| 频道入口标题 | `2560vh` 视觉入场，`2610vh` 文档流起点 | `2560–2660` DOM，`2535–2935` WebGL rail | `HOME_DOM_LAYOUT.channelLeadSpacerVh`、`channelIntroOverlapVh`、`channelIntroSectionVh`、`HOME_STAGE_SCROLL.channelCamera` 与 `HOME_STAGE_SCROLL.channels` |
+| 探索更多专题内容 | `2935vh` | 文档流 | `HOME_DOM_LAYOUT.channelRailSpacerVh` 与 `HOME_DOM_STAGE_START.columns` |
+| 最新文章 | 探索更多专题内容之后 | 文档流 | `HomeRecentPostsStage` 与 `src/app/page.tsx` 的 recent posts 数据 |
+| 联系方式 | 最新文章之后 | 文档流 | `home-contact-stage` 普通 DOM section |
 
 自我介绍 section 应与实际文字可见窗口匹配；其后的 `channelLeadSpacerVh` 只保留极短镜头切换距离。频道入口标题通过 `channelIntroOverlapVh` 向上重叠一段，减少个人简介尾部到频道标题之间的视觉空白；后续 `channelRailSpacerVh` 抵消这个重叠量，保证探索更多专题内容仍按预期接入。新增普通 DOM section 时，先确定它要对应哪个 WebGL 逻辑区间，再在 `homeTimeline.ts` 中调整前置 spacer；不要只在 JSX 中插入 `h-[...]` 或 fixed overlay。
 
@@ -210,6 +223,7 @@ public/home-experience/
 | 调整阶段边界、DOM 起点和轨道高度 | `src/components/home/homeTimeline.ts` |
 | 调整相机路径、模型、主时间线 | `src/components/home/HomeExperienceClient.tsx` |
 | 调整探索更多专题内容列表 | `src/components/home/HomeColumnsListStage.tsx` |
+| 调整最新文章列表 | `src/components/home/HomeRecentPostsStage.tsx`、`src/app/page.tsx` |
 | 调整观察阶段叠加层 | `src/components/home/ObserveSignalField.tsx` |
 | 调整表达阶段关系网络 | `src/components/home/ExpressConnectionField.tsx` |
 | 调整创造阶段环形卡片 | `src/components/home/CreativeRingField.tsx` |

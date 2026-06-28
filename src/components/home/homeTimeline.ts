@@ -1,19 +1,17 @@
 import { CREATE_RING_SCROLL_OFFSET } from "./scrollTimings";
 
-export const HOME_SCROLL_TRACK_VH = 4500;
-
 export const HOME_STAGE_SCROLL = {
   about: {
     start: 1745 + CREATE_RING_SCROLL_OFFSET,
     end: 1795 + CREATE_RING_SCROLL_OFFSET,
   },
-  channels: {
-    start: 1800 + CREATE_RING_SCROLL_OFFSET,
-    end: 2100 + CREATE_RING_SCROLL_OFFSET,
+  channelCamera: {
+    start: 1795 + CREATE_RING_SCROLL_OFFSET,
+    end: 1880 + CREATE_RING_SCROLL_OFFSET,
   },
-  contact: {
-    start: 3040 + CREATE_RING_SCROLL_OFFSET,
-    end: 3640 + CREATE_RING_SCROLL_OFFSET,
+  channels: {
+    start: 1775 + CREATE_RING_SCROLL_OFFSET,
+    end: 2175 + CREATE_RING_SCROLL_OFFSET,
   },
 } as const;
 
@@ -27,10 +25,9 @@ export const HOME_DOM_LAYOUT = {
   aboutSectionVh: 100,
   channelLeadSpacerVh: 5,
   channelIntroOverlapVh: 50,
-  channelIntroSectionVh: 260,
-  channelRailSpacerVh: 90,
+  channelIntroSectionVh: 100,
+  channelRailSpacerVh: 275,
   columnsSectionVh: 100,
-  contactLeadSpacerVh: 200,
 } as const;
 
 export const HOME_DOM_STAGE_START = {

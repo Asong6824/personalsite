@@ -42,7 +42,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="relative min-h-screen flex items-center justify-center py-16 md:py-20 mt-8 md:mt-12 lg:mt-16"
+                className="relative min-h-screen flex items-center justify-center py-16 md:py-20 pt-20 md:pt-24 lg:pt-28"
                 style={{ backgroundColor: 'var(--channel-bg)' }}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

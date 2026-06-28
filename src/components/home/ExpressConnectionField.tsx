@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   forceCenter,
   forceLink,
@@ -7,6 +8,7 @@ import {
   forceSimulation,
   forceX,
   forceY,
+  type Simulation,
   type SimulationLinkDatum,
   type SimulationNodeDatum,
 } from "d3-force";
@@ -36,13 +38,13 @@ type ExpressLink = SimulationLinkDatum<ExpressNode> & {
 const WIDTH = 1000;
 const HEIGHT = 650;
 const NODE_SIZE = 36;
-const CENTER = { x: 500, y: 365 };
+const CENTER = { x: 500, y: 330 };
 
 const rawNodes: ExpressNode[] = [
   {
     id: "expression",
-    label: "Expression",
-    sublabel: "connect what was observed",
+    label: "秩序外部化",
+    sublabel: "internal order, externalized",
     kind: "index",
     level: 0,
     x: CENTER.x,
@@ -50,70 +52,49 @@ const rawNodes: ExpressNode[] = [
     fx: CENTER.x,
     fy: CENTER.y,
   },
-  { id: "essays", label: "Essays", sublabel: "thinking in text", kind: "path", level: 1, ordinal: 1, anchor: { x: 350, y: 290 } },
-  { id: "interfaces", label: "Interfaces", sublabel: "ideas as tools", kind: "path", level: 1, ordinal: 2, anchor: { x: 625, y: 300 } },
-  { id: "images", label: "Images", sublabel: "visual notes", kind: "path", level: 1, ordinal: 3, anchor: { x: 360, y: 485 } },
-  { id: "systems", label: "Systems", sublabel: "repeatable structures", kind: "path", level: 1, ordinal: 4, anchor: { x: 650, y: 490 } },
-  { id: "rag", label: "RAG Philosophy", kind: "research", level: 2, anchor: { x: 210, y: 305 } },
-  { id: "design", label: "Design Basics", kind: "artifact", level: 2, anchor: { x: 255, y: 405 } },
-  { id: "notion", label: "Notion Zen", kind: "initiative", level: 2, anchor: { x: 765, y: 310 } },
-  { id: "stamps", label: "Station Stamps", kind: "artifact", level: 2, anchor: { x: 820, y: 430 } },
-  { id: "japan", label: "Japan Notes", kind: "information", level: 2, anchor: { x: 235, y: 560 } },
-  { id: "market", label: "Market Method", kind: "research", level: 2, anchor: { x: 760, y: 575 } },
-  { id: "map", label: "Map Drawing", kind: "artifact", level: 3, anchor: { x: 120, y: 430 } },
-  { id: "proraw", label: "ProRAW Workflow", kind: "artifact", level: 3, anchor: { x: 430, y: 610 } },
-  { id: "index", label: "Post Index", kind: "research", level: 3, anchor: { x: 885, y: 350 } },
+  // 一级路径：文章 / 策展 / 系统
+  { id: "essays", label: "文章", sublabel: "thinking in text", kind: "path", level: 1, ordinal: 1, anchor: { x: 300, y: 230 } },
+  { id: "curation", label: "策展", sublabel: "collected interests", kind: "path", level: 1, ordinal: 2, anchor: { x: 700, y: 290 } },
+  { id: "systems", label: "系统", sublabel: "repeatable structures", kind: "path", level: 1, ordinal: 3, anchor: { x: 410, y: 510 } },
+  // 文章下
+  { id: "rag", label: "RAG 思想", kind: "research", level: 2, anchor: { x: 130, y: 150 } },
+  { id: "agent", label: "Agent 简史", kind: "research", level: 2, anchor: { x: 250, y: 80 } },
+  { id: "japan", label: "日本行纪", kind: "information", level: 2, anchor: { x: 420, y: 130 } },
+  { id: "review", label: "年度总结", kind: "information", level: 2, anchor: { x: 140, y: 310 } },
+  // 策展下
+  { id: "books", label: "书单", kind: "artifact", level: 2, anchor: { x: 840, y: 210 } },
+  { id: "stamps", label: "印章收集", kind: "artifact", level: 2, anchor: { x: 840, y: 380 } },
+  // 系统下
+  { id: "investment", label: "投资方法论", kind: "research", level: 2, anchor: { x: 210, y: 530 } },
+  { id: "notion", label: "Notion 与禅", kind: "initiative", level: 2, anchor: { x: 520, y: 620 } },
+  { id: "map", label: "地图绘制", kind: "artifact", level: 2, anchor: { x: 620, y: 510 } },
+  { id: "proraw", label: "ProRAW 工作流", kind: "artifact", level: 2, anchor: { x: 370, y: 620 } },
 ];
 
 const rawLinks: ExpressLink[] = [
+  // 中心到一级路径
   { source: "expression", target: "essays", level: 1, pathKind: "angled" },
-  { source: "expression", target: "interfaces", level: 1, pathKind: "angled" },
-  { source: "expression", target: "images", level: 1, pathKind: "angled" },
+  { source: "expression", target: "curation", level: 1, pathKind: "angled" },
   { source: "expression", target: "systems", level: 1, pathKind: "angled" },
+  // 文章下
   { source: "essays", target: "rag", level: 2, pathKind: "straight" },
-  { source: "essays", target: "design", level: 2, pathKind: "angled" },
-  { source: "interfaces", target: "notion", level: 2, pathKind: "straight" },
-  { source: "interfaces", target: "index", level: 3, pathKind: "angled", dashed: true },
-  { source: "images", target: "japan", level: 2, pathKind: "angled" },
-  { source: "images", target: "map", level: 3, pathKind: "straight", dashed: true },
-  { source: "systems", target: "stamps", level: 2, pathKind: "wavy" },
-  { source: "systems", target: "market", level: 2, pathKind: "angled" },
-  { source: "japan", target: "proraw", level: 3, pathKind: "angled", dashed: true },
-  { source: "notion", target: "index", level: 3, pathKind: "wavy", dashed: true },
-  { source: "market", target: "index", level: 3, pathKind: "angled", dashed: true },
+  { source: "essays", target: "agent", level: 2, pathKind: "angled" },
+  { source: "essays", target: "japan", level: 2, pathKind: "angled" },
+  { source: "essays", target: "review", level: 2, pathKind: "wavy" },
+  // 策展下
+  { source: "curation", target: "books", level: 2, pathKind: "straight" },
+  { source: "curation", target: "stamps", level: 2, pathKind: "angled" },
+  // 系统下
+  { source: "systems", target: "investment", level: 2, pathKind: "straight" },
+  { source: "systems", target: "notion", level: 2, pathKind: "angled" },
+  { source: "systems", target: "map", level: 2, pathKind: "angled" },
+  { source: "systems", target: "proraw", level: 2, pathKind: "wavy" },
 ];
 
-function createLayout() {
-  const nodes = rawNodes.map((node) => ({
-    ...node,
-    x: node.x ?? node.anchor?.x,
-    y: node.y ?? node.anchor?.y,
-  }));
-  const links = rawLinks.map((link) => ({ ...link }));
-
-  forceSimulation<ExpressNode>(nodes)
-    .force(
-      "link",
-      forceLink<ExpressNode, ExpressLink>(links)
-        .id((node) => node.id)
-        .distance((link) => (link.level === 1 ? 116 : link.level === 2 ? 96 : 84))
-        .strength(0.1)
-    )
-    .force("charge", forceManyBody<ExpressNode>().strength(-400).distanceMax(300).distanceMin(10))
-    .force("center", forceCenter(WIDTH / 2, HEIGHT / 2))
-    .force("x", forceX<ExpressNode>((node) => node.anchor?.x ?? WIDTH / 2).strength(0.16))
-    .force("y", forceY<ExpressNode>((node) => node.anchor?.y ?? HEIGHT / 2).strength(0.16))
-    .stop()
-    .tick(260);
-
-  return { nodes, links };
-}
-
-const layout = createLayout();
-const nodeById = new Map(layout.nodes.map((node) => [node.id, node]));
+const rawNodeById = new Map(rawNodes.map((node) => [node.id, node]));
 
 function resolvedNode(node: string | ExpressNode) {
-  return typeof node === "string" ? nodeById.get(node)! : node;
+  return typeof node === "string" ? rawNodeById.get(node)! : node;
 }
 
 function point(node: ExpressNode) {
@@ -222,13 +203,84 @@ function centerMarker() {
 }
 
 function labelOffset(node: ExpressNode) {
-  if (node.id === "expression") return { x: 0, y: 48, anchor: "middle" as const };
-  if ((node.x ?? 0) < 280) return { x: -12, y: 44, anchor: "end" as const };
-  if ((node.x ?? 0) > 720) return { x: 14, y: 38, anchor: "start" as const };
-  return { x: 0, y: (node.y ?? 0) < CENTER.y ? -18 : 46, anchor: "middle" as const };
+  if (node.id === "expression") return { x: 0, y: 58, anchor: "middle" as const };
+
+  const x = node.anchor?.x ?? node.x ?? 0;
+  const y = node.anchor?.y ?? node.y ?? 0;
+
+  // 顶部节点 label 放下方
+  if (y < 180) return { x: 0, y: 46, anchor: "middle" as const };
+  // 底部节点 label 放上方
+  if (y > 580) return { x: 0, y: -22, anchor: "middle" as const };
+  // 左侧节点 label 放左侧
+  if (x < 300) return { x: -14, y: 38, anchor: "end" as const };
+  // 右侧节点 label 放右侧
+  if (x > 700) return { x: 14, y: 38, anchor: "start" as const };
+
+  return { x: 0, y: 46, anchor: "middle" as const };
+}
+
+function linkKey(link: ExpressLink) {
+  const sourceId = typeof link.source === "string" ? link.source : link.source.id;
+  const targetId = typeof link.target === "string" ? link.target : link.target.id;
+  return `${sourceId}-${targetId}`;
 }
 
 export default function ExpressConnectionField() {
+  const nodePositionRefs = useRef<Map<string, SVGGElement>>(new Map());
+  const edgeRefs = useRef<Map<string, SVGPathElement>>(new Map());
+  const simRef = useRef<Simulation<ExpressNode, ExpressLink> | null>(null);
+
+  useEffect(() => {
+    const nodes = rawNodes.map((node) => ({
+      ...node,
+      x: node.anchor?.x ?? node.x ?? WIDTH / 2,
+      y: node.anchor?.y ?? node.y ?? HEIGHT / 2,
+    }));
+    const links = rawLinks.map((link) => ({ ...link }));
+
+    const nodeEls = nodePositionRefs.current;
+    const edgeEls = edgeRefs.current;
+
+    const sim = forceSimulation<ExpressNode>(nodes)
+      .alpha(1)
+      .alphaDecay(0.02)
+      .alphaMin(0.001)
+      .velocityDecay(0.3)
+      .force(
+        "link",
+        forceLink<ExpressNode, ExpressLink>(links)
+          .id((node) => node.id)
+          .distance((link) => (link.level === 1 ? 132 : 96))
+          .strength(0.1)
+      )
+      .force("charge", forceManyBody<ExpressNode>().strength(-420).distanceMax(320).distanceMin(10))
+      .force("center", forceCenter(WIDTH / 2, HEIGHT / 2))
+      .force("x", forceX<ExpressNode>((node) => node.anchor?.x ?? WIDTH / 2).strength(0.18))
+      .force("y", forceY<ExpressNode>((node) => node.anchor?.y ?? HEIGHT / 2).strength(0.18))
+      .on("tick", () => {
+        for (const node of nodes) {
+          const el = nodeEls.get(node.id);
+          if (el) {
+            el.setAttribute("transform", `translate(${node.x ?? 0} ${node.y ?? 0})`);
+          }
+        }
+        for (const link of links) {
+          const el = edgeEls.get(linkKey(link));
+          if (el) {
+            el.setAttribute("d", createPath(link));
+          }
+        }
+      });
+
+    simRef.current = sim;
+
+    return () => {
+      sim.stop();
+      simRef.current = null;
+    };
+  }, []);
+
   return (
     <div
       className="express-connection-field fixed inset-0 z-20 pointer-events-none overflow-hidden opacity-0"
@@ -236,12 +288,15 @@ export default function ExpressConnectionField() {
     >
       <svg className="absolute inset-0 h-full w-full" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="xMidYMid meet">
         <g className="express-network" transform="translate(90 98) scale(0.78)">
-          {layout.links.map((link) => {
-            const source = resolvedNode(link.source);
-            const target = resolvedNode(link.target);
+          {rawLinks.map((link) => {
+            const key = linkKey(link);
             return (
               <path
-                key={`${source.id}-${target.id}`}
+                key={key}
+                ref={(el) => {
+                  if (el) edgeRefs.current.set(key, el);
+                  else edgeRefs.current.delete(key);
+                }}
                 className={`express-edge express-edge-level-${link.level}`}
                 d={createPath(link)}
                 fill="none"
@@ -250,38 +305,44 @@ export default function ExpressConnectionField() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray={link.dashed ? "7 9" : undefined}
-                opacity={link.level === 3 ? 0.72 : 1}
+                opacity={1}
               />
             );
           })}
 
-          {layout.nodes.map((node) => {
+          {rawNodes.map((node) => {
             const label = labelOffset(node);
+            const initialX = node.anchor?.x ?? node.x ?? 0;
+            const initialY = node.anchor?.y ?? node.y ?? 0;
             return (
-              <g
-                key={node.id}
-                className={`express-node express-node-level-${node.level}`}
-                transform={`translate(${node.x ?? 0} ${node.y ?? 0})`}
-              >
-                <g>{node.id === "expression" ? centerMarker() : markerPath(node)}</g>
-                <text
-                  x={NODE_SIZE / 2 + label.x}
-                  y={label.y}
-                  textAnchor={label.anchor}
-                  className={`fill-[#0a0c20] ${node.id === "expression" ? "text-[18px]" : "text-[14px]"} font-medium`}
+              <g key={node.id} className={`express-node express-node-level-${node.level}`}>
+                <g
+                  ref={(el) => {
+                    if (el) nodePositionRefs.current.set(node.id, el);
+                    else nodePositionRefs.current.delete(node.id);
+                  }}
+                  transform={`translate(${initialX} ${initialY})`}
                 >
-                  {node.label}
-                </text>
-                {node.sublabel && (
+                  <g>{node.id === "expression" ? centerMarker() : markerPath(node)}</g>
                   <text
                     x={NODE_SIZE / 2 + label.x}
-                    y={label.y + 19}
+                    y={label.y}
                     textAnchor={label.anchor}
-                    className="fill-[#5b6375] text-[9px]"
+                    className={`fill-[#0a0c20] ${node.id === "expression" ? "text-[17px]" : "text-[14px]"} font-medium`}
                   >
-                    {node.sublabel}
+                    {node.label}
                   </text>
-                )}
+                  {node.sublabel && (
+                    <text
+                      x={NODE_SIZE / 2 + label.x}
+                      y={label.y + 19}
+                      textAnchor={label.anchor}
+                      className="fill-[#5b6375] text-[9px]"
+                    >
+                      {node.sublabel}
+                    </text>
+                  )}
+                </g>
               </g>
             );
           })}
@@ -290,11 +351,11 @@ export default function ExpressConnectionField() {
 
       <div className="express-legend absolute right-[7vw] top-1/2 hidden w-[280px] -translate-y-1/2 rounded-lg bg-white/45 p-5 text-[#0a0c20] shadow-[0_18px_50px_rgba(10,12,32,0.08)] backdrop-blur-sm xl:block">
         {[
-          ["INDEX", "✹"],
-          ["PATHS", "1"],
-          ["ARTIFACTS", "□"],
-          ["RESEARCH", "▪"],
-          ["INITIATIVES", "△"],
+          ["核心", "✹"],
+          ["路径", "1"],
+          ["产出", "□"],
+          ["研究", "▪"],
+          ["项目", "△"],
         ].map(([label, icon]) => (
           <div key={label} className="flex items-center justify-between border-b border-dashed border-[#0a0c20]/45 py-3 last:border-b-0">
             <span className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em]">
