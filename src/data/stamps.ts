@@ -964,6 +964,7 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jrw-ibaraki.jpg",
     },
+    story: "茨木站位于JR西日本京都线（东海道本线），是距离立命馆大学 OIC 校区最近的车站。由于我初到日本时情报理工学部预定要在半年后从南草津的 BKC 校区搬迁到 OIC 校区，我便提前一步住到了茨木，茨木站也是我在日本期间使用最频繁的车站。\n\n茨木站是大阪到京都区间一个较大的站，在第一次大阪万博期间，茨木站是 JR 系统前往万博公园最近的站，因此有快速列车停靠。在日本国铁时期并不重视短途通勤客流，因此相距两公里的阪急茨木站才是茨木传统繁华区。伴随 JR 西日本对通勤的重视、站前茨木永旺的开业以及立命馆大学校区的建设，JR 茨木站渐渐成为更新兴的街区。\n\n我从家前往学校的最近自行车路线，就是穿过茨木站东侧具有代表性的拓展平台的下面。很多周五空闲的下午，我和我的老学长会从茨木出发去梅田吃一顿泰国菜自助。当我通过铁路旅行时，茨木站也是我的出发和终到站。",
     size: "square",
   },
   {
@@ -1002,7 +1003,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jrc-r150-oogaki.jpg",
     },
-    story: "大垣駅的实体印章已撤去，这枚是改札外观光案内所的『水の都・大垣』印章。",
     size: "square",
   },
   {
@@ -1012,7 +1012,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jrc-r150-atsuta.jpg",
     },
-    story: "熱田神宮の最寄り駅。JR東海的数字印章。",
     size: "square",
   },
   {
@@ -1040,7 +1039,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jrc-r150-simizu.jpg",
     },
-    story: "改札を出ると富士山が目の前に現れる駅。",
     size: "square",
   },
   {
@@ -1050,7 +1048,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jre-ishikawacho.jpg",
     },
-    story: "横浜中華街の最寄り駅。",
     size: "square",
   },
   {
@@ -1069,7 +1066,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jre-kamakura.jpg",
     },
-    story: "鶴岡八幡宮への玄関口。",
     size: "square",
   },
   {
@@ -1079,7 +1075,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jre-yokosuka.jpg",
     },
-    story: "階段のない駅舎で知られる。",
     size: "square",
   },
   {
@@ -1089,7 +1084,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jre-fujisawa.jpg",
     },
-    story: "江ノ電の起点駅。",
     size: "square",
   },
   {
@@ -1099,7 +1093,6 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jre-hiratsuka.jpg",
     },
-    story: "湘南ひらつか七夕まつりの街。",
     size: "square",
   },
   {
@@ -1388,6 +1381,7 @@ export const stampRecords: StampRecord[] = [
     images: {
       stamp: "https://blog-assets-asong.tos-cn-beijing.volces.com/life/train/stamp/jrw-minamikusatsu.jpg",
     },
+    story: "南草津站位于琵琶湖线（东海道本线），是距离立命馆大学びわこ・くさつキャンパス（BKC）最近的车站。初到日本时，我住在大学提供的BKC临时宿舍，第一次搭乘日本铁路，使用的就是这座车站，从这里出发前往茨木寻找住处。此后半年里，我往返于茨木和南草津之间通学，南草津站也成了我每天生活中必经的一站。\n\n南草津站体现了日本都市近郊住宅区的特征，东西两侧都是回转的公交车站。从西侧出发可以前往琵琶湖边。从东侧出发可以前往松下的工厂和立命馆大学。车站前有高层公寓的开发、药妆店、大型超市以及居酒屋。研究室曾在车站前的ミライザカ举行过忘年会，我也和同学在鸟贵族进行聚会，在bigboy举行过期末前的学习会。",
     size: "square",
   },
   {
