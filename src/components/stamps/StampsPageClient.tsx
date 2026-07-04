@@ -37,6 +37,13 @@ type LayoutRect = {
   colSpan: number;
   rowSpan: number;
 };
+type StampLayout = {
+  stampPositions: Array<{ x: number; y: number }>;
+  stampRects: LayoutRect[];
+  heroRect: LayoutRect;
+  cols: number;
+  rows: number;
+};
 type ResolvedConnection = {
   stationId: string;
   routeType?: string;
@@ -92,7 +99,9 @@ function canPlace(occupied: boolean[][], col: number, row: number, colSpan: numb
 function reserveCells(occupied: boolean[][], col: number, row: number, colSpan: number, rowSpan: number) {
   for (let y = row; y < row + rowSpan; y += 1) {
     for (let x = col; x < col + colSpan; x += 1) {
-      occupied[y][x] = true;
+      if (occupied[y]?.[x] !== undefined) {
+        occupied[y][x] = true;
+      }
     }
   }
 }
@@ -100,6 +109,25 @@ function reserveCells(occupied: boolean[][], col: number, row: number, colSpan: 
 function findOpenSlot(occupied: boolean[][], colSpan: number, rowSpan: number) {
   for (let row = 0; row < occupied.length; row += 1) {
     for (let col = 0; col < occupied[row].length; col += 1) {
+      if (canPlace(occupied, col, row, colSpan, rowSpan)) {
+        return { col, row };
+      }
+    }
+  }
+
+  return null;
+}
+
+function findOpenSlotFrom(
+  occupied: boolean[][],
+  colSpan: number,
+  rowSpan: number,
+  startCol: number,
+  startRow: number
+) {
+  for (let row = startRow; row < occupied.length; row += 1) {
+    const colStart = row === startRow ? startCol : 0;
+    for (let col = colStart; col < occupied[row].length; col += 1) {
       if (canPlace(occupied, col, row, colSpan, rowSpan)) {
         return { col, row };
       }
@@ -125,10 +153,98 @@ function toLayoutRect(col: number, row: number, colSpan: number, rowSpan: number
   };
 }
 
-/** 根据印章数量动态计算紧凑矩形布局，展开态会真实占用网格空间 */
-function getStampLayout(count: number, activeIndex: number | null = null) {
-  const hasActive = activeIndex !== null;
-  let { cols, rows } = getGridSize(count, hasActive);
+function rectsOverlap(a: Pick<LayoutRect, "col" | "row" | "colSpan" | "rowSpan">, b: Pick<LayoutRect, "col" | "row" | "colSpan" | "rowSpan">) {
+  return (
+    a.col < b.col + b.colSpan &&
+    a.col + a.colSpan > b.col &&
+    a.row < b.row + b.rowSpan &&
+    a.row + a.rowSpan > b.row
+  );
+}
+
+function expandLayoutInPlace(baseLayout: StampLayout, activeIndex: number): StampLayout {
+  const activeBaseRect = baseLayout.stampRects[activeIndex];
+  if (!activeBaseRect) return baseLayout;
+
+  const { cols, rows } = baseLayout;
+  const expandedRect = toLayoutRect(
+    activeBaseRect.col,
+    activeBaseRect.row,
+    EXPANDED_COLS,
+    EXPANDED_ROWS,
+    cols,
+    rows
+  );
+  const occupiedRows = Math.max(rows, expandedRect.row + expandedRect.rowSpan);
+  const occupied = createOccupancy(occupiedRows, cols);
+  const nextRects = [...baseLayout.stampRects];
+  let nextHeroRect = baseLayout.heroRect;
+
+  reserveCells(occupied, expandedRect.col, expandedRect.row, expandedRect.colSpan, expandedRect.rowSpan);
+  nextRects[activeIndex] = expandedRect;
+
+  if (rectsOverlap(baseLayout.heroRect, expandedRect)) {
+    let heroSlot = findOpenSlotFrom(
+      occupied,
+      baseLayout.heroRect.colSpan,
+      baseLayout.heroRect.rowSpan,
+      baseLayout.heroRect.col,
+      baseLayout.heroRect.row
+    );
+
+    while (!heroSlot) {
+      occupied.push(Array.from({ length: cols }, () => false));
+      heroSlot = findOpenSlotFrom(
+        occupied,
+        baseLayout.heroRect.colSpan,
+        baseLayout.heroRect.rowSpan,
+        baseLayout.heroRect.col,
+        baseLayout.heroRect.row
+      );
+    }
+
+    nextHeroRect = toLayoutRect(
+      heroSlot.col,
+      heroSlot.row,
+      baseLayout.heroRect.colSpan,
+      baseLayout.heroRect.rowSpan,
+      cols,
+      rows
+    );
+  }
+
+  reserveCells(occupied, nextHeroRect.col, nextHeroRect.row, nextHeroRect.colSpan, nextHeroRect.rowSpan);
+
+  baseLayout.stampRects.forEach((rect, index) => {
+    if (index === activeIndex) return;
+
+    if (index < activeIndex && !rectsOverlap(rect, expandedRect)) {
+      reserveCells(occupied, rect.col, rect.row, rect.colSpan, rect.rowSpan);
+      return;
+    }
+
+    let slot = findOpenSlotFrom(occupied, 1, 1, rect.col, rect.row);
+
+    while (!slot) {
+      occupied.push(Array.from({ length: cols }, () => false));
+      slot = findOpenSlotFrom(occupied, 1, 1, rect.col, rect.row);
+    }
+
+    reserveCells(occupied, slot.col, slot.row, 1, 1);
+    nextRects[index] = toLayoutRect(slot.col, slot.row, 1, 1, cols, rows);
+  });
+
+  return {
+    ...baseLayout,
+    stampPositions: nextRects.map((rect) => ({ x: rect.x, y: rect.y })),
+    stampRects: nextRects,
+    heroRect: nextHeroRect,
+  };
+}
+
+/** 根据印章数量动态计算紧凑矩形布局，展开态只做局部避让 */
+function getStampLayout(count: number, activeIndex: number | null = null): StampLayout {
+  let { cols, rows } = getGridSize(count, false);
   const heroCol = Math.max(0, Math.min(cols - 2, Math.floor((cols - 2) / 2)));
   const heroRow = Math.min(rows - 1, Math.floor(rows * 0.58));
   let occupied = createOccupancy(rows, cols);
@@ -136,8 +252,8 @@ function getStampLayout(count: number, activeIndex: number | null = null) {
 
   const placements: Array<{ col: number; row: number; colSpan: number; rowSpan: number }> = [];
   for (let index = 0; index < count; index += 1) {
-    const colSpan = index === activeIndex ? EXPANDED_COLS : 1;
-    const rowSpan = index === activeIndex ? EXPANDED_ROWS : 1;
+    const colSpan = 1;
+    const rowSpan = 1;
     let slot = findOpenSlot(occupied, colSpan, rowSpan);
 
     while (!slot) {
@@ -153,18 +269,19 @@ function getStampLayout(count: number, activeIndex: number | null = null) {
     toLayoutRect(placement.col, placement.row, placement.colSpan, placement.rowSpan, cols, rows)
   );
 
-  return {
+  const baseLayout = {
     stampPositions: stampRects.map((rect) => ({ x: rect.x, y: rect.y })),
     stampRects,
     heroRect: toLayoutRect(heroCol, heroRow, 2, 1, cols, rows),
     cols,
     rows,
   };
+
+  return activeIndex === null ? baseLayout : expandLayoutInPlace(baseLayout, activeIndex);
 }
 
 /** 根据印章数量计算内容边界 */
-function getContentBounds(count: number, activeIndex: number | null = null) {
-  const layout = getStampLayout(count, activeIndex);
+function getContentBounds(layout: StampLayout) {
   const horizontalEdges = [
     ...layout.stampRects.flatMap((rect) => [rect.x - rect.width / 2, rect.x + rect.width / 2]),
     layout.heroRect.x - layout.heroRect.width / 2,
@@ -873,7 +990,7 @@ export default function StampsPageClient({
   const clampOffset = useCallback((x: number, y: number) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const bounds = getContentBounds(orderedStamps.length, activeLayoutIndex);
+    const bounds = getContentBounds(layout);
     const minX = vw - bounds.right;
     const maxX = -bounds.left;
     const minY = vh - bounds.bottom;
@@ -882,7 +999,7 @@ export default function StampsPageClient({
       x: Math.min(maxX, Math.max(minX, x)),
       y: Math.min(maxY, Math.max(minY, y)),
     };
-  }, [activeLayoutIndex, orderedStamps.length]);
+  }, [layout]);
 
   useEffect(() => {
     if (ready) return;
@@ -895,19 +1012,7 @@ export default function StampsPageClient({
   useEffect(() => {
     if (!ready) return;
     setOffset((prev) => clampOffset(prev.x, prev.y));
-  }, [activeLayoutIndex, clampOffset, ready]);
-
-  useEffect(() => {
-    if (!activeStampId) return;
-    if (activeLayoutIndex === null) return;
-
-    const rect = layout.stampRects[activeLayoutIndex];
-    if (!rect) return;
-
-    const targetX = CANVAS_SIZE / 2 + rect.x;
-    const targetY = CANVAS_SIZE / 2 + rect.y;
-    setOffset(clampOffset(window.innerWidth / 2 - targetX, window.innerHeight / 2 - targetY));
-  }, [activeLayoutIndex, activeStampId, clampOffset, layout.stampRects]);
+  }, [clampOffset, ready]);
 
   // --- 桌面端：滚轮/触摸板滑动 ---
   const handleWheel = useCallback(

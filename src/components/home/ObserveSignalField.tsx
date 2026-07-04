@@ -85,10 +85,6 @@ export default function ObserveSignalField() {
     >
       <div className="observe-signal-crosshair observe-signal-crosshair-x absolute left-0 top-1/2 h-px w-full border-t border-dashed border-[#0a0c20]/20 opacity-0" />
       <div className="observe-signal-crosshair observe-signal-crosshair-y absolute left-1/2 top-0 h-full w-px border-l border-dashed border-[#0a0c20]/20 opacity-0" />
-      <div className="observe-signal-core absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-md border border-[#8a4ec7]/35 bg-[#f5efff]/70 px-3 py-1.5 text-sm font-medium text-[#8a4ec7] opacity-0 shadow-sm backdrop-blur-sm">
-        <span className="observe-signal-core-text" />
-        <span className="observe-signal-cursor inline-block w-[1ch] text-center invisible" aria-hidden="true">|</span>
-      </div>
 
       {observeSignals.map((signal, index) => (
         <figure

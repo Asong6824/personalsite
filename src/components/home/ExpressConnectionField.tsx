@@ -38,7 +38,7 @@ type ExpressLink = SimulationLinkDatum<ExpressNode> & {
 const WIDTH = 1000;
 const HEIGHT = 650;
 const NODE_SIZE = 36;
-const CENTER = { x: 500, y: 330 };
+const CENTER = { x: 505, y: 315 };
 
 const rawNodes: ExpressNode[] = [
   {
@@ -53,22 +53,22 @@ const rawNodes: ExpressNode[] = [
     fy: CENTER.y,
   },
   // 一级路径：文章 / 策展 / 系统
-  { id: "essays", label: "文章", sublabel: "thinking in text", kind: "path", level: 1, ordinal: 1, anchor: { x: 300, y: 230 } },
-  { id: "curation", label: "策展", sublabel: "collected interests", kind: "path", level: 1, ordinal: 2, anchor: { x: 700, y: 290 } },
-  { id: "systems", label: "系统", sublabel: "repeatable structures", kind: "path", level: 1, ordinal: 3, anchor: { x: 410, y: 510 } },
+  { id: "essays", label: "文章", sublabel: "thinking in text", kind: "path", level: 1, ordinal: 1, anchor: { x: 320, y: 260 } },
+  { id: "curation", label: "策展", sublabel: "collected interests", kind: "path", level: 1, ordinal: 2, anchor: { x: 720, y: 290 } },
+  { id: "systems", label: "系统", sublabel: "repeatable structures", kind: "path", level: 1, ordinal: 3, anchor: { x: 430, y: 430 } },
   // 文章下
-  { id: "rag", label: "RAG 思想", kind: "research", level: 2, anchor: { x: 130, y: 150 } },
-  { id: "agent", label: "Agent 简史", kind: "research", level: 2, anchor: { x: 250, y: 80 } },
-  { id: "japan", label: "日本行纪", kind: "information", level: 2, anchor: { x: 420, y: 130 } },
-  { id: "review", label: "年度总结", kind: "information", level: 2, anchor: { x: 140, y: 310 } },
+  { id: "rag", label: "RAG 思想", kind: "research", level: 2, anchor: { x: 155, y: 220 } },
+  { id: "agent", label: "Agent 简史", kind: "research", level: 2, anchor: { x: 290, y: 160 } },
+  { id: "japan", label: "日本行纪", kind: "information", level: 2, anchor: { x: 470, y: 185 } },
+  { id: "review", label: "年度总结", kind: "information", level: 2, anchor: { x: 145, y: 330 } },
   // 策展下
-  { id: "books", label: "书单", kind: "artifact", level: 2, anchor: { x: 840, y: 210 } },
-  { id: "stamps", label: "印章收集", kind: "artifact", level: 2, anchor: { x: 840, y: 380 } },
+  { id: "books", label: "书单", kind: "artifact", level: 2, anchor: { x: 860, y: 205 } },
+  { id: "stamps", label: "印章收集", kind: "artifact", level: 2, anchor: { x: 865, y: 370 } },
   // 系统下
-  { id: "investment", label: "投资方法论", kind: "research", level: 2, anchor: { x: 210, y: 530 } },
-  { id: "notion", label: "Notion 与禅", kind: "initiative", level: 2, anchor: { x: 520, y: 620 } },
-  { id: "map", label: "地图绘制", kind: "artifact", level: 2, anchor: { x: 620, y: 510 } },
-  { id: "proraw", label: "ProRAW 工作流", kind: "artifact", level: 2, anchor: { x: 370, y: 620 } },
+  { id: "investment", label: "投资方法论", kind: "research", level: 2, anchor: { x: 235, y: 465 } },
+  { id: "notion", label: "Notion 与禅", kind: "initiative", level: 2, anchor: { x: 540, y: 530 } },
+  { id: "map", label: "地图绘制", kind: "artifact", level: 2, anchor: { x: 660, y: 440 } },
+  { id: "proraw", label: "ProRAW 工作流", kind: "artifact", level: 2, anchor: { x: 360, y: 540 } },
 ];
 
 const rawLinks: ExpressLink[] = [
@@ -209,9 +209,9 @@ function labelOffset(node: ExpressNode) {
   const y = node.anchor?.y ?? node.y ?? 0;
 
   // 顶部节点 label 放下方
-  if (y < 180) return { x: 0, y: 46, anchor: "middle" as const };
+  if (y < 190) return { x: 0, y: 46, anchor: "middle" as const };
   // 底部节点 label 放上方
-  if (y > 580) return { x: 0, y: -22, anchor: "middle" as const };
+  if (y > 500) return { x: 0, y: -22, anchor: "middle" as const };
   // 左侧节点 label 放左侧
   if (x < 300) return { x: -14, y: 38, anchor: "end" as const };
   // 右侧节点 label 放右侧
@@ -287,7 +287,7 @@ export default function ExpressConnectionField() {
       aria-hidden="true"
     >
       <svg className="absolute inset-0 h-full w-full" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="xMidYMid meet">
-        <g className="express-network" transform="translate(90 98) scale(0.78)">
+        <g className="express-network" transform="translate(90 128) scale(0.78)">
           {rawLinks.map((link) => {
             const key = linkKey(link);
             return (
@@ -349,23 +349,6 @@ export default function ExpressConnectionField() {
         </g>
       </svg>
 
-      <div className="express-legend absolute right-[7vw] top-1/2 hidden w-[280px] -translate-y-1/2 rounded-lg bg-white/45 p-5 text-[#0a0c20] shadow-[0_18px_50px_rgba(10,12,32,0.08)] backdrop-blur-sm xl:block">
-        {[
-          ["核心", "✹"],
-          ["路径", "1"],
-          ["产出", "□"],
-          ["研究", "▪"],
-          ["项目", "△"],
-        ].map(([label, icon]) => (
-          <div key={label} className="flex items-center justify-between border-b border-dashed border-[#0a0c20]/45 py-3 last:border-b-0">
-            <span className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em]">
-              <span className="inline-flex h-5 w-5 items-center justify-center text-sm">{icon}</span>
-              {label}
-            </span>
-            <span className="text-lg leading-none">+</span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

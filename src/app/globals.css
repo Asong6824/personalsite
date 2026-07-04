@@ -1391,12 +1391,3 @@ article {
   0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
   50% { opacity: 0.7; transform: translateX(-50%) translateY(5px); }
 }
-
-@keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.observe-signal-cursor {
-  animation: cursor-blink 1s step-end infinite;
-}

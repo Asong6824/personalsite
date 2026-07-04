@@ -2,11 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/dist/MotionPathPlugin";
-import { TextPlugin } from "gsap/dist/TextPlugin";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -23,7 +24,7 @@ import type { Post } from "@/types";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, TextPlugin);
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 }
 
 const expressConnectionScroll = {
@@ -32,11 +33,23 @@ const expressConnectionScroll = {
 };
 
 const channelEntries = [
-  { id: "tech", label: "TECH", href: "/blog/tech", svg: "/home-experience/svgtitle/channel-tech.svg", scale: 0.00115 },
-  { id: "life", label: "LIFE", href: "/blog/life", svg: "/home-experience/svgtitle/channel-life.svg", scale: 0.00125 },
-  { id: "finance", label: "FINANCE", href: "/blog/finance", svg: "/home-experience/svgtitle/channel-finance.svg", scale: 0.00078 },
-  { id: "design", label: "DESIGN", href: "/blog/creative", svg: "/home-experience/svgtitle/channel-design.svg", scale: 0.00088 },
+  { id: "tech", label: "Tech", href: "/blog/tech", svg: "/home-experience/svgtitle/channel-tech.svg", scale: 0.00115 },
+  { id: "life", label: "Life", href: "/blog/life", svg: "/home-experience/svgtitle/channel-life.svg", scale: 0.00128 },
+  { id: "finance", label: "Finance", href: "/blog/finance", svg: "/home-experience/svgtitle/channel-finance.svg", scale: 0.00086 },
+  { id: "creative", label: "Creative", href: "/blog/creative", svg: "/home-experience/svgtitle/channel-creative.svg", scale: 0.00078 },
 ] as const;
+
+const channelItemLayout = [
+  { x: 0, y: 0, z: 0, center: 0.22 },
+  { x: 0, y: -2, z: 0, center: 0.38 },
+  { x: -0.1, y: -4.5, z: 0, center: 0.58 },
+  { x: 0, y: -7, z: 0, center: 0.78 },
+] as const;
+
+const channelCenterWindow = 0.18;
+const channelActionWindow = 0.055;
+
+type ChannelEntry = (typeof channelEntries)[number];
 
 // Coordinate arrays for camera and look-at targets.
 // The first three post-hero beats are Observe -> Express -> Create; the
@@ -164,6 +177,151 @@ const getResponsivePos = (pos: any, isDesktop: boolean) => {
 const ScrollSpacer = ({ vh }: { vh: number }) => (
   <div aria-hidden="true" style={{ height: `${vh}vh` }} />
 );
+
+function ChannelRailLinks() {
+  const router = useRouter();
+  const [activeChannel, setActiveChannel] = useState<ChannelEntry | null>(null);
+  const [transitionHref, setTransitionHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    let frameId = 0;
+
+    const getScrollDepth = (percent: number) => {
+      return Math.min(window.innerWidth * (percent / 100), window.innerHeight * (percent / 100));
+    };
+
+    const updateActiveChannel = () => {
+      frameId = 0;
+
+      const start = getScrollDepth(HOME_STAGE_SCROLL.channels.start);
+      const end = getScrollDepth(HOME_STAGE_SCROLL.channels.end);
+      const progress = (window.scrollY - start) / (end - start);
+
+      if (progress < 0 || progress > 1) {
+        if (!transitionHref) setActiveChannel(null);
+        return;
+      }
+
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+      channelItemLayout.forEach((layout, index) => {
+        const distance = Math.abs(progress - layout.center);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      if (!transitionHref) {
+        setActiveChannel(closestDistance <= channelActionWindow ? channelEntries[closestIndex] : null);
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(updateActiveChannel);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [transitionHref]);
+
+  const handleNavigate = () => {
+    if (!activeChannel || transitionHref) return;
+
+    setTransitionHref(activeChannel.href);
+    window.setTimeout(() => {
+      router.push(activeChannel.href);
+    }, 560);
+  };
+
+  return (
+    <div className="fixed inset-0 z-30 pointer-events-none" aria-hidden={!activeChannel && !transitionHref}>
+      <AnimatePresence>
+        {activeChannel && !transitionHref && (
+          <motion.button
+            type="button"
+            aria-label={`进入${activeChannel.label}频道`}
+            onClick={handleNavigate}
+            className="group absolute top-[47%] flex h-28 w-20 -translate-y-1/2 cursor-pointer items-center justify-center outline-none pointer-events-auto md:h-36 md:w-24"
+            style={{ left: "calc(50% + min(40vw, 34rem))" }}
+            initial={{ opacity: 0, x: -14, scale: 0.96 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10, scale: 0.98 }}
+            whileHover={{ x: 8 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 72 144"
+              className="h-full w-full text-[#0a0c20]/34 transition-colors duration-200 group-hover:text-[#0a0c20]/72 group-focus-visible:text-[#0a0c20]/85"
+              fill="none"
+            >
+              <path
+                d="M18 22L54 72L18 122"
+                stroke="currentColor"
+                strokeWidth="7"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
+              />
+            </svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {transitionHref && (
+          <motion.div
+            className="fixed inset-0 z-[80] pointer-events-none"
+            initial="idle"
+            animate="active"
+            variants={{
+              idle: {},
+              active: {},
+            }}
+          >
+            <motion.div
+              className="absolute inset-y-0 left-0 w-full bg-[#f0eee7]"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              transition={{ duration: 0.56, ease: [0.76, 0, 0.24, 1] }}
+            />
+            <motion.div
+              className="absolute inset-y-0 left-0 w-px bg-[#0a0c20]/25"
+              initial={{ x: "-100vw", opacity: 0 }}
+              animate={{ x: "100vw", opacity: [0, 0.7, 0] }}
+              transition={{ duration: 0.56, ease: [0.76, 0, 0.24, 1] }}
+            />
+            <motion.div
+              className="absolute left-1/2 top-1/2 flex h-14 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-end text-[#0a0c20]"
+              initial={{ x: -28, opacity: 0 }}
+              animate={{ x: 120, opacity: [0, 1, 0] }}
+              transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+            >
+              <svg aria-hidden="true" viewBox="0 0 72 144" className="h-16 w-10" fill="none">
+                <path
+                  d="M18 22L54 72L18 122"
+                  stroke="currentColor"
+                  strokeWidth="7"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
+                />
+              </svg>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 const friendLinks: Array<{ label: string; href: string; description?: string }> = [
   { label: "lprota.dev", href: "https://lprota.dev" },
@@ -592,7 +750,6 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
       const expressEdges = gsap.utils.toArray<SVGPathElement>(".express-edge");
       const expressNodes = gsap.utils.toArray<SVGGElement>(".express-node");
       gsap.set(".express-connection-field", { autoAlpha: 0 });
-      gsap.set(".express-legend", { autoAlpha: 0, x: 24 });
       expressEdges.forEach((edge) => {
         const length = edge.getTotalLength();
         gsap.set(edge, { strokeDasharray: length, strokeDashoffset: length, opacity: 0 });
@@ -616,7 +773,6 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
         .to(".express-edge-level-2", { strokeDashoffset: 0, opacity: 1, duration: 0.34, stagger: 0.032, ease: "power1.inOut" }, 0.42)
         .to(".express-node-level-2", { autoAlpha: 1, scale: 1, duration: 0.16, stagger: 0.035, ease: "power1.out" }, 0.56)
         .to(".express-edge-level-3", { strokeDashoffset: 0, opacity: 0.72, duration: 0.22, stagger: 0.04, ease: "power1.inOut" }, 0.72)
-        .to(".express-legend", { autoAlpha: 1, x: 0, duration: 0.16, ease: "power1.out" }, 0.78)
         .to(".express-connection-field", { autoAlpha: 0, duration: 0.1, ease: "none" }, 1.18);
 
       ScrollTrigger.create({
@@ -688,9 +844,6 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
 
       const observeSignalItems = gsap.utils.toArray<HTMLElement>(".observe-signal-item");
       gsap.set(".observe-signal-field", { autoAlpha: 0 });
-      gsap.set(".observe-signal-core", { opacity: 0, scale: 0.94 });
-      gsap.set(".observe-signal-core-text", { text: "" });
-      gsap.set(".observe-signal-cursor", { visibility: "hidden" });
       gsap.set(".observe-signal-crosshair", { opacity: 0 });
       gsap.set(observeSignalItems, {
         xPercent: -50,
@@ -725,29 +878,6 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
       observeSignalTl
         .to(".observe-signal-field", { autoAlpha: 1, duration: 0.06, ease: "none" }, 0)
         .to(".observe-signal-crosshair", { opacity: 1, duration: 0.16, ease: "none" }, 0.03)
-        .to(".observe-signal-core", { opacity: 1, scale: 1, duration: 0.16, ease: "power1.out" }, 0.1)
-        // Typewriter: 前半段「观察世界」
-        .set(".observe-signal-cursor", { visibility: "visible" }, 0.12)
-        .to(".observe-signal-core-text", {
-          text: { value: "观察世界", delimiter: "" },
-          duration: 0.28,
-          ease: "none",
-        }, 0.12)
-        .set(".observe-signal-cursor", { visibility: "hidden" }, 0.42)
-        // Typewriter: 后半段「观察自己」
-        .set(".observe-signal-cursor", { visibility: "visible" }, 0.50)
-        .to(".observe-signal-core-text", {
-          text: { value: "", delimiter: "" },
-          duration: 0.10,
-          ease: "none",
-        }, 0.50)
-        .to(".observe-signal-core-text", {
-          text: { value: "观察自己", delimiter: "" },
-          duration: 0.26,
-          ease: "none",
-        }, 0.62)
-        .set(".observe-signal-cursor", { visibility: "hidden" }, 0.90)
-        .to(".observe-signal-core", { opacity: 0, scale: 0.86, duration: 0.16, ease: "power1.in" }, 0.9)
         .to(".observe-signal-crosshair", { opacity: 0, duration: 0.12, ease: "none" }, 0.92)
         .to(".observe-signal-field", { autoAlpha: 0, duration: 0.08, ease: "none" }, 0.97);
 
@@ -792,13 +922,6 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
       const channelRailYCalibration = 1.8;
       const channelRailStartY = isDesktop ? 6.5 + channelRailYCalibration : 18.04;
       const channelRailEndY = isDesktop ? 18 + channelRailYCalibration : 18.04;
-      const channelItemLayout = [
-        { x: 0, y: 0, z: 0, center: 0.22 },
-        { x: 0, y: -2, z: 0, center: 0.38 },
-        { x: -0.1, y: -4.5, z: 0, center: 0.58 },
-        { x: 0, y: -7, z: 0, center: 0.78 },
-      ] as const;
-      const channelCenterWindow = 0.18;
       const channelTitleModels = channelEntries.map((entry) => ({
         ...entry,
         model: null as THREE.Group | null,
@@ -1754,6 +1877,7 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
       <ObserveSignalField />
       <ExpressConnectionField />
       <CreativeRingField />
+      <ChannelRailLinks />
 
       {/* 4. SCROLL CONTAINER TRACK */}
       <div ref={scrollContainerRef} className="relative z-10 w-full">
