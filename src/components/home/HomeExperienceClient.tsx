@@ -329,9 +329,10 @@ const friendLinks: Array<{ label: string; href: string; description?: string }> 
 
 interface HomeExperienceClientProps {
   recentPosts?: Post[];
+  columnPostCounts?: Record<string, number>;
 }
 
-export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienceClientProps) {
+export default function HomeExperienceClient({ recentPosts = [], columnPostCounts = {} }: HomeExperienceClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -1953,7 +1954,7 @@ export default function HomeExperienceClient({ recentPosts = [] }: HomeExperienc
 
         {/* Stage 6: Columns list */}
         <ScrollSpacer vh={HOME_DOM_LAYOUT.channelRailSpacerVh} />
-        <HomeColumnsListStage />
+        <HomeColumnsListStage postCounts={columnPostCounts} />
         <HomeRecentPostsStage posts={recentPosts} />
 
         {/* Stage 7: Contact */}

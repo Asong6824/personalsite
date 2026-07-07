@@ -50,11 +50,11 @@ hidden: boolean             # 设为 true 则文章不在列表展示，详情�
 - **finance**（金融）：财经投资
 - **creative**（创意）：设计美学、产品设计
 
-每篇文章的频道与专栏归属逻辑：优先使用 frontmatter 中的 `channel`/`column` 字段，否则通过 `tags` 匹配专栏配置中的 `tags` 进行自动归类。
+每篇文章的频道与专栏归属完全由 frontmatter 中的 `channel`/`column` 字段决定。`channel` 必须是 `CHANNELS_CONFIG` 中存在的频道 key，`column` 必须是对应频道下的专栏 key，否则构建会失败。
 
-`channel` / `column` 一旦显式填写，就必须存在于 `CHANNELS_CONFIG`。当前索引脚本对不存在的专栏只输出 warning，不会阻止构建；新增或迁移文章时不要把 warning 当成有效分类。
+`tags` 不再决定专栏归属，仅作为内容标签用于展示、SEO 和标签筛选。作者可以自由填写标签，无需担心标签与专栏配置的匹配关系。
 
-当前内容目录仍有迁移中的重复文章和少量未配置专栏。清理完成前，判断文章归属时应同时检查 frontmatter、索引与 `CHANNELS_CONFIG`，不能只依赖文件目录。
+当前内容目录仍有迁移中的重复文章。判断文章归属时应以 frontmatter 中的 `channel`/`column` 为准。
 
 ---
 

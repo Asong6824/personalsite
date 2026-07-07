@@ -28,9 +28,13 @@ describe("post-index", () => {
   function writePost(relPath: string, frontmatter: string, content = "Content") {
     const dir = path.dirname(path.join(process.env.TEST_POSTS_DIR!, relPath));
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const defaults: string[] = [];
+    if (!/(^|\n)channel\s*:/.test(frontmatter)) defaults.push("channel: tech");
+    if (!/(^|\n)column\s*:/.test(frontmatter)) defaults.push("column: general");
+    const fullFrontmatter = defaults.length > 0 ? `${frontmatter}\n${defaults.join("\n")}` : frontmatter;
     fs.writeFileSync(
       path.join(process.env.TEST_POSTS_DIR!, relPath),
-      `---\n${frontmatter}\n---\n${content}`
+      `---\n${fullFrontmatter}\n---\n${content}`
     );
   }
 

@@ -44,7 +44,7 @@
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
 | `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.tsx`） |
 | `src/components/StructuredData.tsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
-| `content/components/` | 文章交互组件（可视化、图表） | `color/*`、`rag/*`、`sketchy/*`、`travel/*` |
+| `content/components/` | 文章交互组件（可视化、图表） | `agent/*`、`color/*`、`rag/*`、`sketchy/*`、`travel/*` |
 
 > **关于旧版首页组件**：`HomeScrollExperience`、`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版首页，现随首页重构为 `HomeExperienceClient` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
 
@@ -123,6 +123,85 @@ import { DualTimeline } from '@content/components/rag/DualTimeline';
 | `SketchyRAGOverview` | `<SketchyRAGOverview />` | RAG 四大发展阶段概览图 |
 | `Word2VecVectorSpace` | `<Word2VecVectorSpace />` | Word2Vec 向量空间示意（King-Queen 示例） |
 | `InContextLearningChart` | `<InContextLearningChart />` | 上下文学习性能曲线图 |
+
+### Agent / Function Calling（`content/components/agent/`）
+
+| 组件 | 用法 | 说明 |
+|------|------|------|
+| `FunctionCallingSteps` | `<FunctionCallingSteps steps={[...]} />` | 多步骤 Agent 调用流程卡片，点击 `<>` 展开 Request/Response 代码 |
+
+**完整示例：**
+
+```mdx
+<FunctionCallingSteps
+  steps={[
+    {
+      step: 1,
+      label: "OpenAI API",
+      title: "Call the model with functions and the user's input",
+      code: {
+        request: `POST /v1/chat/completions
+{
+  "model": "gpt-4",
+  "messages": [{"role": "user", "content": "What's the weather like in Boston?"}],
+  "tools": [{"type": "function", "function": {"name": "get_weather"}}]
+}`,
+        response: `{
+  "choices": [{
+    "message": {
+      "tool_calls": [{
+        "function": {
+          "name": "get_weather",
+          "arguments": "{\"location\": \"Boston\"}"
+        }
+      }]
+    }
+  }]
+}`
+      }
+    },
+    {
+      step: 2,
+      label: "Third party API",
+      title: "Use the model response to call your API",
+      defaultOpen: true,
+      code: {
+        request: `curl https://weatherapi.com/v1/current.json?q=Boston`,
+        response: `{"location": "Boston", "temperature": 22, "condition": "Sunny"}`
+      }
+    },
+    {
+      step: 3,
+      label: "OpenAI API",
+      title: "Send the response back to the model to summarize",
+      code: {
+        request: `POST /v1/chat/completions
+{
+  "model": "gpt-4",
+  "messages": [
+    {"role": "user", "content": "What's the weather like in Boston?"},
+    {"role": "assistant", "tool_calls": [...]},
+    {"role": "tool", "content": "{\"temperature\": 22, \"condition\": \"Sunny\"}"}
+  ]
+}`,
+        response: `{"choices": [{"message": {"content": "The weather in Boston is sunny and 22°C."}}]}`
+      }
+    }
+  ]}
+/>
+```
+
+**Props：**
+
+| Prop | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `steps` | `FunctionCallingStep[]` | 是 | 步骤数组 |
+| `steps[].step` | `number` | 是 | 步骤序号 |
+| `steps[].label` | `string` | 是 | 步骤标签，如 `"OpenAI API"` |
+| `steps[].title` | `string` | 是 | 步骤标题 |
+| `steps[].code.request` | `string` | 否 | Request 代码/内容 |
+| `steps[].code.response` | `string` | 否 | Response 代码/内容 |
+| `steps[].defaultOpen` | `boolean` | 否 | 是否默认展开 |
 
 ### 旅行路线地图（`content/components/travel/`）
 

@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CHANNELS_CONFIG, getChannelByTags, getColumnByTags } from '@/lib/channels';
+import { CHANNELS_CONFIG } from '@/lib/channels';
 // import { zhCN } from 'date-fns/locale'; // 如果日期格式化需要中文
 
 export default function BlogListClient({ initialPosts, allTags }) {
@@ -20,18 +20,14 @@ export default function BlogListClient({ initialPosts, allTags }) {
 
         // 按频道筛选
         if (selectedChannel) {
-            filtered = filtered.filter(post => {
-                const channel = getChannelByTags(post);
-                return channel === selectedChannel;
-            });
+            filtered = filtered.filter(post => post.channel === selectedChannel);
         }
 
         // 按专栏筛选
         if (selectedColumn) {
-            filtered = filtered.filter(post => {
-                const column = getColumnByTags(post);
-                return column && column.channelKey === selectedChannel && column.columnKey === selectedColumn;
-            });
+            filtered = filtered.filter(post =>
+                post.channel === selectedChannel && post.column === selectedColumn
+            );
         }
 
         // 按标签筛选

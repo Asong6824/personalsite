@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { getColumnByTags } from '@/lib/channels';
+
 
 export default function ChannelLayout({ channelKey, channelConfig, posts }) {
     // 按专栏分组文章
@@ -14,9 +14,8 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
         const grouped = {};
         
         posts.forEach(post => {
-            const column = getColumnByTags(post);
-            if (column && column.channelKey === channelKey) {
-                const columnKey = column.columnKey;
+            if (post.channel === channelKey) {
+                const columnKey = post.column;
                 if (!grouped[columnKey]) {
                     grouped[columnKey] = {
                         config: channelConfig.columns[columnKey],

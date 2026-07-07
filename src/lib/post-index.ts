@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { globSync } from "glob";
+import { CHANNELS_CONFIG } from "./channels";
+import { validateChannelExists, validateColumnExists } from "./config-validator";
 import type { Post, PostFrontmatter } from "@/types";
 
 const ROOT = process.cwd();
@@ -145,6 +147,21 @@ export function findPostPathBySlug(slug: string): string | null {
 }
 
 function toPost(item: IndexItem): Post {
+  const channel = item.data.channel;
+  const column = item.data.column;
+
+  if (!channel || !validateChannelExists(CHANNELS_CONFIG, channel)) {
+    throw new Error(
+      `[PostIndex] Post "${item.rel}" has missing or invalid channel: ${channel}`
+    );
+  }
+
+  if (!column || !validateColumnExists(CHANNELS_CONFIG, channel, column)) {
+    throw new Error(
+      `[PostIndex] Post "${item.rel}" has missing or invalid column: ${column} (channel: ${channel})`
+    );
+  }
+
   return {
     slug: item.slug,
     title: item.data.title,
@@ -154,8 +171,8 @@ function toPost(item: IndexItem): Post {
     excerpt: item.data.excerpt,
     coverImage: item.data.coverImage,
     pinned: item.data.pinned ?? false,
-    channel: item.data.channel,
-    column: item.data.column,
+    channel,
+    column,
     columnSlug: item.data.columnSlug,
     music: item.data.music,
     hidden: item.data.hidden,

@@ -1,0 +1,164 @@
+---
+title: 'Agent Tool：Function Calling 如何连接大模型与外部世界'
+date: '2026-07-04'
+slug: 'agent-tool'
+author: '阿松'
+tags: ['AI', 'Agent', 'Function Calling', 'AI工程']
+channel: 'tech'
+column: 'ai-engineering'
+excerpt: '通过 Function Calling 的完整调用链路，理解大模型 Agent 如何把自然语言意图转化为对外部工具的可执行调用。'
+coverImage: ''
+music: ""
+pinned: false
+---
+
+
+传统 AI 中，agent 的经典定义就是通过 sensors 感知环境，通过 actuators/actions 作用于环境。
+
+在今天的大模型 agent 的语境下，tool 就是大模型 agent 的 actuators/action 接口。只不过过去这个 action 是移动、抓取、下棋，今天的是使用终端、读取文件、搜索网页。
+
+从发展过程来看，通过工具调用来提高大模型回答的准确性的研究在大模型风靡全球前就开始。
+
+21 年 12 月 OpenAI 发布了 WebGPT 的论文，GPT-3 使用一个文本浏览器，通过搜索、打开网页、滚动、引用等命令来回答问题。这已经很接近今天的工具调用：模型不是只靠参数记忆，而是通过外部工具获取信息再回答。
+
+2022 年 ReAct 的发布
+
+2023 年 6 月，OpenAI API 发布 function calling，这是一个非常重要的工程节点。它让模型可以根据用户请求输出结构化函数名和参数，开发者再在自己的系统里执行函数。
+https://openai.com/index/function-calling-and-other-api-updates/
+
+这里 OpenAI 给了一个很明确的通过 api 调用模型实现工具调用的演示
+
+<FunctionCallingSteps
+  steps={[
+    {
+      step: 1,
+      label: "OpenAI API",
+      title: "向模型传入用户输入和可用函数",
+      code: {
+        request: `curl https://api.openai.com/v1/chat/completions \\
+  -u :$OPENAI_API_KEY \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+    "model": "gpt-3.5-turbo-0613",
+    "messages": [
+      {"role": "user", "content": "What is the weather like in Boston?"}
+    ],
+    "functions": [
+      {
+        "name": "get_current_weather",
+        "description": "Get the current weather in a given location",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city and state, e.g. San Francisco, CA"
+            },
+            "unit": {
+              "type": "string",
+              "enum": ["celsius", "fahrenheit"]
+            }
+          },
+          "required": ["location"]
+        }
+      }
+    ]
+  }'`,
+        response: `{
+  "id": "chatcmpl-123",
+  ...
+  "choices": [{
+    "index": 0,
+    "message": {
+      "role": "assistant",
+      "content": null,
+      "function_call": {
+        "name": "get_current_weather",
+        "arguments": "{ \\"location\\": \\"Boston, MA\\"}"
+      }
+    },
+    "finish_reason": "function_call"
+  }]
+}`
+      }
+    },
+    {
+      step: 2,
+      label: "Third party API",
+      title: "根据模型返回的参数调用外部 API",
+      defaultOpen: true,
+      code: {
+        request: `curl https://weatherapi.com/...`,
+        response: `{ "temperature": 22, "unit": "celsius", "description": "Sunny" }`
+      }
+    },
+    {
+      step: 3,
+      label: "OpenAI API",
+      title: "将调用结果回传给模型并生成回复",
+      code: {
+        request: `curl https://api.openai.com/v1/chat/completions -u :$OPENAI_API_KEY -H 'Content-Type: application/json' -d '{
+  "model": "gpt-3.5-turbo-0613",
+  "messages": [
+    {"role": "user", "content": "What is the weather like in Boston?"},
+    {"role": "assistant", "content": null, "function_call": {"name": "get_current_weather", "arguments": "{ \\"location\\": \\"Boston, MA\\"}"}},
+    {"role": "function", "name": "get_current_weather", "content": "{\\"temperature\\": 22, \\"unit\\": \\"celsius\\", \\"description\\": \\"Sunny\\"}"}
+  ],
+  "functions": [
+    {
+      "name": "get_current_weather",
+      "description": "Get the current weather in a given location",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "The city and state, e.g. San Francisco, CA"
+          },
+          "unit": {
+            "type": "string",
+            "enum": ["celsius", "fahrenheit"]
+          }
+        },
+        "required": ["location"]
+      }
+    }
+  ]
+}'`,
+        response: `{
+  "id": "chatcmpl-123",
+  ...
+  "choices": [{
+    "index": 0,
+    "message": {
+      "role": "assistant",
+      "content": "The weather in Boston is currently sunny with a temperature of 22 degrees Celsius.",
+    },
+    "finish_reason": "stop"
+  }]
+}`
+      }
+    }
+  ]}
+/>
+
+时到今日，诸如 manus、claude code、gemini cli、openclaw、hermes agent 快速兴起，最初的function calling的定义也在不断更新，现在它更多地被叫做 tool calling
+https://developers.openai.com/api/docs/guides/function-calling
+在现在最新的openai的开发者文档中，就这么介绍函数调用
+函数调用（也称为工具调用）为 OpenAI 模型提供了一种强大而灵活的方式来与外部系统交互，并访问训练数据之外的数据。
+
+tool 不等于函数，也不等于 API。函数/API 只是 tool 的一种实现方式。
+Tool 是一种更 agent 的角度的叫法
+Tool 是 agent 系统暴露给模型的一种受控能力单元。模型负责判断是否需要它、如何使用它；真正执行通常由外部系统、运行时或环境完成；执行结果再作为观察反馈给模型，影响后续决策。从这个角度来看，很多名词其实都是 tool 的一种
+
+Fuction Calling
+Built-in Tools
+MCP
+
+一次最简单的工具调用的闭环有三个核心概念
+
+tool：
+
+toolcall：
+
+toolresult：

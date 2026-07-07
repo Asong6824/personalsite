@@ -1,5 +1,5 @@
 import { validateConfigInDevelopment } from "./config-validator";
-import type { ChannelConfig, ChannelsConfig, ColumnConfig, Post } from "@/types";
+import type { ChannelConfig, ChannelsConfig } from "@/types";
 
 export const CHANNELS_CONFIG: ChannelsConfig = {
   tech: {
@@ -31,6 +31,12 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         tags: ["NLP", "AI", "自然语言处理", "大模型"],
         cover: "",
         featured: true,
+      },
+      "ai-engineering": {
+        name: "AI 工程",
+        description: "AI 工程化、智能体、工作流与落地实践",
+        tags: ["AI工程", "AI Engineering", "智能体", "Agent", "工作流"],
+        cover: "",
       },
       photography: {
         name: "计算摄影",
@@ -118,86 +124,6 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
     },
   },
 };
-
-export function getChannelByTags(
-  postOrTags: Post | string[] | unknown
-): string | null {
-  if (
-    postOrTags &&
-    typeof postOrTags === "object" &&
-    !Array.isArray(postOrTags)
-  ) {
-    const post = postOrTags as Post;
-    if (post.channel && post.channel in CHANNELS_CONFIG) {
-      return post.channel;
-    }
-    const tags = post.tags;
-    if (!tags || !Array.isArray(tags)) return null;
-
-    for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-      for (const column of Object.values(channel.columns) as ColumnConfig[]) {
-        if (tags.some((tag) => column.tags.includes(tag))) {
-          return channelKey;
-        }
-      }
-    }
-    return null;
-  }
-
-  const tags = Array.isArray(postOrTags) ? postOrTags : null;
-  if (!tags) return null;
-
-  for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-    for (const column of Object.values(channel.columns) as ColumnConfig[]) {
-      if (tags.some((tag) => column.tags.includes(tag))) {
-        return channelKey;
-      }
-    }
-  }
-  return null;
-}
-
-export function getColumnByTags(
-  postOrTags: Post | string[] | unknown
-): { channelKey: string; columnKey: string } | null {
-  if (
-    postOrTags &&
-    typeof postOrTags === "object" &&
-    !Array.isArray(postOrTags)
-  ) {
-    const post = postOrTags as Post;
-    if (post.channel && post.column) {
-      const channelConfig = CHANNELS_CONFIG[post.channel as keyof ChannelsConfig] as ChannelConfig | undefined;
-      if (channelConfig && channelConfig.columns[post.column]) {
-        return { channelKey: post.channel, columnKey: post.column };
-      }
-    }
-
-    const tags = post.tags;
-    if (!tags || !Array.isArray(tags)) return null;
-
-    for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-      for (const [columnKey, column] of Object.entries(channel.columns) as [string, ColumnConfig][]) {
-        if (tags.some((tag) => column.tags.includes(tag))) {
-          return { channelKey, columnKey };
-        }
-      }
-    }
-    return null;
-  }
-
-  const tags = Array.isArray(postOrTags) ? postOrTags : null;
-  if (!tags) return null;
-
-  for (const [channelKey, channel] of Object.entries(CHANNELS_CONFIG)) {
-    for (const [columnKey, column] of Object.entries(channel.columns) as [string, ColumnConfig][]) {
-      if (tags.some((tag) => column.tags.includes(tag))) {
-        return { channelKey, columnKey };
-      }
-    }
-  }
-  return null;
-}
 
 export function getAllChannels() {
   return Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({

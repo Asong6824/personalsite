@@ -58,6 +58,7 @@ npm run lint     # 代码检查
 | 路由架构 | `docs/routing.md` |
 | 首页实现总览 | `docs/homepage-experience.md` |
 | 首页阶段、视觉与性能设计 | `docs/homepage-design.md` |
+| MDX 渲染链路 | `docs/mdx-rendering.md` |
 | 组件组织与 MDX 自定义组件 | `docs/components.md` |
 | 手绘风格组件库（Sketchy） | `docs/sketchy-components.md` |
 | 数据系统（股票、数据集、Notion） | `docs/data-system.md` |

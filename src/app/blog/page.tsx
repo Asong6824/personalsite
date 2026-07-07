@@ -33,7 +33,7 @@ export default function BlogIndexPage() {
             date: new Date(post.date).toISOString().slice(0, 10),
             channel: CHANNELS_CONFIG[post.channel]?.name || post.channel,
             image: post.coverImage,
-            href: `/blog/${post.channel}/${post.column}/${post.slug}`
+            href: `/blog/${post.slug}`
         });
         return acc;
     }, {});

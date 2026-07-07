@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { CHANNELS_CONFIG, getChannelByTags, getColumnByTags, getAllChannels } from "../channels";
-import type { ColumnConfig, Post } from "@/types";
+import { CHANNELS_CONFIG, getAllChannels } from "../channels";
+import type { ColumnConfig } from "@/types";
 
 describe("CHANNELS_CONFIG 结构", () => {
   it("包含 4 个频道", () => {
@@ -36,89 +36,6 @@ describe("CHANNELS_CONFIG 结构", () => {
     const names = Object.values(CHANNELS_CONFIG).map((c) => c.name);
     const uniqueNames = new Set(names);
     expect(uniqueNames.size).toBe(names.length);
-  });
-});
-
-describe("getChannelByTags", () => {
-  it("通过 tags 匹配到 tech 频道", () => {
-    const post: Post = {
-      slug: "test",
-      title: "Test",
-      date: "2026-01-01",
-      tags: ["Go", "golang"],
-      pinned: false,
-    };
-    expect(getChannelByTags(post)).toBe("tech");
-  });
-
-  it("通过显式 channel 字段返回频道", () => {
-    const post: Post = {
-      slug: "test",
-      title: "Test",
-      date: "2026-01-01",
-      tags: [],
-      pinned: false,
-      channel: "life",
-    };
-    expect(getChannelByTags(post)).toBe("life");
-  });
-
-  it("无匹配返回 null", () => {
-    const post: Post = {
-      slug: "test",
-      title: "Test",
-      date: "2026-01-01",
-      tags: ["不存在的标签"],
-      pinned: false,
-    };
-    expect(getChannelByTags(post)).toBeNull();
-  });
-
-  it("直接传 tags 数组匹配", () => {
-    expect(getChannelByTags(["日本", "japan"])).toBe("life");
-  });
-});
-
-describe("getColumnByTags", () => {
-  it("通过 tags 匹配到 tech/go", () => {
-    const post: Post = {
-      slug: "test",
-      title: "Test",
-      date: "2026-01-01",
-      tags: ["Go"],
-      pinned: false,
-    };
-    const result = getColumnByTags(post);
-    expect(result).not.toBeNull();
-    expect(result!.channelKey).toBe("tech");
-    expect(result!.columnKey).toBe("go");
-  });
-
-  it("通过显式 channel/column 返回", () => {
-    const post: Post = {
-      slug: "test",
-      title: "Test",
-      date: "2026-01-01",
-      tags: [],
-      pinned: false,
-      channel: "life",
-      column: "japan",
-    };
-    const result = getColumnByTags(post);
-    expect(result).not.toBeNull();
-    expect(result!.channelKey).toBe("life");
-    expect(result!.columnKey).toBe("japan");
-  });
-
-  it("无匹配返回 null", () => {
-    const post: Post = {
-      slug: "test",
-      title: "Test",
-      date: "2026-01-01",
-      tags: ["不存在的标签"],
-      pinned: false,
-    };
-    expect(getColumnByTags(post)).toBeNull();
   });
 });
 

@@ -13,6 +13,8 @@ description: 为博客文章新增一个可在 MDX 中直接使用的交互/可�
 
 ## 核心 Workflow
 
+> **文档同步是闭环的一部分**：任何新增、改名、迁移文章组件的操作，都必须同步 `docs/components.md`（详见 Step 6）。
+
 ### Step 1：判断复用范围（这是最关键的一步）
 
 ```
@@ -106,6 +108,27 @@ const mdxComponents = {
    ```
 2. 运行 `npm run dev`，确认页面无报错
 3. 检查控制台是否有 Hydration Error（通常是 `"use client"` 漏加导致的）
+4. 检查 MDX 中使用的 prop、用法与文档描述一致
+
+### Step 6：同步文档（闭环关键）
+
+根据项目 `AGENTS.md` 的「架构文档同步原则」，新增或改动文章组件后，必须同步 `docs/components.md`，避免后续开发者/AI 找不到该组件或重复造轮子。
+
+**必须更新的场景：**
+
+| 场景 | 更新位置 | 操作 |
+|------|---------|------|
+| 新增/修改了文章可用组件 | `docs/components.md` →「文章可用组件速查表」 | 在对应分组（通用交互、布局、色彩工具、RAG、旅行、手绘等）追加或修改条目 |
+| 新增了 `content/components/{topic}/` 目录 | `docs/components.md` →「目录职责」/「组件放置速查表」/Step 1「已有 topic 目录参考」 | 追加新 topic 及示例组件 |
+| 改变了组件目录结构或组织约定 | `AGENTS.md` + `docs/components.md` | 同步更新相关描述 |
+
+**速查表条目格式参考：**
+
+```markdown
+| `MyNewComponent` | `<MyNewComponent data={[1, 2, 3]} />` | 一句话说明组件用途和交互 |
+```
+
+> 不更新文档的代价：组件能用，但其他人和后续 AI 不知道它存在，导致重复造轮子、放错目录或无法复用。
 
 ## 组件放置速查表
 
@@ -145,3 +168,4 @@ import { MyComponent } from '@content/components/topic/MyComponent';
 | 漏加 `"use client"` | `window is not defined` 或 Hydration Error | 文件顶部添加 `"use client"` |
 | 组件放错目录（放 `src/components/`） | 文章归档后组件成为孤儿 | 按决策树迁移到 `content/components/` |
 | 使用 `default export` | MDX 中无法识别 | 使用 `export function` 或 `export const` |
+| 新增组件后未同步 `docs/components.md` | 组件存在但速查表查不到，后续重复造轮子 | 在「文章可用组件速查表」中追加条目 |

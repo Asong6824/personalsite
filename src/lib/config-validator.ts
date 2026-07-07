@@ -182,7 +182,7 @@ export function validatePostClassification(
   }
 
   const p = post as Post;
-  const { channel, column, tags, slug } = p;
+  const { channel, column, slug } = p;
   const postIdentifier = slug || "unknown post";
 
   if (channel) {
@@ -209,9 +209,15 @@ export function validatePostClassification(
     }
   }
 
-  if (!channel && !column && (!tags || !Array.isArray(tags) || tags.length === 0)) {
-    warnings.push(
-      `Post '${postIdentifier}': no classification method available (no channel/column or tags)`
+  if (!channel) {
+    errors.push(
+      `Post '${postIdentifier}': channel is required`
+    );
+  }
+
+  if (!column) {
+    errors.push(
+      `Post '${postIdentifier}': column is required`
     );
   }
 

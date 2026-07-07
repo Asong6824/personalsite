@@ -24,7 +24,7 @@ function resolveColumnImage(columnCover?: string, channelIcon?: string) {
   return columnCover || channelIcon || PLACEHOLDER_IMAGE;
 }
 
-function buildColumnItems(): ColumnListItem[] {
+function buildColumnItems(postCounts: Record<string, number>): ColumnListItem[] {
   return (Object.entries(CHANNELS_CONFIG) as Array<[string, ChannelConfig]>).flatMap(([channelKey, channel]) =>
     (Object.entries(channel.columns) as Array<[string, ColumnConfig]>)
       .filter(([, column]) => column.featured)
@@ -36,13 +36,13 @@ function buildColumnItems(): ColumnListItem[] {
         description: column.description,
         href: `/blog/${channelKey}/${columnKey}`,
         image: resolveColumnImage(column.cover || column.coverImage, channel.icon),
-        countLabel: String(column.tags.length).padStart(2, "0"),
+        countLabel: String(postCounts[`${channelKey}/${columnKey}`] ?? 0).padStart(2, "0"),
       }))
   );
 }
 
-export function HomeColumnsListStage() {
-  const items = useMemo(() => buildColumnItems(), []);
+export function HomeColumnsListStage({ postCounts = {} }: { postCounts?: Record<string, number> }) {
+  const items = useMemo(() => buildColumnItems(postCounts), [postCounts]);
   const listRef = useRef<HTMLElement>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [previewPosition, setPreviewPosition] = useState<{ x: number; y: number } | null>(null);

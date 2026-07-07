@@ -239,30 +239,32 @@ describe("validatePostClassification", () => {
     expect(result.errors.some((e) => e.includes("does not exist"))).toBe(true);
   });
 
-  it("column 无 channel 发出警告", () => {
-    const post: Post = {
+  it("column 无 channel 报错", () => {
+    const post = {
       slug: "test-post",
       title: "Test",
       date: "2026-01-01",
       tags: [],
       pinned: false,
       column: "go",
-    };
+    } as unknown as Post;
     const result = validatePostClassification(post, VALID_CONFIG);
-    expect(result.isValid).toBe(true);
-    expect(result.warnings.some((w) => w.includes("without channel"))).toBe(true);
+    expect(result.isValid).toBe(false);
+    expect(result.errors.some((e) => e.includes("channel is required"))).toBe(true);
   });
 
-  it("无分类方式时发出警告", () => {
-    const post: Post = {
+  it("无 channel/column 时报错", () => {
+    const post = {
       slug: "test-post",
       title: "Test",
       date: "2026-01-01",
       tags: [],
       pinned: false,
-    };
+    } as unknown as Post;
     const result = validatePostClassification(post, VALID_CONFIG);
-    expect(result.warnings.some((w) => w.includes("no classification method"))).toBe(true);
+    expect(result.isValid).toBe(false);
+    expect(result.errors.some((e) => e.includes("channel is required"))).toBe(true);
+    expect(result.errors.some((e) => e.includes("column is required"))).toBe(true);
   });
 });
 

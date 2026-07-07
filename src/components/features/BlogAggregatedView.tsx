@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { getColumnByTags } from '@/lib/channels';
+
 
 export default function BlogAggregatedView({ 
     allPosts, 
@@ -80,10 +80,7 @@ export default function BlogAggregatedView({
                                                 <div key={columnKey} className="flex items-center justify-between text-sm">
                                                     <span className="text-gray-600 dark:text-gray-400">{column.name}</span>
                                                     <span className="text-gray-500 dark:text-gray-500">
-                                                        {channelPosts.filter(post => {
-                                                            const postColumn = getColumnByTags(post);
-                                                            return postColumn?.columnKey === columnKey;
-                                                        }).length} 篇
+                                                        {channelPosts.filter(post => post.column === columnKey).length} 篇
                                                     </span>
                                                 </div>
                                             ))}
@@ -121,10 +118,7 @@ export default function BlogAggregatedView({
                     {Object.entries(channelsConfig).map(([channelKey, channel]: [string, any]) => {
                         return Object.entries(channel.columns).map(([columnKey, column]: [string, any], index) => {
                             const channelPosts = channelKey === 'tech' ? techPosts : lifePosts;
-                            const columnPosts = channelPosts.filter(post => {
-                                const postColumn = getColumnByTags(post);
-                                return postColumn?.columnKey === columnKey;
-                            });
+                            const columnPosts = channelPosts.filter(post => post.column === columnKey);
                             
                             if (columnPosts.length === 0) return null;
                             
@@ -206,9 +200,8 @@ export default function BlogAggregatedView({
                 
                 <div className="grid gap-4">
                     {allPosts.slice(0, 5).map((post, index) => {
-                        const column = getColumnByTags(post);
-                        const channelConfig = column ? channelsConfig[column.channelKey] : null;
-                        const columnConfig = channelConfig?.columns?.[column.columnKey];
+                        const channelConfig = channelsConfig[post.channel];
+                        const columnConfig = channelConfig?.columns?.[post.column];
                         
                         return (
                             <motion.article
@@ -218,7 +211,7 @@ export default function BlogAggregatedView({
                                 transition={{ delay: 0.7 + index * 0.05, duration: 0.4 }}
                                 className="group"
                             >
-                                <Link href={column ? `/blog/${column.channelKey}/${column.columnKey}/${post.slug}` : `/blog/${post.slug}`}>
+                                <Link href={`/blog/${post.slug}`}>
                                     <div className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1">

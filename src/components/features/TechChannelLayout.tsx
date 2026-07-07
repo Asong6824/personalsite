@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { getColumnByTags } from '@/lib/channels';
+
 import ProgrammerDetails from '@/components/features/ProgrammerDetails';
 
 export default function TechChannelLayout({ channelKey, channelConfig, posts }) {
@@ -16,9 +16,8 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
         const grouped = {};
 
         posts.forEach(post => {
-            const column = getColumnByTags(post);
-            if (column && column.channelKey === channelKey) {
-                const columnKey = column.columnKey;
+            if (post.channel === channelKey) {
+                const columnKey = post.column;
                 if (!grouped[columnKey]) {
                     grouped[columnKey] = {
                         config: channelConfig.columns[columnKey],
@@ -110,11 +109,8 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
 
                     <div className="space-y-6 md:space-y-8">
                         {Object.entries(postsByColumn).map(([columnKey, { config, posts: columnPosts }]: [string, any], index) => (
-                            <motion.div
+                            <div
                                 key={columnKey}
-                                initial={{ opacity: 0, x: -50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.2, duration: 0.6 }}
                                 className="rounded-2xl overflow-hidden transition-shadow duration-300"
                                 style={{ backgroundColor: 'var(--channel-card)', border: '1px solid var(--channel-border)' }}
                             >
@@ -159,7 +155,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                         </div>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -183,9 +179,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                     </motion.div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                        {featuredPosts.map((post, index) => {
-                            const column = getColumnByTags(post);
-                            return (
+                        {featuredPosts.map((post, index) => (
                                 <motion.article
                                     key={post.slug}
                                     initial={{ opacity: 0, y: 30 }}
@@ -216,9 +210,9 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                         置顶
                                                     </span>
                                                 )}
-                                                {column && (
+                                                {post.column && (
                                                     <span className="bg-blue-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium">
-                                                        {postsByColumn[column.columnKey]?.config?.name}
+                                                        {postsByColumn[post.column]?.config?.name}
                                                     </span>
                                                 )}
                                             </div>
@@ -244,8 +238,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                         </div>
                                     </Link>
                                 </motion.article>
-                            );
-                        })}
+                        ))}
                     </div>
                 </div>
             </section>

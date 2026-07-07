@@ -7,7 +7,7 @@ import { zhCN } from 'date-fns/locale'; // 中文日期格式
 import { BookOpen, CalendarDays, Clock3, Map, Newspaper, UserRound } from 'lucide-react';
 
 import { getAllPostSlugs, getPostData } from '@/lib/post'; // 确保路径相对于您的项目结构正确
-import { CHANNELS_CONFIG, getColumnByTags } from '@/lib/channels';
+import { CHANNELS_CONFIG } from '@/lib/channels';
 import { MDXRemote } from 'next-mdx-remote/rsc'; // 用于 App Router (RSC)渲染 MDX
 import { InlineExplanation } from '@/components/ui/InlineExplanation'; // 导入InlineExplanation组件
 import { TableOfContents } from '@/components/ui/TableOfContents';
@@ -37,6 +37,7 @@ import {
     SketchyText,
 } from '@content/components/sketchy';
 import { TravelRouteMap, CityWalkMap } from '@content/components/travel';
+import { FunctionCallingSteps } from '@content/components/agent/FunctionCallingSteps';
 
 // 导入 remark/rehype 插件 (用于 MDXRemote 的 options)
 import remarkGfm from 'remark-gfm'; // 支持 GitHub Flavored Markdown (表格、删除线等)
@@ -183,6 +184,7 @@ export default async function PostPage({ params }) {
         SketchyText: SketchyText,
         TravelRouteMap: TravelRouteMap,
         CityWalkMap: CityWalkMap,
+        FunctionCallingSteps: FunctionCallingSteps,
         h2: ({ children, ...props }) => (
             <h2 className="text-[1.65rem] md:text-[1.85rem] font-bold mt-12 mb-5 leading-snug scroll-mt-28" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}} {...props}>
                 {children}
@@ -208,9 +210,8 @@ export default async function PostPage({ params }) {
     };
 
     const isRAGPost = slug.join('/') === 'tech/general/from-rag-technique-to-rag-philosophy';
-    const columnInfo = getColumnByTags(frontmatter);
-    const channelConfig = columnInfo ? CHANNELS_CONFIG[columnInfo.channelKey] : null;
-    const columnConfig = columnInfo ? CHANNELS_CONFIG[columnInfo.channelKey]?.columns?.[columnInfo.columnKey] : null;
+    const channelConfig = frontmatter.channel ? CHANNELS_CONFIG[frontmatter.channel as keyof typeof CHANNELS_CONFIG] : null;
+    const columnConfig = channelConfig && frontmatter.column ? channelConfig.columns[frontmatter.column] : null;
     const formattedDate = frontmatter.date ? format(parseISO(frontmatter.date), 'yyyy年MM月dd日', { locale: zhCN }) : '未知日期';
     const readingMinutes = estimateReadingMinutes(content);
     const mediaType = isRAGPost

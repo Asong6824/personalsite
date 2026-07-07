@@ -30,8 +30,8 @@ export interface Post {
   coverImage?: string;
   pinned: boolean;
   content?: string;
-  channel?: string;
-  column?: string;
+  channel: string;
+  column: string;
   columnSlug?: string;
   music?: string | string[];
   hidden?: boolean;

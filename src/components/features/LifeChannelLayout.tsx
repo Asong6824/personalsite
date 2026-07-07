@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { getColumnByTags } from '@/lib/channels';
+
 import { BookShelf } from '@/components/features/BookShelf3D';
 import TravelSection from '@/components/features/TravelSection';
 import SunlitBackground from '@/components/features/SunlitBackground';
@@ -18,9 +18,8 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
         const grouped = {};
         
         posts.forEach(post => {
-            const column = getColumnByTags(post);
-            if (column && column.channelKey === channelKey) {
-                const columnKey = column.columnKey;
+            if (post.channel === channelKey) {
+                const columnKey = post.column;
                 if (!grouped[columnKey]) {
                     grouped[columnKey] = {
                         config: channelConfig.columns[columnKey],
@@ -161,9 +160,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {featuredPosts.map((post) => {
-                            const column = getColumnByTags(post);
-                            return (
+                        {featuredPosts.map((post) => (
                                 <article
                                     key={post.slug}
                                     className="overflow-hidden transition-all duration-300"
@@ -173,7 +170,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                         borderRadius: '2px'
                                     }}
                                 >
-                                    <Link href={column ? `/blog/${column.channelKey}/${column.columnKey}/${post.slug}` : `/blog/${post.slug}`}>
+                                    <Link href={`/blog/${post.slug}`}>
                                         {/* 文章图片 */}
                                         <div className="aspect-video bg-gray-200 dark:bg-gray-700 flex items-center justify-center relative overflow-hidden">
                                             {post.coverImage ? (
@@ -200,13 +197,13 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                                             置顶
                                                         </span>
                                                     )}
-                                                    {column && (
+                                                    {post.column && (
                                                         <span className="text-xs px-3 py-1 font-light" style={{
                                                             backgroundColor: 'var(--theme-surface-low)',
                                                             color: 'var(--theme-primary)',
                                                             border: '1px solid var(--theme-outline-variant)'
                                                         }}>
-                                                            {postsByColumn[column.columnKey]?.config?.name}
+                                                            {postsByColumn[post.column]?.config?.name}
                                                         </span>
                                                     )}
                                                 </div>
@@ -233,8 +230,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                         </div>
                                     </Link>
                                 </article>
-                            );
-                        })}
+                        ))}
                     </div>
                 </div>
             </section>

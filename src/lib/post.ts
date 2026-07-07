@@ -8,7 +8,7 @@ import {
   findPostPathBySlug,
   getOrBuildPostsIndex,
 } from "./post-index";
-import { getChannelByTags, getColumnByTags } from "./channels";
+
 import type { Post, PostFrontmatter } from "@/types";
 
 function _getSortedPostsData(): Post[] {
@@ -75,10 +75,7 @@ export const getPostSummary = isDev
 function _getPostsByChannel(channelKey: string): Post[] {
   const allPosts = getSortedPostsData();
   if (!channelKey) return allPosts;
-  return allPosts.filter((post) => {
-    const channel = getChannelByTags(post);
-    return channel === channelKey;
-  });
+  return allPosts.filter((post) => post.channel === channelKey);
 }
 
 export const getPostsByChannel = isDev
@@ -91,14 +88,9 @@ function _getPostsByColumn(
 ): Post[] {
   const allPosts = getSortedPostsData();
   if (!channelKey || !columnKey) return allPosts;
-  return allPosts.filter((post) => {
-    const column = getColumnByTags(post);
-    return (
-      column &&
-      column.channelKey === channelKey &&
-      column.columnKey === columnKey
-    );
-  });
+  return allPosts.filter(
+    (post) => post.channel === channelKey && post.column === columnKey
+  );
 }
 
 export const getPostsByColumn = isDev

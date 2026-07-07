@@ -4,7 +4,13 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 const mockIndexItems: Array<{ slug: string; data: Record<string, unknown> }> = [];
 
 vi.mock("../post-index", () => ({
-  listIndexedPosts: () => mockIndexItems.map((i) => ({ ...i.data, slug: i.slug })),
+  listIndexedPosts: () =>
+    mockIndexItems.map((i) => ({
+      ...i.data,
+      slug: i.slug,
+      channel: i.data.channel ?? "tech",
+      column: i.data.column ?? "general",
+    })),
   listIndexedSlugs: () => mockIndexItems.map((i) => i.slug),
   findPostPathBySlug: (slug: string) => {
     const hit = mockIndexItems.find((i) => i.slug === slug);
@@ -154,11 +160,11 @@ describe("post", () => {
   });
 
   describe("getPostsByChannel", () => {
-    it("按 tags 过滤 tech 频道文章", () => {
+    it("按 frontmatter channel 过滤 tech 频道文章", () => {
       mockIndexItems.push(
-        { slug: "go-post", data: { title: "Go Post", date: "2026-01-01", tags: ["Go"], pinned: false } },
-        { slug: "life-post", data: { title: "Life Post", date: "2026-01-01", tags: ["日本"], pinned: false } },
-        { slug: "general-tech", data: { title: "General Tech", date: "2026-01-01", tags: ["技术"], pinned: false } },
+        { slug: "go-post", data: { title: "Go Post", date: "2026-01-01", tags: ["Go"], pinned: false, channel: "tech", column: "go" } },
+        { slug: "life-post", data: { title: "Life Post", date: "2026-01-01", tags: ["日本"], pinned: false, channel: "life", column: "japan" } },
+        { slug: "general-tech", data: { title: "General Tech", date: "2026-01-01", tags: ["技术"], pinned: false, channel: "tech", column: "general" } },
       );
 
       const techPosts = getPostsByChannel("tech");
@@ -170,8 +176,8 @@ describe("post", () => {
 
     it("空 channelKey 返回所有文章", () => {
       mockIndexItems.push(
-        { slug: "a", data: { title: "A", date: "2026-01-01", tags: ["Go"], pinned: false } },
-        { slug: "b", data: { title: "B", date: "2026-01-01", tags: ["日本"], pinned: false } },
+        { slug: "a", data: { title: "A", date: "2026-01-01", tags: ["Go"], pinned: false, channel: "tech", column: "go" } },
+        { slug: "b", data: { title: "B", date: "2026-01-01", tags: ["日本"], pinned: false, channel: "life", column: "japan" } },
       );
 
       const allPosts = getPostsByChannel("");
@@ -180,7 +186,7 @@ describe("post", () => {
 
     it("无匹配返回空数组", () => {
       mockIndexItems.push(
-        { slug: "only-life", data: { title: "Life", date: "2026-01-01", tags: ["日本"], pinned: false } },
+        { slug: "only-life", data: { title: "Life", date: "2026-01-01", tags: ["日本"], pinned: false, channel: "life", column: "japan" } },
       );
 
       const techPosts = getPostsByChannel("tech");
@@ -189,7 +195,7 @@ describe("post", () => {
   });
 
   describe("getPostsByColumn", () => {
-    it("按显式 channel/column 过滤", () => {
+    it("按 frontmatter channel/column 过滤", () => {
       mockIndexItems.push(
         { slug: "go-post", data: { title: "Go Post", date: "2026-01-01", tags: ["Go"], pinned: false, channel: "tech", column: "go" } },
         { slug: "general-post", data: { title: "General Post", date: "2026-01-01", tags: ["技术"], pinned: false, channel: "tech", column: "general" } },
@@ -203,7 +209,7 @@ describe("post", () => {
 
     it("空参数返回所有文章", () => {
       mockIndexItems.push(
-        { slug: "a", data: { title: "A", date: "2026-01-01", tags: ["Go"], pinned: false } },
+        { slug: "a", data: { title: "A", date: "2026-01-01", tags: ["Go"], pinned: false, channel: "tech", column: "go" } },
       );
 
       const allPosts = getPostsByColumn("", "");
