@@ -74,6 +74,8 @@ npm run lint     # 代码检查
 | `src/lib/channels.ts` | 频道/专栏定义 |
 | `src/lib/post-index.ts` | 文章索引构建 |
 | `src/lib/post.ts` | 文章数据读取 |
+| `src/lib/article/mdx-options.ts` | 文章 MDX remark/rehype 插件配置 |
+| `src/lib/article/rendering.ts` | 文章阅读时间、媒体类型、音乐播放列表等渲染辅助 |
 | `src/lib/seo-utils.ts` | SEO 结构化数据生成 |
 | `src/lib/route-utils.ts` | 专栏静态参数与路由校验 |
 | `src/lib/scrollUtils.ts` | 平滑滚动工具 |
@@ -82,6 +84,8 @@ npm run lint     # 代码检查
 | `vitest.config.ts` | 测试框架配置 |
 | `scripts/gate-check.ts` | 总门禁脚本（lint + test + build + 索引验证） |
 | `src/app/blog/[...slug]/page.tsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
+| `src/components/article/mdx-components.tsx` | 文章 MDX 组件注册表 |
+| `src/components/article/article-channel-styles.ts` | 文章页频道样式配置 |
 | `src/app/blog/page.tsx` | 博客主页 |
 | `src/app/blog/life/japan/stamps/page.tsx` | 车站印章收藏页 |
 | `src/components/stamps/StampsPageClient.tsx` | 印章页客户端组件（无限画布 + Bento 重排展开 + 线路/地域/铁路公司组织筛选 + 滚轮/触摸滑动） |

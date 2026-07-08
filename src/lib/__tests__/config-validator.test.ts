@@ -218,6 +218,7 @@ describe("validatePostClassification", () => {
       tags: [],
       pinned: false,
       channel: "travel",
+      column: "japan",
     };
     const result = validatePostClassification(post, VALID_CONFIG);
     expect(result.isValid).toBe(false);
@@ -278,7 +279,7 @@ describe("validatePostsClassification", () => {
   it("统计有效和无效文章", () => {
     const posts: Post[] = [
       { slug: "good", title: "Good", date: "2026-01-01", tags: ["Go"], pinned: false, channel: "tech", column: "go" },
-      { slug: "bad", title: "Bad", date: "2026-01-01", tags: [], pinned: false, channel: "travel" },
+      { slug: "bad", title: "Bad", date: "2026-01-01", tags: [], pinned: false, channel: "travel", column: "japan" },
     ];
     const result = validatePostsClassification(posts, VALID_CONFIG);
     expect(result.isValid).toBe(false);

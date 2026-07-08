@@ -1153,6 +1153,13 @@
   animation: site-route-progress 1.2s ease-in-out infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .site-route-progress[data-active="true"] {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 .site-loading-shell {
   min-height: 100vh;
   background: #F0EEE7;

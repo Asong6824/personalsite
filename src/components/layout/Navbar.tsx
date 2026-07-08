@@ -113,7 +113,6 @@ const Navbar = () => {
 
     return (
         <>
-            <span className="site-route-progress" data-active={Boolean(pendingHref)} />
             <motion.nav
                 initial={{ y: 0 }}
                 animate={{ y: hidden ? "-100%" : "0%" }}

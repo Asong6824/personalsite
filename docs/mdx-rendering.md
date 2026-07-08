@@ -10,7 +10,15 @@
 
 - `generateStaticParams()`：读取全部文章 slug，供 Next.js 静态生成文章详情页。
 - `generateMetadata()`：读取文章 frontmatter，生成页面 `title`、`description` 和 Open Graph 图片。
-- `PostPage()`：读取正文与 frontmatter，选择频道样式，配置 MDX 组件与插件，渲染文章头图、正文、音乐播放器和目录。
+- `PostPage()`：读取正文与 frontmatter，组合文章头图、正文、音乐播放器和目录。
+
+文章渲染相关的可复用配置已从路由文件拆出：
+
+- `src/components/article/article-channel-styles.ts`：频道级文章样式 token。
+- `src/components/article/mdx-components.tsx`：MDX 组件注册表和标题覆盖。
+- `src/components/article/ArticleInfoItem.tsx`：文章头部元信息项。
+- `src/lib/article/mdx-options.ts`：`remark` / `rehype` 插件配置。
+- `src/lib/article/rendering.ts`：阅读时间、顶部媒体类型、媒体标签和音乐播放列表生成。
 
 `src/components/features/PostLayout.tsx` 也存在 `MDXRemote` 用法，但当前文章详情路由没有挂载它。它更像旧版/备用文章布局，不应作为现行 MDX 渲染链路的事实来源。
 
@@ -59,7 +67,7 @@ slug.join("/")
 
 ### 频道样式
 
-`PostPage()` 根据 `frontmatter.channel` 判断频道：
+`PostPage()` 根据 `frontmatter.channel` 调用 `getArticleChannelStyle()` 判断频道：
 
 - `tech`
 - `life`
@@ -67,7 +75,7 @@ slug.join("/")
 - `finance`
 - fallback `default`
 
-频道样式集中在 `channelStyles` 对象中，控制页面背景、正文 prose 颜色、标题颜色、元信息颜色和标签颜色。
+频道样式集中在 `src/components/article/article-channel-styles.ts`，控制页面背景、正文 prose 颜色、标题颜色、元信息颜色和标签颜色。
 
 ### 文章头部
 
@@ -83,7 +91,7 @@ slug.join("/")
 
 ### 顶部媒体区
 
-正文前的顶部媒体区由 `mediaType` 决定：
+正文前的顶部媒体区由 `getArticleMediaType()` 决定：
 
 - 特定 RAG 文章 `tech/general/from-rag-technique-to-rag-philosophy`：显示 `SketchyRAGOverview` 交互概览。
 - 有 `frontmatter.heroVideo` 或 `frontmatter.videoUrl`：显示 iframe 视频。
@@ -106,7 +114,7 @@ slug.join("/")
 
 ### remark / rehype 插件
 
-`mdxOptions` 当前配置：
+`src/lib/article/mdx-options.ts` 当前配置：
 
 - `remark-gfm`，并设置 `breaks: true`，支持表格、删除线、任务列表等 GFM 能力，并把换行按硬换行处理。
 - `rehype-slug`，给标题生成 `id`。
@@ -117,7 +125,7 @@ slug.join("/")
 
 ### 注册给 MDX 的组件
 
-`mdxComponents` 是文章正文可直接使用的组件白名单。当前包括：
+`src/components/article/mdx-components.tsx` 中的 `createArticleMdxComponents()` 是文章正文可直接使用的组件白名单。当前包括：
 
 - 通用组件：`InlineExplanation`、`BentoGrid`、`BentoGridItem`、`BeforeAfter`、`Highlighter`
 - 色彩组件：`HSBSliders`、`ColorWheelSteps`、`RotatableColorWheel`
@@ -127,7 +135,7 @@ slug.join("/")
 - Agent 组件：`FunctionCallingSteps`
 - 标题覆盖：`h2`、`h3`
 
-新增文章组件时，必须先在 `src/app/blog/[...slug]/page.tsx` 中导入并加入 `mdxComponents`，MDX 正文才可以直接写 `<ComponentName />`。
+新增文章组件时，必须先在 `src/components/article/mdx-components.tsx` 中导入并加入 `createArticleMdxComponents()` 返回值，MDX 正文才可以直接写 `<ComponentName />`。
 
 ## 自动渲染但不是 MDX 标签的组件
 

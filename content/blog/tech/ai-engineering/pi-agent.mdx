@@ -58,3 +58,84 @@ Pi 有四个组成部分
 pi 的设计遵循极简的原则，如果不需要，就不做它
 
 就这样，pi 诞生了
+
+## pi-coding-agent 总览
+
+作为一个 coding agent，pi-coding-agent 的交互方式与 claude code、codex 几乎相同，包括
+
+ - 跨系统，可以在 Windows、Linux、MacOS 以及任何具有 Node.js 运行时的系统
+ - 支持多大模型提供商，可以在对话中切换
+ - 会话管理，支持继续、恢复和分支
+ - 支持加载项目上下文文件（agent.md）
+ - 支持 / 命令
+ - 支持 skill
+ - 通过 json 或 RPC 进行无头操作
+
+正如 Mario 自己说的，他受够了 Claude Code 宇宙飞船般的功能，所以 pi-coding-agent 的设计哲学是只保留最小可用，因此：
+
+1. 默认 yolo 模式
+2. 没有内置 TODO
+3. 没有计划模式
+4. 不支持 MCP
+5. 不支持 subagent
+
+Mario 自己说他在使用 claude code 时，即使使用安全模式，也不看具体执行了什么命令，只是一味地摁 enter，所以他干脆把 pi-coding-agent 设计成了默认 yolo 模式。
+
+TODO 功能和计划模式，都可以使用一个额外的 md 文档来实现，因此不需要写进 agent 中
+
+加载 MCP 通常会占用 10k 至 20k 的 token，对于大多数模型 128k 到 256k 的上下文长度来说，仅加载 MCP 就占据了 10% 上下文长度。而很多 MCP 在对话中用不到。
+
+他在博客中写得非常硬：Pi “does not and will not support MCP”。他的主要理由不是讨厌协议本身，而是认为 MCP 对多数 coding-agent 场景过重，尤其是 context overhead 太大。
+
+他的替代方案是：CLI tools + README。也就是把外部能力做成普通命令行工具，配一个说明文档；agent 需要时再读 README，再用 bash 调用工具。这是 progressive disclosure：需要时才付 token 成本，而且天然可组合、可管道化、容易扩展。
+
+所以他不是说“外部工具集成不好”，而是说：MCP 作为默认工具注入机制太臃肿；Unix CLI 更符合 Pi 的极简 harness 设计。
+
+他同样不想内置 dedicated sub-agent tool。核心反感点是 可观察性差 和 上下文转交不透明。他批评 Claude Code 这类系统里，主 agent 生成子 agent 后，用户看不到子 agent 到底读了什么、怎么推理、错在哪里；他说这是 “black box within a black box”。Mario Zechner 的博客
+
+更深一层，他认为很多人用 subagent 做 context gathering，是工作流设计问题。为了节省主会话 context 而在中途派子 agent 搜上下文，他觉得这说明前期没有规划好。更好的方式是：先开一个独立 session 做 context gathering，产出一个 artifact，比如 context.md、调研笔记、设计文档，再在干净的新 session 里把这个 artifact 交给 agent。
+
+但他并不是彻底否定 subagent。他承认有合理场景，尤其是 code review。他的做法也很 Pi：不是内置 subagent primitive，而是让 Pi 通过 bash 再启动一个 pi --print，用 slash command 包一层。也就是说：如果要子 agent，就把它当成另一个可观察、可保存、可单独进入的 Pi 进程，而不是隐藏在主 agent 内部的机制。
+
+他还明确反对“开多个 subagent 并行实现多个 feature”这种玩法，认为这在真实代码库里容易把质量搞坏。
+
+我们不评价重剑无锋和瑞士军刀哪个更好用，只来学习一下 pi 是怎么做的
+
+### 最小系统提示词
+
+```
+You are an expert coding assistant. You help users with coding tasks by reading files, executing commands, editing code, and writing new files.
+
+Available tools:
+- read: Read file contents
+- bash: Execute bash commands
+- edit: Make surgical edits to files
+- write: Create or overwrite files
+
+Guidelines:
+- Use bash for file operations like ls, grep, find
+- Use read to examine files before editing
+- Use edit for precise changes (old text must match exactly)
+- Use write only for new files or complete rewrites
+- When summarizing your actions, output plain text directly - do NOT use cat or bash to display what you did
+- Be concise in your responses
+- Show file paths clearly when working with files
+
+Documentation:
+- Your own documentation (including custom model setup and theme creation) is at: /path/to/README.md
+- Read it when users ask about features, configuration, or setup, and especially if the user asks you to add a custom model or provider, or create a custom theme.
+```
+
+https://cchistory.mariozechner.at/
+
+claude code 的系统提示词细致地涵盖了角色定位、任务领域、安全边界、工具和交互风格
+
+与之相比 pi-coding-agent 只说明角色和可以使用的工具，claude code 在系统提示词要花费 10000 token，而 pi-coding-agent 只需要不到 1000。
+
+如此简单的系统提示词难免让人怀疑 pi-coding-agent 能否正常完成编码任务。
+
+测试结果表明，因为模型大多针对代码类任务进行过强化学习训练，所以只需要简单地表达你是一个专业的编码助手，大模型就可以激活相应的能力。
+
+## 最小工具集
+
+pi-coding-agent 只有 4 个工具：read、bash、edit 和 write，相比之下 claude code 有 17 个
