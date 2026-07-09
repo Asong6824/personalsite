@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Noto+Serif+SC:wght@400;700;900&display=swap');
-
 /* ===== LXGW WenKai (霞鹜文楷) — 中文手写体 ===== */
 /* GB 版本：按字符分包加载，仅下载页面中出现的文字，流量极小 */
 @import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-gb-web@latest/style.css');
@@ -8,14 +6,6 @@
 @font-face {
   font-family: 'Excalifont';
   src: url('/fonts/Excalifont-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Virgil';
-  src: url('/fonts/Virgil.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -774,12 +764,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
+  --font-serif: var(--font-newsreader);
   --font-mono: var(--font-jetbrains-mono);
-  --font-cursive: 'KaiTi',
-  'STKaiti',
-  '楷体',
-  'SimKai',
-  cursive;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -849,10 +835,6 @@
 }
 
 :root {
-  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-newsreader: 'Newsreader', ui-serif, Georgia, serif;
-  --font-noto-serif-sc: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
-  --font-jetbrains-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   --radius: 0.625rem;
   /* 半径保持不变或按需调整 */
 
@@ -951,11 +933,6 @@
   /* 更亮的天蓝 */
   --color-5-new: oklch(0.60 0.18 220);
   /* 更深的天蓝 */
-}
-
-/* 行书字体样式 */
-.font-cursive {
-  font-family: 'KaiTi', 'STKaiti', '楷体', 'SimKai', cursive;
 }
 
 .dark {
@@ -1158,6 +1135,10 @@
     animation: none;
     transform: scaleX(1);
   }
+
+  .site-nav-pending-dot[data-pending="true"] {
+    animation: none;
+  }
 }
 
 .site-loading-shell {
@@ -1168,16 +1149,16 @@
 }
 
 .site-loading-frame {
-  max-width: 68rem;
+  width: 100%;
+  max-width: 75rem;
   margin: 0 auto;
 }
 
-.site-loading-kicker,
-.site-loading-line,
-.site-loading-card {
+.site-loading-block {
   position: relative;
   overflow: hidden;
   background: rgba(226, 219, 206, 0.82);
+  border: 1px solid rgba(104, 100, 93, 0.08);
 }
 
 .site-loading-kicker {
@@ -1188,24 +1169,36 @@
 
 .site-loading-title {
   width: min(34rem, 78vw);
-  height: clamp(2.5rem, 7vw, 4.5rem);
+  height: clamp(2.75rem, 7vw, 4.75rem);
   margin-bottom: 2rem;
 }
 
-.site-loading-line {
+.site-loading-display {
+  width: min(42rem, 100%);
+  height: clamp(3rem, 7vw, 5.5rem);
+  margin-bottom: 0.75rem;
+}
+
+.site-loading-display--short {
+  width: min(29rem, 72%);
+  margin-bottom: 2rem;
+}
+
+.site-loading-copy {
+  width: 100%;
   height: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
-.site-loading-line:nth-child(3) {
+.site-loading-copy--wide {
   width: 78%;
 }
 
-.site-loading-line:nth-child(4) {
+.site-loading-copy--short {
   width: 52%;
 }
 
-.site-loading-grid {
+.site-loading-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: 1rem;
@@ -1217,16 +1210,117 @@
   border: 1px solid var(--site-nav-border);
 }
 
-.site-loading-kicker::after,
-.site-loading-title::after,
-.site-loading-line::after,
-.site-loading-card::after {
+.site-loading-channel {
+  display: grid;
+  min-height: calc(100vh - 11rem);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.site-loading-channel-copy {
+  width: 100%;
+}
+
+.site-loading-channel-media {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+}
+
+.site-loading-breadcrumb {
+  width: min(20rem, 60vw);
+  height: 1rem;
+  margin-bottom: clamp(4rem, 10vh, 7rem);
+}
+
+.site-loading-article {
+  display: grid;
+  gap: clamp(3rem, 8vw, 7rem);
+}
+
+.site-loading-article-meta {
+  align-self: end;
+}
+
+.site-loading-article-body {
+  max-width: 46rem;
+  margin: clamp(5rem, 12vh, 9rem) auto 0;
+}
+
+.site-loading-canvas-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.site-loading-canvas-filters {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.site-loading-canvas-filters .site-loading-block {
+  width: 4.5rem;
+  height: 2rem;
+}
+
+.site-loading-canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.site-loading-canvas-grid .site-loading-block {
+  min-height: 10rem;
+}
+
+.site-loading-canvas-grid .site-loading-block:nth-child(1),
+.site-loading-canvas-grid .site-loading-block:nth-child(4) {
+  grid-row: span 2;
+}
+
+.site-loading-block::after {
   content: "";
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
   background: linear-gradient(90deg, transparent, rgba(240, 238, 231, 0.82), transparent);
   animation: site-loading-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .site-loading-channel {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.82fr);
+  }
+
+  .site-loading-article {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.28fr);
+  }
+
+  .site-loading-canvas-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .site-loading-canvas-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .site-loading-canvas-filters {
+    width: 100%;
+  }
+
+  .site-loading-canvas-filters .site-loading-block {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loading-block::after {
+    animation: none;
+  }
 }
 
 @keyframes site-nav-fade-in {

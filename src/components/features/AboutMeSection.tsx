@@ -8,6 +8,7 @@ import { scrollToSection } from '@/lib/scrollUtils';
 import { RainbowButton } from "@/components/magicui/rainbow-button"; // 确保路径正确
 import Image from "next/image";
 import { BookShelf } from "./BookShelf3D/BookShelf";
+import { startRouteTransition } from "@/lib/route-transition";
 
 // IdentityCardContent 子组件
 const IdentityCardContent = ({ title, description, targetId, imageUrl }) => {
@@ -36,6 +37,7 @@ const IdentityCardContent = ({ title, description, targetId, imageUrl }) => {
                         if (targetId?.startsWith('#')) {
                             scrollToSection(targetId);
                         } else if (targetId) {
+                            startRouteTransition(targetId);
                             router.push(targetId);
                         }
                     }}

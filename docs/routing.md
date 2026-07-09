@@ -27,6 +27,16 @@
 
 ---
 
+## 客户端跳转反馈
+
+- `src/components/layout/RouteTransitionFeedback.tsx` 全局监听站内链接，负责顶部路由进度条和导航意图预取。
+- 进度条从用户按下站内链接时开始，在 pathname 或 search params 实际变化后结束；同路由和纯 hash 跳转不会触发。
+- 使用 `router.push()` 的程序化跳转必须先调用 `src/lib/route-transition.ts` 中的 `startRouteTransition(href)`，确保与普通 `<Link>` 使用同一套反馈。
+- `src/components/layout/RouteLoadingSkeleton.tsx` 提供 overview、channel、article、canvas 四种无客户端 JavaScript 的 Suspense 骨架。
+- `src/app/loading.tsx` 和 `src/app/blog/loading.tsx` 使用 overview 骨架；各频道父级使用 channel，文章 catch-all 使用 article，印章页使用 canvas。Navbar 另外提供当前入口的 pending 状态。
+
+---
+
 ## API 路由
 
 | 路由 | 说明 |

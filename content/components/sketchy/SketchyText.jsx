@@ -10,7 +10,7 @@ export function SketchyText({
   y,
   text,
   fontSize = 14,
-  fontFamily = "'Excalifont', 'LXGW WenKai GB', 'Virgil', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif",
+  fontFamily = "'Excalifont', 'LXGW WenKai GB', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif",
   color = "#1a1a1a",
   background,
   backgroundPadding = { x: 8, y: 4 },

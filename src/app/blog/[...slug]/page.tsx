@@ -94,13 +94,23 @@ export default async function PostPage({ params }) {
                             {channelConfig && (
                                 <>
                                     <span>/</span>
-                                    <span>{channelConfig.name}</span>
+                                    <Link
+                                        href={`/blog/${frontmatter.channel}`}
+                                        className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
+                                    >
+                                        {channelConfig.name}
+                                    </Link>
                                 </>
                             )}
                             {columnConfig && (
                                 <>
                                     <span>/</span>
-                                    <span>{columnConfig.name}</span>
+                                    <Link
+                                        href={`/blog/${frontmatter.channel}/${frontmatter.column}`}
+                                        className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
+                                    >
+                                        {columnConfig.name}
+                                    </Link>
                                 </>
                             )}
                         </div>

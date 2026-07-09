@@ -41,7 +41,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
     const uniqueAuthors = [...new Set(posts.map(p => p.author).filter(Boolean))];
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
+        <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter)' }}>
             <main className="max-w-7xl mx-auto px-6 pt-24 pb-12">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center space-x-2 text-sm mb-8" style={{ color: '#444748' }}>
@@ -63,7 +63,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                 >
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="max-w-2xl">
-                            <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif', color: '#1a1c19' }}>
+                            <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6" style={{ fontFamily: 'var(--font-noto-serif-sc)', color: '#1a1c19' }}>
                                 {columnConfig.name}
                             </h1>
                             <p className="text-xl leading-relaxed" style={{ color: '#444748' }}>
@@ -71,7 +71,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                             </p>
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                            <span className="text-sm uppercase tracking-widest font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>Editorial Column</span>
+                            <span className="text-sm uppercase tracking-widest font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>Editorial Column</span>
                             <div className="h-1 w-24" style={{ backgroundColor: '#1a1c19' }}></div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                                     </div>
                                     <div className="flex-1 flex flex-col">
                                         <div className="flex items-center gap-4 mb-3">
-                                            <span className="text-xs tracking-widest uppercase" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>
+                                            <span className="text-xs tracking-widest uppercase" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>
                                                 {(post.tags || [])[0] || 'Article'}
                                             </span>
                                             <span className="text-xs font-medium" style={{ color: '#747878' }}>
@@ -136,7 +136,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                                             </span>
                                         </div>
                                         <Link href={`/blog/${post.slug}`}>
-                                            <h2 className="text-2xl font-bold leading-tight mb-4 group-hover:underline underline-offset-8 transition-all" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif', color: '#1a1c19', textDecorationColor: '#ffdea5' }}>
+                                            <h2 className="text-2xl font-bold leading-tight mb-4 group-hover:underline underline-offset-8 transition-all" style={{ fontFamily: 'var(--font-noto-serif-sc)', color: '#1a1c19', textDecorationColor: '#ffdea5' }}>
                                                 {post.title}
                                             </h2>
                                         </Link>
@@ -170,19 +170,19 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                         <aside className="lg:col-span-4 space-y-12 md:space-y-16">
                             {/* Column Stats */}
                             <div className="p-8 rounded-xl" style={{ backgroundColor: '#f4f4ef', border: '1px solid rgba(196,199,199,0.1)' }}>
-                                <h3 className="text-lg font-bold mb-6" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>专栏洞察</h3>
+                                <h3 className="text-lg font-bold mb-6" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>专栏洞察</h3>
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center pb-4" style={{ borderBottom: '1px solid rgba(196,199,199,0.2)' }}>
                                         <span className="text-sm font-medium" style={{ color: '#444748' }}>文章数量</span>
-                                        <span className="text-sm font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>{totalCount} 篇</span>
+                                        <span className="text-sm font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>{totalCount} 篇</span>
                                     </div>
                                     <div className="flex justify-between items-center pb-4" style={{ borderBottom: '1px solid rgba(196,199,199,0.2)' }}>
                                         <span className="text-sm font-medium" style={{ color: '#444748' }}>作者</span>
-                                        <span className="text-sm font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>{uniqueAuthors.length} 位</span>
+                                        <span className="text-sm font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>{uniqueAuthors.length} 位</span>
                                     </div>
                                     <div className="flex justify-between items-center pb-4">
                                         <span className="text-sm font-medium" style={{ color: '#444748' }}>最近更新</span>
-                                        <span className="text-sm font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>
+                                        <span className="text-sm font-bold" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>
                                             {posts[0]?.date ? format(parseISO(posts[0].date), 'yyyy.MM') : '-'}
                                         </span>
                                     </div>
@@ -195,11 +195,11 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                             {/* Trending Topics */}
                             {posts.length > 0 && (
                                 <div>
-                                    <h3 className="text-lg font-bold mb-8" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>热点议题</h3>
+                                    <h3 className="text-lg font-bold mb-8" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>热点议题</h3>
                                     <div className="space-y-6">
                                         {posts.slice(0, 3).map((post, idx) => (
                                             <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
-                                                <p className="text-xs mb-2" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>0{idx + 1} / TOPIC</p>
+                                                <p className="text-xs mb-2" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>0{idx + 1} / TOPIC</p>
                                                 <h4 className="font-medium group-hover:text-[#1a1c19] transition-colors" style={{ color: '#1a1c19' }}>{post.title}</h4>
                                             </Link>
                                         ))}
@@ -210,10 +210,10 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                             {/* Quote Card */}
                             <div className="relative overflow-hidden rounded-xl aspect-[3/4]" style={{ backgroundColor: '#1a1c19' }}>
                                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                                    <p className="italic text-xl mb-4 leading-relaxed text-white" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                                    <p className="italic text-xl mb-4 leading-relaxed text-white" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                                         &ldquo;在别人的恐惧中贪婪，在别人的贪婪中恐惧。&rdquo;
                                     </p>
-                                    <span className="text-xs uppercase tracking-widest text-white/60" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace' }}>— Warren Buffett</span>
+                                    <span className="text-xs uppercase tracking-widest text-white/60" style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>— Warren Buffett</span>
                                 </div>
                             </div>
                         </aside>
@@ -226,7 +226,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
                         animate={{ opacity: 1 }}
                     >
                         <span className="text-6xl mb-6" style={{ color: '#c4c7c7' }}>📭</span>
-                        <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif', color: '#1a1c19' }}>该专栏暂无文章</h3>
+                        <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-noto-serif-sc)', color: '#1a1c19' }}>该专栏暂无文章</h3>
                         <p className="max-w-sm" style={{ color: '#444748' }}>作者正在深度研究中，请耐心等待新的见解发布。</p>
                     </motion.div>
                 )}
@@ -236,7 +236,7 @@ export default function FinanceColumnLayout({ channelConfig, columnConfig, posts
             <footer className="w-full py-16 mt-20" style={{ backgroundColor: '#f4f4ef' }}>
                 <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 text-sm leading-relaxed">
                     <div className="space-y-6">
-                        <div className="text-lg italic" style={{ fontFamily: 'var(--font-newsreader), Newsreader, serif', color: '#1a1c19' }}>金融 Editorial</div>
+                        <div className="text-lg italic" style={{ fontFamily: 'var(--font-newsreader)', color: '#1a1c19' }}>金融 Editorial</div>
                         <p className="max-w-xs" style={{ color: '#444748' }}>
                             专注于提供高品质的财经投资深度见解。我们不提供交易建议，只提供思考的坐标。
                         </p>

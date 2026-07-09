@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLinkStatus } from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { NAV_LINKS } from './navLinks';
 
@@ -26,6 +26,7 @@ const Navbar = () => {
     const [hidden, setHidden] = useState(false);
     const [pendingHref, setPendingHref] = useState<string | null>(null);
     const pathname = usePathname();
+    const shouldReduceMotion = useReducedMotion();
     const { scrollY } = useScroll();
 
     const activeHref = useMemo(() => {
@@ -116,7 +117,7 @@ const Navbar = () => {
             <motion.nav
                 initial={{ y: 0 }}
                 animate={{ y: hidden ? "-100%" : "0%" }}
-                transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.35, ease: [0.25, 0.1, 0.25, 1] }}
                 className="site-navbar fixed top-0 left-0 right-0 z-50 bg-transparent"
             >
                 <div className="w-full px-8 sm:px-10 lg:px-16 xl:px-24">
@@ -174,38 +175,40 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className="md:hidden bg-[#F0EEE7]/95 backdrop-blur-md border-b border-[var(--site-nav-border)]"
-                        id="mobile-menu"
-                    >
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            {NAV_LINKS.map((linkItem) => {
-                                const isActive = activeHref === linkItem.href;
-                                const isPending = pendingHref === linkItem.href;
+                <AnimatePresence initial={false}>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
+                            transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
+                            className="md:hidden bg-[#F0EEE7]/95 backdrop-blur-md border-b border-[var(--site-nav-border)]"
+                            id="mobile-menu"
+                        >
+                            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                                {NAV_LINKS.map((linkItem) => {
+                                    const isActive = activeHref === linkItem.href;
+                                    const isPending = pendingHref === linkItem.href;
 
-                                return (
-                                    <Link
-                                        key={linkItem.label}
-                                        href={linkItem.href}
-                                        onClick={(e) => handleNavLinkClick(e, linkItem.href, linkItem.type)}
-                                        className="site-nav-link w-full px-3 py-2 rounded-md text-base font-medium"
-                                        data-active={isActive}
-                                        data-pending={isPending}
-                                        aria-current={isActive ? 'page' : undefined}
-                                    >
-                                        <span>{linkItem.label}</span>
-                                        <NavPendingIndicator active={isPending} />
-                                    </Link>
-                                );
-                            })}
-                        </div>
-                    </motion.div>
-                )}
+                                    return (
+                                        <Link
+                                            key={linkItem.label}
+                                            href={linkItem.href}
+                                            onClick={(e) => handleNavLinkClick(e, linkItem.href, linkItem.type)}
+                                            className="site-nav-link w-full px-3 py-2 rounded-md text-base font-medium"
+                                            data-active={isActive}
+                                            data-pending={isPending}
+                                            aria-current={isActive ? 'page' : undefined}
+                                        >
+                                            <span>{linkItem.label}</span>
+                                            <NavPendingIndicator active={isPending} />
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </motion.nav>
         </>
     );

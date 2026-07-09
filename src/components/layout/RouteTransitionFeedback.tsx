@@ -1,8 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  ROUTE_TRANSITION_START_EVENT,
+  type RouteTransitionStartDetail,
+} from "@/lib/route-transition";
 import { NAV_LINKS } from "./navLinks";
+
+function getCurrentRouteKey() {
+  return `${window.location.pathname}${window.location.search}`;
+}
 
 function getInternalNavigationHref(anchor: HTMLAnchorElement) {
   const rawHref = anchor.getAttribute("href");
@@ -28,11 +36,11 @@ function getInternalNavigationHref(anchor: HTMLAnchorElement) {
   const currentPath = `${window.location.pathname}${window.location.search}`;
   const nextPath = `${url.pathname}${url.search}`;
 
-  if (nextPath === currentPath && url.hash) {
+  if (nextPath === currentPath) {
     return null;
   }
 
-  return `${url.pathname}${url.search}${url.hash}`;
+  return nextPath;
 }
 
 export default function RouteTransitionFeedback() {
@@ -41,18 +49,34 @@ export default function RouteTransitionFeedback() {
   const searchParams = useSearchParams();
   const [isNavigating, setIsNavigating] = useState(false);
   const prefetchedHrefsRef = useRef(new Set<string>());
+  const navigationOriginRef = useRef<string | null>(null);
+  const routeKey = `${pathname}${searchParams.size ? `?${searchParams.toString()}` : ""}`;
+
+  const beginNavigation = useCallback((href: string) => {
+    const currentRouteKey = getCurrentRouteKey();
+    const targetUrl = new URL(href, window.location.href);
+    const targetRouteKey = `${targetUrl.pathname}${targetUrl.search}`;
+
+    if (targetRouteKey === currentRouteKey) {
+      return;
+    }
+
+    navigationOriginRef.current = currentRouteKey;
+    setIsNavigating(true);
+  }, []);
 
   useEffect(() => {
-    if (!isNavigating) {
+    if (!isNavigating || !navigationOriginRef.current || routeKey === navigationOriginRef.current) {
       return;
     }
 
     const settleTimer = window.setTimeout(() => {
       setIsNavigating(false);
-    }, 320);
+      navigationOriginRef.current = null;
+    }, 180);
 
     return () => window.clearTimeout(settleTimer);
-  }, [pathname, searchParams, isNavigating]);
+  }, [isNavigating, routeKey]);
 
   useEffect(() => {
     if (!isNavigating) {
@@ -61,6 +85,7 @@ export default function RouteTransitionFeedback() {
 
     const fallbackTimer = window.setTimeout(() => {
       setIsNavigating(false);
+      navigationOriginRef.current = null;
     }, 7000);
 
     return () => window.clearTimeout(fallbackTimer);
@@ -120,6 +145,16 @@ export default function RouteTransitionFeedback() {
   }, [router]);
 
   useEffect(() => {
+    const handleProgrammaticNavigation = (event: Event) => {
+      const customEvent = event as CustomEvent<RouteTransitionStartDetail>;
+
+      if (customEvent.detail?.href) {
+        beginNavigation(customEvent.detail.href);
+      }
+    };
+
+    window.addEventListener(ROUTE_TRANSITION_START_EVENT, handleProgrammaticNavigation);
+
     const startNavigationFeedback = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -147,7 +182,7 @@ export default function RouteTransitionFeedback() {
       const href = getInternalNavigationHref(anchor);
 
       if (href) {
-        setIsNavigating(true);
+        beginNavigation(href);
       }
     };
 
@@ -163,10 +198,11 @@ export default function RouteTransitionFeedback() {
     document.addEventListener("click", handleClick);
 
     return () => {
+      window.removeEventListener(ROUTE_TRANSITION_START_EVENT, handleProgrammaticNavigation);
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [beginNavigation]);
 
   return (
     <span

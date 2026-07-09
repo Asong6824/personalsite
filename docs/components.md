@@ -40,7 +40,7 @@
 | `src/components/finance/` | 金融频道专属 | `FinanceHomeClient`、`FinanceColumnLayout` |
 | `src/components/creative/` | 创意频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
-| `src/components/layout/` | 布局组件 | `Navbar` |
+| `src/components/layout/` | 布局组件 | `Navbar`、`RouteTransitionFeedback`、`RouteLoadingSkeleton` |
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
 | `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.tsx`） |
 | `src/components/StructuredData.tsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |

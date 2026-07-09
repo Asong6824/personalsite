@@ -180,7 +180,7 @@
 | `x`, `y` | — | 文字基线坐标（必填） |
 | `text` | — | 文字内容（必填） |
 | `fontSize` | `14` | 字号 |
-| `fontFamily` | 系统字体栈 | 默认包含 `Excalifont`、`LXGW WenKai GB`、`Virgil` |
+| `fontFamily` | 系统字体栈 | 默认包含 `Excalifont`、`LXGW WenKai GB` |
 | `color` | `"#1a1a1a"` | 文字颜色 |
 | `background` | — | 文字背景色（可选） |
 | `backgroundPadding` | `{x:8, y:4}` | 背景内边距 |

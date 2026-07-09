@@ -19,6 +19,7 @@ import { HomeRecentPostsStage } from "./HomeRecentPostsStage";
 import { HOME_DOM_LAYOUT, HOME_STAGE_SCROLL } from "./homeTimeline";
 import { CREATE_RING_SCROLL_OFFSET, CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
 import { SITE_WARM_BACKGROUND, SITE_WARM_BACKGROUND_THREE } from "@/lib/site-theme";
+import { startRouteTransition } from "@/lib/route-transition";
 import { NAV_LINKS } from "@/components/layout/navLinks";
 import type { Post } from "@/types";
 
@@ -238,6 +239,7 @@ function ChannelRailLinks() {
 
     setTransitionHref(activeChannel.href);
     window.setTimeout(() => {
+      startRouteTransition(activeChannel.href);
       router.push(activeChannel.href);
     }, 560);
   };

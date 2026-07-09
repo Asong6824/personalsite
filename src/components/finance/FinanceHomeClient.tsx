@@ -41,7 +41,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
     ).slice(0, 3);
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
+        <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter)' }}>
             {/* Hero Section */}
             <header className="max-w-7xl mx-auto px-6 pt-32 pb-16 md:pt-40 md:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
                 <motion.div
@@ -54,7 +54,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                         Smart investing, rational decisions
                     </p>
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.1] mb-8"
-                        style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                        style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                         在波动中寻找秩序，<br />
                         在不确定性中寻找确定性。
                     </h1>
@@ -72,7 +72,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                     variants={{ ...FADE_UP, visible: { ...FADE_UP.visible, transition: { delay: 0.2, duration: 0.6 } } }}
                 >
                     <div className="text-right">
-                        <span className="text-3xl font-light" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>0.618</span>
+                        <span className="text-3xl font-light" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>0.618</span>
                         <p className="text-[10px] uppercase tracking-widest mt-1" style={{ color: '#c4c7c7' }}>Market Efficiency Ratio</p>
                     </div>
                 </motion.div>
@@ -87,7 +87,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                     viewport={{ once: true }}
                     variants={FADE_UP}
                 >
-                    <h2 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                    <h2 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                         精选专题 / <span style={{ color: '#747878' }}>Featured</span>
                     </h2>
                     <Link href="/blog/finance/finance" className="group flex items-center gap-2 text-sm uppercase tracking-widest">
@@ -122,7 +122,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                                 <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase rounded mb-4" style={{ backgroundColor: '#ffdea5', color: '#261900' }}>
                                     Investment Strategy
                                 </span>
-                                <h3 className="text-2xl md:text-3xl font-bold mb-4" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                                <h3 className="text-2xl md:text-3xl font-bold mb-4" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                                     {featuredPost.title}
                                 </h3>
                                 {featuredPost.excerpt && (
@@ -143,11 +143,11 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                     {secondPost ? (
                         <motion.article variants={FADE_UP} className="md:col-span-3 lg:col-span-4 rounded-xl p-8 flex flex-col justify-between" style={{ backgroundColor: '#e3e3de' }}>
                             <div>
-                                <h3 className="text-xl font-bold leading-tight mb-4" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>{secondPost.title}</h3>
+                                <h3 className="text-xl font-bold leading-tight mb-4" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>{secondPost.title}</h3>
                                 {secondPost.excerpt && <p className="text-sm leading-relaxed line-clamp-3" style={{ color: '#444748' }}>{secondPost.excerpt}</p>}
                             </div>
                             <div className="mt-8 pt-8 flex justify-between items-center" style={{ borderTop: '1px solid rgba(196,199,199,0.2)' }}>
-                                <span className="text-xs" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#747878' }}>
+                                <span className="text-xs" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#747878' }}>
                                     {secondPost.date ? format(parseISO(secondPost.date), 'MMM yyyy', { locale: zhCN }).toUpperCase() : ''}
                                 </span>
                             </div>
@@ -161,7 +161,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                     {/* Small Grid Items */}
                     {smallPosts.map((post, i) => (
                         <motion.div key={post.slug} variants={FADE_UP} className="md:col-span-3 lg:col-span-4 rounded-xl p-6" style={{ backgroundColor: '#f4f4ef', borderBottom: `4px solid ${i === 0 ? 'rgba(80,99,84,0.2)' : i === 1 ? 'rgba(233,193,118,0.4)' : 'rgba(186,26,26,0.2)'}` }}>
-                            <h4 className="text-lg font-bold mb-2" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>{post.title}</h4>
+                            <h4 className="text-lg font-bold mb-2" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>{post.title}</h4>
                             {post.excerpt && <p className="text-xs line-clamp-2" style={{ color: '#444748' }}>{post.excerpt}</p>}
                         </motion.div>
                     ))}
@@ -178,8 +178,8 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                 {/* Category One: 财经投资 */}
                 <div>
                     <div className="flex items-center justify-between mb-12 pb-4" style={{ borderBottom: '1px solid rgba(196,199,199,0.15)' }}>
-                        <h3 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
-                            财经投资 <span className="text-sm font-normal ml-2 opacity-40" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace' }}>/ {investmentPosts.length} Articles</span>
+                        <h3 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
+                            财经投资 <span className="text-sm font-normal ml-2 opacity-40" style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>/ {investmentPosts.length} Articles</span>
                         </h3>
                         <span>↗</span>
                     </div>
@@ -194,9 +194,9 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                                     )}
                                 </div>
                                 <div>
-                                    <span className="text-[10px] uppercase tracking-widest" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#c4c7c7' }}>Insight #0{index + 1}</span>
+                                    <span className="text-[10px] uppercase tracking-widest" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#c4c7c7' }}>Insight #0{index + 1}</span>
                                     <Link href={`/blog/${post.slug}`}>
-                                        <h4 className="text-lg font-semibold mt-1 mb-2 group-hover:text-[#506354] transition-colors" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>{post.title}</h4>
+                                        <h4 className="text-lg font-semibold mt-1 mb-2 group-hover:text-[#506354] transition-colors" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>{post.title}</h4>
                                     </Link>
                                     {post.excerpt && <p className="text-sm line-clamp-1" style={{ color: '#444748' }}>{post.excerpt}</p>}
                                 </div>
@@ -215,17 +215,17 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                 {/* Category Two: 投资方法论 */}
                 <div>
                     <div className="flex items-center justify-between mb-12 pb-4" style={{ borderBottom: '1px solid rgba(196,199,199,0.15)' }}>
-                        <h3 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
-                            投资方法论 <span className="text-sm font-normal ml-2 opacity-40" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace' }}>/ {methodologyPosts.length} Articles</span>
+                        <h3 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
+                            投资方法论 <span className="text-sm font-normal ml-2 opacity-40" style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>/ {methodologyPosts.length} Articles</span>
                         </h3>
                         <span>◎</span>
                     </div>
                     <div className="space-y-6">
                         {methodologyPosts.length > 0 ? methodologyPosts.map((post, index) => (
                             <article key={post.slug} className="p-6 rounded-xl group cursor-pointer transition-all hover:border-l-2" style={{ backgroundColor: '#f4f4ef', borderLeft: '2px solid transparent' }}>
-                                <span className="text-[10px]" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>METHOD_0{index + 1}</span>
+                                <span className="text-[10px]" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>METHOD_0{index + 1}</span>
                                 <Link href={`/blog/${post.slug}`}>
-                                    <h4 className="text-xl font-bold mt-2 mb-3" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>{post.title}</h4>
+                                    <h4 className="text-xl font-bold mt-2 mb-3" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>{post.title}</h4>
                                 </Link>
                                 {post.excerpt && <p className="text-sm leading-relaxed" style={{ color: '#444748' }}>{post.excerpt}</p>}
                             </article>
@@ -250,7 +250,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                     viewport={{ once: true }}
                     variants={FADE_UP}
                 >
-                    <h2 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                    <h2 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                         专栏 / <span style={{ color: '#747878' }}>Columns</span>
                     </h2>
                 </motion.div>
@@ -268,10 +268,10 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                                 <Link href={`/blog/finance/${key}`} className="group block rounded-xl p-8 h-full transition-all duration-300 hover:shadow-lg" style={{ backgroundColor: '#f4f4ef' }}>
                                     <div className="flex flex-col h-full">
                                         <div className="mb-6">
-                                            <span className="text-sm" style={{ fontFamily: 'var(--font-jetbrains-mono), "JetBrains Mono", monospace', color: '#506354' }}>
+                                            <span className="text-sm" style={{ fontFamily: 'var(--font-jetbrains-mono)', color: '#506354' }}>
                                                 0{index + 1} ::
                                             </span>
-                                            <h3 className="text-2xl font-bold mt-2 group-hover:text-[#506354] transition-colors" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                                            <h3 className="text-2xl font-bold mt-2 group-hover:text-[#506354] transition-colors" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                                                 {column.name}
                                             </h3>
                                         </div>
@@ -297,7 +297,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                         <span className="text-white text-9xl">📈</span>
                     </div>
                     <div className="relative z-10 max-w-2xl mx-auto">
-                        <h2 className="text-white text-4xl font-bold mb-6" style={{ fontFamily: 'var(--font-noto-serif-sc), "Noto Serif SC", serif' }}>
+                        <h2 className="text-white text-4xl font-bold mb-6" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>
                             每周一次的冷静思考。
                         </h2>
                         <p className="text-white/60 mb-10 leading-relaxed">
@@ -322,7 +322,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
             <footer className="w-full py-16" style={{ backgroundColor: '#f4f4ef' }}>
                 <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 text-sm leading-relaxed">
                     <div>
-                        <p className="text-lg italic mb-6" style={{ fontFamily: 'var(--font-newsreader), Newsreader, serif', color: '#1a1c19' }}>金融 Editorial</p>
+                        <p className="text-lg italic mb-6" style={{ fontFamily: 'var(--font-newsreader)', color: '#1a1c19' }}>金融 Editorial</p>
                         <p className="max-w-xs" style={{ color: '#444748' }}>
                             致力通过理性的视角解析复杂的金融世界，为专业投资者提供具有洞察力的深度内容。
                         </p>

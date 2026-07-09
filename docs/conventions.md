@@ -27,11 +27,11 @@
 | 英文无衬线 | `Inter` | 正文、UI 标签 |
 | 英文衬线 | `Newsreader` | 大标题、Display 文字 |
 | 英文等宽 | `JetBrains Mono` | 代码块、数据展示 |
-| 中文衬线 | `Noto Serif SC` | 中文标题、正文 |
+| 中文衬线 | `Noto Serif SC` | 金融频道中文标题 |
 | 中文手写 | `LXGW WenKai`（霞鹜文楷） | 装饰性中文手写体 |
-| 手绘图表 | `Excalifont` / `Virgil` | Sketchy 组件库专用 |
+| 手绘图表 | `Excalifont` + `LXGW WenKai` | Sketchy 组件库的西文与中文 |
 
-字体在 `src/app/globals.css` 中通过 `@import` 引入 Google Fonts 和 CDN 分包字体。
+四个核心字体在 `src/app/layout.tsx` 中通过 `next/font/google` 构建时下载并自托管，统一暴露为 `--font-*` CSS 变量。霞鹜文楷继续使用 CDN 分包字体，`Excalifont` 使用 `public/fonts/` 下的本地 WOFF2。
 
 ---
 
