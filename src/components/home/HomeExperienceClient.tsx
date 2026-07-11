@@ -47,10 +47,22 @@ const channelItemLayout = [
   { x: 0, y: -7, z: 0, center: 0.78 },
 ] as const;
 
+const channelSnapPoints = channelItemLayout.map(({ center }) => center);
 const channelCenterWindow = 0.18;
 const channelActionWindow = 0.055;
 
 type ChannelEntry = (typeof channelEntries)[number];
+type ChannelId = ChannelEntry["id"];
+
+const CHANNEL_HOVER_EVENT = "home:channel-hover";
+
+function dispatchChannelHover(channelId: ChannelId | null) {
+  window.dispatchEvent(
+    new CustomEvent(CHANNEL_HOVER_EVENT, {
+      detail: { channelId },
+    })
+  );
+}
 
 // Coordinate arrays for camera and look-at targets.
 // The first three post-hero beats are Observe -> Express -> Create; the
@@ -234,9 +246,18 @@ function ChannelRailLinks() {
     };
   }, [transitionHref]);
 
+  useEffect(() => {
+    if (!activeChannel || transitionHref) {
+      dispatchChannelHover(null);
+    }
+
+    return () => dispatchChannelHover(null);
+  }, [activeChannel, transitionHref]);
+
   const handleNavigate = () => {
     if (!activeChannel || transitionHref) return;
 
+    dispatchChannelHover(null);
     setTransitionHref(activeChannel.href);
     window.setTimeout(() => {
       startRouteTransition(activeChannel.href);
@@ -249,33 +270,20 @@ function ChannelRailLinks() {
       <AnimatePresence>
         {activeChannel && !transitionHref && (
           <motion.button
+            key={activeChannel.id}
             type="button"
             aria-label={`进入${activeChannel.label}频道`}
             onClick={handleNavigate}
-            className="group absolute top-[47%] flex h-28 w-20 -translate-y-1/2 cursor-pointer items-center justify-center outline-none pointer-events-auto md:h-36 md:w-24"
-            style={{ left: "calc(50% + min(40vw, 34rem))" }}
-            initial={{ opacity: 0, x: -14, scale: 0.96 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10, scale: 0.98 }}
-            whileHover={{ x: 8 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
-          >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 72 144"
-              className="h-full w-full text-[#0a0c20]/34 transition-colors duration-200 group-hover:text-[#0a0c20]/72 group-focus-visible:text-[#0a0c20]/85"
-              fill="none"
-            >
-              <path
-                d="M18 22L54 72L18 122"
-                stroke="currentColor"
-                strokeWidth="7"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              />
-            </svg>
-          </motion.button>
+            onPointerEnter={() => dispatchChannelHover(activeChannel.id)}
+            onPointerLeave={() => dispatchChannelHover(null)}
+            onFocus={() => dispatchChannelHover(activeChannel.id)}
+            onBlur={() => dispatchChannelHover(null)}
+            className="pointer-events-auto absolute left-1/2 top-[52%] h-[28vh] min-h-40 w-[82vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-sm bg-transparent outline-none md:h-[30vh] md:w-[70vw] lg:w-[62vw] focus-visible:ring-1 focus-visible:ring-[#0a0c20]/35"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+          />
         )}
       </AnimatePresence>
 
@@ -433,6 +441,19 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
     let expressGroup: THREE.Group | null = null;
     let observeGroup: THREE.Group | null = null;
     let channelTitleGroup: THREE.Group | null = null;
+    const channelTitleModels = channelEntries.map((entry) => ({
+      ...entry,
+      model: null as THREE.Group | null,
+      layout: channelItemLayout[channelEntries.findIndex((item) => item.id === entry.id)],
+      baseRotation: new THREE.Euler(),
+      hoverAmount: 0,
+    }));
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let hoveredChannelId: ChannelId | null = null;
+    const handleChannelHover = (event: Event) => {
+      hoveredChannelId = (event as CustomEvent<{ channelId: ChannelId | null }>).detail.channelId;
+    };
+    window.addEventListener(CHANNEL_HOVER_EVENT, handleChannelHover);
     let videoMesh: THREE.Mesh | null = null;
     let reviewGroup: THREE.Group | null = null;
     let awardsGroup: THREE.Group | null = null;
@@ -925,11 +946,6 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
       const channelRailYCalibration = 1.8;
       const channelRailStartY = isDesktop ? 6.5 + channelRailYCalibration : 18.04;
       const channelRailEndY = isDesktop ? 18 + channelRailYCalibration : 18.04;
-      const channelTitleModels = channelEntries.map((entry) => ({
-        ...entry,
-        model: null as THREE.Group | null,
-        layout: channelItemLayout[channelEntries.findIndex((item) => item.id === entry.id)],
-      }));
       const channelActiveColor = new THREE.Color(0x0a0c20);
       const channelMutedColor = new THREE.Color(0x6f7685);
 
@@ -953,11 +969,12 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
             isDesktop ? entry.layout.y : entry.layout.y * 0.72,
             isDesktop ? entry.layout.z : entry.layout.z
           );
-          entry.model.rotation.set(
+          entry.baseRotation.set(
             THREE.MathUtils.degToRad(THREE.MathUtils.lerp(-2, 0, centerWeight)),
             THREE.MathUtils.degToRad(THREE.MathUtils.lerp(40, 0, centerWeight)),
             THREE.MathUtils.degToRad(THREE.MathUtils.lerp(-5, 0, centerWeight))
           );
+          entry.model.rotation.copy(entry.baseRotation);
           entry.model.scale.set(scale, -scale, scale);
           (entry.model.userData.materials as THREE.MeshStandardMaterial[]).forEach((material) => {
             material.opacity = opacity;
@@ -1021,6 +1038,14 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
         start: () => getScrollDepth(HOME_STAGE_SCROLL.channels.start) + " top",
         end: () => getScrollDepth(HOME_STAGE_SCROLL.channels.end) + " top",
         scrub: true,
+        snap: {
+          snapTo: channelSnapPoints,
+          directional: false,
+          inertia: false,
+          delay: 0.08,
+          duration: { min: 0.16, max: 0.36 },
+          ease: "power2.out",
+        },
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           updateChannelTitleModels(self.progress);
@@ -1770,6 +1795,18 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
         obj.mesh.position.y = obj.baseHeight + Math.sin(elapsed * obj.speed) * obj.range;
       });
 
+      channelTitleModels.forEach((entry) => {
+        if (!entry.model) return;
+
+        const hoverTarget = hoveredChannelId === entry.id && !prefersReducedMotion ? 1 : 0;
+        entry.hoverAmount = THREE.MathUtils.damp(entry.hoverAmount, hoverTarget, 12, delta);
+        entry.model.rotation.set(
+          entry.baseRotation.x + Math.sin(elapsed * 5.2) * 0.006 * entry.hoverAmount,
+          entry.baseRotation.y + Math.sin(elapsed * 4.3) * 0.018 * entry.hoverAmount,
+          entry.baseRotation.z + Math.sin(elapsed * 5.8) * 0.008 * entry.hoverAmount
+        );
+      });
+
       // The 3 stage title groups are always visible.
       // The camera movement naturally controls what appears in the viewport, so no scroll-based toggling is needed.
       // Only toggle visibility for elements that are genuinely off-scene and need lazy activation:
@@ -1813,6 +1850,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener(CHANNEL_HOVER_EVENT, handleChannelHover);
       if (handleReelClick) {
         window.removeEventListener("click", handleReelClick);
       }

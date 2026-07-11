@@ -12,6 +12,7 @@ import {
   type SimulationLinkDatum,
   type SimulationNodeDatum,
 } from "d3-force";
+import { SITE_WARM_BACKGROUND } from "@/lib/site-theme";
 
 type NodeKind = "index" | "path" | "artifact" | "research" | "initiative" | "information";
 type PathKind = "straight" | "angled" | "wavy";
@@ -328,6 +329,10 @@ export default function ExpressConnectionField() {
                     x={NODE_SIZE / 2 + label.x}
                     y={label.y}
                     textAnchor={label.anchor}
+                    stroke={SITE_WARM_BACKGROUND}
+                    strokeWidth={7}
+                    strokeLinejoin="round"
+                    paintOrder="stroke"
                     className={`fill-[#0a0c20] ${node.id === "expression" ? "text-[17px]" : "text-[14px]"} font-medium`}
                   >
                     {node.label}
@@ -337,6 +342,10 @@ export default function ExpressConnectionField() {
                       x={NODE_SIZE / 2 + label.x}
                       y={label.y + 19}
                       textAnchor={label.anchor}
+                      stroke={SITE_WARM_BACKGROUND}
+                      strokeWidth={4}
+                      strokeLinejoin="round"
+                      paintOrder="stroke"
                       className="fill-[#5b6375] text-[9px]"
                     >
                       {node.sublabel}

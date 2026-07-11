@@ -88,7 +88,8 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 - 频道入口 3D 文字队列在逻辑区间 `2535–2935` 显示；相机在 `2555–2640` 进入频道视角，让提示文案之后更快接上 WebGL 模型，减少空白等待。
 - 四个频道入口为 `Tech`、`Life`、`Finance`、`Creative`，其中 `Creative` 链接到 `/blog/creative`。
 - 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 保留 Noomo 的 `11.5` 世界单位位移幅度，并针对 SVG 字体基线增加 `+1.8` 垂直校准，因此从 `y=8.3` 上移到 `19.8`；rail 比相机更早启动，`Tech` 正中时相机进度约 `80%`，实际投影仍接近屏幕中心，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
-- HTML 层使用普通文档流 section 显示「Channels / 进入不同内容路径」，内部 sticky 居中停留，标题样式与「Columns / 探索更多专题内容」一致；`ChannelRailLinks` 只在 3D 频道文字接近正中时，于模型右边缘与页面右边缘之间叠加大号无文字 `>` 入口，点击后先播放向右推页的过渡动画，再跳转到对应频道。
+- 频道轨道仅在该逻辑区间启用 ScrollTrigger snap；用户停止滚动后，页面以短时缓动吸附到 `0.22 / 0.38 / 0.58 / 0.78` 四个模型中心点，其他首页阶段保持自由滚动。
+- HTML 层使用普通文档流 section 显示「Channels / 进入不同内容路径」，内部 sticky 居中停留，标题样式与「Columns / 探索更多专题内容」一致；`ChannelRailLinks` 只在 3D 频道文字接近正中时，于模型投影区域叠加完全透明的可访问按钮。hover 或键盘聚焦该区域时，当前模型轻微摆动；点击后先播放向右推页的过渡动画，再跳转到对应频道。
 - 原评价标题、3D 评价卡与评价文案已停用。
 
 ### 探索更多专题内容
