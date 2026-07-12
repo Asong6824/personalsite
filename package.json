@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "gate": "tsx scripts/gate-check.ts",
+    "audit:content": "tsx scripts/audit-content-organization.ts",
     "ingest:stocks": "tsx scripts/ingest-stocks.ts",
     "ingest:datasets": "tsx scripts/ingest-datasets.ts"
   },

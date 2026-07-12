@@ -54,6 +54,7 @@ npm run lint     # 代码检查
 | 主题 | 文件 |
 |------|------|
 | 内容系统（MDX、Frontmatter、索引、频道） | `docs/content-system.md` |
+| 内容整理盘点（散落文章、重复专栏、重复文章） | `docs/content-reorganization.md` |
 | 频道、专栏与设计风格 | `docs/channels-and-design.md` |
 | 路由架构 | `docs/routing.md` |
 | 首页实现总览 | `docs/homepage-experience.md` |

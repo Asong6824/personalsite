@@ -24,10 +24,10 @@
 
 | 频道 | 描述 | 专栏数 | 路由 |
 |------|------|--------|------|
-| **技术** | 技术分享与学习笔记 | 7 | `/blog/tech` |
+| **技术** | 技术分享与学习笔记 | 3 | `/blog/tech` |
 | **生活** | 生活感悟与旅行记录 | 3 | `/blog/life` |
 | **金融** | 投资交易与金融市场分析 | 2 | `/blog/finance` |
-| **创意** | 逻辑与感性的液态交汇 | 2 | `/blog/creative` |
+| **创意** | 逻辑与感性的液态交汇 | 3 | `/blog/creative` |
 
 ---
 
@@ -58,11 +58,7 @@
 |----------|------|------|------|
 | `go` | Golang 精进之路 | `Go`, `golang` | 自定义封面图 |
 | `general` | 通用技术 | `技术`, `programming`, `tech` | — |
-| `devtools` | 开发工具 | `Git`, `版本控制`, `工具`, `devtools` | — |
-| `nlp` | 自然语言处理 | `NLP`, `AI`, `自然语言处理`, `大模型` | — |
-| `photography` | 计算摄影 | `摄影`, `photography`, `影像` | 自定义 |
-| `product` | 产品设计 | `产品`, `product`, `设计`, `UX`, `UI` | Unsplash |
-| `design` | 设计美学 | `设计`, `design`, `视觉`, `美学`, `交互` | Unsplash |
+| `ai-engineering` | AI 工程 | `AI工程`, `AI Engineering`, `智能体`, `Agent`, `工作流` | — |
 
 **频道页设计风格**
 
@@ -133,6 +129,7 @@
 |----------|------|------|------|
 | `design` | 设计美学 | `设计`, `design`, `视觉`, `美学`, `交互` | Unsplash |
 | `product` | 产品设计 | `产品`, `product`, `设计`, `UX`, `UI` | Unsplash |
+| `visual-craft` | 视觉创作 | `视觉创作`, `地图`, `摄影`, `影像`, `旅行` | 自定义 |
 
 **频道页设计风格**
 
@@ -145,7 +142,7 @@
   - 参数：`displacementScale=60`，`blurAmount=0.3`，`saturation=140`，`aberrationIntensity=2`，`elasticity=0.15`，`cornerRadius=32`。
   - Fallback 状态：`rounded-[32px] border border-neutral-200/50 shadow-sm`。
   - Hover：外部叠加一层 `pointer-events-none` 的边框，`opacity-0 group-hover:opacity-100 transition-opacity duration-500`。
-- **卡片内容**：序号（等宽 01/02）、专栏名（2xl semibold）、描述（sm neutral-500）、「进入专栏 →」（hover translate-x-1）。
+- **卡片内容**：等宽序号、专栏名（2xl semibold）、描述（sm neutral-500）、「进入专栏 →」（hover translate-x-1）。
 - **底部导航**：返回博客主页按钮，`rounded-full border border-neutral-200 hover:border-neutral-300`。
 - **动效**：Framer Motion，标题 `y: -30 → 0`，卡片 `opacity: 0, y: 40 → 1, 0`（错开 0.15s），分隔线 `scaleX: 0 → 1`。
 

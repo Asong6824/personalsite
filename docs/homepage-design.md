@@ -96,7 +96,7 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 
 - 移植 noomo awards list 的列表阶段，用于展示本站配置为 `featured: true` 的专栏。
 - 探索更多专题内容是普通文档流中的 `h-screen` section，不使用 GSAP fixed overlay 或 pin；它前面保留真实滚动间隔，并由频道入口 WebGL 组在末段继续上移、整体淡出，避免重叠。
-- 数据来自 `CHANNELS_CONFIG`，每一行链接到 `/blog/{channelKey}/{columnKey}`；当前精选为 `tech/nlp`、`life/japan` 与 `creative/design`。
+- 数据来自 `CHANNELS_CONFIG`，每一行链接到 `/blog/{channelKey}/{columnKey}`；当前精选为 `life/japan` 与 `creative/design`。
 - hover 或键盘 focus 列表条目时，在列表容器内显示并移动对应专栏 `cover` / `coverImage`；未配置专栏首图时回退到频道 `icon` 或站内占位图。
 
 ### 最新文章

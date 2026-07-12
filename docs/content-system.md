@@ -3,6 +3,7 @@
 ## MDX 文件组织
 
 - 所有博客文章存放于 `content/blog/`，按频道/专栏用子目录组织。
+- `CHANNELS_CONFIG` 中每个专栏都必须对应一个 `content/blog/{channel}/{column}` 目录；即使专栏暂时没有文章，也要用 `.gitkeep` 保留空目录。
 - **文件路径即 slug（默认可被覆盖）**：`content/blog/life/japan/kyoto.mdx` → slug `life/japan/kyoto`。
 - **Frontmatter 中的 `slug` 字段现在真正生效**：如果提供了 `slug`，它会**覆盖文件名部分**作为 URL 的最后一段，目录结构保持不变。例如 `content/blog/tech/general/post.mdx` 中 `slug: "custom"` → URL `/blog/tech/general/custom`。`slug` 不能包含 `/`、`.` 等路径分隔符或遍历字符。
 - 通用动态路由 `src/app/blog/[...slug]/page.tsx` 捕获所有文章详情页。
@@ -70,16 +71,16 @@ nextReads:
 
 `src/lib/channels.ts` 中定义 `CHANNELS_CONFIG`，包含以下频道：
 
-- **tech**（技术）：Golang 精进之路、通用技术、产品设计、设计美学
+- **tech**（技术）：Golang 精进之路、通用技术、AI 工程
 - **life**（生活）：日本行纪、年度总结、杂记
-- **finance**（金融）：财经投资
-- **creative**（创意）：设计美学、产品设计
+- **finance**（金融）：财经投资、投资方法论
+- **creative**（创意）：设计美学、产品设计、视觉创作
 
 每篇文章的频道与专栏归属完全由 frontmatter 中的 `channel`/`column` 字段决定。`channel` 必须是 `CHANNELS_CONFIG` 中存在的频道 key，`column` 必须是对应频道下的专栏 key，否则构建会失败。
 
 `tags` 不再决定专栏归属，仅作为内容标签用于展示、SEO 和标签筛选。作者可以自由填写标签，无需担心标签与专栏配置的匹配关系。
 
-当前内容目录仍有迁移中的重复文章。判断文章归属时应以 frontmatter 中的 `channel`/`column` 为准。
+判断文章归属时应以 frontmatter 中的 `channel`/`column` 为准。
 
 ---
 

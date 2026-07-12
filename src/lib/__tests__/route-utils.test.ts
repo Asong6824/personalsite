@@ -11,8 +11,9 @@ describe("generateColumnStaticParams", () => {
     expect(params.every((p) => typeof p.columnSlug === "string")).toBe(true);
     expect(params.some((p) => p.columnSlug === "go")).toBe(true);
     expect(params.some((p) => p.columnSlug === "general")).toBe(true);
-    expect(params.some((p) => p.columnSlug === "product")).toBe(true);
-    expect(params.some((p) => p.columnSlug === "design")).toBe(true);
+    expect(params.some((p) => p.columnSlug === "ai-engineering")).toBe(true);
+    expect(params.some((p) => p.columnSlug === "product")).toBe(false);
+    expect(params.some((p) => p.columnSlug === "design")).toBe(false);
   });
 
   it("为 life 频道生成专栏静态参数", () => {
