@@ -837,6 +837,7 @@
 :root {
   --radius: 0.625rem;
   /* 半径保持不变或按需调整 */
+  --site-page-bg: #F0EEE7;
 
   --site-nav-ink: #141413;
   --site-nav-muted: #68645d;
@@ -933,6 +934,17 @@
   /* 更亮的天蓝 */
   --color-5-new: oklch(0.60 0.18 220);
   /* 更深的天蓝 */
+}
+
+html,
+body {
+  background: var(--site-page-bg);
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+body > main {
+  background: var(--site-page-bg);
 }
 
 .dark {

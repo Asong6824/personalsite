@@ -12,12 +12,14 @@ import { MDXRemote } from 'next-mdx-remote/rsc'; // 用于 App Router (RSC)渲�
 import { TableOfContents } from '@/components/ui/TableOfContents';
 import { MusicPlayer } from '@/components/ui/MusicPlayer'; // 导入目录组件
 import { ArticleInfoItem } from '@/components/article/ArticleInfoItem';
+import { ArticleRecommendations } from '@/components/article/ArticleRecommendations';
 import { getArticleChannelStyle } from '@/components/article/article-channel-styles';
 import {
     createArticleMdxComponents,
     SketchyRAGOverview,
 } from '@/components/article/mdx-components';
 import { articleMdxOptions } from '@/lib/article/mdx-options';
+import { getArticleRecommendations } from '@/lib/article/recommendations';
 import {
     estimateReadingMinutes,
     getArticleMediaLabel,
@@ -78,6 +80,7 @@ export default async function PostPage({ params }) {
     const mediaType = getArticleMediaType(articleSlug, frontmatter);
     const mediaLabel = getArticleMediaLabel(mediaType);
     const musicPlaylist = getPlaylistFromFrontmatter(frontmatter);
+    const recommendations = getArticleRecommendations(frontmatter, articleSlug);
 
     return (
         <div
@@ -198,7 +201,7 @@ export default async function PostPage({ params }) {
                     )}
 
                     <div className="xl:grid xl:grid-cols-12 xl:gap-x-[2.2%]">
-                        <article className="mx-auto w-full min-w-0 xl:col-span-6 xl:col-start-3 xl:mx-0">
+                        <article className="mx-auto w-full min-w-0 xl:col-span-8 xl:col-start-2 xl:mx-0">
                             <div
                                 className={`prose article-reading-prose dark:prose-invert max-w-none
             ${currentStyle.prose}
@@ -224,6 +227,8 @@ export default async function PostPage({ params }) {
                                 />
                             </div>
 
+                            <ArticleRecommendations recommendations={recommendations} />
+
                             <div className="mt-14 pt-8 border-t border-[#D8D0C3] text-center">
                                 <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-[#506354] hover:text-[#1a1c19]' : isTechChannel || isLifeChannel ? 'text-[#141413] hover:text-[#68645d]' : 'text-blue-400 hover:text-blue-300'}`}>
                                     &larr; 返回博客列表
@@ -231,7 +236,7 @@ export default async function PostPage({ params }) {
                             </div>
                         </article>
 
-                        <aside className="relative hidden xl:col-span-2 xl:col-start-10 xl:block">
+                        <aside className="relative hidden xl:col-span-2 xl:col-start-11 xl:block">
                             <div className="sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto space-y-4 pr-2">
                                 {!isTechChannel && (
                                     <MusicPlayer playlist={musicPlaylist} />

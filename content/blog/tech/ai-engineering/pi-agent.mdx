@@ -9,21 +9,30 @@ tags:
 channel: 'tech'
 column: 'ai-engineering'
 excerpt: ''
-coverImage: ''
+coverImage: 'https://blog-assets-asong.tos-cn-beijing.volces.com/tech/ai-engineering/pi-agent/cover.jpeg'
 pinned: false
 hidden: false
 ---
 
-pi 是一个极简的 Agent 运行时，它包含统一的 LLM API、智能体循环、终端用户界面和编码智能体命令行工具。
-pi 在技术圈内获得了极高的评价，被很多人推荐作为agent的底座。今年年初火爆的 openclaw，就使用 pi 作为自己的 Agent Loop。
-对于喜欢折腾，自己动手的极客来说，Pi是他们
+## 引言
+pi 是一个极简的 Agent Harness，它包含统一的 LLM API、Agent Loop、tui 和 coding agent。
+
+在过去的一年时间里，我们使用者、开发者和大模型厂家，对 agent 都有了新的理解。最初被视作 coding agent 的 claude code 等，在 skill 系统的加持下，展现出了作为通用 agent 的潜力。
+
+有关 agent 的工程范式也在不断迭代，从最初的 Prompt Engineering 到 Context Engineering，再到 Harness Engineering。
+
+在这种背景下，pi 在技术圈内获得了极高的评价。最初它只是作者不喜欢 claude code 臃肿的功能而自研的 coding agent，后来它被用作 openclaw 的 agent loop，也因此获得了第一批追随者。现在它被推荐作为 agent harness，开发者用它去创造自己的 agent。 
+
+pi 究竟有何魔力，这篇文章我想从 pi 的诞生讲起，去分析 agent 的一种设计思路。
+
+在介绍具体内容之前，值得注意的是，这篇文章是介绍 pi 的，因此难免要以支持者的立场去谈作者的设计思路并与其他 agent 对比。但并不意味着 pi 的设计思路就一定是对的或是错的（我个人其实很喜欢 pi 的设计思路），我们现在还位于探索 agent 边界的初级阶段，去多思考和接纳不同范式一定是一件好事。
 
 ## pi 的诞生
 pi 的作者是 Mario Zechner，这是一个德语区名字，中文翻译应该是马里奥·泽克纳（就是那个顶蘑菇的马里奥，只不过顶蘑菇这个的名字来源是西雅图的房地产商）。
 
 Mario 居住在奥地利。2009 年，他因为想写 Android 游戏，开始做一个名为 AFX 的 Android 游戏框架；后来为了让开发和调试更方便，把它扩展成可在桌面和移动端共享代码的跨平台框架，这就是后来的 libGDX。
 
-从 2023 年开始，他和我们一样，开始使用大模型编码。他最初从浏览器手动复制代码，后来他开始使用 cursor。2025 年 4 月，Peter Steinberger（没错，就是 openclaw 的作者）和他说：兄弟，这些编程 agent 现在真的能用了。
+从 2023 年开始，他和我们一样，开始使用大模型编码。他最初从浏览器手动复制代码，后来开始使用 cursor。2025 年 4 月，Peter Steinberger（没错，就是 openclaw 的作者）和他说：兄弟，这些编程 agent 现在真的能用了。
 
 在接下来的一个月，他沉浸在各种编程工具中，他自己说他那段时间没怎么睡过觉，做了很多东西，但是都没什么用。这时候他受够了这些编程 agent，他在想自己做一个能有多难，这时 Peter 说，我做一个私人助手就行。现在我们都知道 Peter 后面的故事了。
 
@@ -33,19 +42,18 @@ Mario 最初一直很喜欢 Claude Code。他认为 Claude Code开创了一种�
 
 渐渐地，他觉得 Claude Code 变得像 Homer 的那辆汽车一样，塞了过多无用的东西进去，他实际用到的功能可能还不足 10%。他把 Homer 的汽车和 Claude Code 都称为宇宙飞船，他不想要一辆 Homer 的汽车，也不想要宇宙飞船。
 
-TODO：补充宇宙汽车的图
+![Homer 的汽车](https://blog-assets-asong.tos-cn-beijing.volces.com/tech/ai-engineering/pi-agent/the-homer-car.webp)
 
 Mario 思考出两个论点
 
-一是我们还处在摸索和试错的阶段，没有人知道完美的 coding agent 应该长什么样
+一是我们还处在摸索和试错的阶段，没有人知道完美的 agent 应该长什么样
 
-二是我们需要一个更好的方式去探索 coding agent，它们应该自我修改，快速验证
+二是如果 agent 不支持修改和扩展，就难以探索 agent 应该长什么样
 
-所以，一个冲着 Claude Code 大吼大叫的老头会怎么做呢？他会自己写一个编码代理程序，然后取一个谷歌搜不到的名字，这样就永远不会有用户。这意味着GitHub问题跟踪器上也永远不会出现任何问题。
+于是，Mario 决定自己做一个 agent。他在自己的博客中是这么写的：一个冲着 Claude Code 大吼大叫的老头会怎么做呢？他会自己写一个编码代理程序，然后取一个谷歌搜不到的名字，这样就永远不会有用户。这意味着GitHub问题跟踪器上也永远不会出现任何问题。
 
-这段取自 Mario 自己的博客
 
-TODO：补充博客截图
+![Mario 的博客截图](https://blog-assets-asong.tos-cn-beijing.volces.com/tech/ai-engineering/pi-agent/mario-blog.png)
 
 Pi 有四个组成部分
  - pi-ai：一个统一的 LLM API，支持多提供商、流式传输、工具调用、思维/推理支持、无缝跨提供商上下文切换以及 token 和成本跟踪。
@@ -59,7 +67,7 @@ pi 的设计遵循极简的原则，如果不需要，就不做它
 
 就这样，pi 诞生了
 
-## pi-coding-agent 总览
+## pi-coding-agent 的极简主义
 
 作为一个 coding agent，pi-coding-agent 的交互方式与 claude code、codex 几乎相同，包括
 
@@ -71,37 +79,21 @@ pi 的设计遵循极简的原则，如果不需要，就不做它
  - 支持 skill
  - 通过 json 或 RPC 进行无头操作
 
-正如 Mario 自己说的，他受够了 Claude Code 宇宙飞船般的功能，所以 pi-coding-agent 的设计哲学是只保留最小可用，因此：
+pi-coding-agent 原生不支持 MCP、计划模式和 subagent，但提供了一些方式来间接实现，把选择权交给了使用者。同时它在系统提示词、工具等也有一些自己的特点，这都是它极简主义的一种体现。
 
-1. 默认 yolo 模式
-2. 没有内置 TODO
-3. 没有计划模式
-4. 不支持 MCP
-5. 不支持 subagent
+pi 的极简主义一句话来说就是复杂性放到 harness 外，我把它归纳成三个原则
 
-Mario 自己说他在使用 claude code 时，即使使用安全模式，也不看具体执行了什么命令，只是一味地摁 enter，所以他干脆把 pi-coding-agent 设计成了默认 yolo 模式。
+### 上下文应尽可能保持简洁
 
-TODO 功能和计划模式，都可以使用一个额外的 md 文档来实现，因此不需要写进 agent 中
+大模型的上下文是一种稀缺资源，这个观点现在已经是大家的共识，但是 pi 做得更激进一点，包括
 
-加载 MCP 通常会占用 10k 至 20k 的 token，对于大多数模型 128k 到 256k 的上下文长度来说，仅加载 MCP 就占据了 10% 上下文长度。而很多 MCP 在对话中用不到。
+1. 极短的系统提示词和最小工具集
 
-他在博客中写得非常硬：Pi “does not and will not support MCP”。他的主要理由不是讨厌协议本身，而是认为 MCP 对多数 coding-agent 场景过重，尤其是 context overhead 太大。
+pi-coding-agent 的系统提示词本质只有两句话，然后是工具集的定义。
 
-他的替代方案是：CLI tools + README。也就是把外部能力做成普通命令行工具，配一个说明文档；agent 需要时再读 README，再用 bash 调用工具。这是 progressive disclosure：需要时才付 token 成本，而且天然可组合、可管道化、容易扩展。
+一般来说给大模型的提示词要尽可能精准，同时运用一些 few shot 的技巧，给一些示例。但伴随大模型能力的进步，以及针对代码工作的强化学习训练，pi-coding-agent 用实例证明给一句话也是可以的，大模型知道一个专业的软件助手应该做什么。
 
-所以他不是说“外部工具集成不好”，而是说：MCP 作为默认工具注入机制太臃肿；Unix CLI 更符合 Pi 的极简 harness 设计。
-
-他同样不想内置 dedicated sub-agent tool。核心反感点是 可观察性差 和 上下文转交不透明。他批评 Claude Code 这类系统里，主 agent 生成子 agent 后，用户看不到子 agent 到底读了什么、怎么推理、错在哪里；他说这是 “black box within a black box”。Mario Zechner 的博客
-
-更深一层，他认为很多人用 subagent 做 context gathering，是工作流设计问题。为了节省主会话 context 而在中途派子 agent 搜上下文，他觉得这说明前期没有规划好。更好的方式是：先开一个独立 session 做 context gathering，产出一个 artifact，比如 context.md、调研笔记、设计文档，再在干净的新 session 里把这个 artifact 交给 agent。
-
-但他并不是彻底否定 subagent。他承认有合理场景，尤其是 code review。他的做法也很 Pi：不是内置 subagent primitive，而是让 Pi 通过 bash 再启动一个 pi --print，用 slash command 包一层。也就是说：如果要子 agent，就把它当成另一个可观察、可保存、可单独进入的 Pi 进程，而不是隐藏在主 agent 内部的机制。
-
-他还明确反对“开多个 subagent 并行实现多个 feature”这种玩法，认为这在真实代码库里容易把质量搞坏。
-
-我们不评价重剑无锋和瑞士军刀哪个更好用，只来学习一下 pi 是怎么做的
-
-### 最小系统提示词
+工具方面 pi-coding-agent 只定义了四个，对于编码来说，能读能写能查找就足够了。
 
 ```
 You are an expert coding assistant. You help users with coding tasks by reading files, executing commands, editing code, and writing new files.
@@ -124,18 +116,59 @@ Guidelines:
 Documentation:
 - Your own documentation (including custom model setup and theme creation) is at: /path/to/README.md
 - Read it when users ask about features, configuration, or setup, and especially if the user asks you to add a custom model or provider, or create a custom theme.
+
 ```
 
 https://cchistory.mariozechner.at/
 
-claude code 的系统提示词细致地涵盖了角色定位、任务领域、安全边界、工具和交互风格
+2. 不支持 MCP
 
-与之相比 pi-coding-agent 只说明角色和可以使用的工具，claude code 在系统提示词要花费 10000 token，而 pi-coding-agent 只需要不到 1000。
+Mario 对 MCP 接入 agent 持一种排斥态度，他认为 MCP Server 为了覆盖所有场景，暴露大量工具和详细定义，并在会话开始时将它们整体加入上下文。这么做极度浪费上下文空间。
 
-如此简单的系统提示词难免让人怀疑 pi-coding-agent 能否正常完成编码任务。
+比如 Playwright MCP 和 Chrome DevTools MCP，分别包含 21 和 26 个工具，工具定义约占 13.7k 和 18k tokens。而每次使用时可能只需要两三个。
 
-测试结果表明，因为模型大多针对代码类任务进行过强化学习训练，所以只需要简单地表达你是一个专业的编码助手，大模型就可以激活相应的能力。
+他给出的替代方案是一种渐进式披露，使用CLI tools + README。把外部能力做成普通命令行工具，配一个说明文档；agent 需要时再读 README，再用 bash 调用工具。
 
-## 最小工具集
+```
+tool-a | jq ... | grep ... > result.json
+```
 
-pi-coding-agent 只有 4 个工具：read、bash、edit 和 write，相比之下 claude code 有 17 个
+数据可以在工具之间传递，不一定全部经过模型上下文。Agent 也可以让程序处理一万个结果，最后只读取十行摘要。
+
+
+### 状态应该显式存在
+
+pi 倾向于把隐藏在上下文中的状态外化为文件存储。也就是把 agnet harness 维护的状态下放到项目环境。
+
+因此 pi-coding-agent 并不提供 TODO 工具，也不提供计划模式。
+
+这点也和第一条保持上下文简洁的原则保持一致，因为 TODO 工具和计划模式都可以通过一个额外的 md 文件来实现，所以不需要作为工具进入系统提示词，减少了上下文的占用。
+
+### 复杂操作应该保持可观察
+
+Mario 不希望在 Agent Harness 内部制造用户无法进入的黑箱。
+
+很多 Coding Agent 都支持后台执行命令。例如 Agent 可以启动开发服务器、运行持续测试、打开调试器，然后继续做其他事情。
+
+Mario 认为一旦 Harness 自己实现后台任务，就必须同时解决如何记录、如何保存、如何清理等一整套问题。事实上 claude code 这部分做得并不好。
+
+他认为这种内置机制不仅增加 Harness 的复杂性，也容易让后台任务变成只有 Agent 知道、用户却不容易接管的内部状态。
+
+因此，pi-coding-agent 的 Bash 工具默认同步执行；需要长期运行的命令时，会使用 tmux。
+
+pi-coding-agent 也不支持 subagent，当必须使用 subagent 类似的功能时，可以显式地用 Bash 启动另一个 pi 进程。
+
+
+## 远景：Harness Engineering 和可拓展性
+
+未来很多年，我们都要面临如何和 agent 协作的问题。我们有着不同的个人背景、不同的任务，所以我们需要不同的 agent。我理解 Harness Engineering 处理的就是这个问题。
+
+一般来说会把 agent 中大模型以外的部分，都叫做 harness。继续细分还可以分为 agent 开发者开发的 agent harness（claude code、pi-coding-agent都是）和使用者自己构建的 user harness（自定义的skill、agent.md、eval等）。
+
+Harness Engineering 强调持续优化，我们在与 agent 协作的循环中，不断通过各种方式去控制 agent 作出我们理想中的行为。
+
+现在仅在 user harness 上做文章是远远不够的，总有一天产品经理、开发者和使用者的界限会逐渐模糊，这时必然会基于自己的需求去改动 agent harness。
+
+事实上，Peter 就基于 pi 去做自己的 agent -- openclaw。现在很多开发者也舍弃了 claude code 转而使用自定义的 pi-coding-agent。伴随 AI 编码能力的增强，这股风会吹到普通用户那里的。 
+
+这时，像 pi 这种极简的 harness 会迎来一波新的热潮。

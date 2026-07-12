@@ -36,8 +36,33 @@ column: string              # 可选，显式指定专栏
 columnSlug: string          # 可选，显式指定专栏 slug
 music: string | string[]    # 可选，背景音乐 URL（数组支持多首）
 hidden: boolean             # 设为 true 则文章不在列表展示，详情读取返回 null；底层索引仍保留该条目
+nextReads: string[] | { slug: string, reason?: string }[]  # 可选，文章底部手动推荐阅读
 ---
 ```
+
+### 手动推荐阅读
+
+文章详情页支持在 frontmatter 中配置 `nextReads`，用于在正文下方展示“接下来阅读”。推荐项使用 `/blog/` 后面的完整文章 slug，例如当前文章访问地址是 `/blog/tech/ai-engineering/pi-agent`，则 slug 写 `tech/ai-engineering/pi-agent`。
+
+简写形式：
+
+```yaml
+nextReads:
+  - tech/ai-engineering/pi-agent
+  - creative/product/notion-zen
+```
+
+带推荐理由：
+
+```yaml
+nextReads:
+  - slug: tech/ai-engineering/pi-agent
+    reason: 继续理解 AI 工程化落地方式
+  - slug: creative/product/notion-zen
+    reason: 从产品体验角度延伸阅读
+```
+
+页面渲染时会从文章索引中读取标题、摘要、日期、封面、频道和专栏信息。找不到的 slug、隐藏文章和当前文章自身会被跳过；开发环境会在控制台输出提示。
 
 ---
 

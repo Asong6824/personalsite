@@ -18,6 +18,12 @@ export interface PostFrontmatter {
   music?: string | string[];
   hidden?: boolean;
   slug?: string;
+  nextReads?: Array<string | NextReadConfig>;
+}
+
+export interface NextReadConfig {
+  slug: string;
+  reason?: string;
 }
 
 export interface Post {

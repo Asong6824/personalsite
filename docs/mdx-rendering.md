@@ -17,7 +17,9 @@
 - `src/components/article/article-channel-styles.ts`：频道级文章样式 token。
 - `src/components/article/mdx-components.tsx`：MDX 组件注册表和标题覆盖。
 - `src/components/article/ArticleInfoItem.tsx`：文章头部元信息项。
+- `src/components/article/ArticleRecommendations.tsx`：文章底部“接下来阅读”推荐区块。
 - `src/lib/article/mdx-options.ts`：`remark` / `rehype` 插件配置。
+- `src/lib/article/recommendations.ts`：从 frontmatter `nextReads` 解析推荐文章摘要。
 - `src/lib/article/rendering.ts`：阅读时间、顶部媒体类型、媒体标签和音乐播放列表生成。
 
 `src/components/features/PostLayout.tsx` 也存在 `MDXRemote` 用法，但当前文章详情路由没有挂载它。它更像旧版/备用文章布局，不应作为现行 MDX 渲染链路的事实来源。
@@ -62,6 +64,19 @@ slug.join("/")
 - `content`：去掉 frontmatter 后的 MDX 正文字符串。
 
 如果文章 frontmatter 中 `hidden: true`，`getPostData()` 返回 `null`，文章详情页会走 `notFound()`。
+
+### 4. 解析推荐阅读
+
+文章可在 frontmatter 中配置 `nextReads`：
+
+```yaml
+nextReads:
+  - tech/ai-engineering/pi-agent
+  - slug: creative/product/notion-zen
+    reason: 从产品体验角度延伸阅读
+```
+
+`PostPage()` 会调用 `getArticleRecommendations(frontmatter, articleSlug)`，用推荐项中的完整文章 slug 查询索引摘要。推荐项允许省略 `/blog/` 前缀；渲染链接统一使用 `/blog/${recommendation.slug}`。找不到的 slug、隐藏文章和当前文章自身会被跳过。
 
 ## 页面渲染层
 

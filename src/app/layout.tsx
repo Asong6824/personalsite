@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono, Newsreader, Noto_Serif_SC } from 'next/font/goog
 import Navbar from '@/components/layout/Navbar'; // 确保路径正确
 import PerformanceMonitor from '@/components/debug/PerformanceMonitor';
 import RouteTransitionFeedback from '@/components/layout/RouteTransitionFeedback';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 import './globals.css'; // 您的全局样式
 
 const inter = Inter({
@@ -37,6 +38,16 @@ const notoSerifSc = Noto_Serif_SC({
 export const metadata = {
     title: '大盈若冲',
     description: '阿松个人主页',
+    icons: {
+        icon: [
+            {
+                url: '/logo.svg',
+                type: 'image/svg+xml',
+                sizes: 'any',
+            },
+        ],
+        shortcut: '/logo.svg',
+    },
 };
 
 export default function RootLayout({ children }) {
@@ -45,7 +56,11 @@ export default function RootLayout({ children }) {
             lang="zh-CN"
             className={`${inter.variable} ${jetbrainsMono.variable} ${newsreader.variable} ${notoSerifSc.variable}`}
         >
-            <body className="font-sans bg-background text-foreground" suppressHydrationWarning>
+            <body
+                className="overflow-x-hidden font-sans text-foreground"
+                style={{ backgroundColor: SITE_WARM_BACKGROUND }}
+                suppressHydrationWarning
+            >
                 <PerformanceMonitor />
                 <Suspense fallback={null}>
                     <RouteTransitionFeedback />

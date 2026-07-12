@@ -801,7 +801,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
 
       ScrollTrigger.create({
         trigger: "body",
-        start: () => getScrollDepth(expressConnectionScroll.end + 20) + " top",
+        start: () => getScrollDepth(1440 + CREATE_STAGE_SCROLL_OFFSET) + " top",
         end: () => getScrollDepth(HOME_STAGE_SCROLL.about.start) + " top",
         invalidateOnRefresh: true,
         onEnter: () => {
