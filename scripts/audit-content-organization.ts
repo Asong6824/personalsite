@@ -103,7 +103,7 @@ function main() {
     .filter((record) => record.ext !== ".mdx")
     .map(formatArticle);
 
-  const duplicateBodies = [...groupBy(records, (record) => record.bodyKey).values()]
+  const duplicateBodies = [...groupBy(records.filter((record) => record.bodyKey), (record) => record.bodyKey).values()]
     .filter((group) => group.length > 1)
     .map((group) => group.map(formatArticle).join(" | "));
 

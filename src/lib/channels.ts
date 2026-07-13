@@ -90,10 +90,10 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         tags: ["产品", "product", "设计", "UX", "UI"],
         cover: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop",
       },
-      "visual-craft": {
-        name: "视觉创作",
-        description: "地图绘制、摄影后期与视觉表达实践",
-        tags: ["视觉创作", "地图", "摄影", "影像", "旅行"],
+      notes: {
+        name: "创意手记",
+        description: "记录个人网站、视觉表达、交互想法与创作方法中的灵感和实验",
+        tags: ["创意手记", "灵感", "网站设计", "视觉表达", "交互", "地图", "摄影"],
         cover: "https://blog-assets-asong.tos-cn-beijing.volces.com/travel/Tokyo/tokyo_map_points_20250324_cover.png",
       },
     },

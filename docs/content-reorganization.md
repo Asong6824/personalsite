@@ -12,7 +12,7 @@ npm run audit:content
 - 文章 URL 由物理目录和 frontmatter `slug` 共同决定。当前整理目标是让文章物理目录与 frontmatter 的 `channel`/`column` 保持一致。
 - `CHANNELS_CONFIG` 中每个专栏都必须对应一个 `content/blog/{channel}/{column}` 目录；空专栏用 `.gitkeep` 保留目录。
 - `tech/design` 与 `tech/product` 已移除，设计/产品类文章统一收敛到 `creative/design` 与 `creative/product`。
-- `tech/devtools`、`tech/nlp`、`tech/photography` 已移除；地图绘制与 iPhone 摄影文章已迁入 `creative/visual-craft`。
+- `tech/devtools`、`tech/nlp`、`tech/photography` 已移除；地图绘制与 iPhone 摄影文章已迁入 `creative/notes`。
 - 当前索引校验会验证 `channel`/`column` 是否存在，但不会验证文件目录是否与 frontmatter 归属一致。
 
 ## 散落在根目录的文章
