@@ -1,0 +1,24 @@
+---
+title: "Skill 评估：如何衡量一个 Agent Skill 的好坏"
+date: "2026-07-13"
+tags:
+  - "AI工程"
+  - "Agent"
+  - "skill"
+  - "评估"
+excerpt: "从触发准确率、执行成功率、边界处理、可维护性等维度，建立一套评估 Agent Skill 的实用框架。"
+coverImage: ""
+pinned: false
+---
+
+## 引言
+agent skill 是一种轻量、开放的封装规范，通过复用非参数化知识和工作流来扩展 agent 的能力。
+在 skill 诞生之初还有人质疑它是 md 的新叫法，但伴随 openclaw、hermes agent 以及各家 coding agent 对 skill 的兼容，使用者也发现了它在 AI 协同工作中的价值。
+这时，我们应该把视角从 skill 的创建与使用转向评估与演化。
+
+## skill 的演化
+罗马不是一日建成的，harness 也不是一日建成的，作为 user harness 的一部分，skill 自然也不是。
+
+成熟的 harness engineering 强调持续演化，pi-coding-agent 的系统提示词只需要一句“你是专业的代码助手”，就可以利用最新的大模型实现过去几十句提示词才能实现的效果。
+
+所以在 skill 诞生之初，现在 skills.sh 热榜上的那些 skill，是否在当前的模型能力还被需要，是否适配自己的 harness 和人机交互的工作流。
