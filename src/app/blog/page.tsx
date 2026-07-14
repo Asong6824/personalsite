@@ -31,7 +31,7 @@ export default function BlogIndexPage() {
     return (
         <div className="min-h-screen bg-[#F0EEE7] text-[#141413]">
             <main className="mx-auto w-full max-w-[1480px] px-6 pb-24 pt-32 sm:px-10 lg:px-16 lg:pb-32 lg:pt-40">
-                <header className="grid gap-8 border-b border-[#141413]/25 pb-12 lg:grid-cols-12 lg:gap-8 lg:pb-14">
+                <header className="grid gap-8 pb-12 lg:grid-cols-12 lg:gap-8 lg:pb-14">
                     <div className="lg:col-span-4">
                         <p className="mb-5 font-mono text-xs uppercase tracking-[0.24em] text-[#68645d]">
                             Blog / 文章目录
