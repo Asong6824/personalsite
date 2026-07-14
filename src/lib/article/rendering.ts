@@ -25,7 +25,7 @@ export function estimateReadingMinutes(content: string): number {
 }
 
 export function getArticleMediaType(slug: string, frontmatter: PostFrontmatter): ArticleMediaType {
-  if (slug === "tech/general/from-rag-technique-to-rag-philosophy") {
+  if (slug === "tech/ai-engineering/from-rag-technique-to-rag-philosophy") {
     return "interactive";
   }
 

@@ -108,7 +108,7 @@ nextReads:
 
 正文前的顶部媒体区由 `getArticleMediaType()` 决定：
 
-- 特定 RAG 文章 `tech/general/from-rag-technique-to-rag-philosophy`：显示 `SketchyRAGOverview` 交互概览。
+- 特定 RAG 文章 `tech/ai-engineering/from-rag-technique-to-rag-philosophy`：显示 `SketchyRAGOverview` 交互概览。
 - 有 `frontmatter.heroVideo` 或 `frontmatter.videoUrl`：显示 iframe 视频。
 - 有 `frontmatter.coverImage`：显示 `next/image` 封面图。
 - 都没有：不渲染顶部媒体区。

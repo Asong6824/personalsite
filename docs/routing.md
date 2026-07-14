@@ -4,8 +4,8 @@
 
 | 路由 | 说明 |
 |------|------|
-| `/` | 首页（Three.js + GSAP ScrollTrigger 3D 滚动体验） |
-| `/blog` | 博客主页（频道入口 + 按年份时间轴聚合） |
+| `/` | 桌面端首页（Three.js + GSAP ScrollTrigger 3D 滚动体验）；手机和平板访问时由 Middleware 重定向至 `/blog` |
+| `/blog` | 博客主页（简洁的频道入口 + 最近文章目录），同时作为移动端默认入口 |
 | `/blog/columns` | 全站专栏聚合页 |
 | `/blog/tech` | 技术频道页 |
 | `/blog/tech/[columnSlug]` | 技术频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
@@ -22,6 +22,12 @@
 > 注：频道下的专栏路径由动态路由 `[columnSlug]` 统一处理，不再使用独立的固定路由文件。
 
 > 注：旧的临时实验路由已移除，3D 首页体验统一挂载在 `/`。
+
+### 移动端首页降级
+
+- `src/middleware.ts` 仅匹配根路由 `/`，通过 Next.js `userAgent()` 识别设备类型。
+- `mobile` 与 `tablet` 设备在服务端直接重定向至 `/blog`，避免下载 WebGL 首页资源后再进行客户端跳转。
+- 桌面端访问以及所有非根路由不受影响；仅调整浏览器窗口宽度不会触发重定向。
 
 **路由优先级说明**：在 Next.js App Router 中，`/blog/tech/[columnSlug]` 的 `[columnSlug]` 只能匹配单个路径段（如 `/blog/tech/go`），无法匹配 `/blog/tech/go/something`。因此 `/blog/tech/general/my-post` 这类多段路径会正确落入 `/blog/[...slug]` 文章详情页，而不会与专栏路由冲突。
 

@@ -15,7 +15,8 @@ async function main() {
     }
   }
 
-  const warnings = []
+  const warnings: string[] = []
+  const errors: string[] = []
 
   for (const item of idx?.items || []) {
     const post = (item.data || {}) as Record<string, any>
@@ -42,13 +43,21 @@ async function main() {
       }
     }
 
-    // 3. Validate manual classification
-    if (post.channel && post.column) {
-      const column = CHANNELS_CONFIG[post.channel]?.columns?.[post.column]
-      if (!column) {
-        warnings.push(`[CONFIG] ${rel}: column '${post.column}' not found in channel '${post.channel}'`)
-      }
+    // 3. Validate the classification required by listIndexedPosts()
+    if (!post.channel || !CHANNELS_CONFIG[post.channel]) {
+      errors.push(`[CONFIG] ${rel}: missing or invalid channel '${post.channel ?? ''}'`)
+    } else if (!post.column || !CHANNELS_CONFIG[post.channel].columns?.[post.column]) {
+      errors.push(`[CONFIG] ${rel}: missing or invalid column '${post.column ?? ''}' in channel '${post.channel}'`)
     }
+  }
+
+  if (errors.length > 0) {
+    console.error('\n[posts-index] validation errors:')
+    for (const error of errors) {
+      console.error(`  ${error}`)
+    }
+    process.exitCode = 1
+    return
   }
 
   if (warnings.length > 0) {

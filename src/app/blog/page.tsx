@@ -1,57 +1,113 @@
-// app/blog/page.jsx
-import { CHANNELS_CONFIG } from '@/lib/channels';
-import TakeoverLinks from '@/components/ui/takeover-links';
-import { Timeline } from '@/components/ui/timeline';
-import { getSortedPostsData } from '@/lib/post';
 import Link from 'next/link';
 
+import { CHANNELS_CONFIG } from '@/lib/channels';
+import { getSortedPostsData } from '@/lib/post';
+
 export const metadata = {
-    title: '博客 | 阿松的个人网站',
-    description: '浏览我的所有技术分享、学习笔记和生活感悟。',
+    title: '博客 | 大盈若冲',
+    description: '阿松的个人主页：技术、创作、生活与投资记录。',
 };
 
+const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+});
+
+function formatDate(date: string) {
+    return dateFormatter.format(new Date(date)).replaceAll('/', '.');
+}
+
 export default function BlogIndexPage() {
-    // 频道卡片数据 -> TakeoverLinks items
-    const channelItems = Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({
-        title: config.name,
-        // 简化为仅展示频道名称，取消副文以符合参考风格
-        href: `/blog/${key}`,
-        image: (Object.values(config.columns) as any[])?.[0]?.cover || config.icon,
-        accent: ({ tech: '#141413', life: '#141413', finance: '#10b981' }[key]) || 'rgb(56 189 248)'
+    const allPosts = getSortedPostsData();
+    const latestPosts = allPosts.slice(0, 12);
+
+    const channels = Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({
+        key,
+        ...config,
+        count: allPosts.filter((post) => post.channel === key).length,
     }));
 
-    // 获取所有文章数据并按年份分组
-    const allPosts = getSortedPostsData();
-    const postsByYear = allPosts.reduce((acc, post) => {
-        const year = new Date(post.date).getFullYear().toString();
-        if (!acc[year]) {
-            acc[year] = [];
-        }
-        acc[year].push({
-            title: post.title,
-            description: post.excerpt || post.title,
-            date: new Date(post.date).toISOString().slice(0, 10),
-            channel: CHANNELS_CONFIG[post.channel]?.name || post.channel,
-            image: post.coverImage,
-            href: `/blog/${post.slug}`
-        });
-        return acc;
-    }, {});
-
-    // 转换为时间轴数据格式，按年份降序排列
-    const timelineData = Object.entries(postsByYear)
-        .sort(([a], [b]) => parseInt(b) - parseInt(a))
-        .map(([year, posts]) => ({
-            title: year,
-            posts,
-        }));
-
     return (
-        <div className="min-h-screen bg-white dark:bg-neutral-950">
-            <TakeoverLinks items={channelItems} variant="fullscreen" />
-            <div className="mt-10">
-                <Timeline data={timelineData} />
-            </div>
+        <div className="min-h-screen bg-[#F0EEE7] text-[#141413]">
+            <main className="mx-auto w-full max-w-[1480px] px-6 pb-24 pt-32 sm:px-10 lg:px-16 lg:pb-32 lg:pt-40">
+                <header className="grid gap-8 border-b border-[#141413]/25 pb-12 lg:grid-cols-12 lg:gap-8 lg:pb-14">
+                    <div className="lg:col-span-4">
+                        <p className="mb-5 font-mono text-xs uppercase tracking-[0.24em] text-[#68645d]">
+                            Blog / 文章目录
+                        </p>
+                        <p className="text-base leading-7 text-[#4f4b45] sm:text-lg sm:leading-8">
+                            大盈若冲
+                        </p>
+                    </div>
+                    <div className="lg:col-span-8 lg:pt-7">
+                        <div className="max-w-2xl space-y-2 text-base leading-7 text-[#4f4b45] sm:text-lg sm:leading-8">
+                            <p>我致力于探索新技术，让生活变得更有趣、更丰富、更有质感。</p>
+                            <p>我喜欢旅行、收集，也享受接触新事物的过程。</p>
+                            <p>这里是我的数字花园，记录我想记录的内容。</p>
+                        </div>
+                        <p className="mt-5 font-mono text-xs tracking-[0.12em] text-[#68645d]">
+                            共 {allPosts.length} 篇文章 · 持续更新
+                        </p>
+                    </div>
+                </header>
+
+                <section aria-labelledby="channels-heading" className="border-b border-[#141413]/25 py-12 lg:py-16">
+                    <div className="mb-8 flex items-baseline justify-between gap-6">
+                        <h2 id="channels-heading" className="text-sm font-semibold tracking-[0.12em]">按频道浏览</h2>
+                        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#68645d]">Four directions</span>
+                    </div>
+                    <div className="grid border-l border-t border-[#141413]/20 sm:grid-cols-2 lg:grid-cols-4">
+                        {channels.map((channel, index) => (
+                            <Link
+                                key={channel.key}
+                                href={`/blog/${channel.key}`}
+                                className="group flex min-h-60 flex-col justify-between border-b border-r border-[#141413]/20 p-6 transition-colors duration-200 hover:bg-[#E2DBCE] focus-visible:bg-[#E2DBCE] focus-visible:outline-none lg:min-h-72 lg:p-8"
+                            >
+                                <div className="flex items-start justify-between font-mono text-xs text-[#68645d]">
+                                    <span>0{index + 1}</span>
+                                    <span>{channel.count} 篇</span>
+                                </div>
+                                <div>
+                                    <h3 className="mb-3 font-serif text-4xl tracking-[-0.04em] lg:text-5xl">{channel.name}</h3>
+                                    <p className="max-w-[15rem] text-sm leading-6 text-[#68645d]">{channel.description}</p>
+                                    <span className="mt-6 inline-block text-sm transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">进入频道 →</span>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+
+                <section aria-labelledby="latest-heading" className="pt-12 lg:pt-16">
+                    <div className="grid gap-8 lg:grid-cols-12 lg:gap-8">
+                        <div className="lg:col-span-3">
+                            <h2 id="latest-heading" className="text-sm font-semibold tracking-[0.12em]">最近更新</h2>
+                            <p className="mt-3 max-w-52 text-sm leading-6 text-[#68645d]">按发布时间排列，标题就是全部线索。</p>
+                        </div>
+                        <div className="border-t border-[#141413]/25 lg:col-span-9">
+                            {latestPosts.map((post, index) => {
+                                const channelName = CHANNELS_CONFIG[post.channel as keyof typeof CHANNELS_CONFIG]?.name ?? post.channel;
+
+                                return (
+                                    <Link
+                                        key={post.slug}
+                                        href={`/blog/${post.slug}`}
+                                        className="group grid gap-3 border-b border-[#141413]/20 py-5 transition-colors hover:bg-[#E2DBCE]/60 focus-visible:bg-[#E2DBCE]/60 focus-visible:outline-none sm:grid-cols-[4.5rem_1fr_auto] sm:items-baseline sm:gap-6 sm:px-3 lg:py-6"
+                                    >
+                                        <span className="font-mono text-[11px] text-[#68645d]">{String(index + 1).padStart(2, '0')}</span>
+                                        <span className="font-serif text-xl leading-snug tracking-[-0.02em] sm:text-2xl lg:text-[1.7rem]">{post.title}</span>
+                                        <span className="flex items-center gap-4 text-xs text-[#68645d]">
+                                            <span>{channelName}</span>
+                                            <time dateTime={post.date} className="font-mono">{formatDate(post.date)}</time>
+                                            <span className="hidden transition-transform group-hover:translate-x-1 sm:inline" aria-hidden="true">→</span>
+                                        </span>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
     );
 }
