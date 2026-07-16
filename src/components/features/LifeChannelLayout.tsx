@@ -113,16 +113,15 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                     </div>
                                     
                                     {/* 右侧内容 */}
-                                    <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
-                                        <h3 className="text-2xl font-light mb-4" style={{color: 'var(--theme-ink)', letterSpacing: '0.02em'}}>
+                                    <div className="w-full md:w-1/2 p-8 flex flex-col items-start justify-center text-left">
+                                        <h3 className="w-full text-left text-2xl font-light mb-4" style={{color: 'var(--theme-ink)', letterSpacing: '0.02em'}}>
                                             {config.name}
                                         </h3>
-                                        <p className="font-light mb-6 line-clamp-3 leading-relaxed" style={{color: 'var(--theme-outline)', letterSpacing: '0.01em'}}>
+                                        <p className="w-full text-left font-light mb-6 line-clamp-3 leading-relaxed" style={{color: 'var(--theme-outline)', letterSpacing: '0.01em'}}>
                                             {config.description}
                                         </p>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm font-light flex items-center" style={{color: 'var(--theme-outline)'}}>
-                                                <span className="w-1 h-1 mr-2" style={{backgroundColor: 'var(--theme-outline-variant)'}}></span>
+                                        <div className="flex w-full items-center justify-between">
+                                            <span className="text-left text-sm font-light" style={{color: 'var(--theme-outline)'}}>
                                                 {columnPosts.length} 篇文章
                                             </span>
                                             <Link

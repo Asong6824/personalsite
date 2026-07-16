@@ -4,13 +4,15 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Plus, X } from "lucide-react";
+import { Plus, Scan, X, ZoomIn, ZoomOut } from "lucide-react";
 import type { Stamp } from "@/data/stamps";
 
 interface StampsPageClientProps {
   stamps: Stamp[];
   navLinks: { label: string; href: string }[];
   socialLinks: { label: string; href: string }[];
+  embedded?: boolean;
+  interactive?: boolean;
 }
 
 const CANVAS_SIZE = 3600;
@@ -19,6 +21,9 @@ const GAP = 6;
 const EXPANDED_COLS = 3;
 const EXPANDED_ROWS = 2;
 const MARGIN = 180;
+const MIN_ZOOM = 0.4;
+const MAX_ZOOM = 2;
+const ZOOM_STEP = 0.1;
 const GROUP_MODES = [
   { key: "line", label: "线路" },
   { key: "region", label: "地域" },
@@ -53,6 +58,21 @@ type ResolvedConnection = {
   geometry?: Array<[number, number]>;
   target: Stamp;
 };
+
+function clampZoom(value: number) {
+  return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
+}
+
+function getTouchDistance(first: React.Touch, second: React.Touch) {
+  return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+}
+
+function getTouchMidpoint(first: React.Touch, second: React.Touch) {
+  return {
+    x: (first.clientX + second.clientX) / 2,
+    y: (first.clientY + second.clientY) / 2,
+  };
+}
 
 function getSpanSize(span: number) {
   return span * UNIT + (span - 1) * GAP;
@@ -757,7 +777,7 @@ function StampImage({
           src={stamp.images.stamp}
           alt={`${stamp.station.name} 駅スタンプ`}
           fill
-          sizes={expanded ? "280px" : "280px"}
+          sizes={expanded ? "840px" : "560px"}
           draggable={false}
           onError={onImageFailed}
           className="object-contain group-hover:scale-[1.03] transition-transform duration-500 select-none"
@@ -951,6 +971,8 @@ function reorderStampsByGroup(stamps: Stamp[], mode: GroupMode, selectedValue: s
 export default function StampsPageClient({
   stamps,
   navLinks,
+  embedded = false,
+  interactive = true,
 }: StampsPageClientProps) {
   const tokyoTime = useTokyoTime();
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -958,14 +980,24 @@ export default function StampsPageClient({
   const [activeStampId, setActiveStampId] = useState<string | null>(null);
   const [groupMode, setGroupMode] = useState<GroupMode>("line");
   const [selectedGroupValue, setSelectedGroupValue] = useState<string | null>(null);
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const [zoom, setZoom] = useState(1);
 
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const previousViewportSize = useRef({ width: 0, height: 0 });
+  const previousInteractive = useRef(interactive);
   const isTouching = useRef(false);
+  const isPinching = useRef(false);
   const touchStartPos = useRef({ x: 0, y: 0 });
   const touchStartOffset = useRef({ x: 0, y: 0 });
+  const pinchStartDistance = useRef(0);
+  const pinchStartZoom = useRef(1);
+  const pinchWorldPoint = useRef({ x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
   const lastPos = useRef({ x: 0, y: 0 });
   const rafId = useRef<number | undefined>(undefined);
   const offsetRef = useRef({ x: 0, y: 0 });
+  const zoomRef = useRef(1);
   const groupOptions = useMemo(() => getGroupOptions(stamps, groupMode), [groupMode, stamps]);
   const orderedStamps = useMemo(
     () => reorderStampsByGroup(stamps, groupMode, selectedGroupValue),
@@ -980,77 +1012,275 @@ export default function StampsPageClient({
     () => getStampLayout(orderedStamps.length, activeLayoutIndex),
     [activeLayoutIndex, orderedStamps.length]
   );
+  const previewScale = Math.min(1, viewportSize.width / 700, viewportSize.height / 400);
+  const displayScale = interactive ? zoom : previewScale;
 
   // 保持 offsetRef 与 offset 同步
   useEffect(() => {
     offsetRef.current = offset;
   }, [offset]);
 
-  // 限制偏移范围：视口不能滑出内容边界
-  const clampOffset = useCallback((x: number, y: number) => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const bounds = getContentBounds(layout);
-    const minX = vw - bounds.right;
-    const maxX = -bounds.left;
-    const minY = vh - bounds.bottom;
-    const maxY = -bounds.top;
-    return {
-      x: Math.min(maxX, Math.max(minX, x)),
-      y: Math.min(maxY, Math.max(minY, y)),
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const updateViewportSize = () => {
+      const { width, height } = viewport.getBoundingClientRect();
+      setViewportSize((current) => {
+        if (current.width === width && current.height === height) return current;
+        return { width, height };
+      });
     };
-  }, [layout]);
+
+    updateViewportSize();
+    const observer = new ResizeObserver(updateViewportSize);
+    observer.observe(viewport);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const clampOffset = useCallback((x: number, y: number, scale: number) => {
+    const vw = viewportSize.width;
+    const vh = viewportSize.height;
+    if (vw === 0 || vh === 0) return { x, y };
+
+    const bounds = getContentBounds(layout);
+    const minX = vw - bounds.right * scale;
+    const maxX = -bounds.left * scale;
+    const minY = vh - bounds.bottom * scale;
+    const maxY = -bounds.top * scale;
+    const centeredX = (vw - (bounds.left + bounds.right) * scale) / 2;
+    const centeredY = (vh - (bounds.top + bounds.bottom) * scale) / 2;
+
+    return {
+      x: minX > maxX ? centeredX : Math.min(maxX, Math.max(minX, x)),
+      y: minY > maxY ? centeredY : Math.min(maxY, Math.max(minY, y)),
+    };
+  }, [layout, viewportSize]);
+
+  const getCenteredOffset = useCallback((scale: number) => {
+    const bounds = getContentBounds(layout);
+    return clampOffset(
+      (viewportSize.width - (bounds.left + bounds.right) * scale) / 2,
+      (viewportSize.height - (bounds.top + bounds.bottom) * scale) / 2,
+      scale
+    );
+  }, [clampOffset, layout, viewportSize]);
 
   useEffect(() => {
-    if (ready) return;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    setOffset(clampOffset(-(CANVAS_SIZE - vw) / 2, -(CANVAS_SIZE - vh) / 2));
+    if (ready || viewportSize.width === 0 || viewportSize.height === 0) return;
+    const centered = getCenteredOffset(displayScale);
+    offsetRef.current = centered;
+    setOffset(centered);
     setReady(true);
-  }, [clampOffset, ready]);
+  }, [displayScale, getCenteredOffset, ready, viewportSize]);
+
+  useEffect(() => {
+    const previous = previousViewportSize.current;
+    const modeChanged = previousInteractive.current !== interactive;
+    previousViewportSize.current = viewportSize;
+    previousInteractive.current = interactive;
+    if (!ready || previous.width === 0 || previous.height === 0) return;
+
+    if (modeChanged || !interactive) {
+      const centered = getCenteredOffset(displayScale);
+      offsetRef.current = centered;
+      setOffset(centered);
+      return;
+    }
+
+    const deltaX = (viewportSize.width - previous.width) / 2;
+    const deltaY = (viewportSize.height - previous.height) / 2;
+    setOffset((current) => {
+      const next = clampOffset(current.x + deltaX, current.y + deltaY, zoomRef.current);
+      offsetRef.current = next;
+      return next;
+    });
+  }, [clampOffset, displayScale, getCenteredOffset, interactive, ready, viewportSize]);
 
   useEffect(() => {
     if (!ready) return;
-    setOffset((prev) => clampOffset(prev.x, prev.y));
-  }, [clampOffset, ready]);
+    setOffset((current) => {
+      const next = clampOffset(current.x, current.y, displayScale);
+      offsetRef.current = next;
+      return next;
+    });
+  }, [clampOffset, displayScale, ready]);
 
-  // --- 桌面端：滚轮/触摸板滑动 ---
-  const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
-      e.preventDefault();
-      setOffset((prev) => clampOffset(prev.x - e.deltaX, prev.y - e.deltaY));
-    },
-    [clampOffset]
-  );
+  const stopInertia = useCallback(() => {
+    if (rafId.current) {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = undefined;
+    }
+  }, []);
 
-  // --- 移动端：触摸滑动 ---
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    const touch = e.touches[0];
+  const setZoomAtPoint = useCallback((value: number, point: { x: number; y: number }) => {
+    if (!interactive) return;
+    stopInertia();
+
+    const previousZoom = zoomRef.current;
+    const nextZoom = clampZoom(value);
+    if (Math.abs(nextZoom - previousZoom) < 0.001) return;
+
+    const current = offsetRef.current;
+    const worldX = (point.x - current.x) / previousZoom;
+    const worldY = (point.y - current.y) / previousZoom;
+    const nextOffset = clampOffset(
+      point.x - worldX * nextZoom,
+      point.y - worldY * nextZoom,
+      nextZoom
+    );
+
+    zoomRef.current = nextZoom;
+    offsetRef.current = nextOffset;
+    setZoom(nextZoom);
+    setOffset(nextOffset);
+  }, [clampOffset, interactive, stopInertia]);
+
+  const zoomAtViewportCenter = useCallback((value: number) => {
+    setZoomAtPoint(value, {
+      x: viewportSize.width / 2,
+      y: viewportSize.height / 2,
+    });
+  }, [setZoomAtPoint, viewportSize]);
+
+  const fitContent = useCallback(() => {
+    if (!interactive) return;
+    stopInertia();
+
+    const bounds = getContentBounds(layout);
+    const availableWidth = Math.max(1, viewportSize.width - 64);
+    const availableHeight = Math.max(1, viewportSize.height - 64);
+    const nextZoom = clampZoom(Math.min(
+      availableWidth / (bounds.right - bounds.left),
+      availableHeight / (bounds.bottom - bounds.top)
+    ));
+    const nextOffset = getCenteredOffset(nextZoom);
+
+    zoomRef.current = nextZoom;
+    offsetRef.current = nextOffset;
+    setZoom(nextZoom);
+    setOffset(nextOffset);
+  }, [getCenteredOffset, interactive, layout, stopInertia, viewportSize]);
+
+  // 桌面端：滚轮平移，Ctrl/Cmd + 滚轮围绕指针缩放。
+  const handleWheel = useCallback((event: React.WheelEvent) => {
+    event.preventDefault();
+
+    if (event.ctrlKey || event.metaKey) {
+      const rect = viewportRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const multiplier = Math.exp(-event.deltaY * 0.0025);
+      setZoomAtPoint(zoomRef.current * multiplier, {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      });
+      return;
+    }
+
+    setOffset((current) => {
+      const next = clampOffset(
+        current.x - event.deltaX,
+        current.y - event.deltaY,
+        zoomRef.current
+      );
+      offsetRef.current = next;
+      return next;
+    });
+  }, [clampOffset, setZoomAtPoint]);
+
+  const handleTouchStart = useCallback((event: React.TouchEvent) => {
+    stopInertia();
+    velocity.current = { x: 0, y: 0 };
+
+    if (event.touches.length >= 2) {
+      const first = event.touches[0];
+      const second = event.touches[1];
+      const midpoint = getTouchMidpoint(first, second);
+      const rect = viewportRef.current?.getBoundingClientRect();
+      if (!rect) return;
+
+      isPinching.current = true;
+      isTouching.current = false;
+      pinchStartDistance.current = getTouchDistance(first, second);
+      pinchStartZoom.current = zoomRef.current;
+      pinchWorldPoint.current = {
+        x: (midpoint.x - rect.left - offsetRef.current.x) / zoomRef.current,
+        y: (midpoint.y - rect.top - offsetRef.current.y) / zoomRef.current,
+      };
+      return;
+    }
+
+    const touch = event.touches[0];
+    isPinching.current = false;
     isTouching.current = true;
     touchStartPos.current = { x: touch.clientX, y: touch.clientY };
     touchStartOffset.current = { ...offsetRef.current };
     lastPos.current = { x: touch.clientX, y: touch.clientY };
-  }, []);
+  }, [stopInertia]);
 
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (!isTouching.current) return;
-      const touch = e.touches[0];
-      const dx = touch.clientX - touchStartPos.current.x;
-      const dy = touch.clientY - touchStartPos.current.y;
+  const handleTouchMove = useCallback((event: React.TouchEvent) => {
+    if (isPinching.current && event.touches.length >= 2) {
+      const first = event.touches[0];
+      const second = event.touches[1];
+      const rect = viewportRef.current?.getBoundingClientRect();
+      if (!rect || pinchStartDistance.current === 0) return;
 
-      velocity.current = {
-        x: touch.clientX - lastPos.current.x,
-        y: touch.clientY - lastPos.current.y,
-      };
-      lastPos.current = { x: touch.clientX, y: touch.clientY };
+      const midpoint = getTouchMidpoint(first, second);
+      const nextZoom = clampZoom(
+        pinchStartZoom.current * getTouchDistance(first, second) / pinchStartDistance.current
+      );
+      const nextOffset = clampOffset(
+        midpoint.x - rect.left - pinchWorldPoint.current.x * nextZoom,
+        midpoint.y - rect.top - pinchWorldPoint.current.y * nextZoom,
+        nextZoom
+      );
 
-      setOffset(clampOffset(touchStartOffset.current.x + dx, touchStartOffset.current.y + dy));
-    },
-    [clampOffset]
-  );
+      zoomRef.current = nextZoom;
+      offsetRef.current = nextOffset;
+      setZoom(nextZoom);
+      setOffset(nextOffset);
+      return;
+    }
 
-  const handleTouchEnd = useCallback(() => {
+    if (!isTouching.current || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    const dx = touch.clientX - touchStartPos.current.x;
+    const dy = touch.clientY - touchStartPos.current.y;
+
+    velocity.current = {
+      x: touch.clientX - lastPos.current.x,
+      y: touch.clientY - lastPos.current.y,
+    };
+    lastPos.current = { x: touch.clientX, y: touch.clientY };
+
+    const next = clampOffset(
+      touchStartOffset.current.x + dx,
+      touchStartOffset.current.y + dy,
+      zoomRef.current
+    );
+    offsetRef.current = next;
+    setOffset(next);
+  }, [clampOffset]);
+
+  const handleTouchEnd = useCallback((event: React.TouchEvent) => {
+    if (isPinching.current) {
+      isPinching.current = false;
+      pinchStartDistance.current = 0;
+      velocity.current = { x: 0, y: 0 };
+
+      if (event.touches.length === 1) {
+        const touch = event.touches[0];
+        isTouching.current = true;
+        touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+        touchStartOffset.current = { ...offsetRef.current };
+        lastPos.current = { x: touch.clientX, y: touch.clientY };
+      } else {
+        isTouching.current = false;
+      }
+      return;
+    }
+
     if (!isTouching.current) return;
     isTouching.current = false;
 
@@ -1069,11 +1299,14 @@ export default function StampsPageClient({
       currentX += velX;
       currentY += velY;
 
-      const clamped = clampOffset(currentX, currentY);
-      setOffset(clamped);
+      const next = clampOffset(currentX, currentY, zoomRef.current);
+      offsetRef.current = next;
+      setOffset(next);
 
       if (Math.abs(velX) > 0.5 || Math.abs(velY) > 0.5) {
         rafId.current = requestAnimationFrame(animate);
+      } else {
+        rafId.current = undefined;
       }
     };
 
@@ -1091,7 +1324,12 @@ export default function StampsPageClient({
 
   return (
     <div
-      className="theme-muji relative h-screen w-screen select-none overflow-hidden dark:bg-neutral-950"
+      ref={viewportRef}
+      aria-hidden={!interactive}
+      inert={!interactive ? true : undefined}
+      className={`theme-muji relative select-none overflow-hidden dark:bg-neutral-950 ${
+        embedded ? "h-full w-full" : "h-screen w-screen"
+      }`}
       style={{ backgroundColor: "var(--muji-bg)" }}
     >
       {!ready && (
@@ -1102,17 +1340,19 @@ export default function StampsPageClient({
 
       {ready && (
         <div
-          className="absolute touch-none"
+          className={`absolute ${interactive ? "touch-none" : "pointer-events-none"}`}
           style={{
             width: CANVAS_SIZE,
             height: CANVAS_SIZE,
-            transform: `translate(${offset.x}px, ${offset.y}px)`,
+            transform: `translate(${offset.x}px, ${offset.y}px) scale(${displayScale})`,
+            transformOrigin: "0 0",
           }}
-          onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onClick={() => setActiveStampId(null)}
+          onWheel={interactive ? handleWheel : undefined}
+          onTouchStart={interactive ? handleTouchStart : undefined}
+          onTouchMove={interactive ? handleTouchMove : undefined}
+          onTouchEnd={interactive ? handleTouchEnd : undefined}
+          onTouchCancel={interactive ? handleTouchEnd : undefined}
+          onClick={interactive ? () => setActiveStampId(null) : undefined}
         >
           <div
             className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
@@ -1249,6 +1489,53 @@ export default function StampsPageClient({
               onClose={() => setActiveStampId(null)}
             />
           ))}
+        </div>
+      )}
+
+      {interactive && ready && (
+        <div
+          role="group"
+          aria-label="画布缩放"
+          className="absolute bottom-4 left-1/2 z-40 flex h-11 -translate-x-1/2 items-center overflow-hidden rounded-md border border-neutral-900/10 bg-white/90 text-neutral-800 shadow-md backdrop-blur-sm dark:border-white/15 dark:bg-neutral-900/90 dark:text-white"
+        >
+          <button
+            type="button"
+            aria-label="缩小画布"
+            title="缩小画布"
+            disabled={zoom <= MIN_ZOOM + 0.001}
+            onClick={() => zoomAtViewportCenter(zoomRef.current - ZOOM_STEP)}
+            className="flex h-full w-11 items-center justify-center transition-colors hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800"
+          >
+            <ZoomOut className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label="恢复百分之百缩放"
+            title="恢复 100%"
+            onClick={() => zoomAtViewportCenter(1)}
+            className="h-full min-w-16 border-x border-neutral-900/10 px-3 text-xs font-medium tabular-nums transition-colors hover:bg-neutral-100 dark:border-white/15 dark:hover:bg-neutral-800"
+          >
+            {Math.round(zoom * 100)}%
+          </button>
+          <button
+            type="button"
+            aria-label="放大画布"
+            title="放大画布"
+            disabled={zoom >= MAX_ZOOM - 0.001}
+            onClick={() => zoomAtViewportCenter(zoomRef.current + ZOOM_STEP)}
+            className="flex h-full w-11 items-center justify-center transition-colors hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800"
+          >
+            <ZoomIn className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label="适配画布内容"
+            title="适配画布内容"
+            onClick={fitContent}
+            className="flex h-full w-11 items-center justify-center border-l border-neutral-900/10 transition-colors hover:bg-neutral-100 dark:border-white/15 dark:hover:bg-neutral-800"
+          >
+            <Scan className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       )}
     </div>
