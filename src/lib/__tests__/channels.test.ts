@@ -26,8 +26,6 @@ describe("CHANNELS_CONFIG 结构", () => {
       for (const [colKey, colConfig] of Object.entries(chConfig.columns) as [string, ColumnConfig][]) {
         expect(colConfig.name, `${chKey}.${colKey} 缺少 name`).toBeDefined();
         expect(colConfig.description, `${chKey}.${colKey} 缺少 description`).toBeDefined();
-        expect(Array.isArray(colConfig.tags), `${chKey}.${colKey} tags 不是数组`).toBe(true);
-        expect(colConfig.tags.length, `${chKey}.${colKey} tags 为空`).toBeGreaterThan(0);
       }
     }
   });

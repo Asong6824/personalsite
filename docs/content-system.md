@@ -28,12 +28,12 @@
 title: string               # 文章标题（必填）
 date: string (YYYY-MM-DD)   # 发布日期（必填）
 author: string              # 作者名
-tags: string[]              # 标签数组，用于频道/专栏归类
+tags: string[]              # 内容标签数组（必填，至少一个）
 excerpt: string             # 摘要
 coverImage: string          # 封面图 URL
 pinned: boolean             # 可选，置顶文章（排序优先）
-channel: string             # 可选，显式指定频道（tech/life/finance/creative）
-column: string              # 可选，显式指定专栏
+channel: string             # 频道（必填：tech/life/finance/creative）
+column: string              # 专栏（必填，必须属于对应频道）
 columnSlug: string          # 可选，显式指定专栏 slug
 music: string | string[]    # 可选，背景音乐 URL（数组支持多首）
 hidden: boolean             # 设为 true 则文章不在列表展示，详情读取返回 null；底层索引仍保留该条目
@@ -78,9 +78,17 @@ nextReads:
 
 每篇文章的频道与专栏归属完全由 frontmatter 中的 `channel`/`column` 字段决定。`channel` 必须是 `CHANNELS_CONFIG` 中存在的频道 key，`column` 必须是对应频道下的专栏 key，否则构建会失败。
 
-`tags` 不再决定专栏归属，仅作为内容标签用于展示、SEO 和标签筛选。作者可以自由填写标签，无需担心标签与专栏配置的匹配关系。
+`tags` 不再决定专栏归属，仅作为内容标签用于展示、SEO 和标签筛选。作者应按下方规范填写标签，无需让标签匹配专栏配置。
 
 判断文章归属时应以 frontmatter 中的 `channel`/`column` 为准。
+
+### 标签规范
+
+- 标签描述文章的主题、对象或方法，不重复承担频道/专栏归类职责。
+- 每篇文章至少填写 1 个标签，通常控制在 2-5 个；具体技术、地点、工具等长尾标签可以只出现一次。
+- 技术专有名词使用官方写法，如 `Agent`、`RAG`、`Go`；一般概念优先使用中文。
+- 同一概念只保留一种写法。当前废弃别名及替代项维护在 `src/lib/article-tags.ts`。
+- 索引构建会拒绝空标签、重复标签、首尾空格和废弃别名；超过 5 个标签会产生 warning。
 
 ---
 

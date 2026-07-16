@@ -18,7 +18,6 @@ const VALID_CONFIG = {
       go: {
         name: "Go",
         description: "Go语言",
-        tags: ["Go"],
         cover: "https://example.com/go.png",
       },
     },
@@ -79,24 +78,6 @@ describe("validateChannelsConfig", () => {
     expect(result.errors.some((e) => e.includes("missing required field: columns"))).toBe(true);
   });
 
-  it("检测专栏缺少 tags 字段", () => {
-    const badConfig = {
-      tech: {
-        name: "技术",
-        description: "技术分享",
-        columns: {
-          go: {
-            name: "Go",
-            description: "Go语言",
-          },
-        },
-      },
-    } as unknown as ChannelsConfig;
-    const result = validateChannelsConfig(badConfig);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some((e) => e.includes("missing required field: tags"))).toBe(true);
-  });
-
   it("检测非字符串 name", () => {
     const badConfig = {
       tech: {
@@ -110,43 +91,6 @@ describe("validateChannelsConfig", () => {
     expect(result.errors.some((e) => e.includes("name must be a string"))).toBe(true);
   });
 
-  it("检测非数组 tags", () => {
-    const badConfig = {
-      tech: {
-        name: "技术",
-        description: "技术分享",
-        columns: {
-          go: {
-            name: "Go",
-            description: "Go语言",
-            tags: "Go",
-          },
-        },
-      },
-    } as unknown as ChannelsConfig;
-    const result = validateChannelsConfig(badConfig);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some((e) => e.includes("tags must be an array"))).toBe(true);
-  });
-
-  it("检测 tags 中非法类型", () => {
-    const badConfig = {
-      tech: {
-        name: "技术",
-        description: "技术分享",
-        columns: {
-          go: {
-            name: "Go",
-            description: "Go语言",
-            tags: ["Go", 123],
-          },
-        },
-      },
-    } as unknown as ChannelsConfig;
-    const result = validateChannelsConfig(badConfig);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some((e) => e.includes("must be a string"))).toBe(true);
-  });
 });
 
 describe("validateChannelExists", () => {

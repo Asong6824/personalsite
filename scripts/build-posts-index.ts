@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { getOrBuildPostsIndex } from '../src/lib/post-index'
 import { CHANNELS_CONFIG } from '../src/lib/channels'
+import { validateArticleTags } from '../src/lib/article-tags'
 
 async function main() {
   const idx = getOrBuildPostsIndex()
@@ -48,6 +49,15 @@ async function main() {
       errors.push(`[CONFIG] ${rel}: missing or invalid channel '${post.channel ?? ''}'`)
     } else if (!post.column || !CHANNELS_CONFIG[post.channel].columns?.[post.column]) {
       errors.push(`[CONFIG] ${rel}: missing or invalid column '${post.column ?? ''}' in channel '${post.channel}'`)
+    }
+
+    // 4. Validate article tags independently from channel/column classification
+    const tagValidation = validateArticleTags(post.tags)
+    for (const error of tagValidation.errors) {
+      errors.push(`[TAGS] ${rel}: ${error}`)
+    }
+    for (const warning of tagValidation.warnings) {
+      warnings.push(`[TAGS] ${rel}: ${warning}`)
     }
   }
 

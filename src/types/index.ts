@@ -47,7 +47,6 @@ export interface Post {
 export interface ColumnConfig {
   name: string;
   description: string;
-  tags: string[];
   cover?: string;
   coverImage?: string;
   featured?: boolean;

@@ -38,7 +38,7 @@ export function validateChannelsConfig(
 
   const config = channelsConfig as ChannelsConfig;
   const requiredChannelFields = ["name", "description", "columns"];
-  const requiredColumnFields = ["name", "description", "tags"];
+  const requiredColumnFields = ["name", "description"];
 
   Object.entries(config).forEach(([channelKey, channelConfig]) => {
     requiredChannelFields.forEach((field) => {
@@ -95,21 +95,6 @@ export function validateChannelsConfig(
               );
             }
 
-            if (columnConfig.tags) {
-              if (!Array.isArray(columnConfig.tags)) {
-                errors.push(
-                  `Column '${channelKey}.${columnKey}' tags must be an array`
-                );
-              } else {
-                columnConfig.tags.forEach((tag, index) => {
-                  if (typeof tag !== "string") {
-                    errors.push(
-                      `Column '${channelKey}.${columnKey}' tag at index ${index} must be a string`
-                    );
-                  }
-                });
-              }
-            }
           }
         );
       }

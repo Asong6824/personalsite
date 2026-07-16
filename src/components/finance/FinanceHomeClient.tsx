@@ -31,14 +31,8 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
     const secondPost = recentPosts[1];
     const smallPosts = recentPosts.slice(2, 5);
 
-    // 分类文章
-    const investmentPosts = allPosts.filter(p =>
-        (p.tags || []).some(t => ['财经', 'finance', '投资', 'investment', '市场分析', 'A股', '港股', '美股'].includes(t))
-    ).slice(0, 3);
-
-    const methodologyPosts = allPosts.filter(p =>
-        (p.tags || []).some(t => ['方法论', 'methodology', '价值投资', '理财', '策略'].includes(t))
-    ).slice(0, 3);
+    const investmentPosts = (postsByColumn.finance || []).slice(0, 3);
+    const methodologyPosts = (postsByColumn['investment-methodology'] || []).slice(0, 3);
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: SITE_WARM_BACKGROUND, color: '#1a1c19', fontFamily: 'var(--font-inter)' }}>

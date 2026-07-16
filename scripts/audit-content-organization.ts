@@ -4,6 +4,8 @@ import path from "path";
 import matter from "gray-matter";
 import { globSync } from "glob";
 import { CHANNELS_CONFIG } from "../src/lib/channels";
+import { validateArticleTags } from "../src/lib/article-tags";
+import type { ColumnConfig } from "../src/types";
 
 const ROOT = process.cwd();
 const POSTS_DIR = path.join(ROOT, "content", "blog");
@@ -19,6 +21,8 @@ type ArticleRecord = {
   slug: string;
   url: string;
   bodyKey: string;
+  tagErrors: string[];
+  tagWarnings: string[];
 };
 
 function normalizeBody(content: string) {
@@ -40,6 +44,7 @@ function getArticleRecords(): ArticleRecord[] {
       const filenameSlug = path.basename(rel, ext);
       const slug = String(parsed.data.slug || filenameSlug).trim();
       const indexedSlug = dir ? `${dir}/${slug}` : slug;
+      const tagValidation = validateArticleTags(parsed.data.tags);
 
       return {
         rel,
@@ -52,6 +57,8 @@ function getArticleRecords(): ArticleRecord[] {
         slug,
         url: `/blog/${indexedSlug}`,
         bodyKey: normalizeBody(parsed.content),
+        tagErrors: tagValidation.errors,
+        tagWarnings: tagValidation.warnings,
       };
     });
 }
@@ -111,9 +118,18 @@ function main() {
     .filter((group) => group[0]?.title && group.length > 1)
     .map((group) => `${group[0].title}: ${group.map(formatArticle).join(" | ")}`);
 
+  const tagIssues = records
+    .filter((record) => record.ext === ".mdx")
+    .flatMap((record) => [
+      ...record.tagErrors.map((issue) => `${record.rel}: ERROR ${issue}`),
+      ...record.tagWarnings.map((issue) => `${record.rel}: WARNING ${issue}`),
+    ]);
+
   const columnsByName = new Map<string, string[]>();
   for (const [channelKey, channelConfig] of Object.entries(CHANNELS_CONFIG)) {
-    for (const [columnKey, columnConfig] of Object.entries(channelConfig.columns)) {
+    for (const [columnKey, columnConfig] of Object.entries(
+      channelConfig.columns
+    ) as Array<[string, ColumnConfig]>) {
       const group = columnsByName.get(columnConfig.name) || [];
       group.push(`${channelKey}/${columnKey}`);
       columnsByName.set(columnConfig.name, group);
@@ -129,6 +145,7 @@ function main() {
   printSection("Directory Mismatches", directoryMismatches);
   printSection("Duplicate Article Bodies", duplicateBodies);
   printSection("Duplicate Article Titles", duplicateTitles);
+  printSection("Article Tag Issues", tagIssues);
   printSection("Duplicate Column Display Names", duplicateColumnNames);
   printSection("Non-MDX Files Not Indexed By post-index.ts", nonMdxFiles);
 }

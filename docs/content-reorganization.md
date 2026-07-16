@@ -14,6 +14,7 @@ npm run audit:content
 - `tech/design` 与 `tech/product` 已移除，设计/产品类文章统一收敛到 `creative/design` 与 `creative/product`。
 - `tech/devtools`、`tech/nlp`、`tech/photography` 已移除；地图绘制与 iPhone 摄影文章已迁入 `creative/notes`。
 - 当前索引校验会验证 `channel`/`column` 是否存在，但不会验证文件目录是否与 frontmatter 归属一致。
+- 文章标签不参与频道/专栏归类；索引构建会校验空标签、重复标签、首尾空格和废弃别名。
 
 ## 散落在根目录的文章
 
