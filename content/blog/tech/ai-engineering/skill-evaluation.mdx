@@ -1,5 +1,5 @@
 ---
-title: "Skill 评估：如何衡量一个 Agent Skill 的好坏"
+title: "skill 的演化与评估"
 date: "2026-07-13"
 tags:
   - "AI工程"
@@ -14,13 +14,195 @@ column: "ai-engineering"
 ---
 
 ## 引言
-agent skill 是一种轻量、开放的封装规范，通过复用非参数化知识和工作流来扩展 agent 的能力。
-在 skill 诞生之初还有人质疑它是 md 的新叫法，但伴随 openclaw、hermes agent 以及各家 coding agent 对 skill 的兼容，使用者也发现了它在 AI 协同工作中的价值。
-这时，我们应该把视角从 skill 的创建与使用转向评估与演化。
-
-## skill 的演化
 罗马不是一日建成的，harness 也不是一日建成的，作为 user harness 的一部分，skill 自然也不是。
 
 成熟的 harness engineering 强调持续演化，pi-coding-agent 的系统提示词只需要一句“你是专业的代码助手”，就可以利用最新的大模型实现过去几十句提示词才能实现的效果，skill 也是同理。
 
-所以在 skill 诞生之初，现在 skills.sh 热榜上的那些 skill 还有那些我们自己写的 skill，是否在当前的模型能力还被需要，是否还适配自己的 harness 和人机交互的工作流，这是一个值得持续思考的问题。
+所以在 skill 诞生之初，我们当时为了解决模型不懂设计、不守规范等设计等各类 skill，还有处于各种目的蒸馏的（比如张雪峰 skill），在当前的模型能力还被需要（可能豆包已经在模型层面蒸馏了张雪峰），是否还适配自己的 harness 和人机交互的工作流，这是一个值得持续思考的问题。
+
+此时，我认为应该从 skill 的创造转向 skill 的持续治理，去构建一个不断优化的闭环以适应基础模型的进步和 harness的进步。
+
+社区内已经有很多相关的讨论，比如 skill evolution 和 evaluation，但是尚未形成公认的最佳实践。
+
+这篇文章我总结了社区内的观点以及我的实践，分为演化和评估两部分。演化是 skill 持续治理的闭环，评估则贯穿演化的各个阶段，为演化提供最基础的依据。
+
+
+## 演化
+
+TODO：补充演化流程图
+
+提起 skill 的演化，我认为应该把眼光从单一的 skill 转向整个 skill 系统。skill 系统中我们除了 skill 内容上的优化，还要考虑多 skill 协同、agent 使用 skill 的策略和 skill 生态等。
+
+图中是我总结现在的我使用的各 agent 的演化流程，大致可以分为新 skill 的引入和使用迭代循环两部分，使用迭代的循环又会进一步去影响新 skill 的引入，这个流程目前还是半自动的由我手动驱使 agent 去完成。
+
+### 引入 skill
+
+我引入的 skill 可以分为三部分。
+
+外部获取指的是通过社区下载。人工提炼是我自己总结的工作流或规范，比如我写过从 b 站下载视频提取音频再将音频转文字的工作流式 skill，以及我个人网站项目关于设计风格的 skill。
+
+agent 蒸馏指的是完全由 agent 创造，我并不清楚其内部具体逻辑。比如 hermes agent 在使用过程中自己总结的，我在调试完一个环境问题后顺手让 agent 总结一下的 skill。 
+
+### 执行·修订 skill
+
+在接下来的循环中，面对具体任务的 agent 根据任务需求选择合适的 skill，必要时将多个 skill 组合，然后执行任务。
+
+任务执行后，我根据执行结果判断 skill 是否有效。如果存在问题后，就对 skill 进行修订。也有一种可能是现有的 skill 无法覆盖这个问题，这是就要考虑引入新的 skill。
+
+修订后的 skill 重新进入 skill 库，并在后续任务中再次被调用和验证。
+
+如果把上面这个演化流程看作一个状态机的话，触发这个状态转移的就是评估，我们要判断哪些 skill 应该被引入，哪些 skill 在哪种情况下被 agent 调用，以及何种情况应该修订或引入 skill。
+
+## 评估
+
+在评估一个 skill 的时候，我们很难去评估它的真实属性，比如这个 skill 好不好用，应该建立相应的可测指标。
+
+可测指标有点像对成功的定义，每个人都应该建立一套自己的对 skill 的可测指标。与我而言，我主要关注三点
+
+ - 过程指标：agent 是否正确触发 skill，是否按照 skill 规定的流程执行
+ - 结果指标：任务是否完成，结果是否正确
+ - 目标指标：使用这个 skill 后是否对我的最终目标有帮助
+
+由于目标指标需要基于人的主观判断，这里我不多赘述。前两个指标可以利用 agent 来判断。
+
+我们可以把写 skill 封装成一个 skill（就像 codex 自带的 skill-creator），也可以把“如何设计测试、执行测试、收集证据和解释结果”封装成一个评估 skill。  
+
+在我的个人知识管理项目 kos 中，由于项目本质是 user harness，整个项目基于 skill 来构建，因此我在这个项目中实践了 skill 演化和评估的理论，接下来都将以这个项目为例，详细介绍如何建立具体的指标以及使用。
+
+### 过程指标一：是否正确触发 skill 
+
+对于这个指标，我们可以准备三类测试
+
+```
+id,skill,should_trigger,prompt
+explicit-01,kos-skill-manager,true,"使用 kos-skill-manager review 这个 incubator Skill 是否能晋升"
+implicit-01,kos-skill-manager,true,"帮我看看新生成的 Skill 应该放 core 还是 personal"
+negative-01,kos-skill-manager,false,"帮我创建一个普通项目计划"
+```
+
+三类测试分别代表：  
+- 显式正例：用户直接点名 Skill；  
+- 隐式正例：用户没有点名，但意图属于 Skill 的职责；  
+- 负例：文本中可能存在相似词，但不应该调用 Skill。  
+
+运行后，可以得到四种结果：
+
+| 预期 | 实际 | 结果 |
+|---|---|---|
+| 应调用 | 调用了 | TP，正确触发 |
+| 应调用 | 未调用 | FN，漏触发 |
+| 不应调用 | 调用了 | FP，误触发 |
+| 不应调用 | 未调用 | TN，正确拒绝 |
+
+由此可以计算
+触发召回率 = TP / (TP + FN)
+触发准确率 = TP / (TP + FP)
+误触发率 = FP / (FP + TN)
+
+对 Skill 来说，召回率和误触发率必须同时看。
+如果只看正例，可以通过把 description 写得非常宽来提高召回率，但这样会导致大量误触发。反过来，如果把 description 写得过窄，虽然误触发少了，却可能无法识别用户的隐式意图。
+
+### 过程指标二：是否按照 skill 规定的流程执行
+
+正确调用 skill，并不意味着正确执行 skill。
+例如，项目创建 skill 要求：
+1. 先明确目标（读取目标 skill）；
+2. 定义成功指标；
+3. 创建项目对象；
+4. 写入规定路径；
+5. 保留人工确认边界；
+6. 运行结构校验。
+
+Agent 即使读取了这个 skill，也可能跳过其中几步。
+因此需要进一步检查：
+1. 是否读取了目标 skill；
+2. 是否写入正确路径；
+3. 是否保留了必需字段；
+4. 是否执行了人工确认；
+5. 是否执行了规定的验证步骤。
+
+我们可以定义协议遵循率来作为一个量化指标
+协议遵循率 = 已通过的必需过程检查数 / 必需过程检查总数
+
+现在大多数的 agent 都支持 -json 参数来将事件以json的形式写到标准输出中，我们可以基于此来计算协议遵循率
+
+### 结果指标：评估任务是否真正完成
+以上过程指标都完美达标的情况下，最终产物也有可能不可用，这里最重要的是定义任务完成的标准 task contract。
+
+例如评估 kos-create-project，可以先定义
+
+```
+version: 1
+id: create-project-basic
+skill: kos-create-project
+objective: 创建结构完整且能够继续推进的 Project
+max_iterations: 3
+
+checks:
+  - id: project_exists
+    type: path_exists
+    path: 30_项目/测试项目.md
+
+  - id: project_status
+    type: frontmatter
+    path: 30_项目/测试项目.md
+    field: status
+    operator: equals
+    expected: idea
+
+  - id: has_success_metrics
+    type: text_contains
+    path: 30_项目/测试项目.md
+    values:
+      - "### 成功指标"
+
+  - id: schema_valid
+    type: harness_passes
+    script: validate_schema.py
+
+rubric:
+  - id: actionability
+    description: 项目的下一步行动具体且可执行
+    min_score: 3
+    weight: 1
+```
+
+然后将完成条件分为两类，一类是确定性检查，另一类是语义检查。
+
+
+确定性检查指文件是否存在、路径是否正确、frontmatter 是否符合要求这类二分类问题，要么正确、要么错误。这种检查我们可以直接通过程序判断而不是 agent。
+
+语义检查则带有一些主观性，比如创建的项目是否清晰。
+
+这种情况由 agent 根据 rubric 评估。agent 输出：
+
+```
+contract_id: create-project-basic
+
+summary: 项目结构已创建，但下一步行动缺少明确的验收条件。
+
+next_action: 只补充下一步行动的完成条件，不修改其他内容。
+
+needs_user: false
+
+rubric:
+  actionability:
+    score: 2
+    evidence:
+      - 30_项目/测试项目.md#当前任务
+```
+
+
+
+
+
+
+一次完整的评估流程
+ 1.建立 prompt 测试集
+```
+id,skill,should_trigger,prompt,expected_checks,notes
+explicit-create,kos-create-project,true,"使用 kos-create-project 创建一个写作项目","skill_loaded|project_created","显式调用"
+implicit-create,kos-create-project,true,"我想用一个月写完 Skill 评估文章，帮我把它组织成可推进的项目","skill_loaded|project_created","隐式项目意图"
+negative-todo,kos-create-project,false,"提醒我今天晚上整理文章提纲","skill_not_loaded","普通任务不应升级为项目"
+boundary-idea,kos-create-project,false,"我最近在考虑要不要写一篇 Skill 评估文章","skill_not_loaded","只有想法，还没有明确创建项目"
+```

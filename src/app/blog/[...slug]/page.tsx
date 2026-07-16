@@ -90,36 +90,31 @@ export default async function PostPage({ params }) {
             {...(isLifeChannel && { 'data-life-page': true })}
         >
             <div className="pt-20">
-                <div className="border-y border-[var(--channel-border,#D8D0C3)]">
-                    <div className="mx-auto flex h-16 w-[calc(100vw-2.5rem)] items-center justify-between xl:w-[75vw]">
-                        <div className={`flex flex-wrap items-center gap-x-2 gap-y-2 text-sm md:text-base ${currentStyle.headerMeta}`}>
-                            <Link href="/blog" className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]">博客</Link>
-                            {channelConfig && (
-                                <>
-                                    <span>/</span>
-                                    <Link
-                                        href={`/blog/${frontmatter.channel}`}
-                                        className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
-                                    >
-                                        {channelConfig.name}
-                                    </Link>
-                                </>
-                            )}
-                            {columnConfig && (
-                                <>
-                                    <span>/</span>
-                                    <Link
-                                        href={`/blog/${frontmatter.channel}/${frontmatter.column}`}
-                                        className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
-                                    >
-                                        {columnConfig.name}
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                        <Link href="/blog" className={`hidden text-sm md:block ${currentStyle.headerMeta} hover:text-[var(--channel-ink,#141413)]`}>
-                            返回博客
-                        </Link>
+                <div className="flex h-16 w-full items-center px-8 sm:px-10 lg:px-16 xl:px-24">
+                    <div className={`flex flex-wrap items-center gap-x-2 gap-y-2 text-sm md:text-base ${currentStyle.headerMeta}`}>
+                        <Link href="/blog" className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]">博客</Link>
+                        {channelConfig && (
+                            <>
+                                <span>/</span>
+                                <Link
+                                    href={`/blog/${frontmatter.channel}`}
+                                    className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
+                                >
+                                    {channelConfig.name}
+                                </Link>
+                            </>
+                        )}
+                        {columnConfig && (
+                            <>
+                                <span>/</span>
+                                <Link
+                                    href={`/blog/${frontmatter.channel}/${frontmatter.column}`}
+                                    className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
+                                >
+                                    {columnConfig.name}
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -128,42 +123,42 @@ export default async function PostPage({ params }) {
                 <div className="mx-auto article-container space-y-20 md:space-y-24 xl:space-y-[12vh]">
                     <section className="xl:min-h-[39vh]">
                         <header className="grid items-start gap-12 xl:grid-cols-12 xl:gap-x-[2.2%]">
-                        <div className="max-w-5xl xl:col-span-6 xl:col-start-3">
-                            <h1 className={`max-w-[56rem] text-[clamp(3rem,6.4vw,5.6rem)] font-bold mb-0 leading-[0.98] break-words tracking-normal ${currentStyle.headerTitle}`}>
-                                {frontmatter.title}
-                            </h1>
-                            {frontmatter.excerpt && (
-                                <p className={`mt-8 max-w-[46rem] text-xl leading-9 md:text-2xl md:leading-10 ${currentStyle.headerMeta}`}>
-                                    {frontmatter.excerpt}
-                                </p>
-                            )}
-                            {frontmatter.tags && frontmatter.tags.length > 0 && (
-                                <div className="mt-6 flex flex-wrap gap-2">
-                                    {frontmatter.tags.map(tag => (
-                                        <span
-                                            key={tag}
-                                            className={`text-xs px-2.5 py-1 rounded-md cursor-default ${currentStyle.tagBg}`}
-                                        >
-                                            #{tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                            <div className="xl:col-span-8 xl:col-start-2">
+                                <h1 className={`text-[clamp(3rem,6.4vw,5.6rem)] font-bold mb-0 leading-[0.98] break-words tracking-normal ${currentStyle.headerTitle}`}>
+                                    {frontmatter.title}
+                                </h1>
+                                {frontmatter.excerpt && (
+                                    <p className={`mt-8 max-w-[46rem] text-xl leading-9 md:text-2xl md:leading-10 ${currentStyle.headerMeta}`}>
+                                        {frontmatter.excerpt}
+                                    </p>
+                                )}
+                                {frontmatter.tags && frontmatter.tags.length > 0 && (
+                                    <div className="mt-6 flex flex-wrap gap-2">
+                                        {frontmatter.tags.map(tag => (
+                                            <span
+                                                key={tag}
+                                                className={`text-xs px-2.5 py-1 rounded-md cursor-default ${currentStyle.tagBg}`}
+                                            >
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
 
-                        <aside className="grid gap-4 text-left xl:col-span-2 xl:col-start-10 xl:self-end">
-                            <ArticleInfoItem icon={BookOpen} label="专栏" value={columnConfig?.name || frontmatter.column} />
-                            <ArticleInfoItem icon={UserRound} label="作者" value={frontmatter.author || '佚名'} />
-                            <ArticleInfoItem icon={CalendarDays} label="发布" value={formattedDate} />
-                            <ArticleInfoItem icon={Clock3} label="阅读时间" value={`${readingMinutes} 分钟`} />
-                            {mediaType && (
-                                <ArticleInfoItem
-                                    icon={mediaType === 'interactive' ? Map : Newspaper}
-                                    label="媒体"
-                                    value={mediaLabel}
-                                />
-                            )}
-                        </aside>
+                            <aside className="grid gap-4 text-left xl:col-span-2 xl:col-start-10 xl:self-end">
+                                <ArticleInfoItem icon={BookOpen} label="专栏" value={columnConfig?.name || frontmatter.column} />
+                                <ArticleInfoItem icon={UserRound} label="作者" value={frontmatter.author || '佚名'} />
+                                <ArticleInfoItem icon={CalendarDays} label="发布" value={formattedDate} />
+                                <ArticleInfoItem icon={Clock3} label="阅读时间" value={`${readingMinutes} 分钟`} />
+                                {mediaType && (
+                                    <ArticleInfoItem
+                                        icon={mediaType === 'interactive' ? Map : Newspaper}
+                                        label="媒体"
+                                        value={mediaLabel}
+                                    />
+                                )}
+                            </aside>
                         </header>
                     </section>
 
@@ -237,7 +232,7 @@ export default async function PostPage({ params }) {
                         </article>
 
                         <aside className="relative hidden xl:col-span-2 xl:col-start-11 xl:block">
-                            <div className="sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto space-y-4 pr-2">
+                            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto space-y-4 pr-2">
                                 {!isTechChannel && (
                                     <MusicPlayer playlist={musicPlaylist} />
                                 )}

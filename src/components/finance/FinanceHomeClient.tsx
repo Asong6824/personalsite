@@ -104,7 +104,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                 >
                     {/* Large Card */}
                     {featuredPost ? (
-                        <motion.article variants={FADE_UP} className="md:col-span-6 lg:col-span-8 group relative overflow-hidden rounded-xl aspect-[16/9] lg:aspect-auto">
+                        <motion.article variants={FADE_UP} className="md:col-span-6 lg:col-span-8 group relative min-h-[22rem] overflow-hidden rounded-xl sm:min-h-0 sm:aspect-[16/9]">
                             <div className="absolute inset-0" style={{ backgroundColor: '#f4f4ef' }}>
                                 {featuredPost.coverImage ? (
                                     <Image
@@ -141,7 +141,7 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
 
                     {/* Vertical Card */}
                     {secondPost ? (
-                        <motion.article variants={FADE_UP} className="md:col-span-3 lg:col-span-4 rounded-xl p-8 flex flex-col justify-between" style={{ backgroundColor: '#e3e3de' }}>
+                        <motion.article variants={FADE_UP} className="md:col-span-3 lg:col-span-4 min-h-40 rounded-xl p-8 flex flex-col justify-between" style={{ backgroundColor: '#e3e3de' }}>
                             <div>
                                 <h3 className="text-xl font-bold leading-tight mb-4" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>{secondPost.title}</h3>
                                 {secondPost.excerpt && <p className="text-sm leading-relaxed line-clamp-3" style={{ color: '#444748' }}>{secondPost.excerpt}</p>}
@@ -153,20 +153,20 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                             </div>
                         </motion.article>
                     ) : (
-                        <motion.div variants={FADE_UP} className="md:col-span-3 lg:col-span-4 rounded-xl p-8 flex flex-col justify-center" style={{ backgroundColor: '#e3e3de' }}>
+                        <motion.div variants={FADE_UP} className="md:col-span-3 lg:col-span-4 min-h-40 rounded-xl p-8 flex flex-col justify-center" style={{ backgroundColor: '#e3e3de' }}>
                             <p className="text-sm" style={{ color: '#747878' }}>敬请期待更多内容</p>
                         </motion.div>
                     )}
 
                     {/* Small Grid Items */}
                     {smallPosts.map((post, i) => (
-                        <motion.div key={post.slug} variants={FADE_UP} className="md:col-span-3 lg:col-span-4 rounded-xl p-6" style={{ backgroundColor: '#f4f4ef', borderBottom: `4px solid ${i === 0 ? 'rgba(80,99,84,0.2)' : i === 1 ? 'rgba(233,193,118,0.4)' : 'rgba(186,26,26,0.2)'}` }}>
+                        <motion.div key={post.slug} variants={FADE_UP} className="md:col-span-3 lg:col-span-4 min-h-32 rounded-xl p-6" style={{ backgroundColor: '#f4f4ef', borderBottom: `4px solid ${i === 0 ? 'rgba(80,99,84,0.2)' : i === 1 ? 'rgba(233,193,118,0.4)' : 'rgba(186,26,26,0.2)'}` }}>
                             <h4 className="text-lg font-bold mb-2" style={{ fontFamily: 'var(--font-noto-serif-sc)' }}>{post.title}</h4>
                             {post.excerpt && <p className="text-xs line-clamp-2" style={{ color: '#444748' }}>{post.excerpt}</p>}
                         </motion.div>
                     ))}
                     {smallPosts.length < 3 && Array.from({ length: 3 - smallPosts.length }).map((_, i) => (
-                        <motion.div key={`empty-${i}`} variants={FADE_UP} className="md:col-span-3 lg:col-span-4 rounded-xl p-6 flex items-center justify-center" style={{ backgroundColor: '#f4f4ef', borderBottom: `4px solid rgba(196,199,199,0.2)` }}>
+                        <motion.div key={`empty-${i}`} variants={FADE_UP} className="md:col-span-3 lg:col-span-4 min-h-32 rounded-xl p-6 flex items-center justify-center" style={{ backgroundColor: '#f4f4ef', borderBottom: `4px solid rgba(196,199,199,0.2)` }}>
                             <p className="text-xs" style={{ color: '#747878' }}>即将发布</p>
                         </motion.div>
                     ))}

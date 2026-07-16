@@ -94,7 +94,7 @@ export function TableOfContents() {
   const mutedColor = 'var(--channel-muted, rgb(115 115 115))';
 
   return (
-    <nav className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <nav>
       <div className="pl-4 border-l" style={{ borderColor }}>
         <h3 className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: mutedColor }}>
           目录

@@ -156,7 +156,7 @@ nextReads:
 
 ### 目录
 
-`TableOfContents` 位于右侧 sticky aside，只在 `xl` 及以上视口显示。
+`TableOfContents` 位于正文区右侧的 sticky aside，只在 `xl` 及以上视口显示。它先随正文进入视口，滚动到距视口顶部 `7rem` 后吸附；内容超过可用高度时，侧栏内部独立滚动。
 
 它是客户端组件，会在浏览器中查询：
 

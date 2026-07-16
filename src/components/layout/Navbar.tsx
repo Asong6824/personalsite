@@ -9,6 +9,8 @@ import { AnimatePresence, motion, useReducedMotion, useScroll, useMotionValueEve
 import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { NAV_LINKS } from './navLinks';
 
+const NAVBAR_LINKS = NAV_LINKS.filter((linkItem) => linkItem.href !== '/');
+
 function NavPendingIndicator({ active }: { active: boolean }) {
     const { pending } = useLinkStatus();
 
@@ -30,14 +32,8 @@ const Navbar = () => {
     const { scrollY } = useScroll();
 
     const activeHref = useMemo(() => {
-        const matchingLinks = NAV_LINKS
-            .filter((linkItem) => {
-                if (linkItem.href === '/') {
-                    return pathname === '/';
-                }
-
-                return pathname === linkItem.href || pathname.startsWith(`${linkItem.href}/`);
-            })
+        const matchingLinks = NAVBAR_LINKS
+            .filter((linkItem) => pathname === linkItem.href || pathname.startsWith(`${linkItem.href}/`))
             .sort((a, b) => b.href.length - a.href.length);
 
         return matchingLinks[0]?.href ?? null;
@@ -134,7 +130,7 @@ const Navbar = () => {
 
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-1">
-                                {NAV_LINKS.map((linkItem) => {
+                                {NAVBAR_LINKS.map((linkItem) => {
                                     const isActive = activeHref === linkItem.href;
                                     const isPending = pendingHref === linkItem.href;
 
@@ -186,7 +182,7 @@ const Navbar = () => {
                             id="mobile-menu"
                         >
                             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                                {NAV_LINKS.map((linkItem) => {
+                                {NAVBAR_LINKS.map((linkItem) => {
                                     const isActive = activeHref === linkItem.href;
                                     const isPending = pendingHref === linkItem.href;
 

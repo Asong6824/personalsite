@@ -20,7 +20,9 @@ function formatDate(date: string) {
 
 export default function BlogIndexPage() {
     const allPosts = getSortedPostsData();
-    const latestPosts = allPosts.slice(0, 12);
+    const latestPosts = [...allPosts]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 12);
 
     const channels = Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({
         key,

@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
             className={`${inter.variable} ${jetbrainsMono.variable} ${newsreader.variable} ${notoSerifSc.variable}`}
         >
             <body
-                className="overflow-x-hidden font-sans text-foreground"
+                className="overflow-x-clip font-sans text-foreground"
                 style={{ backgroundColor: SITE_WARM_BACKGROUND }}
                 suppressHydrationWarning
             >

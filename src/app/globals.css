@@ -939,7 +939,7 @@
 html,
 body {
   background: var(--site-page-bg);
-  overflow-x: hidden;
+  overflow-x: clip;
   overscroll-behavior-x: none;
 }
 
