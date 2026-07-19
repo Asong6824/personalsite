@@ -187,13 +187,14 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 public/home-experience/
 ├── awards/
 ├── backTexture/
+├── draco/
 ├── hdri/
 ├── models/
 ├── revs/
 └── svgtitle/
 ```
 
-`THREE.LoadingManager` 汇总 GLB 加载进度，并驱动首屏进度条。纹理、SVG 与模型应继续使用 `/home-experience/...` 绝对站内路径。
+`THREE.LoadingManager` 汇总 GLB 加载进度，并驱动首屏进度条。纹理、SVG、模型与 Draco 解码器应继续使用 `/home-experience/...` 绝对站内路径。Draco 解码器必须保持站内托管，避免首页初始化依赖第三方运行时脚本。
 
 首页背景色的代码来源是 `src/lib/site-theme.ts` 中的 `SITE_WARM_BACKGROUND` / `SITE_WARM_BACKGROUND_THREE`。不要在首页外层、加载态或 Three.js fallback 中重新硬编码临时背景色。
 

@@ -40,12 +40,22 @@ export default function StockComparisonChart({
           if (ds && ds.type === 'timeseries' && Array.isArray(ds.series)) {
             const mapped = {
               meta: { source: 'dataset' },
-              series: ds.series.map(s => ({
-                symbol: s.key,
-                name: s.label || s.key,
-                points: (s.points || []).map(p => ({ timestamp: p.t, price: p.v })),
-                latest: undefined
-              }))
+              series: ds.series.map(s => {
+                const points = (s.points || []).map(p => ({ timestamp: p.t, price: p.v }))
+                const latestPoint = points[points.length - 1]
+                const previousPoint = points[points.length - 2] || latestPoint
+                const price = latestPoint?.price
+                const prevClose = previousPoint?.price
+                const change = price !== undefined && prevClose !== undefined ? price - prevClose : undefined
+                const changePct = change !== undefined && prevClose ? (change / prevClose) * 100 : undefined
+
+                return {
+                  symbol: s.key,
+                  name: s.label || s.key,
+                  points,
+                  latest: price === undefined ? undefined : { price, prevClose, change, changePct }
+                }
+              })
             }
             setPayload(mapped)
           } else {
@@ -158,8 +168,8 @@ export default function StockComparisonChart({
         <div ref={chartRef} style={{ height: '100%', width: '100%' }} />
       </div>
 
-      <div style={{ marginTop: 12 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div style={{ marginTop: 12, maxWidth: '100%', overflowX: 'auto' }}>
+        <table style={{ width: '100%', minWidth: 620, borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ textAlign: 'left', borderBottom: `1px solid ${isDark ? '#444' : '#ddd'}` }}>
               <th style={{ padding: '8px 4px' }}>Symbol</th>

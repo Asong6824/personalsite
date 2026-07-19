@@ -69,6 +69,7 @@
 | `ALLOW_API_FILE_WRITES` | 本地维护开关；设为 `1` 时允许 API 写入 `src/data` 文件 |
 | `ENABLE_ARCHIVED_NOTION_API` | 已封存 Notion API 开关；设为 `1` 时才允许旧接口运行 |
 | `NOTION_TOKEN` | 已封存的 Notion 集成 Token；当前默认不配置 |
+| `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR` | 本地性能调试覆盖层开关；仅开发环境设为 `1` 时加载 FPS 与 React Scan |
 
 `NOTION_DB_ACTIVITIES`、`NOTION_DB_GOALS`、`NOTION_DB_KRS` 同属已封存的 Notion 集成。除非明确执行重新启用工作，否则本地开发、测试和部署均不要求配置这些变量。
 
@@ -86,7 +87,7 @@
 
 ## 测试
 
-项目使用 **Vitest** 作为测试框架，配置见 `vitest.config.ts`。
+项目使用 **Vitest** 执行单元测试，并使用 **Playwright** 执行全页面响应式布局巡检。配置分别见 `vitest.config.ts` 和 `playwright.config.ts`。
 
 ### 运行测试
 
@@ -94,7 +95,18 @@
 npm run test        # 运行全部测试（CI 模式）
 npm run test:watch  # 监听模式
 npm run test:ui     # UI 界面模式
+npm run test:responsive          # 六组核心视口的全页面响应式巡检
+npm run test:responsive:desktop  # 仅运行标准桌面视口
+npm run test:responsive:report   # 打开最近一次 Playwright HTML 报告
 ```
+
+首次运行响应式测试前，需要执行 `npx playwright install chromium` 安装测试浏览器。响应式路由清单由 `src/lib/channels.ts` 和生成后的 `src/data/posts/index.json` 动态构建；新增频道、专栏或文章后无需手工登记测试 URL。Chromium 全量覆盖的核心视口为 320×568、390×844、768×1024、1024×768、1440×900 和 1920×1080。
+
+`tests/e2e/responsive/breakpoints.spec.ts` 会在 480、640、768、1024、1280、1536 六个断点的前后 1px 检查代表页面。CI 使用独立的“响应式布局巡检”任务，在生产构建上运行全套测试，并在失败时上传截图、trace 和 HTML 报告。本地开发服务器并发限制为 2 个 worker，失败用例自动重试一次，以降低冷编译和远程图片代理抖动造成的误报。
+
+响应式巡检会检查路由状态、移动端首页重定向、页面横向溢出、破损图片、Canvas 尺寸、浏览器控制台错误和运行时异常。失败时的截图与 trace 写入 `test-results/`，HTML 报告写入 `playwright-report/`，两者均不提交 Git。
+
+本轮巡检发现的问题、根因、修复状态和剩余风险统一记录在 `docs/responsive-quality-audit.md`。新增响应式豁免、外部资源依赖或已知失败时，必须同步更新该质量台账。
 
 ### 测试覆盖范围
 

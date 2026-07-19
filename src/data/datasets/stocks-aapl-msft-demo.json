@@ -1,0 +1,31 @@
+{
+  "id": "stocks-aapl-msft-demo",
+  "type": "timeseries",
+  "name": "AAPL vs MSFT Demo",
+  "tags": ["stocks"],
+  "createdAt": "2025-11-12T00:00:00.000Z",
+  "updatedAt": "2025-11-12T00:00:00.000Z",
+  "series": [
+    {
+      "key": "AAPL",
+      "label": "Apple",
+      "unit": "USD",
+      "points": [
+        { "t": "2025-01-01", "v": 195.2 },
+        { "t": "2025-02-01", "v": 197.5 },
+        { "t": "2025-03-01", "v": 202.1 }
+      ]
+    },
+    {
+      "key": "MSFT",
+      "label": "Microsoft",
+      "unit": "USD",
+      "points": [
+        { "t": "2025-01-01", "v": 410.3 },
+        { "t": "2025-02-01", "v": 412.8 },
+        { "t": "2025-03-01", "v": 418.4 }
+      ]
+    }
+  ],
+  "granularity": "1d"
+}

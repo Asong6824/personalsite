@@ -554,7 +554,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
     };
 
     const dracoLoader = new DRACOLoader(loadingManager);
-    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.5/");
+    dracoLoader.setDecoderPath("/home-experience/draco/");
     const glbLoader = new GLTFLoader(loadingManager);
     glbLoader.setDRACOLoader(dracoLoader);
 

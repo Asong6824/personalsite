@@ -7,8 +7,8 @@ export default function Page() {
     { id: 'q1-2025', label: '2025 Q1', start: '2025-01-01', end: '2025-03-31' }
   ]
   return (
-    <div style={{ padding: 24 }}>
-      <h2 style={{ fontWeight: 700, marginBottom: 12 }}>Datasets Demo</h2>
+    <main className="mx-auto w-full max-w-7xl min-w-0 px-4 pb-12 pt-28 sm:px-6">
+      <h1 className="mb-4 text-2xl font-bold">Datasets Demo</h1>
       <StockComparisonChart
         symbols={["AAPL","MSFT"]}
         ranges={ranges}
@@ -16,6 +16,6 @@ export default function Page() {
         datasetId={"stocks-aapl-msft-demo"}
         theme={'light'}
       />
-    </div>
+    </main>
   )
 }

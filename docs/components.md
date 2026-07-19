@@ -42,7 +42,7 @@
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar`、`RouteTransitionFeedback`、`RouteLoadingSkeleton` |
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
-| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载于 `layout.tsx`） |
+| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载，但仅在开发环境设置 `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR=1` 时启用） |
 | `src/components/StructuredData.tsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
 | `content/components/` | 文章交互组件（可视化、图表） | `agent/*`、`color/*`、`rag/*`、`sketchy/*`、`travel/*` |
 

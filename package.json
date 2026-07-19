@@ -12,6 +12,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
+    "pretest:responsive": "tsx scripts/build-posts-index.ts",
+    "test:responsive": "playwright test",
+    "test:responsive:desktop": "playwright test --project=desktop-standard",
+    "test:responsive:report": "playwright show-report",
     "gate": "tsx scripts/gate-check.ts",
     "audit:content": "tsx scripts/audit-content-organization.ts",
     "ingest:stocks": "tsx scripts/ingest-stocks.ts",
@@ -74,6 +78,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
     "@types/echarts": "^4.9.22",

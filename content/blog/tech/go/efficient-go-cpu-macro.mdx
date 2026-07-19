@@ -16,7 +16,7 @@ coverImage: 'https://blog-assets-asong.tos-cn-beijing.volces.com/tech/go/efficie
 本文从CPU和汇编开始，理解CPU是如何执行指令的；然后探究Go编译器编译的全过程，了解当执行`go build`时发生了什么；最后从内存墙问题入手，探讨现代CPU设计，并发和调度器。
 # 现代计算机体系结构中的CPU
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce5eaf93cb0142c496537b13c4a2e4a3~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1155&h=946&s=449389&e=png&b=f6f6f6)
+![现代计算机体系结构](/blog-assets/tech/go/efficient-go-cpu-architecture.png)
 
 在现代的计算机体系结构中，计算机的硬件都执行相同的基本功能：输入数据、输出数据、处理数据和存储数据。在冯诺依曼架构中，CPU是处理数据的核心。一个CPU由多个核心组成。每个核心都可以执行所需的指令，与此同时某些数据被保存在随机访问存储器（RAM）或其他内存层次如寄存器或L-缓存中。CPU与RAM、磁盘和网络接口等I/O设备构成了计算机最基础的部分，这些是在“效率要求应该正式化”中提到的“资源”，也是在软件开发中通常优化的对象。
 
@@ -49,7 +49,7 @@ Go的编译过程与C语言的编译过程相似，使用编译器来编译，�
 `go build`命令调用编译和链接两个阶段。虽然链接阶段也执行某些优化和检查，但编译器可能执行最复杂的任务。Go编译器一次专注于一个包。它将包源代码编译成目标架构和操作系统支持的本机代码。除此之外，它还验证和优化这些代码，并为调试目的准备重要的元数据。
 
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42d4f73e8f654127b092c65e4b441b53~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1575&h=1164&s=58233&e=png&b=ffffff)
+![Go 编译流程](/blog-assets/tech/go/efficient-go-build-process.png)
 
 编译的整个过程围绕Go程序中使用的包展开。每个包都是分别编译的，这允许并行编译和关注点分离。图4中展示的编译流程如下：
 
@@ -81,7 +81,7 @@ Go 构建过程中有许多不同的配置选项。首批大量的选项可以�
 编译过程在减轻程序员从事繁琐工作方面起着至关重要的作用。没有编译器优化，我们需要编写更多的代码才能达到相同的效率水平，同时牺牲了可读性和可移植性。但是想要最大化利用CPU的计算资源，还需要处理一些问题。
 # CPU与内存墙问题
 
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8fcf3f840c074b7f97c3252ef1364cc6~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1162&h=546&s=69509&e=png&b=f0f0f1)
+![CPU 内存层次结构](/blog-assets/tech/go/efficient-go-memory-hierarchy.png)
 
 竖轴使用对数刻度来记录CPU-DRAM 性能差距的大小。基线是 1980 年的 64 KiB DRAM，延迟性能每年提高 1.07。处理器线假设每年提高 1.25，直到 1986 年，然后到 2000 年每年提高 1.52，2000 年到 2005 年间每年提高 1.20，2005 年到 2015 年间处理器性能（按每核计）仅有小幅提高。尽管CPU单核的性能不再增长，但DRAM与CPU的延迟表现依然差距明显，在多核持续发展的今天，差距只会被进一步拉大。
 
@@ -91,12 +91,12 @@ Go 构建过程中有许多不同的配置选项。首批大量的选项可以�
 ## 多级缓存
 多级缓存是一个使用了局部性原理和平衡内存技术的成本性能的设计。局部性原理指出，大多数程序并不均匀地访问所有代码或数据，局部性在时间上（时间局部性）和空间上（空间局部性）都有发生。这个原理加上这样一个指导方针：对于给定的实现技术和功率预算，更小的硬件可以做得更快，导致了基于不同速度和大小的存储器的层次结构。
 
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b69d0f6e6394754955ab31c99dd32f6~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=969&h=300&s=98558&e=png&b=ffffff)
+![CPU 指令执行示意](/blog-assets/tech/go/efficient-go-instruction-execution.png)
 
 ## 流水线
 流水线是一种实现多条指令重叠执行的技术，与生产流水线类似。CPU的流水线将指令的执行分解为几个阶段，每个阶段由不同的硬件单元处理，使得多个指令可以重叠执行，从而提高了执行效率。
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bde38eac9d054438ac56b83cddc47968~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=982&h=666&s=119703&e=png&b=ffffff)
+![Go 调度器模型](/blog-assets/tech/go/efficient-go-scheduler.png)
 
 ## 超线程
 超线程是英特尔用来称呼同时多线程（SMT）的专有名称。其他 CPU 制造商也实现了 SMT 技术。这种方法允许单个 CPU 核心在对程序和操作系统可见的模式下作为两个逻辑 CPU 核心操作。SMT 促使操作系统将两个线程调度到同一个物理 CPU 核心上。虽然单个物理核心一次永远不会执行多于一个指令，但队列中的更多指令有助于在空闲时间保持 CPU 核心的忙碌。考虑到内存访问等待时间，这可以在不影响过程执行的延迟的情况下更有效地利用单个 CPU 核心。此外，SMT 中的额外寄存器使 CPU 能够更快地在单个物理核心上运行的多个线程之间进行上下文切换。

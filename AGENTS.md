@@ -43,6 +43,7 @@ scripts/               # 构建与数据摄入脚本
 npm run dev      # 开发（自动重建索引）
 npm run build    # 生产构建
 npm run lint     # 代码检查
+npm run test:responsive  # 全页面响应式布局巡检
 ```
 
 ---
@@ -66,6 +67,7 @@ npm run lint     # 代码检查
 | 手绘风格组件库（Sketchy） | `docs/sketchy-components.md` |
 | 数据系统（股票、数据集、Notion） | `docs/data-system.md` |
 | 开发约定（风格、缓存、环境变量） | `docs/conventions.md` |
+| 响应式布局质量审计（问题、修复、剩余风险） | `docs/responsive-quality-audit.md` |
 | 架构反思与未来方向 | `docs/architecture-reflection.md` |
 
 ---
@@ -85,6 +87,7 @@ npm run lint     # 代码检查
 | `src/lib/config-validator.ts` | 频道配置校验（开发环境） |
 | `src/lib/api/datasets.ts` | 前端数据集查询封装 |
 | `vitest.config.ts` | 测试框架配置 |
+| `playwright.config.ts` | 响应式布局测试的浏览器、视口与运行环境配置 |
 | `scripts/gate-check.ts` | 总门禁脚本（lint + test + build + 索引验证） |
 | `src/app/blog/[...slug]/page.tsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
 | `src/components/article/mdx-components.tsx` | 文章 MDX 组件注册表 |

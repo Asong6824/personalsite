@@ -35,3 +35,40 @@ jobs:
           path: |
             .next/
             !.next/cache/
+
+  responsive-check:
+    name: 响应式布局巡检
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: 安装依赖
+        run: npm ci --legacy-peer-deps
+
+      - name: 安装测试浏览器
+        run: npx playwright install --with-deps chromium
+
+      - name: 构建生产版本
+        run: npm run build
+
+      - name: 运行响应式布局巡检
+        run: npm run test:responsive
+        env:
+          PLAYWRIGHT_USE_PRODUCTION: "1"
+
+      - name: 上传失败报告
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-test-report
+          path: |
+            playwright-report/
+            test-results/

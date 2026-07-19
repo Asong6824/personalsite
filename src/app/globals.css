@@ -1558,6 +1558,10 @@ article {
   margin-bottom: 1.15em;
 }
 
+.article-reading-prose a {
+  overflow-wrap: anywhere;
+}
+
 .article-reading-prose h2 {
   border-top: 1px solid var(--channel-border, transparent);
   padding-top: 1.35em;

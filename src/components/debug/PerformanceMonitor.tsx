@@ -3,8 +3,12 @@
 import { useEffect } from 'react';
 
 export default function PerformanceMonitor() {
+    const isEnabled =
+        process.env.NODE_ENV === 'development' &&
+        process.env.NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR === '1';
+
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (!isEnabled || typeof window === 'undefined') return;
 
         let frameId;
         let statsDom;
@@ -46,7 +50,7 @@ export default function PerformanceMonitor() {
             }
             if (frameId) cancelAnimationFrame(frameId);
         };
-    }, []);
+    }, [isEnabled]);
 
     return null;
 }
