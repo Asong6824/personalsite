@@ -45,12 +45,29 @@ describe("post-index", () => {
     });
 
     it("构建包含单篇文章的索引", () => {
-      writePost("hello.mdx", "title: Hello\ndate: 2026-01-01");
+      writePost(
+        "hello.mdx",
+        "title: Hello\ndate: 2026-01-01",
+        "Content <InlineExplanation explanation=\"Detail\">term</InlineExplanation>",
+      );
       const idx = postIndex.getOrBuildPostsIndex();
       expect(idx.items).toHaveLength(1);
       expect(idx.items[0].slug).toBe("hello");
       expect(idx.items[0].rel).toBe("hello.mdx");
       expect(idx.items[0].data.title).toBe("Hello");
+      expect(idx.items[0].components).toEqual(["InlineExplanation"]);
+    });
+
+    it("未知 MDX 组件会阻止索引构建", () => {
+      writePost(
+        "unknown.mdx",
+        "title: Unknown\ndate: 2026-01-01",
+        "<UnknownWidget />",
+      );
+
+      expect(() => postIndex.getOrBuildPostsIndex()).toThrow(
+        /Unknown MDX components: UnknownWidget/,
+      );
     });
 
     it("默认使用文件路径作为 slug", () => {
@@ -101,7 +118,8 @@ describe("post-index", () => {
   describe("索引读写", () => {
     it("索引写入后可以被读取", () => {
       const testIndex = {
-        items: [{ slug: "test", rel: "test.mdx", data: { title: "Test", date: "2026-01-01" } }],
+        version: 2,
+        items: [{ slug: "test", rel: "test.mdx", data: { title: "Test", date: "2026-01-01" }, components: [] }],
         updatedAt: "2026-01-01T00:00:00.000Z",
       };
       postIndex.writePostsIndex(testIndex);

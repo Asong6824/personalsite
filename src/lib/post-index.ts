@@ -4,6 +4,8 @@ import matter from "gray-matter";
 import { globSync } from "glob";
 import { CHANNELS_CONFIG } from "./channels";
 import { validateChannelExists, validateColumnExists } from "./config-validator";
+import { analyzeMdxComponents } from "./article/mdx-component-analysis";
+import type { ArticleMdxComponentName } from "./article/mdx-component-manifest";
 import type { Post, PostFrontmatter } from "@/types";
 
 const ROOT = process.cwd();
@@ -15,13 +17,17 @@ const INDEX_DIR = process.env.TEST_INDEX_DIR
   : path.join(ROOT, "src", "data", "posts");
 const INDEX_FP = path.join(INDEX_DIR, "index.json");
 
+const POSTS_INDEX_VERSION = 2;
+
 interface IndexItem {
   slug: string;
   rel: string;
   data: PostFrontmatter;
+  components: ArticleMdxComponentName[];
 }
 
 interface PostsIndex {
+  version: number;
   items: IndexItem[];
   updatedAt: string;
 }
@@ -40,11 +46,18 @@ function buildIndexFromFS(): PostsIndex {
   console.log("[PostIndex] Rebuilding index from FS...");
   const files = getMdFiles();
   const items: IndexItem[] = [];
+  const errors: string[] = [];
   for (const rel of files) {
     const fp = path.join(POSTS_DIR, rel);
     try {
       const raw = fs.readFileSync(fp, "utf-8");
-      const { data } = matter(raw);
+      const { data, content } = matter(raw);
+      const componentAnalysis = analyzeMdxComponents(content);
+      if (componentAnalysis.unknownComponents.length > 0) {
+        throw new Error(
+          `Unknown MDX components: ${componentAnalysis.unknownComponents.join(", ")}`,
+        );
+      }
       const pathSlug = rel.replace(/\.mdx?$/, "");
       let slug = pathSlug;
       const fmSlug = (data.slug as string)?.trim();
@@ -58,10 +71,24 @@ function buildIndexFromFS(): PostsIndex {
           slug = dir === "." ? fmSlug : `${dir}/${fmSlug}`;
         }
       }
-      items.push({ slug, rel, data: data as PostFrontmatter });
+      items.push({
+        slug,
+        rel,
+        data: data as PostFrontmatter,
+        components: componentAnalysis.components,
+      });
     } catch (e) {
-      console.error(`[PostIndex] Error reading ${rel}:`, e);
+      const message = e instanceof Error ? e.message : String(e);
+      errors.push(`${rel}: ${message}`);
     }
+  }
+
+  if (errors.length > 0) {
+    throw new Error(
+      `[PostIndex] Failed to build article index:\n${errors
+        .map((error) => `- ${error}`)
+        .join("\n")}`,
+    );
   }
 
   items.sort((a, b) => {
@@ -74,7 +101,11 @@ function buildIndexFromFS(): PostsIndex {
     return bd - ad;
   });
 
-  const index: PostsIndex = { items, updatedAt: new Date().toISOString() };
+  const index: PostsIndex = {
+    version: POSTS_INDEX_VERSION,
+    items,
+    updatedAt: new Date().toISOString(),
+  };
   _memIndex = index;
   return index;
 }
@@ -101,7 +132,11 @@ export function writePostsIndex(index: PostsIndex): PostsIndex {
 
 export function getOrBuildPostsIndex(): PostsIndex {
   let idx = readPostsIndex();
-  if (!idx || !Array.isArray(idx.items)) {
+  if (
+    !idx ||
+    idx.version !== POSTS_INDEX_VERSION ||
+    !Array.isArray(idx.items)
+  ) {
     return writePostsIndex(buildIndexFromFS());
   }
   if (process.env.NODE_ENV === "production") {
@@ -144,6 +179,13 @@ export function findPostPathBySlug(slug: string): string | null {
   const idx = getOrBuildPostsIndex();
   const hit = idx?.items?.find((i: IndexItem) => i.slug === slug);
   return hit ? path.join(POSTS_DIR, hit.rel) : null;
+}
+
+export function getIndexedPostComponents(
+  slug: string,
+): ArticleMdxComponentName[] {
+  const idx = getOrBuildPostsIndex();
+  return idx.items.find((item) => item.slug === slug)?.components ?? [];
 }
 
 function toPost(item: IndexItem): Post {

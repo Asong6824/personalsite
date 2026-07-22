@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { BlogKnowledgeMap } from '@/components/features/BlogKnowledgeMap';
+import { CONTENT_GRAPH_SLUGS } from '@/data/content-graph';
 import { CHANNELS_CONFIG } from '@/lib/channels';
 import { getSortedPostsData } from '@/lib/post';
 
@@ -23,6 +25,18 @@ export default function BlogIndexPage() {
     const latestPosts = [...allPosts]
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 12);
+    const contentGraphSlugs = new Set(CONTENT_GRAPH_SLUGS);
+    const knowledgeMapPosts = allPosts
+        .filter((post) => contentGraphSlugs.has(post.slug))
+        .map((post) => ({
+            slug: post.slug,
+            title: post.title,
+            date: post.date,
+            channel: post.channel,
+            column: post.column,
+            tags: post.tags,
+            excerpt: post.excerpt,
+        }));
 
     const channels = Object.entries(CHANNELS_CONFIG).map(([key, config]) => ({
         key,
@@ -79,6 +93,8 @@ export default function BlogIndexPage() {
                         ))}
                     </div>
                 </section>
+
+                <BlogKnowledgeMap posts={knowledgeMapPosts} />
 
                 <section aria-labelledby="latest-heading" className="pt-12 lg:pt-16">
                     <div className="grid gap-8 lg:grid-cols-12 lg:gap-8">

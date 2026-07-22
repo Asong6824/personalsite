@@ -6,8 +6,10 @@ import {
   listIndexedPosts,
   listIndexedSlugs,
   findPostPathBySlug,
+  getIndexedPostComponents,
   getOrBuildPostsIndex,
 } from "./post-index";
+import type { ArticleMdxComponentName } from "./article/mdx-component-manifest";
 
 import type { Post, PostFrontmatter } from "@/types";
 
@@ -30,6 +32,7 @@ interface PostData {
   slug: string;
   frontmatter: PostFrontmatter;
   content: string;
+  components: ArticleMdxComponentName[];
 }
 
 function _getPostData(slug: string): PostData | null {
@@ -47,7 +50,12 @@ function _getPostData(slug: string): PostData | null {
     if (data.hidden) {
       return null;
     }
-    return { slug, frontmatter: data as PostFrontmatter, content };
+    return {
+      slug,
+      frontmatter: data as PostFrontmatter,
+      content,
+      components: getIndexedPostComponents(slug),
+    };
   } catch (error) {
     console.error(
       `Error reading or parsing post with slug "${slug}":`,

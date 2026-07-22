@@ -16,6 +16,7 @@ vi.mock("../post-index", () => ({
     const hit = mockIndexItems.find((i) => i.slug === slug);
     return hit ? `/mock/content/blog/${hit.data.rel || slug}` : null;
   },
+  getIndexedPostComponents: () => [],
   getOrBuildPostsIndex: () => ({
     items: mockIndexItems,
     updatedAt: new Date().toISOString(),

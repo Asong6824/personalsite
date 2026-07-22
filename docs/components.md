@@ -6,7 +6,7 @@
 1. 给文章用的交互/可视化？
    ├─ 2+ 篇文章复用 ──────→ content/components/{topic}/
    └─ 仅一篇用 ───────────→ content/blog/{slug}/components/
-      （注：动态加载机制暂未实现，目前暂放 content/components/{topic}/）
+      （仍需加入统一组件清单与按需加载器）
 
 2. 给页面级区块用的？
    ├─ 首页 3D 体验 ───────→ src/components/home/
@@ -54,7 +54,7 @@
 
 ## MDX 自定义组件
 
-`src/app/blog/[...slug]/page.tsx` 中通过 `next-mdx-remote/rsc` 注入自定义组件，供文章直接使用：
+`src/app/blog/[...slug]/page.tsx` 中通过 `next-mdx-remote/rsc` 注入自定义组件。构建索引会从 MDX AST 提取每篇文章实际使用的组件，客户端交互组件通过 lazy wrapper 按文章加载：
 
 - `InlineExplanation` — 行内解释提示
 - `BentoGrid` / `BentoGridItem` — 网格布局
@@ -74,20 +74,17 @@
 - 预计被 **2+ 篇文章复用** → `content/components/{topic}/`
   - 例：`content/components/color/HSBSliders.jsx`（被 creative 和 tech 两篇文章共用）
 - **严格单篇专属**且不可能复用 → `content/blog/{slug}/components/`
-  - （需 `page.tsx` 支持动态加载；当前尚未实现，暂放 `content/components/{topic}/`）
+  - 仍需加入统一白名单和显式加载器，保证构建校验与代码拆分可追踪
 
 **理由：** 文章组件与 UI 原语生命周期不同。文章归档时，其组件应一并消失。`content/` 与 `src/components/` 的物理边界使这一关系显性化。
 
-**路径别名：** `tsconfig.json` 中 `@content/*` 映射到 `./content/*`。在 `page.tsx` 中导入：
-```js
-import { DualTimeline } from '@content/components/rag/DualTimeline';
-```
+**路径别名：** `tsconfig.json` 中 `@content/*` 映射到 `./content/*`。组件入口统一维护在 `src/components/article/mdx-client-components.tsx` 和 `src/components/article/mdx-components.tsx`，文章页不直接静态导入全部内容组件。
 
 ---
 
 ## 文章可用组件速查
 
-以下组件在 `src/app/blog/[...slug]/page.tsx` 的 `mdxComponents` 中已注册，可在任意 MDX 文章中直接使用。
+以下组件已加入 MDX 白名单，可在任意文章中直接使用。只有正文实际出现的组件才会进入该文章的运行时映射和客户端加载链路。
 
 ### 通用交互组件
 

@@ -15,7 +15,10 @@
 文章渲染相关的可复用配置已从路由文件拆出：
 
 - `src/components/article/article-channel-styles.ts`：频道级文章样式 token。
-- `src/components/article/mdx-components.tsx`：MDX 组件注册表和标题覆盖。
+- `src/components/article/mdx-components.tsx`：根据文章索引按需组装 MDX 组件注册表，并提供标题覆盖。
+- `src/components/article/mdx-client-components.tsx`：客户端交互组件的 lazy wrapper，确保组件实现不进入所有文章的首屏包。
+- `src/lib/article/mdx-component-manifest.ts`：允许在文章中使用的组件名称白名单。
+- `src/lib/article/mdx-component-analysis.ts`：基于 MDX AST 提取文章实际使用的组件。
 - `src/components/article/ArticleInfoItem.tsx`：文章头部元信息项。
 - `src/components/article/ArticleRecommendations.tsx`：文章底部“接下来阅读”推荐区块。
 - `src/lib/article/mdx-options.ts`：`remark` / `rehype` 插件配置。
@@ -35,8 +38,11 @@
 - `slug`：默认来自文件路径，frontmatter 的 `slug` 只覆盖最后一段文件名。
 - `rel`：相对 `content/blog/` 的 MDX 文件路径。
 - `data`：frontmatter 原始数据。
+- `components`：正文实际使用的已注册 MDX 组件名称。
 
 开发环境下，`getOrBuildPostsIndex()` 会检查文件集合和文件修改时间，发现新增、删除、改名或内容更新时自动重建索引。生产环境信任构建期生成的索引。
+
+组件名称通过 MDX AST 提取，因此代码块中的 `<Component />` 示例不会被误判。正文出现不在白名单中的大写 JSX 标签时，索引构建直接失败，避免运行时才暴露缺失组件。
 
 ### 2. 路由参数映射到 MDX 文件
 
@@ -125,7 +131,7 @@ nextReads:
 />
 ```
 
-这里的 `source` 是 `getPostData()` 读取出的 MDX 正文字符串。MDX 编译和渲染发生在服务端组件链路中；被注册的客户端组件会按 React/Next.js 规则在客户端 hydrate。
+这里的 `source` 是 `getPostData()` 读取出的 MDX 正文字符串。MDX 编译和渲染发生在服务端组件链路中；`components` 只包含当前文章索引声明的组件。被实际渲染的客户端组件会按 React/Next.js 规则 hydrate，并加载自己的异步 chunk。
 
 ### remark / rehype 插件
 
@@ -140,7 +146,7 @@ nextReads:
 
 ### 注册给 MDX 的组件
 
-`src/components/article/mdx-components.tsx` 中的 `createArticleMdxComponents()` 是文章正文可直接使用的组件白名单。当前包括：
+`src/lib/article/mdx-component-manifest.ts` 是文章正文可直接使用的组件名称白名单，`src/components/article/mdx-components.tsx` 根据当前文章的索引记录按需创建运行时映射。当前包括：
 
 - 通用组件：`InlineExplanation`、`BentoGrid`、`BentoGridItem`、`BeforeAfter`、`Highlighter`
 - 色彩组件：`HSBSliders`、`ColorWheelSteps`、`RotatableColorWheel`
@@ -150,7 +156,13 @@ nextReads:
 - Agent 组件：`FunctionCallingSteps`
 - 标题覆盖：`h2`、`h3`
 
-新增文章组件时，必须先在 `src/components/article/mdx-components.tsx` 中导入并加入 `createArticleMdxComponents()` 返回值，MDX 正文才可以直接写 `<ComponentName />`。
+新增文章组件时需要同步完成三处注册：
+
+1. 在 `mdx-component-manifest.ts` 加入组件名称。
+2. 客户端组件在 `mdx-client-components.tsx` 增加 lazy wrapper；纯服务端组件可跳过此步。
+3. 在 `mdx-components.tsx` 的 `componentLoaders` 增加显式加载器。
+
+缺少名称注册时，索引构建会报告未知组件；清单与运行时加载器不完整时，TypeScript 或模块初始化会失败。
 
 ## 自动渲染但不是 MDX 标签的组件
 
@@ -183,7 +195,7 @@ article .prose h4
 ## 重要边界
 
 - `content/blog/` 只放文章 MDX 源文件。
-- `content/components/` 放文章可视化/交互组件，但不会自动被 MDX 发现；必须在文章页入口显式注册。
+- `content/components/` 放文章可视化/交互组件，但不会自动被 MDX 发现；必须加入组件清单、lazy wrapper 和运行时加载器。
 - `@content/*` 在 `tsconfig.json` 中映射到 `./content/*`，用于在文章页入口导入 `content/components/*`。
 - 浏览器 API、地图、播放器、交互动画等必须放在 `"use client"` 组件内；文章页本身是服务端组件。
 - `Mermaid` 组件虽然存在于 `src/components/ui/Mermaid.tsx`，但当前没有注册到 `mdxComponents`，不能直接在 MDX 中使用。

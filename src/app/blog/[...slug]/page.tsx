@@ -14,10 +14,7 @@ import { MusicPlayer } from '@/components/ui/MusicPlayer'; // 导入目录组件
 import { ArticleInfoItem } from '@/components/article/ArticleInfoItem';
 import { ArticleRecommendations } from '@/components/article/ArticleRecommendations';
 import { getArticleChannelStyle } from '@/components/article/article-channel-styles';
-import {
-    createArticleMdxComponents,
-    SketchyRAGOverview,
-} from '@/components/article/mdx-components';
+import { createArticleMdxComponents } from '@/components/article/mdx-components';
 import { articleMdxOptions } from '@/lib/article/mdx-options';
 import { getArticleRecommendations } from '@/lib/article/recommendations';
 import {
@@ -63,14 +60,15 @@ export default async function PostPage({ params }) {
         notFound();
     }
 
-    const { frontmatter, content } = postData;
+    const { frontmatter, content, components } = postData;
     const isTechChannel = frontmatter.channel === 'tech';
     const isLifeChannel = frontmatter.channel === 'life';
     const isFinanceChannel = frontmatter.channel === 'finance';
 
     const articleSlug = slug.join('/');
     const currentStyle = getArticleChannelStyle(frontmatter.channel);
-    const mdxComponents = createArticleMdxComponents({
+    const mdxComponents = await createArticleMdxComponents({
+        componentNames: components,
         useChannelInkHeadings: isTechChannel || isLifeChannel,
     });
     const channelConfig = frontmatter.channel ? CHANNELS_CONFIG[frontmatter.channel as keyof typeof CHANNELS_CONFIG] : null;
@@ -81,6 +79,9 @@ export default async function PostPage({ params }) {
     const mediaLabel = getArticleMediaLabel(mediaType);
     const musicPlaylist = getPlaylistFromFrontmatter(frontmatter);
     const recommendations = getArticleRecommendations(frontmatter, articleSlug);
+    const InteractiveHero = mediaType === 'interactive'
+        ? (await import('@/components/article/mdx-client-components')).SketchyRAGOverview
+        : null;
 
     return (
         <div
@@ -164,9 +165,9 @@ export default async function PostPage({ params }) {
 
                     {mediaType && (
                         <section className="mx-auto grid w-full xl:grid-cols-12 xl:gap-x-[2.2%]">
-                            {mediaType === 'interactive' && (
+                            {InteractiveHero && (
                                 <div className="not-prose article-top-media rounded-xl border border-[var(--channel-border,#D8D0C3)] bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_42%,transparent)] p-4 md:p-6 xl:col-span-10 xl:col-start-2 [&>div]:my-0">
-                                    <SketchyRAGOverview />
+                                    <InteractiveHero />
                                 </div>
                             )}
                             {mediaType === 'video' && (
