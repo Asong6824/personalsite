@@ -75,6 +75,7 @@ Kimi_Agent_Asong圆球动画/
 # temp files / artifacts
 echo
 twitter-gif-*.gif
+*_files/
 临时素材/
 stitch_column_list_financial_investment/
-.codex/config.toml
+.codex/
