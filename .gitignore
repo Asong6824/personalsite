@@ -63,6 +63,8 @@ oss/
 scratch_*/
 
 # auto-generated data
+.generated/
+public/generated/finance/
 src/data/posts/index.json
 src/data/stocks/
 

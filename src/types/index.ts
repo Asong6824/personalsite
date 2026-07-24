@@ -15,7 +15,6 @@ export interface PostFrontmatter {
   channel?: 'tech' | 'life' | 'finance' | 'creative';
   column?: string;
   columnSlug?: string;
-  music?: string | string[];
   hidden?: boolean;
   slug?: string;
   nextReads?: Array<string | NextReadConfig>;
@@ -39,7 +38,6 @@ export interface Post {
   channel: string;
   column: string;
   columnSlug?: string;
-  music?: string | string[];
   hidden?: boolean;
   rel?: string;
 }

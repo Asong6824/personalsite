@@ -37,7 +37,7 @@ description: 在站点中新增一个 UI 组件（页面级区块、通用组件
 | 目录 | 职责 | 典型示例 |
 |------|------|----------|
 | `src/components/features/` | 页面级区块，与特定页面共存 | `HeroSection`, `BlogAggregatedView`, `ColumnLayout`, `HomeScrollExperience` |
-| `src/components/ui/` | 通用 UI 原语，跨页面复用 | `bento-grid`, `MusicPlayer`, `TableOfContents`, `BeforeAfter` |
+| `src/components/ui/` | 通用 UI 原语，跨页面复用 | `bento-grid`, `TableOfContents`, `BeforeAfter` |
 | `src/components/finance/` | 金融频道专属 | `TempoHero`, `TempoGrid`, `DataWall` |
 | `src/components/create/` | 创作频道专属 | `LiquidGlassWrapper`, `GlassCard` |
 | `src/components/magicui/` | 特效/装饰性，纯视觉增强 | `Highlighter`, `rainbow-button` |

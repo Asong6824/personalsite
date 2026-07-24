@@ -35,15 +35,21 @@ pinned: boolean             # 可选，置顶文章（排序优先）
 channel: string             # 频道（必填：tech/life/finance/creative）
 column: string              # 专栏（必填，必须属于对应频道）
 columnSlug: string          # 可选，显式指定专栏 slug
-music: string | string[]    # 可选，背景音乐 URL（数组支持多首）
 hidden: boolean             # 设为 true 则文章不在列表展示，详情读取返回 null；底层索引仍保留该条目
-nextReads: string[] | { slug: string, reason?: string }[]  # 可选，文章底部手动推荐阅读
+nextReads: string[] | { slug: string, reason?: string }[]  # 可选，置顶文章底部的人工推荐
 ---
 ```
 
-### 手动推荐阅读
+### 推荐阅读与内容图谱
 
-文章详情页支持在 frontmatter 中配置 `nextReads`，用于在正文下方展示“接下来阅读”。推荐项使用 `/blog/` 后面的完整文章 slug，例如当前文章访问地址是 `/blog/tech/ai-engineering/pi-agent`，则 slug 写 `tech/ai-engineering/pi-agent`。
+文章详情页会根据 `src/data/content-graph.ts` 自动生成正文下方的“接下来阅读”，通常输出 2-3 篇。推荐顺序固定为：
+
+1. frontmatter `nextReads` 中的人工置顶项；
+2. 当前文章指向的 `sequence` / `applied-in` 有向关系；
+3. 与当前文章相连的 `related` / `reflection` 双向关系；
+4. 当前文章所在阅读脉络中的邻近文章，优先后续文章，再补前置背景。
+
+`nextReads` 只用于覆盖默认排序，不需要在每篇文章中重复维护图谱关系。推荐项使用 `/blog/` 后面的完整文章 slug，例如当前文章访问地址是 `/blog/tech/ai-engineering/pi-agent`，则 slug 写 `tech/ai-engineering/pi-agent`。
 
 简写形式：
 
@@ -63,7 +69,9 @@ nextReads:
     reason: 从产品体验角度延伸阅读
 ```
 
-页面渲染时会从文章索引中读取标题、摘要、日期、封面、频道和专栏信息。找不到的 slug、隐藏文章和当前文章自身会被跳过；开发环境会在控制台输出提示。
+页面渲染时会从文章索引中读取标题、摘要、日期、封面、频道和专栏信息，并对人工项与图谱候选统一去重。找不到的 slug、隐藏文章和当前文章自身会被跳过；开发环境会在控制台输出提示。`npm run content:validate` 会在开发、构建和响应式测试前检查图谱与 `nextReads` 引用，失效引用会直接让流程失败。
+
+所有可见文章必须至少属于一条 `CONTENT_GRAPH_TRAILS` 阅读脉络。新增文章时应同步补充脉络；只有需要表达明确语义时才新增 `CONTENT_GRAPH_RELATIONS`，不要为了凑边而创建无意义关系。
 
 ---
 

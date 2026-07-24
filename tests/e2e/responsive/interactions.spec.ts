@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { marketStudyRoutes } from "./routes";
 
 const focusedProjects = new Set([
   "mobile-standard",
@@ -72,6 +73,27 @@ test("dataset chart keeps its canvas inside the viewport", async ({ page }, test
   }
 });
 
+test("published market study chart switches views without overflow", async ({ page }, testInfo) => {
+  test.skip(!focusedProjects.has(testInfo.project.name));
+  test.skip(marketStudyRoutes.length === 0, "No published market study is configured");
+
+  await page.goto(marketStudyRoutes[0].path, { waitUntil: "domcontentloaded" });
+  const chart = page.getByTestId("market-study-chart");
+  await expect(chart).toBeVisible({ timeout: 20_000 });
+  await expect.poll(async () => chart.locator("canvas").count()).toBeGreaterThan(0);
+
+  const drawdown = page.getByRole("button", { name: "回撤", exact: true });
+  await drawdown.click();
+  await expect(drawdown).toHaveAttribute("aria-pressed", "true");
+
+  const bounds = await chart.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return { left: rect.left, right: rect.right, viewportWidth: window.innerWidth };
+  });
+  expect(bounds.left).toBeGreaterThanOrEqual(0);
+  expect(bounds.right).toBeLessThanOrEqual(bounds.viewportWidth + 1);
+});
+
 test("mobile navigation opens without changing page width", async ({ page }, testInfo) => {
   test.skip(!mobileInteractionProjects.has(testInfo.project.name));
 
@@ -90,4 +112,25 @@ test("mobile navigation opens without changing page width", async ({ page }, tes
 
   await menuButton.click();
   await expect(menu).toBeHidden();
+});
+
+test("article recommendations combine editorial and graph relationships", async ({ page }, testInfo) => {
+  test.skip(!focusedProjects.has(testInfo.project.name));
+
+  await page.goto("/blog/creative/product/obsidian-future-note-making", {
+    waitUntil: "domcontentloaded",
+  });
+
+  const recommendations = page.getByRole("region", { name: "接下来阅读" });
+  await expect(recommendations).toBeVisible();
+
+  const links = recommendations.getByRole("link");
+  await expect(links).toHaveCount(2);
+  await expect(links.first()).toHaveAttribute(
+    "href",
+    "/blog/creative/product/notion-zen",
+  );
+  await expect(
+    recommendations.getByRole("link", { name: /从 RAG 技术到 RAG 思想/ }),
+  ).toBeVisible();
 });

@@ -36,13 +36,13 @@
 |------|------|------|
 | `src/components/home/` | 首页 3D WebGL 体验 | `HomeExperienceClient` |
 | `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
-| `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`MusicPlayer`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
-| `src/components/finance/` | 金融频道专属 | `FinanceHomeClient`、`FinanceColumnLayout` |
+| `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
+| `src/components/finance/` | 金融频道专属 | `FinanceHomeClient`、`FinanceColumnLayout`、`market-study/*` |
 | `src/components/creative/` | 创意频道专属 | `LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar`、`RouteTransitionFeedback`、`RouteLoadingSkeleton` |
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
-| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载，但仅在开发环境设置 `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR=1` 时启用） |
+| `src/components/debug/` | 调试辅助 | `PerformanceMonitor`（全局挂载，但仅在开发环境设置 `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR=1` 时启用 FPS 面板） |
 | `src/components/StructuredData.tsx` | SEO 结构化数据 | 根级单文件，注入 JSON-LD |
 | `content/components/` | 文章交互组件（可视化、图表） | `agent/*`、`color/*`、`rag/*`、`sketchy/*`、`travel/*` |
 
@@ -63,6 +63,7 @@
 - `HSBSliders` / `ColorWheelSteps` / `RotatableColorWheel` — 色彩工具（位于 `content/components/color/`）
 - `DualTimeline` / `RAGFlowDiagram` — RAG 专用交互组件（位于 `content/components/rag/`）
 - `TravelRouteMap` — 旅行路线手绘地图（位于 `content/components/travel/`）
+- `MarketStudy` — 引用一个已发布的固定阶段市场研究（服务端加载数据，ECharts 图表按需进入客户端）
 
 ---
 
@@ -95,7 +96,7 @@
 | `Highlighter` | `<Highlighter color="#ffd1dc">文本</Highlighter>` | 基于 Rough Notation 的手绘高亮，支持 `action`（highlight/underline/circle/box）、`animationDuration`、`isView`（滚动触发） |
 | `RAGSidesOverview` | `<RAGSidesOverview />` | RAG 索引侧与检索侧的手绘风格对照总览，用作文章中的概念视觉锚点 |
 
-`TableOfContents` 与 `MusicPlayer` 由文章页面根据正文和 frontmatter 自动渲染，不是 MDX 标签。`Mermaid` 组件存在于 `src/components/ui/Mermaid.tsx`，但当前没有注册到 `mdxComponents`，因此不能直接在文章中使用。
+`TableOfContents` 由文章页面根据正文自动渲染，不是 MDX 标签。`Mermaid` 组件存在于 `src/components/ui/Mermaid.tsx`，但当前没有注册到 `mdxComponents`，因此不能直接在文章中使用。
 
 ### 布局组件
 
@@ -120,6 +121,14 @@
 | `SketchyRAGOverview` | `<SketchyRAGOverview />` | RAG 四大发展阶段概览图 |
 | `Word2VecVectorSpace` | `<Word2VecVectorSpace />` | Word2Vec 向量空间示意（King-Queen 示例） |
 | `InContextLearningChart` | `<InContextLearningChart />` | 上下文学习性能曲线图 |
+
+### 金融研究（`content/components/finance/`）
+
+| 组件 | 用法 | 说明 |
+|------|------|------|
+| `MarketStudy` | `<MarketStudy studyId="company-vs-benchmark-stage" />` | 服务端读取已物化研究；未发布 ID 在生产环境不渲染，开发环境显示诊断信息 |
+
+`MarketStudy` 本身是 Server Component，负责读取 `.generated/finance/catalog.json` 和对应 artifact；内部只有 `StockStageChart` 使用 `"use client"`。因此文章不会把文件系统、TOS 地址或 CSV 解析逻辑打进客户端 bundle。新增研究不需要新增 React 组件，只需新增 study 定义并重新物化。
 
 ### Agent / Function Calling（`content/components/agent/`）
 

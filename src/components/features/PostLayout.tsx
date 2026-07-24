@@ -111,6 +111,8 @@ export default async function PostLayout({
     const isDev = process.env.NODE_ENV === 'development';
     const prism = isDev ? null : (await import('rehype-prism-plus')).default;
     const mdxOptions = {
+        blockJS: false,
+        blockDangerousJS: true,
         mdxOptions: {
             remarkPlugins: [remarkGfm],
             rehypePlugins: [

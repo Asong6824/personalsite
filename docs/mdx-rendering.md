@@ -22,8 +22,9 @@
 - `src/components/article/ArticleInfoItem.tsx`：文章头部元信息项。
 - `src/components/article/ArticleRecommendations.tsx`：文章底部“接下来阅读”推荐区块。
 - `src/lib/article/mdx-options.ts`：`remark` / `rehype` 插件配置。
-- `src/lib/article/recommendations.ts`：从 frontmatter `nextReads` 解析推荐文章摘要。
-- `src/lib/article/rendering.ts`：阅读时间、顶部媒体类型、媒体标签和音乐播放列表生成。
+- `src/lib/content-graph.ts`：按关系语义和阅读脉络生成自动推荐候选。
+- `src/lib/article/recommendations.ts`：合并 frontmatter 人工置顶项与图谱候选，并解析文章摘要。
+- `src/lib/article/rendering.ts`：阅读时间、顶部媒体类型和媒体标签生成。
 
 `src/components/features/PostLayout.tsx` 也存在 `MDXRemote` 用法，但当前文章详情路由没有挂载它。它更像旧版/备用文章布局，不应作为现行 MDX 渲染链路的事实来源。
 
@@ -82,7 +83,9 @@ nextReads:
     reason: 从产品体验角度延伸阅读
 ```
 
-`PostPage()` 会调用 `getArticleRecommendations(frontmatter, articleSlug)`，用推荐项中的完整文章 slug 查询索引摘要。推荐项允许省略 `/blog/` 前缀；渲染链接统一使用 `/blog/${recommendation.slug}`。找不到的 slug、隐藏文章和当前文章自身会被跳过。
+`PostPage()` 会调用 `getArticleRecommendations(frontmatter, articleSlug)`。`nextReads` 是人工置顶层，后续候选来自 `src/data/content-graph.ts`：先取当前文章出发的 `sequence` / `applied-in`，再取双向的 `related` / `reflection`，最后用同一阅读脉络中的邻近文章补足。所有候选统一去重，最多渲染 3 篇。
+
+推荐项允许省略 `/blog/` 前缀；渲染链接统一使用 `/blog/${recommendation.slug}`。找不到的 slug、隐藏文章和当前文章自身会被跳过。构建前的 `scripts/validate-content-graph.ts` 会验证全部图谱端点、可见文章覆盖和 `nextReads` 引用，因此正常生产构建不应出现静默失效关系。
 
 ## 页面渲染层
 
@@ -137,6 +140,8 @@ nextReads:
 
 `src/lib/article/mdx-options.ts` 当前配置：
 
+- `blockJS: false`，保留仓库内可信 MDX 的对象、数组和函数型组件 props；站点不接受用户上传或远程不可信 MDX。
+- `blockDangerousJS: true`，继续阻止 `eval`、`Function`、`process` 等危险全局。该项是 `next-mdx-remote` v6 升级后的明确安全边界。
 - `remark-gfm`，并设置 `breaks: true`，支持表格、删除线、任务列表等 GFM 能力，并把换行按硬换行处理。
 - `rehype-slug`，给标题生成 `id`。
 - `rehype-autolink-headings`，给标题追加 `#` 锚点。
@@ -154,6 +159,7 @@ nextReads:
 - Sketchy 基础图形：`SketchySvg`、`SketchyLine`、`SketchyArrow`、`SketchyRect`、`SketchyCircle`、`SketchyEllipse`、`SketchyPath`、`SketchyDashedLine`、`SketchyText`
 - 旅行地图：`TravelRouteMap`、`CityWalkMap`
 - Agent 组件：`FunctionCallingSteps`
+- 金融研究：`MarketStudy`（服务端按 `studyId` 读取已发布 artifact，内部图表为 Client Component）
 - 标题覆盖：`h2`、`h3`
 
 新增文章组件时需要同步完成三处注册：
@@ -180,26 +186,14 @@ article .prose h4
 
 因此目录依赖 MDX 编译后真实渲染出的标题节点，以及 `rehype-slug` 生成的标题 `id`。它不是 MDX 标签，文章中不需要写 `<TableOfContents />`。
 
-### 音乐播放器
-
-`MusicPlayer` 同样位于右侧 aside，但技术频道文章不显示。
-
-播放列表来源：
-
-- `frontmatter.music` 为数组：每个 URL 生成一首“背景音乐 N”。
-- `frontmatter.music` 为字符串：生成一首“背景音乐 1”。
-- 没有 `music`：使用 `defaultPlaylist`。
-
-它也不是 MDX 标签。
-
 ## 重要边界
 
 - `content/blog/` 只放文章 MDX 源文件。
 - `content/components/` 放文章可视化/交互组件，但不会自动被 MDX 发现；必须加入组件清单、lazy wrapper 和运行时加载器。
 - `@content/*` 在 `tsconfig.json` 中映射到 `./content/*`，用于在文章页入口导入 `content/components/*`。
-- 浏览器 API、地图、播放器、交互动画等必须放在 `"use client"` 组件内；文章页本身是服务端组件。
+- 浏览器 API、地图、交互动画等必须放在 `"use client"` 组件内；文章页本身是服务端组件。
 - `Mermaid` 组件虽然存在于 `src/components/ui/Mermaid.tsx`，但当前没有注册到 `mdxComponents`，不能直接在 MDX 中使用。
-- `TableOfContents` 与 `MusicPlayer` 是页面布局自动插入的能力，不应写入文章正文。
+- `TableOfContents` 是页面布局自动插入的能力，不应写入文章正文。
 
 ## 相关文档
 

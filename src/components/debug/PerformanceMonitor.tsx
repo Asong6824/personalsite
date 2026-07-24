@@ -32,14 +32,6 @@ export default function PerformanceMonitor() {
             };
 
             frameId = requestAnimationFrame(animate);
-
-            // 动态导入 react-scan
-            try {
-                const { scan } = await import('react-scan');
-                scan({ enabled: true });
-            } catch (e) {
-                console.error('Failed to initialize react-scan:', e);
-            }
         };
 
         init();

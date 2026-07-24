@@ -66,6 +66,8 @@ const componentLoaders = {
     (await import("./mdx-client-components")).CityWalkMap,
   FunctionCallingSteps: async () =>
     (await import("./mdx-client-components")).FunctionCallingSteps,
+  MarketStudy: async () =>
+    (await import("@content/components/finance/MarketStudy")).MarketStudy,
 } satisfies Record<ArticleMdxComponentName, MdxComponentLoader>;
 
 // Keep the manifest and runtime loaders exhaustive in both directions.

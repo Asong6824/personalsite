@@ -53,7 +53,8 @@
 - 定位为首页滚动叙事之外的快捷内容入口，不使用 WebGL、滚动时间线、全屏图片或入场动画。
 - 使用 warm editorial 的米色纸感背景、衬线大标题、细分隔线与无圆角目录列表。
 - 首屏直接提供四个频道入口及文章数量，下方通过「内容地图」展示跨频道的主题脉络，再展示最近 12 篇文章；信息层级仍以快速扫读和直接到达为优先。
-- 内容地图的人工编辑数据集中维护在 `src/data/content-graph.ts`，只描述主题脉络与文章之间的关系，不继续扩充 MDX frontmatter。
+- 内容地图的人工编辑数据集中维护在 `src/data/content-graph.ts`，同时作为文章底部自动推荐的统一关系源；MDX `nextReads` 只承担人工置顶，不重复描述完整关系。
+- 所有可见文章必须进入至少一条阅读脉络。`scripts/validate-content-graph.ts` 在开发、构建和响应式测试前检查 slug、关系端点、重复项、自关联以及 `nextReads` 引用。
 - `src/components/features/BlogKnowledgeMap.tsx` 使用 SVG 与 `d3-force` 计算小规模关系布局。桌面端支持主题筛选、节点选择与关系理由预览；移动端退化为按脉络排列的文章列表。
 - 页面主体继续保持 Server Component，仅将内容地图隔离为 Client Component。
 

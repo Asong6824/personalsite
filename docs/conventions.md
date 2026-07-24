@@ -56,6 +56,14 @@
 
 项目使用 npm，锁文件为 `package-lock.json`。CI 通过 `npm ci --legacy-peer-deps` 安装依赖；不要同时维护 pnpm/yarn lockfile。
 
+### 依赖安全
+
+- 使用 `npm audit` 复查生产与开发依赖，不执行 `npm audit fix --force`，避免审计工具跨主版本降级或升级核心框架。
+- 使用 `npm run audit:dependencies` 执行中危及以上依赖审计；该命令需要 npm registry 网络，不放入必须支持离线运行的 `npm run gate`。
+- `package.json#overrides` 将 Next 15.5.21 的传递依赖 `postcss` 和 `sharp` 固定到已修复版本。Next 升级后必须重新检查其原生依赖范围；如果上游已经采用安全版本，应删除对应 override。
+- `react-scan` 已从常驻依赖移除。性能覆盖层只保留 `stats.js` FPS 面板，React 渲染诊断使用临时开发工具，不进入站点依赖树。
+- 核心依赖升级后至少运行 `npm audit`、`npm run gate` 和 MDX/图表相关浏览器测试。
+
 ---
 
 ## 环境变量
@@ -69,7 +77,11 @@
 | `ALLOW_API_FILE_WRITES` | 本地维护开关；设为 `1` 时允许 API 写入 `src/data` 文件 |
 | `ENABLE_ARCHIVED_NOTION_API` | 已封存 Notion API 开关；设为 `1` 时才允许旧接口运行 |
 | `NOTION_TOKEN` | 已封存的 Notion 集成 Token；当前默认不配置 |
-| `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR` | 本地性能调试覆盖层开关；仅开发环境设为 `1` 时加载 FPS 与 React Scan |
+| `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR` | 本地性能调试覆盖层开关；仅开发环境设为 `1` 时加载 FPS 面板 |
+| `TOS_AK` / `TOS_SK` | 市场研究显式发布命令使用；不得进入客户端或仓库 |
+| `TOS_ENDPOINT` / `TOS_REGION` / `TOS_BUCKET` | 市场研究对象存储目标 |
+| `TOS_PUBLIC_BASE_URL` | 已发布、不可变 CSV 构建源的公开/CDN 基础地址 |
+| `TOSUTIL_PATH` | 可选，指定本机 `tosutil` 可执行文件 |
 
 `NOTION_DB_ACTIVITIES`、`NOTION_DB_GOALS`、`NOTION_DB_KRS` 同属已封存的 Notion 集成。除非明确执行重新启用工作，否则本地开发、测试和部署均不要求配置这些变量。
 
@@ -80,7 +92,7 @@
 ## 部署
 
 - 项目为标准 Next.js 应用，推荐使用 **Vercel** 部署。
-- 构建时 `prebuild` 会自动生成文章索引，确保 MDX 文件变更后被正确收录。
+- 构建时 `prebuild` 会自动生成文章索引和已发布市场研究 artifact；任一研究的定义、哈希或数据不合法都会停止构建。
 - 若使用静态导出（`output: 'export'`），需在保留的 Next.js 配置文件中开启，并确保所有动态路由已预渲染。
 
 ---
@@ -117,6 +129,8 @@ npm run test:responsive:report   # 打开最近一次 Playwright HTML 报告
 | `article-tags` | `src/lib/__tests__/article-tags.test.ts` | 文章标签格式、重复项、废弃别名与数量建议 |
 | `cache` | `src/lib/__tests__/cache.test.ts` | 内存缓存命中/过期/清理 |
 | `route-utils` | `src/lib/__tests__/route-utils.test.ts` | 静态参数生成、路由验证 |
+| `content-graph` | `src/lib/__tests__/content-graph.test.ts` | 推荐关系优先级、方向性和脉络回退 |
+| `content-graph-validation` | `src/lib/__tests__/content-graph-validation.test.ts` | 图谱覆盖、关系端点和人工推荐引用校验 |
 
 ### 总门禁脚本
 
@@ -129,7 +143,8 @@ npm run gate
 1. **ESLint** — 代码风格与规则检查
 2. **单元测试** — `vitest run`
 3. **文章索引验证** — `scripts/build-posts-index.ts`（路由冲突、slug 合法性、频道/专栏与标签有效性）
-4. **Next.js 构建** — 编译与静态页面生成
+4. **内容关系验证** — `scripts/validate-content-graph.ts`（全文章脉络覆盖、关系端点、重复项、自关联与 `nextReads` 引用）
+5. **Next.js 构建** — 编译与静态页面生成
 
 > 门禁脚本是 Harness 的"反馈"核心：把"是否完成"从 AI 的主观汇报变成可检查的客观结果。
 

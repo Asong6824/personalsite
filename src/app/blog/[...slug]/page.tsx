@@ -10,7 +10,6 @@ import { getAllPostSlugs, getPostData } from '@/lib/post'; // 确保路径相对
 import { CHANNELS_CONFIG } from '@/lib/channels';
 import { MDXRemote } from 'next-mdx-remote/rsc'; // 用于 App Router (RSC)渲染 MDX
 import { TableOfContents } from '@/components/ui/TableOfContents';
-import { MusicPlayer } from '@/components/ui/MusicPlayer'; // 导入目录组件
 import { ArticleInfoItem } from '@/components/article/ArticleInfoItem';
 import { ArticleRecommendations } from '@/components/article/ArticleRecommendations';
 import { getArticleChannelStyle } from '@/components/article/article-channel-styles';
@@ -21,7 +20,6 @@ import {
     estimateReadingMinutes,
     getArticleMediaLabel,
     getArticleMediaType,
-    getPlaylistFromFrontmatter,
 } from '@/lib/article/rendering';
 
 // 1. (必需) 为动态路由生成静态参数 (SSG)
@@ -77,7 +75,6 @@ export default async function PostPage({ params }) {
     const readingMinutes = estimateReadingMinutes(content);
     const mediaType = getArticleMediaType(articleSlug, frontmatter);
     const mediaLabel = getArticleMediaLabel(mediaType);
-    const musicPlaylist = getPlaylistFromFrontmatter(frontmatter);
     const recommendations = getArticleRecommendations(frontmatter, articleSlug);
     const InteractiveHero = mediaType === 'interactive'
         ? (await import('@/components/article/mdx-client-components')).SketchyRAGOverview
@@ -234,9 +231,6 @@ export default async function PostPage({ params }) {
 
                         <aside className="relative hidden xl:col-span-2 xl:col-start-11 xl:block">
                             <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto space-y-4 pr-2">
-                                {!isTechChannel && (
-                                    <MusicPlayer playlist={musicPlaylist} />
-                                )}
                                 <TableOfContents />
                             </div>
                         </aside>

@@ -44,6 +44,9 @@ npm run dev      # 开发（自动重建索引）
 npm run build    # 生产构建
 npm run lint     # 代码检查
 npm run test:responsive  # 全页面响应式布局巡检
+npm run content:validate # 校验内容图谱、全文章覆盖与推荐引用
+npm run finance:build    # 校验并物化已发布的固定阶段市场研究
+npm run audit:dependencies  # 检查中危及以上依赖漏洞
 ```
 
 ---
@@ -80,15 +83,19 @@ npm run test:responsive  # 全页面响应式布局巡检
 | `src/lib/post-index.ts` | 文章索引构建 |
 | `src/lib/post.ts` | 文章数据读取 |
 | `src/lib/article/mdx-options.ts` | 文章 MDX remark/rehype 插件配置 |
-| `src/lib/article/rendering.ts` | 文章阅读时间、媒体类型、音乐播放列表等渲染辅助 |
+| `src/lib/article/rendering.ts` | 文章阅读时间、媒体类型等渲染辅助 |
+| `src/lib/content-graph.ts` | 从内容关系与阅读脉络生成文章推荐候选 |
+| `src/lib/content-graph-validation.ts` | 内容图谱、全文章覆盖与推荐引用校验 |
 | `src/lib/seo-utils.ts` | SEO 结构化数据生成 |
 | `src/lib/route-utils.ts` | 专栏静态参数与路由校验 |
 | `src/lib/scrollUtils.ts` | 平滑滚动工具 |
 | `src/lib/config-validator.ts` | 频道配置校验（开发环境） |
 | `src/lib/api/datasets.ts` | 前端数据集查询封装 |
+| `src/lib/finance/market-study-schema.ts` | 固定阶段市场研究的数据契约与发布校验 |
+| `src/lib/finance/market-study-loader.ts` | 已物化市场研究的服务端读取入口 |
 | `vitest.config.ts` | 测试框架配置 |
 | `playwright.config.ts` | 响应式布局测试的浏览器、视口与运行环境配置 |
-| `scripts/gate-check.ts` | 总门禁脚本（lint + test + build + 索引验证） |
+| `scripts/gate-check.ts` | 总门禁脚本（lint + test + 索引/内容关系验证 + build） |
 | `src/app/blog/[...slug]/page.tsx` | 文章详情页（含 generateStaticParams / generateMetadata） |
 | `src/components/article/mdx-components.tsx` | 文章 MDX 组件注册表 |
 | `src/components/article/article-channel-styles.ts` | 文章页频道样式配置 |
@@ -97,6 +104,8 @@ npm run test:responsive  # 全页面响应式布局巡检
 | `src/components/stamps/StampsPageClient.tsx` | 印章页客户端组件（无限画布 + Bento 重排展开 + 线路/地域/铁路公司组织筛选 + 滚轮/触摸滑动） |
 | `src/data/stamps.ts` | 印章收藏数据（车站信息、TOS 图片 URL、故事） |
 | `scripts/build-posts-index.ts` | 索引构建脚本 |
+| `scripts/validate-content-graph.ts` | 内容图谱和文章推荐完整性门禁 |
+| `scripts/build-finance-studies.ts` | 市场研究构建期物化脚本 |
 | `src/app/globals.css` | 全局样式与字体导入 |
 | `next.config.ts` | Next.js 配置（远程图片白名单等） |
 

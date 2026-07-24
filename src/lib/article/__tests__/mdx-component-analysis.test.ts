@@ -6,12 +6,13 @@ describe("analyzeMdxComponents", () => {
   it("extracts registered flow and inline components", () => {
     const result = analyzeMdxComponents(`
 <FunctionCallingSteps steps={[]} />
+<MarketStudy studyId="sample-stage" />
 
 Text with <InlineExplanation explanation="Detail">term</InlineExplanation>.
 `);
 
     expect(result).toEqual({
-      components: ["FunctionCallingSteps", "InlineExplanation"],
+      components: ["FunctionCallingSteps", "InlineExplanation", "MarketStudy"],
       unknownComponents: [],
     });
   });

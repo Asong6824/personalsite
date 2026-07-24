@@ -1,5 +1,9 @@
 import { getPostSummary } from "@/lib/post";
-import type { NextReadConfig, Post, PostFrontmatter } from "@/types";
+import { getContentGraphRecommendationCandidates } from "@/lib/content-graph";
+import { normalizeRecommendationEntry } from "./recommendation-config";
+import type { Post, PostFrontmatter } from "@/types";
+
+export const MAX_ARTICLE_RECOMMENDATIONS = 3;
 
 export interface ArticleRecommendation {
   slug: string;
@@ -12,34 +16,22 @@ export interface ArticleRecommendation {
   reason?: string;
 }
 
-function normalizeRecommendationEntry(
-  entry: string | NextReadConfig
-): NextReadConfig | null {
-  if (typeof entry === "string") {
-    const slug = entry.trim().replace(/^\/?blog\//, "").replace(/^\/+/, "");
-    return slug ? { slug } : null;
-  }
-
-  if (entry && typeof entry.slug === "string") {
-    const slug = entry.slug.trim().replace(/^\/?blog\//, "").replace(/^\/+/, "");
-    return slug ? { slug, reason: entry.reason } : null;
-  }
-
-  return null;
-}
-
 export function getArticleRecommendations(
   frontmatter: PostFrontmatter,
   currentSlug: string
 ): ArticleRecommendation[] {
-  const entries = Array.isArray(frontmatter.nextReads)
+  const editorialEntries = Array.isArray(frontmatter.nextReads)
     ? frontmatter.nextReads
     : [];
+  const graphEntries = getContentGraphRecommendationCandidates(currentSlug);
+  const entries = [...editorialEntries, ...graphEntries];
 
   const seen = new Set<string>([currentSlug]);
   const recommendations: ArticleRecommendation[] = [];
 
   for (const entry of entries) {
+    if (recommendations.length >= MAX_ARTICLE_RECOMMENDATIONS) break;
+
     const normalized = normalizeRecommendationEntry(entry);
     if (!normalized || seen.has(normalized.slug)) continue;
 
@@ -53,7 +45,7 @@ export function getArticleRecommendations(
     if (!post || post.hidden) {
       if (process.env.NODE_ENV !== "production") {
         console.warn(
-          `[ArticleRecommendations] Cannot resolve nextReads slug "${normalized.slug}".`
+          `[ArticleRecommendations] Cannot resolve recommendation slug "${normalized.slug}".`
         );
       }
       continue;

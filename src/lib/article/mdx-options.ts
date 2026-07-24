@@ -4,6 +4,10 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrismPlus from "rehype-prism-plus";
 
 export const articleMdxOptions: any = {
+  // Article MDX is trusted, version-controlled source. Component props rely on
+  // JavaScript expressions, while dangerous globals remain blocked by v6.
+  blockJS: false,
+  blockDangerousJS: true,
   mdxOptions: {
     remarkPlugins: [[remarkGfm, { breaks: true }]],
     rehypePlugins: [

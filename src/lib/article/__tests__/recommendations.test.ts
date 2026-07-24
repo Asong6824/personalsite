@@ -95,4 +95,42 @@ describe("getArticleRecommendations", () => {
 
     warnSpy.mockRestore();
   });
+
+  it("uses editorial entries first and fills the remaining slots from the content graph", () => {
+    mockSummaries.set("tech/ai-engineering/pi-agent", {
+      title: "Pi Agent",
+    });
+    mockSummaries.set("tech/ai-engineering/from-rag-technique-to-rag-philosophy", {
+      title: "RAG Philosophy",
+    });
+    mockSummaries.set("tech/general/ios-cloud-platform-guide", {
+      title: "iOS Cloud Platform",
+    });
+    mockSummaries.set("tech/ai-engineering/harness-engineering", {
+      title: "Harness Engineering",
+    });
+
+    const recommendations = getArticleRecommendations(
+      {
+        title: "Agent Tool",
+        date: "2026-07-11",
+        nextReads: [
+          {
+            slug: "tech/ai-engineering/pi-agent",
+            reason: "编辑优先推荐",
+          },
+        ],
+      },
+      "tech/ai-engineering/agent-tool",
+    );
+
+    expect(recommendations).toHaveLength(3);
+    expect(recommendations.map((recommendation) => recommendation.slug)).toEqual([
+      "tech/ai-engineering/pi-agent",
+      "tech/ai-engineering/from-rag-technique-to-rag-philosophy",
+      "tech/general/ios-cloud-platform-guide",
+    ]);
+    expect(recommendations[0].reason).toBe("编辑优先推荐");
+    expect(recommendations[1].reason).toMatch(/工具调用解决行动问题/);
+  });
 });

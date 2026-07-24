@@ -66,7 +66,6 @@ coverImage: "https://..."       # 可选，封面图 URL
 pinned: false                   # 可选，true 则置顶
 channel: "tech"                 # 可选，显式指定频道（一般通过 tags 自动归类即可）
 column: "general"               # 可选，显式指定专栏（一般通过 tags 自动归类即可）
-music: "https://..."            # 可选，背景音乐 URL，数组支持多首
 hidden: false                   # 可选，true 则隐藏不显示在列表中
 ---
 ```

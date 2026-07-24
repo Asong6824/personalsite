@@ -21,7 +21,7 @@ const STAGGER = {
     }
 };
 
-export default function FinanceHomeClient({ channelConfig, postsByColumn, allPosts }) {
+export default function FinanceHomeClient({ channelConfig, postsByColumn, allPosts, marketStudySection }) {
     const columns = channelConfig.columns || {};
     const columnEntries = Object.entries(columns);
 
@@ -166,6 +166,8 @@ export default function FinanceHomeClient({ channelConfig, postsByColumn, allPos
                     ))}
                 </motion.div>
             </section>
+
+            {marketStudySection}
 
             {/* Two Column Archive Section */}
             <section className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 mb-24 md:mb-32">

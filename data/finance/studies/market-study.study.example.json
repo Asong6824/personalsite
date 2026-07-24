@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "company-vs-benchmark-stage",
+  "version": "2026.07.22",
+  "status": "draft",
+  "featured": true,
+  "title": "公司与基准的阶段表现",
+  "subtitle": "一次固定区间内的价格、回撤与波动对照",
+  "summary": "说明选择这段区间的原因，以及读者应该关注的主要差异。",
+  "thesis": "用一句可验证的判断定义研究问题。",
+  "period": {
+    "label": "研究阶段",
+    "start": "2024-01-01",
+    "end": "2024-12-31"
+  },
+  "timezone": "America/New_York",
+  "adjustment": "split",
+  "source": {
+    "provider": "Data provider",
+    "title": "Historical daily OHLCV",
+    "url": "https://provider.example/dataset",
+    "license": "Check provider terms before publishing",
+    "retrievedAt": "2026-07-22"
+  },
+  "instruments": [
+    {
+      "id": "company",
+      "symbol": "COMPANY",
+      "name": "Company name",
+      "role": "equity",
+      "market": "NASDAQ",
+      "currency": "USD",
+      "color": "#176B5B",
+      "input": {
+        "uri": "https://assets.example/finance/company.csv",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "format": "csv",
+        "mock": true
+      }
+    }
+  ],
+  "events": [
+    {
+      "date": "2024-05-01",
+      "title": "关键事件",
+      "description": "事件只用于解释时间点，不暗示因果关系。"
+    }
+  ],
+  "disclaimer": "仅用于历史研究与信息展示，不构成投资建议。"
+}

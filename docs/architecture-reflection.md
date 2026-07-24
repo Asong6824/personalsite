@@ -9,6 +9,7 @@
 5. **路由冲突检测**：`scripts/build-posts-index.ts` 在构建索引后自动扫描，如果某篇文章的 slug 恰好等于某个频道/专栏路由（2 段路径），输出警告。
 6. **删除 `tech/design` 固定路由**：移除了 `src/app/blog/tech/design/page.tsx`，统一由动态路由 `tech/[columnSlug]/page.tsx` 处理，消除了代码重复和路由拦截问题。
 7. **修复专栏页文章链接 Bug**：`ColumnLayout` 和 `JapanColumnLayout` 中文章链接从 `/blog/${channel}/${column}/${post.slug}` 修正为 `/blog/${post.slug}`，解决了路径重复导致的 404。
+8. **固定阶段市场研究发布链路**：金融数据从运行时 API 查询分离为“版本化定义 + SHA-256 + 构建期物化”，同一 artifact 可供频道页、研究详情页和 MDX 复用，mock 数据禁止进入正式发布。
 
 ---
 

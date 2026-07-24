@@ -216,7 +216,6 @@ function toPost(item: IndexItem): Post {
     channel,
     column,
     columnSlug: item.data.columnSlug,
-    music: item.data.music,
     hidden: item.data.hidden,
     rel: item.rel,
   };

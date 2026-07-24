@@ -60,7 +60,6 @@ coverImage: "https://..."       # 可选，封面图 URL
 pinned: false                   # 可选，true 则置顶
 channel: "tech"                 # 必填，显式指定频道
 column: "ai-engineering"         # 必填，显式指定专栏
-music: "https://..."            # 可选，背景音乐 URL，数组支持多首
 hidden: false                   # 可选，true 则隐藏不显示在列表中
 ---
 ```

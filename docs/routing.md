@@ -13,6 +13,7 @@
 | `/blog/life/[columnSlug]` | 生活频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
 | `/blog/finance` | 金融频道页 |
 | `/blog/finance/[columnSlug]` | 金融频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
+| `/blog/finance/market-studies/[studyId]` | 固定阶段市场研究详情页；参数来自已发布研究目录并静态生成 |
 | `/blog/creative` | 创意频道页 |
 | `/blog/creative/[columnSlug]` | 创意频道专栏页 |
 | `/blog/[...slug]` | 文章详情页（通用，匹配一个或多个路径段） |
@@ -30,6 +31,8 @@
 - 桌面端访问以及所有非根路由不受影响；仅调整浏览器窗口宽度不会触发重定向。
 
 **路由优先级说明**：在 Next.js App Router 中，`/blog/tech/[columnSlug]` 的 `[columnSlug]` 只能匹配单个路径段（如 `/blog/tech/go`），无法匹配 `/blog/tech/go/something`。因此 `/blog/tech/general/my-post` 这类多段路径会正确落入 `/blog/[...slug]` 文章详情页，而不会与专栏路由冲突。
+
+金融研究使用更具体的静态前缀 `/blog/finance/market-studies/`，优先级高于 `/blog/[...slug]`。不要创建 slug 为 `finance/market-studies/<id>` 的 MDX 文章；研究叙事需要出现在文章中时，使用 `<MarketStudy studyId="..." />` 引用同一份 artifact。
 
 ---
 

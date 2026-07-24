@@ -1,5 +1,95 @@
 # 数据系统
 
+## 固定阶段市场研究（正式展示链路）
+
+金融频道使用“市场阶段研究”展示指定历史区间内的股票、指数和基准表现。它是可复现的编辑型内容，不是实时行情面板，也不依赖页面请求时的数据 API。
+
+```mermaid
+flowchart LR
+  A["供应商 CSV"] --> B["TOS 私有原始归档"]
+  A --> C["校验后的不可变构建源"]
+  C --> D["study 定义：版本 + SHA-256"]
+  D --> E["predev / prebuild 物化"]
+  E --> F[".generated 服务端目录"]
+  E --> G["public/generated 浏览器 JSON"]
+  F --> H["金融首页 / 独立研究页 / MDX"]
+  G --> H
+```
+
+### 设计边界
+
+- **固定区间**：区间由 study 定义锁定，页面不提供任意日期选择器。
+- **构建期快照**：浏览器不读取 CSV，不在页面运行时调用 `/api/stocks` 或 `/api/datasets`。
+- **失败即停止**：SHA-256 不匹配、日期越界、顺序重复、OHLC 不合法、mock 标记或重复发布 ID 都会令构建失败。
+- **可追溯**：页面始终展示数据商、许可、获取日期、复权口径、时区、版本和免责声明。
+- **输入隔离**：TOS 原始对象地址和 `input` 配置不会进入浏览器 artifact。
+- **无数据不占位**：没有 `status: "published"` 的研究时，金融首页不渲染研究区块，不使用随机数据补位。
+
+旧 `/api/stocks` 的 mock 回退只保留给本地实验和数据采集，不得作为正式研究页数据源。
+
+### 目录与职责
+
+| 路径 | 职责 |
+|------|------|
+| `data/finance/studies/*.study.json` | 人工审核、可版本控制的研究定义 |
+| `src/lib/finance/market-study-schema.ts` | 类型和定义校验 |
+| `src/lib/finance/market-study-csv.ts` | CSV 解析与 OHLCV 不变量校验 |
+| `src/lib/finance/market-study-metrics.ts` | 阶段收益、年化收益/波动、最大回撤、归一化序列 |
+| `src/lib/finance/market-study-materializer.ts` | 下载、哈希验证和 artifact 生成 |
+| `src/lib/finance/market-study-loader.ts` | Server Component 目录与研究读取 |
+| `scripts/build-finance-studies.ts` | 构建全部已发布研究 |
+| `scripts/publish-finance-study.ts` | 校验 CSV 并上传 TOS 私有归档/不可变构建源 |
+| `.generated/finance/` | 服务端生成目录，不提交 Git |
+| `public/generated/finance/` | 同源浏览器 artifact，不提交 Git |
+
+### CSV 契约
+
+```csv
+date,open,high,low,close,adjusted_close,volume
+2024-01-02,100.00,103.00,99.00,102.00,101.50,1200000
+```
+
+`date/open/high/low/close` 必填；`adjusted_close/volume` 可选。日期必须为 `YYYY-MM-DD`、唯一、严格升序并落在研究区间内。价格必须大于 0，且 `high`/`low` 必须包住开盘与收盘价。不同市场的休市日期不需要对齐，图表使用真实时间戳而非共享分类轴。
+
+### 发布流程
+
+1. 从授权数据源导出日频 OHLCV CSV，并确认许可、复权方式、市场时区和币种。
+2. 配置 `.env.local` 中的 TOS 变量，执行：
+
+```bash
+npm run finance:publish -- \
+  --file=/absolute/path/company.csv \
+  --study=company-vs-benchmark-stage \
+  --symbol=COMPANY \
+  --start=2024-01-01 \
+  --end=2024-12-31
+```
+
+3. 命令将原始 CSV 私有归档到 `finance/raw/`，将内容寻址的构建源放到 `finance/published/`，并输出 `{ uri, sha256, format }`。
+4. 复制 `data/finance/studies/market-study.study.example.json` 为 `<id>.study.json`，填写所有标的和来源信息；审核完成后将 `status` 改为 `published`。
+5. 执行 `npm run finance:build`。开发和生产构建也会通过 `predev` / `prebuild` 自动执行。
+6. 访问 `/blog/finance/market-studies/<id>`，并在需要引用的文章中使用 `<MarketStudy studyId="<id>" />`。
+
+版本格式为 `YYYY.MM.DD` 或 `YYYY.MM.DD.N`。修改区间、输入文件、复权口径或事件注释时必须创建新版本；同一个 `id` 同时只能有一个 `published` 定义。
+
+### TOS 环境变量
+
+| 变量 | 用途 |
+|------|------|
+| `TOS_AK` / `TOS_SK` | 显式发布命令使用的访问密钥 |
+| `TOS_ENDPOINT` / `TOS_REGION` | TOS 协议端点和地域 |
+| `TOS_BUCKET` | 存储桶名称 |
+| `TOS_PUBLIC_BASE_URL` | `finance/published/` 对象的公开或 CDN 基础 URL |
+| `TOSUTIL_PATH` | 可选，`tosutil` 非 PATH 安装时指定绝对路径 |
+
+这些变量不以 `NEXT_PUBLIC_` 开头，不可写入 study JSON、客户端组件或日志。当前发布脚本使用 `public-read` 的不可变构建源以支持无凭据的 CI 构建；原始归档始终为 `private`。如需把构建源也设为私有，应改为在 CI 中注入短期签名或先同步到受控构建缓存，不能把永久 AK/SK 暴露给浏览器。
+
+### 展示与扩展
+
+默认视图将每个标的起点归一化为 100，适合不同价格量级的横向比较；另提供复权价格、回撤和单标的 K 线/成交量。事件注释只标记时间位置，不自动声明因果关系。
+
+新增股票、基准或指数只需追加 `instruments`。当前 artifact 已保留独立交易日期、市场、币种、角色与 OHLCV，可继续扩展汇率换算、周/月频聚合、股息事件或更多市场；若新增字段改变现有含义，应提升 `schemaVersion`，不要静默复用版本 1。
+
 ## 股票数据
 
 `src/lib/stocks/` 采用多提供商架构：
@@ -9,6 +99,8 @@
 - `providers/yahoo.ts` — Yahoo Finance（需 `RAPIDAPI_KEY`）。
 - `providers/mock.ts` — 降级 mock 数据（无 API Key 时自动回退）。
 - `store.ts` — 本地缓存读写（基于存储 key）。
+
+> 此模块属于旧的运行时查询/开发链路。正式市场阶段研究只消费构建期 artifact。
 
 ---
 

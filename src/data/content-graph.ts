@@ -27,6 +27,7 @@ export const CONTENT_GRAPH_TRAILS: ContentGraphTrail[] = [
     description: "从 Agent 的历史与工具调用出发，走向上下文、Harness、Coding Agent 与 Skill 评估。",
     articles: [
       "tech/general/agent",
+      "tech/ai-engineering/agent-loop",
       "tech/ai-engineering/agent-tool",
       "tech/ai-engineering/from-rag-technique-to-rag-philosophy",
       "tech/ai-engineering/harness-engineering",
@@ -100,9 +101,15 @@ export const CONTENT_GRAPH_TRAILS: ContentGraphTrail[] = [
 export const CONTENT_GRAPH_RELATIONS: ContentGraphRelation[] = [
   {
     from: "tech/general/agent",
+    to: "tech/ai-engineering/agent-loop",
+    type: "sequence",
+    reason: "从 Agent 的历史与概念，进入观察、决策、行动与反馈构成的运行循环。",
+  },
+  {
+    from: "tech/ai-engineering/agent-loop",
     to: "tech/ai-engineering/agent-tool",
     type: "sequence",
-    reason: "从 Agent 的历史与概念，进入模型使用工具的具体机制。",
+    reason: "理解 Agent Loop 的控制权之后，继续观察模型如何通过工具把决策变成行动。",
   },
   {
     from: "tech/ai-engineering/agent-tool",

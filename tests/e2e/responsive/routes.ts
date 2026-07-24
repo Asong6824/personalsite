@@ -1,5 +1,7 @@
 import postsIndex from "../../../src/data/posts/index.json";
 import { CHANNELS_CONFIG } from "../../../src/lib/channels";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 export type ResponsiveRouteKind =
   | "home"
@@ -28,6 +30,22 @@ const fixedRoutes: ResponsiveRoute[] = [
   { path: "/dev/datasets-demo", kind: "data", label: "datasets-demo" },
 ];
 
+function readPublishedStudyIds(): string[] {
+  try {
+    const catalogPath = path.resolve(process.cwd(), ".generated/finance/catalog.json");
+    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+    return catalog.studies.map(({ id }: { id: string }) => id);
+  } catch {
+    return [];
+  }
+}
+
+export const marketStudyRoutes: ResponsiveRoute[] = readPublishedStudyIds().map((id) => ({
+  path: `/blog/finance/market-studies/${id}`,
+  kind: "data",
+  label: `market-study-${id}`,
+}));
+
 const channelRoutes: ResponsiveRoute[] = Object.keys(CHANNELS_CONFIG).map(
   (channel) => ({
     path: `/blog/${channel}`,
@@ -53,6 +71,7 @@ const articleRoutes: ResponsiveRoute[] = postsIndex.items.map((post) => ({
 
 export const responsiveRoutes = [
   ...fixedRoutes,
+  ...marketStudyRoutes,
   ...channelRoutes,
   ...columnRoutes,
   ...articleRoutes,

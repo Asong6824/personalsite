@@ -25,6 +25,7 @@ export const ARTICLE_MDX_COMPONENT_NAMES = [
   "TravelRouteMap",
   "CityWalkMap",
   "FunctionCallingSteps",
+  "MarketStudy",
 ] as const;
 
 export type ArticleMdxComponentName =

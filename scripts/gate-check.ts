@@ -9,7 +9,8 @@
  * 1. Lint 代码检查
  * 2. 单元测试
  * 3. 文章索引验证（路由冲突、slug 合法性、频道/专栏与标签有效性）
- * 4. TypeScript 编译 + Next.js 构建
+ * 4. 内容图谱与推荐引用验证
+ * 5. TypeScript 编译 + Next.js 构建
  */
 
 import { execSync } from "child_process";
@@ -102,7 +103,10 @@ async function main() {
   // 3. 文章索引验证
   checks.push(runCheck("文章索引验证", "npx tsx scripts/build-posts-index.ts"));
 
-  // 4. Next.js 构建
+  // 4. 内容图谱与推荐引用验证
+  checks.push(runCheck("内容关系验证", "npx tsx scripts/validate-content-graph.ts"));
+
+  // 5. Next.js 构建
   // 注意：构建是最慢的，放在最后
   checks.push(runCheck("Next.js 构建", "npx next build"));
 
