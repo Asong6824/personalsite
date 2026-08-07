@@ -17,7 +17,7 @@ export default function CardDemo() {
             height="100"
             width="100"
             alt="Avatar"
-            src="/manu.png"
+            src="/images/placeholders/default.svg"
             className="h-10 w-10 rounded-full border-2 object-cover" />
           <div className="flex flex-col">
             <p className="font-normal text-base text-gray-50 relative z-10">

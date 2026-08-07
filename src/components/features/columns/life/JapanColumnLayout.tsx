@@ -18,7 +18,7 @@ export default function JapanColumnLayout({ channelKey, channelConfig, columnKey
             <div className="muji-card mt-10 lg:mt-20 xl:mt-20 2xl:mt-24" style={{ backgroundColor: "var(--muji-bg)", border: "none", boxShadow: "none" }}>
               <div className="relative w-full aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] xl:aspect-[3/2] 2xl:aspect-[16/9]">
                 <InlineSvgWithHover
-                  src="/images/maps/japan.svg"
+                  src="/images/life/japan-map.svg"
                   idToLabel={PREF_MAP}
                   hoverStyle={{ stroke: "var(--muji-wood)", strokeWidth: "2", filter: "brightness(1.05)" }}
                   onRegionClick={(id, label) => setSelectedPref(label || id)}

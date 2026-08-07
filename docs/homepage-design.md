@@ -9,7 +9,7 @@
 首页不是传统频道导航页，而是一段由滚动驱动的 WebGL 叙事。视觉主线是「观察 → 表达 → 创造」，随后进入自我介绍、频道入口、探索更多专题内容、最新文章与联系方式。
 
 - 品牌：大盈若冲
-- 基础背景：站点统一米色 `#F0EEE7`。首页 WebGL 背景贴图使用 `public/home-experience/backTexture/background-f0eee7.png`，页面外层、加载遮罩与 Three.js `scene.background` 也必须使用同一背景色常量。
+- 基础背景：站点统一米色 `#F0EEE7`。首页 WebGL 背景贴图使用 `public/home-experience/backgrounds/stage.webp`，页面外层、加载遮罩与 Three.js `scene.background` 也必须使用同一背景色常量。
 - 主文字：深蓝黑 `#0a0c20`
 - 渲染技术：Three.js
 - 时间线与滚动：GSAP + ScrollTrigger
@@ -70,9 +70,9 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 ### Create
 
 - `CreativeRingField` 使用独立 Three.js 场景展示 8 张 4:5 海报面板组成的 Gallery 环。
-- 当前海报资源为 `public/home-experience/gallery-images/daying-ruochong-poster.png`。
+- 当前海报资源为 `public/home-experience/stages/create/poster.webp`，8 个面板复用同一个 `THREE.Texture`。
 - 主场景中的 Create 标题会缩放并暂时停靠，为后续展示让出空间。
-- 对应标题资源为 `creative.svg`。
+- 对应标题资源为 `titles/create.svg`。
 
 ### 自我介绍
 
@@ -87,7 +87,7 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 - 复用原 Reviews 阶段的镜头区间，在主 WebGL 场景中展示频道文字队列。
 - 频道入口 3D 文字队列在逻辑区间 `2535–2935` 显示；相机在 `2555–2640` 进入频道视角，让提示文案之后更快接上 WebGL 模型，减少空白等待。
 - 四个频道入口为 `Tech`、`Life`、`Finance`、`Creative`，其中 `Creative` 链接到 `/blog/creative`。
-- 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/svgtitle/channel-*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 保留 Noomo 的 `11.5` 世界单位位移幅度，并针对 SVG 字体基线增加 `+1.8` 垂直校准，因此从 `y=8.3` 上移到 `19.8`；rail 比相机更早启动，`Tech` 正中时相机进度约 `80%`，实际投影仍接近屏幕中心，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
+- 频道文字使用本地 `PP Model Sans Medium` 字体导出的静态 SVG，文件位于 `public/home-experience/titles/channels/*.svg`；加载后转换为 `ExtrudeGeometry`。布局仿照 Noomo awards rail：每个词使用固定 authored position，整体 rail 保留 Noomo 的 `11.5` 世界单位位移幅度，并针对 SVG 字体基线增加 `+1.8` 垂直校准，因此从 `y=8.3` 上移到 `19.8`；rail 比相机更早启动，`Tech` 正中时相机进度约 `80%`，实际投影仍接近屏幕中心，每个词有独立的中心窗口用于 rotation 归正、透明度增强和缩放。
 - 频道轨道仅在该逻辑区间启用 ScrollTrigger snap；用户停止滚动后，页面以短时缓动吸附到 `0.22 / 0.38 / 0.58 / 0.78` 四个模型中心点，其他首页阶段保持自由滚动。
 - HTML 层使用普通文档流 section 显示「Channels / 进入不同内容路径」，内部 sticky 居中停留，标题样式与「Columns / 探索更多专题内容」一致；`ChannelRailLinks` 只在 3D 频道文字接近正中时，于模型投影区域叠加完全透明的可访问按钮。hover 或键盘聚焦该区域时，当前模型轻微摆动；点击后先播放向右推页的过渡动画，再跳转到对应频道。
 - 原评价标题、3D 评价卡与评价文案已停用。
@@ -104,7 +104,7 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 - 移植 noomo `Our Insights` 的普通 DOM list 结构，用于展示最近文章入口。
 - 数据在 `src/app/page.tsx` 中通过 `getSortedPostsData()` 获取，按 `date` 降序排序后传给 `HomeExperienceClient`；客户端展示组件不读取文件系统或文章索引。
 - 区块提示为「Articles / 抵达最新文章前沿」，标题样式与「Channels / 进入不同内容路径」和「Columns / 探索更多专题内容」保持一致；右侧提供「查看全部」入口链接到 `/blog`。
-- 每条文章使用左图右文横向布局：封面图、标签 pills、hover 时的 `Read` 遮罩、标题、专栏名与日期。无文章封面时回退到专栏封面、频道 icon 或 `placeholder-image.svg`。
+- 每条文章使用左图右文横向布局：封面图、标签 pills、hover 时的 `Read` 遮罩、标题、专栏名与日期。无文章封面时回退到专栏封面、频道 icon 或 `images/placeholders/default.svg`。
 
 ### 联系方式
 
@@ -185,16 +185,17 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 
 ```text
 public/home-experience/
-├── awards/
-├── backTexture/
-├── draco/
-├── hdri/
+├── backgrounds/
+├── environment/
 ├── models/
-├── revs/
-└── svgtitle/
+├── runtime/draco/
+├── stages/
+│   ├── observe/
+│   └── create/
+└── titles/channels/
 ```
 
-`THREE.LoadingManager` 汇总 GLB 加载进度，并驱动首屏进度条。纹理、SVG、模型与 Draco 解码器应继续使用 `/home-experience/...` 绝对站内路径。Draco 解码器必须保持站内托管，避免首页初始化依赖第三方运行时脚本。
+`THREE.LoadingManager` 汇总 GLB 加载进度，并驱动首屏进度条。纹理、SVG、模型与 Draco 解码器应继续使用 `/home-experience/...` 绝对站内路径。Draco 解码器必须保持站内托管，避免首页初始化依赖第三方运行时脚本。位图优先按实际展示尺寸输出 WebP；同一纹理被多个网格使用时只加载一次并复用 `THREE.Texture`。
 
 首页背景色的代码来源是 `src/lib/site-theme.ts` 中的 `SITE_WARM_BACKGROUND` / `SITE_WARM_BACKGROUND_THREE`。不要在首页外层、加载态或 Three.js fallback 中重新硬编码临时背景色。
 

@@ -288,6 +288,9 @@ interface StampImages {
 - Bucket：`blog-assets-asong.tos-cn-beijing.volces.com`
 - 建议路径：`stamps/{id}-{station}-stamp.jpg`
 - 已在 `next.config.ts` `images.remotePatterns` 中配置白名单，可直接用 `next/image` 加载
+- `public/images/stamps/` 不作为回退目录；缺失图片应保留为待补数据并在 TOS 上传后直接填写远程 URL
+
+当前山崎站收藏记录仍缺少有效 TOS URL，迁移任务完成前会进入页面的图片失败占位态。
 
 ### 页面布局
 

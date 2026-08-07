@@ -74,7 +74,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                         >
                             <div className="w-full max-w-sm md:max-w-md lg:max-w-lg">
                                 <Image
-                                    src="/tech_cover.svg"
+                                    src="/images/channels/tech-cover.svg"
                                     alt="技术频道插图"
                                     width={500}
                                     height={400}

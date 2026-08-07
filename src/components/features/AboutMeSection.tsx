@@ -153,7 +153,7 @@ const ExperienceOverview = () => {
                                 className="w-full h-full object-cover"
                                 loading="lazy"
                                 referrerPolicy="no-referrer"
-                                onError={(e) => { e.currentTarget.src = "/placeholder-image.svg"; }}
+                                onError={(e) => { e.currentTarget.src = "/images/placeholders/default.svg"; }}
                             />
                         </div>
                     </div>

@@ -90,7 +90,7 @@
   background-size: 100% 100%; 
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("/bamboo_leaves.png");
+  background-image: url("/images/backgrounds/bamboo-leaves.webp");
   /* Reactivate the wind filter */
   filter: url(#wind);
   animation: billow 8s ease-in-out infinite;

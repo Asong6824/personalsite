@@ -114,9 +114,9 @@ export const AnimatedTestimonials = ({
                     width={500}
                     height={500}
                     draggable={false}
-                    className={`h-full w-full rounded-3xl ${testimonial.src?.includes('tech_cover.svg') ? 'object-contain' : 'object-cover'} object-center`}
+                    className={`h-full w-full rounded-3xl ${testimonial.src?.includes('tech-cover.svg') ? 'object-contain' : 'object-cover'} object-center`}
                     style={{
-                      backgroundColor: testimonial.src?.includes('tech_cover.svg') ? '#E2DBCE' : '#f5f5f5'
+                      backgroundColor: testimonial.src?.includes('tech-cover.svg') ? '#E2DBCE' : '#f5f5f5'
                     }} />
                 </motion.div>
               ))}

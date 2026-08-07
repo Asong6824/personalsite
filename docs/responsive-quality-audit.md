@@ -31,7 +31,7 @@
 | R-05 | 数据完整性 | 数据演示页请求 `stocks-aapl-msft-demo` 返回 404，图表无法渲染 | 示例数据文件已从仓库删除，但页面仍引用该 ID | 恢复轻量数据 fixture，并纳入页面测试 |
 | R-06 | 数据展示 | 数据集图表表格显示 `undefined` 涨跌数据 | Dataset 映射只生成 points，没有生成 latest 摘要 | 由最后两个点计算 price、prevClose、change 和 changePct |
 | R-07 | MDX 正确性 | 色彩文章触发 React hydration mismatch | 显式 `<p>` 内的 Markdown 又生成 `<p>`，形成非法 `<p><p>` 嵌套 | 将三个说明容器改为 `<div>`，站内浏览器确认运行时错误消失 |
-| R-08 | 首页资源 | 首页长期停留在 `Initializing WebGL...`，并出现 `Invalid or unexpected token` | Draco 解码器运行时依赖 Google 远程脚本，自动化环境加载不稳定 | 将 Three.js 自带 Draco 解码器放入 `public/home-experience/draco/` 并改用站内路径 |
+| R-08 | 首页资源 | 首页长期停留在 `Initializing WebGL...`，并出现 `Invalid or unexpected token` | Draco 解码器运行时依赖 Google 远程脚本，自动化环境加载不稳定 | 将 Three.js 自带 Draco 解码器放入 `public/home-experience/runtime/draco/` 并改用站内路径 |
 | R-09 | 媒体可靠性 | Go 文章 5 张图片在浏览器中全部加载失败 | 掘金图片服务按 UA/Referer 拒绝热链 | 下载原图到 `public/blog-assets/tech/go/`，MDX 改用站内资源并补充语义化 alt |
 | R-10 | 调试污染 | 所有开发页面默认出现 FPS 和 React Scan 覆盖层，影响视觉检查并增加运行时噪声 | `PerformanceMonitor` 全局挂载且无显式开关 | 改为仅开发环境且 `NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITOR=1` 时启用 |
 | R-11 | 数据页布局 | 数据演示标题被固定 Navbar 覆盖，小屏左右留白不稳定 | 页面使用裸内联 `padding: 24`，没有站点级顶部间距 | 改为响应式 main 容器、稳定顶部间距和 `min-w-0` |
@@ -71,7 +71,7 @@ ECharts 当前会生成多层 Canvas。专项测试不能使用要求唯一元�
 
 | 优先级 | ID | 问题 | 当前影响 | 建议动作 |
 |--------|----|------|----------|----------|
-| P1 | Q-01 | `src/data/stamps.ts` 中印章 `#093` 引用不存在的 `/images/stamps/kyoto_B83A2E.png` | 页面进入图片 fallback，山崎站印章不可见；Next 图片接口返回非图片内容 | 找回原图并上传 TOS 或补入 `public/`，然后删除失效路径 |
+| P1 | Q-01 | `src/data/stamps.ts` 中印章 `#093` 引用不存在的 `/images/stamps/kyoto_B83A2E.png` | 页面进入图片 fallback，山崎站印章不可见；Next 图片接口返回非图片内容 | 找回原图并上传 TOS，随后直接替换为远程 URL；不恢复 `public/images/stamps/` |
 | P1 | Q-02 | TOS 印章图片在批量测试中多次出现上游 504 | 印章页首次加载变慢，部分图片短暂进入 fallback | 检查 TOS/CDN 可用性与缓存；为收藏页考虑缩略图、预生成尺寸和有限并发 |
 | P2 | Q-04 | `LXGW WenKai` 仍通过 jsDelivr `@import` 加载 | 网络慢时 CSS/字体请求拖长生产浏览器测试，也影响首次排版稳定性 | 固定版本并自托管必要字重/子集，避免 `@latest` 和运行时 CSS 依赖 |
 | P2 | Q-05 | 生产构建仍有多处 `<img>` ESLint warning | 可能影响 LCP、响应式图片选择和带宽 | 按首屏优先级逐步迁移 `next/image`；对 Canvas/特殊组件保留 `<img>` 时写明理由 |

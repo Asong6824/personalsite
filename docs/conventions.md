@@ -48,7 +48,9 @@
 - `p6-juejin.byteimg.com`
 - `p9-juejin.byteimg.com`
 
-本地静态资源存放于 `public/`。
+`public/` 只存放与站点代码版本绑定的 UI、字体、首页 WebGL 资源和构建期浏览器 artifact。MDX 正文图片、文章封面、图书封面和印章照片统一使用火山引擎 TOS，不在 `public/` 中保留对应业务目录或副本。新增远程图片域名时仍只维护 `next.config.ts`。
+
+图书封面迁移完成前，`src/content/books.json` 使用站内通用占位图；不得重新向 `public/images/books/` 写入封面。印章图片字段必须是 TOS URL，不得新增 `/images/stamps/...` 路径。
 
 ---
 
@@ -153,7 +155,7 @@ npm run gate
 自动化测试无法覆盖的视觉/交互项，部署前仍需手动验证：
 
 - 全局导航与布局（Navbar、Footer）
-- 首页 WebGL 加载、Observe / Express / Create 阶段、Showcase、Reviews 与 Awards 收尾
+- 首页 WebGL 加载、Observe / Express / Create、自我介绍与频道入口阶段
 - 博客列表与文章详情
 - 频道页与专栏页
 - 股票对比图表交互

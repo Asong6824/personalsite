@@ -40,6 +40,13 @@ nextReads: string[] | { slug: string, reason?: string }[]  # 可选，置顶文�
 ---
 ```
 
+### 图片与媒体托管
+
+- MDX 正文图片和 `coverImage` 必须使用火山引擎 TOS URL，不得新增 `/blog-assets/...`、`/images/...` 等站内静态路径。
+- 图书封面和印章图片遵循同一规则，`public/` 只保留通用 UI 占位图，不保留业务图片副本或待上传目录。
+- 当前 `efficient-go-cpu-macro.mdx` 中 5 张已删除的本地图片仍待补 TOS URL；在迁移完成前应视为已知媒体缺口，不要恢复到 `public/blog-assets/`。
+- 上传或替换远程图片后，确认域名已在 `next.config.ts` 的 `images.remotePatterns` 中登记，并运行内容校验与构建。
+
 ### 推荐阅读与内容图谱
 
 文章详情页会根据 `src/data/content-graph.ts` 自动生成正文下方的“接下来阅读”，通常输出 2-3 篇。推荐顺序固定为：

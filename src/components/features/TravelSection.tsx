@@ -8,7 +8,7 @@ import NextImage from "next/image"; // CardDemo 的 JSX 使用了 img，我们�
 
 // 默认作者信息 (这些应该是您自己的信息)
 const SITE_AUTHOR_NAME = "您的名字"; // 替换为您的名字
-const SITE_AUTHOR_AVATAR = "/images/avatars/default-avatar.png"; // 您的默认头像，确保路径正确
+const SITE_AUTHOR_AVATAR = "/images/placeholders/default.svg";
 
 // 示例旅行数据 (确保 image 路径有效)
 const travelExperiences = [

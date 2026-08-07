@@ -18,7 +18,7 @@ type ColumnListItem = {
   countLabel: string;
 };
 
-const PLACEHOLDER_IMAGE = "/placeholder-image.svg";
+const PLACEHOLDER_IMAGE = "/images/placeholders/default.svg";
 
 function resolveColumnImage(columnCover?: string, channelIcon?: string) {
   return columnCover || channelIcon || PLACEHOLDER_IMAGE;

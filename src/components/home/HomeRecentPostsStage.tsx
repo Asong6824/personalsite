@@ -17,7 +17,7 @@ interface RecentPostItem {
   tags: string[];
 }
 
-const PLACEHOLDER_IMAGE = "/placeholder-image.svg";
+const PLACEHOLDER_IMAGE = "/images/placeholders/default.svg";
 
 function formatDate(date: string) {
   const [year, month, day] = date.split("-");

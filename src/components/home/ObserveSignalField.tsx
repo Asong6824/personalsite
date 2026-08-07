@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const observeSignals = [
   {
-    src: "/raw_shoji.jpg",
+    src: "/home-experience/stages/observe/light-memory.webp",
     name: "light-memory.jpg",
     meta: "240x320",
     x: "-23vw",
@@ -13,7 +13,7 @@ const observeSignals = [
     height: 227,
   },
   {
-    src: "/bamboo_leaves.png",
+    src: "/images/backgrounds/bamboo-leaves.webp",
     name: "branch-shadow.png",
     meta: "255x169",
     x: "22vw",
@@ -22,7 +22,7 @@ const observeSignals = [
     height: 169,
   },
   {
-    src: "/images/maps/japan.svg",
+    src: "/images/life/japan-map.svg",
     name: "city-path.svg",
     meta: "231x171",
     x: "-25vw",
@@ -31,7 +31,7 @@ const observeSignals = [
     height: 171,
   },
   {
-    src: "/home-experience/backTexture/beckground_04min.jpeg",
+    src: "/home-experience/stages/observe/time-field.webp",
     name: "time-field.jpeg",
     meta: "320x180",
     x: "27vw",
@@ -40,7 +40,7 @@ const observeSignals = [
     height: 149,
   },
   {
-    src: "/tech_cover.svg",
+    src: "/images/channels/tech-cover.svg",
     name: "tech-signal.svg",
     meta: "182x227",
     x: "14vw",
@@ -49,7 +49,7 @@ const observeSignals = [
     height: 227,
   },
   {
-    src: "/home-experience/revs/rev1.png",
+    src: "/home-experience/stages/observe/ideas-card.webp",
     name: "voice-sample.png",
     meta: "260x160",
     x: "-17vw",
@@ -58,22 +58,13 @@ const observeSignals = [
     height: 145,
   },
   {
-    src: "/shoji_shadow.png",
+    src: "/home-experience/stages/observe/body-shadow.webp",
     name: "body-shadow.png",
     meta: "210x156",
     x: "-31vw",
     y: "11vh",
     width: 210,
     height: 156,
-  },
-  {
-    src: "/home-experience/awards/awwwards.png",
-    name: "external-mark.png",
-    meta: "206x146",
-    x: "31vw",
-    y: "-8vh",
-    width: 206,
-    height: 146,
   },
 ];
 

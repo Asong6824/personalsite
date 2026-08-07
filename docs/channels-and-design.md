@@ -73,7 +73,7 @@
 **频道页设计风格**
 
 - **整体色调**：warm editorial 主题，背景 `#F0EEE7`，卡片 `#E2DBCE`，正文/标题 `#141413`。频道页、专栏页、文章详情页通过 `data-tech-page` / `data-life-page` 下的 `--channel-*` 变量保持一致。
-- **Hero**：全屏高度，左右分栏布局。左侧大标语「探索技术前沿」（Inter 粗体，6xl），副标题「谦逊，自驱，持续」，右侧放置 `tech_cover.svg` 矢量插图。
+- **Hero**：全屏高度，左右分栏布局。左侧大标语「探索技术前沿」（Inter 粗体，6xl），副标题「谦逊，自驱，持续」，右侧放置 `public/images/channels/tech-cover.svg` 矢量插图。
 - **技术栈区块**：`ProgrammerDetails` 组件展示技术栈标签云与技能熟练度。
 - **专栏卡片**：左右分栏（左图右文），`rounded-2xl`，背景 `var(--channel-card)`，边框 `var(--channel-border)`，封面图 hover 时 `scale-105` 过渡。
 - **文章卡片**：三列网格，背景 `var(--channel-card)`，正文 `var(--channel-muted)`，标题 `var(--channel-ink)`，顶部叠加「置顶」和「专栏」标签。

@@ -5,7 +5,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
   tech: {
     name: "技术",
     description: "技术分享与学习笔记",
-    icon: "/tech_cover.svg",
+    icon: "/images/channels/tech-cover.svg",
     columns: {
       go: {
         name: "Golang 精进之路",
@@ -50,7 +50,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
   finance: {
     name: "金融",
     description: "投资交易与金融市场分析",
-    icon: "/placeholder-image.svg",
+    icon: "/images/placeholders/default.svg",
     columns: {
       finance: {
         name: "财经投资",
@@ -67,7 +67,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
   creative: {
     name: "创意",
     description: "逻辑与感性的液态交汇",
-    icon: "/placeholder-image.svg",
+    icon: "/images/placeholders/default.svg",
     columns: {
       design: {
         name: "设计美学",
