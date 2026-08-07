@@ -36,7 +36,7 @@ HomeExperienceClient
 - **组件目录**：`src/components/home/`
 - **渲染方式**：客户端组件内初始化 Three.js，浏览器 API 必须隔离在 `"use client"` 组件中
 - **加载状态**：`THREE.LoadingManager` 控制首屏加载遮罩，资源加载完成后隐藏
-- **Create Gallery 资源**：`CreativeRingField` 使用 `public/home-experience/stages/create/poster.webp` 作为 8 张 4:5 海报面板共享的单一纹理
+- **Create Gallery 资源**：`CreativeRingField` 使用 `public/home-experience/stages/create/cr-*.png` 中的 8 张图片，按配置顺序分别映射到 8 个 Gallery 面板
 - **外部资源原则**：首页不应保留临时参考站点的品牌、文案或资源 URL
 
 ---

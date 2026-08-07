@@ -13,7 +13,16 @@ if (typeof window !== "undefined") {
 const GALLERY_ITEM_COUNT = 8;
 const GALLERY_ASPECT_RATIO = 0.8;
 
-const GALLERY_IMAGE_URL = "/home-experience/stages/create/poster.webp";
+const GALLERY_IMAGE_URLS = [
+  "/home-experience/stages/create/cr-coding.png",
+  "/home-experience/stages/create/cr-gsap.png",
+  "/home-experience/stages/create/cr-data.png",
+  "/home-experience/stages/create/cr-kos.png",
+  "/home-experience/stages/create/cr-3d-print.png",
+  "/home-experience/stages/create/cr-map.png",
+  "/home-experience/stages/create/cr-ekistamp.png",
+  "/home-experience/stages/create/cr-coffee.png",
+] as const;
 
 const DESKTOP_GALLERY_SCALE = 0.67;
 const MOBILE_GALLERY_SCALE = 0.72;
@@ -135,23 +144,36 @@ class GalleryStage {
 
   async init() {
     const textureLoader = new THREE.TextureLoader();
+    const loadTexture = (url: string, attempt = 0): Promise<THREE.Texture> =>
+      new Promise((resolve, reject) => {
+        textureLoader.load(
+          url,
+          (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.generateMipmaps = false;
+            resolve(texture);
+          },
+          undefined,
+          () => {
+            if (attempt === 0) {
+              window.setTimeout(() => {
+                loadTexture(url, attempt + 1).then(resolve, reject);
+              }, 250);
+              return;
+            }
+            reject(new Error(`Failed to load creative gallery texture: ${url}`));
+          },
+        );
+      });
 
-    const texture = await new Promise<THREE.Texture>((resolve, reject) => {
-      textureLoader.load(
-        GALLERY_IMAGE_URL,
-        (loadedTexture) => {
-          loadedTexture.colorSpace = THREE.SRGBColorSpace;
-          loadedTexture.minFilter = THREE.LinearFilter;
-          loadedTexture.magFilter = THREE.LinearFilter;
-          loadedTexture.generateMipmaps = false;
-          resolve(loadedTexture);
-        },
-        undefined,
-        reject,
-      );
-    });
-
-    this.textures.push(texture);
+    const textures: THREE.Texture[] = [];
+    for (const url of GALLERY_IMAGE_URLS) {
+      const texture = await loadTexture(url);
+      textures.push(texture);
+      this.textures.push(texture);
+    }
 
     for (let index = 0; index < GALLERY_ITEM_COUNT; index += 1) {
       const panelWidth = (2 * Math.PI * this.radius) / GALLERY_ITEM_COUNT;
@@ -163,7 +185,7 @@ class GalleryStage {
         transparent: true,
         side: THREE.DoubleSide,
         uniforms: {
-          uTexture: { value: texture },
+          uTexture: { value: textures[index] },
           uOpacity: { value: 0 },
           uBorderRadius: { value: 0.07 },
           uAspect: { value: panelWidth / panelHeight },
@@ -357,7 +379,10 @@ export default function CreativeRingField() {
         render();
       })
       .catch((error) => {
-        console.error("Failed to load creative gallery stage:", error);
+        console.error(
+          "Failed to load creative gallery stage:",
+          error instanceof Error ? error.message : String(error),
+        );
       });
 
     const handlePointerMove = (event: PointerEvent) => {

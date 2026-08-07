@@ -1,70 +1,78 @@
 "use client";
 
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 const observeSignals = [
   {
-    src: "/home-experience/stages/observe/light-memory.webp",
-    name: "light-memory.jpg",
-    meta: "240x320",
+    src: "/home-experience/stages/observe/goon.webp",
+    name: "goon.webp",
     x: "-23vw",
     y: "-13vh",
-    width: 182,
-    height: 227,
+    width: 775,
+    height: 1033,
+    desktopWidth: 270,
+    mobileWidth: 220,
   },
   {
-    src: "/images/backgrounds/bamboo-leaves.webp",
-    name: "branch-shadow.png",
-    meta: "255x169",
+    src: "/home-experience/stages/observe/autumn.webp",
+    name: "autumn.webp",
     x: "22vw",
     y: "-11vh",
-    width: 255,
-    height: 169,
+    width: 1050,
+    height: 788,
+    desktopWidth: 360,
+    mobileWidth: 280,
   },
   {
-    src: "/images/life/japan-map.svg",
-    name: "city-path.svg",
-    meta: "231x171",
+    src: "/home-experience/stages/observe/hashidate.webp",
+    name: "hashidate.webp",
     x: "-25vw",
     y: "25vh",
-    width: 231,
-    height: 171,
+    width: 950,
+    height: 713,
+    desktopWidth: 330,
+    mobileWidth: 260,
   },
   {
-    src: "/home-experience/stages/observe/time-field.webp",
-    name: "time-field.jpeg",
-    meta: "320x180",
+    src: "/home-experience/stages/observe/sea.webp",
+    name: "sea.webp",
     x: "27vw",
     y: "21vh",
-    width: 264,
-    height: 149,
+    width: 1075,
+    height: 806,
+    desktopWidth: 370,
+    mobileWidth: 290,
   },
   {
-    src: "/images/channels/tech-cover.svg",
-    name: "tech-signal.svg",
-    meta: "182x227",
+    src: "/home-experience/stages/observe/matsuri.webp",
+    name: "matsuri.webp",
     x: "14vw",
     y: "-17vh",
-    width: 188,
-    height: 227,
+    width: 825,
+    height: 619,
+    desktopWidth: 285,
+    mobileWidth: 230,
   },
   {
-    src: "/home-experience/stages/observe/ideas-card.webp",
-    name: "voice-sample.png",
-    meta: "260x160",
+    src: "/home-experience/stages/observe/izu.webp",
+    name: "izu.webp",
     x: "-17vw",
     y: "27vh",
-    width: 236,
-    height: 145,
+    width: 1000,
+    height: 750,
+    desktopWidth: 345,
+    mobileWidth: 270,
   },
   {
-    src: "/home-experience/stages/observe/body-shadow.webp",
-    name: "body-shadow.png",
-    meta: "210x156",
+    src: "/home-experience/stages/observe/tamp.webp",
+    name: "tamp.webp",
     x: "-31vw",
     y: "11vh",
-    width: 210,
-    height: 156,
+    width: 900,
+    height: 675,
+    desktopWidth: 310,
+    mobileWidth: 250,
   },
 ];
 
@@ -80,26 +88,26 @@ export default function ObserveSignalField() {
       {observeSignals.map((signal, index) => (
         <figure
           key={signal.name}
-          className="observe-signal-item absolute left-1/2 top-1/2 m-0 opacity-0 will-change-transform"
+          className="observe-signal-item absolute left-1/2 top-1/2 m-0 w-[var(--observe-mobile-width)] opacity-0 will-change-transform lg:w-[var(--observe-desktop-width)]"
           data-start-x={signal.x}
           data-start-y={signal.y}
-          style={{ width: signal.width }}
+          style={{
+            "--observe-mobile-width": `${signal.mobileWidth}px`,
+            "--observe-desktop-width": `${signal.desktopWidth}px`,
+          } as CSSProperties}
         >
           <div className="overflow-hidden border border-[#0a0c20]/18 bg-[#f7f8f1]/82 shadow-[0_10px_30px_rgba(10,12,32,0.08)] backdrop-blur-sm">
             <Image
-              className="block h-auto w-full object-cover grayscale-[20%] saturate-[0.78] opacity-85"
+              className="block h-auto w-full object-contain"
               src={signal.src}
               alt=""
               width={signal.width}
               height={signal.height}
+              sizes={`(min-width: 1024px) ${signal.desktopWidth}px, ${signal.mobileWidth}px`}
               loading={index < 2 ? "eager" : "lazy"}
               draggable={false}
             />
           </div>
-          <figcaption className="mt-2 font-mono text-[11px] leading-tight tracking-normal text-[#42513b]">
-            <span className="block">{signal.name}</span>
-            <span className="block">{signal.meta}</span>
-          </figcaption>
         </figure>
       ))}
     </div>

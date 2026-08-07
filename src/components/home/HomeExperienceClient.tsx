@@ -843,14 +843,14 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
       });
 
       const signalTimings = [
-        { start: 0.07, live: 0.24, endX: "-7.2vw", endY: "-4.6vh", scale: 0.78 },
-        { start: 0.19, live: 0.24, endX: "6.8vw", endY: "-4.1vh", scale: 0.72 },
-        { start: 0.31, live: 0.24, endX: "-6.2vw", endY: "4.8vh", scale: 0.76 },
-        { start: 0.43, live: 0.24, endX: "7.5vw", endY: "4.6vh", scale: 0.68 },
-        { start: 0.55, live: 0.24, endX: "4.8vw", endY: "-5.5vh", scale: 0.74 },
-        { start: 0.67, live: 0.23, endX: "-8vw", endY: "3.4vh", scale: 0.7 },
-        { start: 0.79, live: 0.18, endX: "5.8vw", endY: "3.6vh", scale: 0.64 },
-        { start: 0.89, live: 0.15, endX: "-4.6vw", endY: "5.7vh", scale: 0.58 },
+        { start: 0.07, live: 0.24, endX: "-7.2vw", endY: "-4.6vh", scale: 0.92 },
+        { start: 0.19, live: 0.24, endX: "6.8vw", endY: "-4.1vh", scale: 0.88 },
+        { start: 0.31, live: 0.24, endX: "-6.2vw", endY: "4.8vh", scale: 0.9 },
+        { start: 0.43, live: 0.24, endX: "7.5vw", endY: "4.6vh", scale: 0.86 },
+        { start: 0.55, live: 0.24, endX: "4.8vw", endY: "-5.5vh", scale: 0.9 },
+        { start: 0.67, live: 0.23, endX: "-8vw", endY: "3.4vh", scale: 0.86 },
+        { start: 0.79, live: 0.18, endX: "5.8vw", endY: "3.6vh", scale: 0.84 },
+        { start: 0.89, live: 0.15, endX: "-4.6vw", endY: "5.7vh", scale: 0.82 },
       ];
 
       const observeSignalTl = gsap.timeline({
