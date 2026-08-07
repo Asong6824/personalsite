@@ -25,7 +25,6 @@ const MIN_ZOOM = 0.4;
 const MAX_ZOOM = 2;
 const ZOOM_STEP = 0.1;
 const GROUP_MODES = [
-  { key: "line", label: "线路" },
   { key: "region", label: "地域" },
   { key: "operator", label: "铁路公司" },
 ] as const;
@@ -912,7 +911,6 @@ function getValidLinks(links: { label: string; href: string }[]) {
 }
 
 function getStampGroupValue(stamp: Stamp, mode: GroupMode) {
-  if (mode === "line") return stamp.station.line;
   if (mode === "region") return stamp.station.region;
   return stamp.station.operator ?? null;
 }
@@ -978,7 +976,7 @@ export default function StampsPageClient({
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [ready, setReady] = useState(false);
   const [activeStampId, setActiveStampId] = useState<string | null>(null);
-  const [groupMode, setGroupMode] = useState<GroupMode>("line");
+  const [groupMode, setGroupMode] = useState<GroupMode>("region");
   const [selectedGroupValue, setSelectedGroupValue] = useState<string | null>(null);
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const [zoom, setZoom] = useState(1);
