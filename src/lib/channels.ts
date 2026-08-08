@@ -22,6 +22,11 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
         description: "AI 工程化、智能体、工作流与落地实践",
         cover: "",
       },
+      "knowledge-management": {
+        name: "知识管理",
+        description: "知识组织、个人知识库与学习方法",
+        cover: "",
+      },
     },
   },
   life: {
