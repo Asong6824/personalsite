@@ -4,7 +4,7 @@
 
 ## 范围与目标
 
-本轮初始盘点覆盖 `content/blog/` 中进入站点索引的全部 27 篇 MDX 文章。#01 至 #04 已按作者决定删除，当前剩余 23 篇正式文章。另有 1 份未索引的 RAG 研究笔记，作为资料单独跟踪，不计入正式文章总数。
+本轮初始盘点覆盖 `content/blog/` 中进入站点索引的全部 27 篇 MDX 文章。#01 至 #04 及原金融文章已按作者决定删除，后续另有新文章加入，当前索引共 24 篇正式文章。另有 1 份未索引的 RAG 研究笔记，作为资料单独跟踪，不计入正式文章总数。
 
 重审目标：
 
@@ -65,38 +65,37 @@
 | 09 | 待审 | 2025-08-08 | 日本纪行 祭典篇：千年之约，京都祇园祭 | `content/blog/life/japan/japan-gion-matsuri.mdx` | 重点区分亲历叙事与资料性介绍 |
 | 10 | 待审 | 2025-06-25 | 2025 年中总结：拥抱变化，主动变化，用变化创造价值 | `content/blog/life/thoughts/2025-mid-review.mdx` | 作为个人写作语气的重要样本审阅 |
 
-### 第三阶段：技术与金融文章
+### 第三阶段：技术文章
 
 | # | 状态 | 日期 | 文章 | 文件 | 初步备注 |
 | --- | --- | --- | --- | --- | --- |
-| 11 | 待审 | 2025-01-17 | 投资、人类文明与个人发展 | `content/blog/finance/investment-methodology/value-investing-first-principles.mdx` | 核对概念跨度、论据与投资表述边界 |
-| 12 | 待审 | 2025-05-30 | Efficient Go \| Go如何使用CPU资源（宏观视角：从CPU到Go Runtime调度器） | `content/blog/tech/go/efficient-go-cpu-macro.mdx` | 技术事实、术语和代码示例深审 |
-| 13 | 待审 | 2025-11-25 | iOS 云真机平台实现指南（Host–Device 侧） | `content/blog/tech/general/ios-cloud-platform-guide.mdx` | 长文；重点核对架构完整性与时效性 |
-| 14 | 待审 | 2025-05-01 | 大模型 Agent 简史：从 AutoGPT 到自主工作流 | `content/blog/tech/general/agent.mdx` | 核对时间线、来源与是否存在事后概括 |
-| 15 | 待审 | 2026-07-04 | Agent Tool：Function Calling 如何连接大模型与外部世界 | `content/blog/tech/ai-engineering/agent-tool.mdx` | 检查核心概念、示例和段落重复 |
-| 16 | 待审 | 2026-04-26 | 从 RAG 技术到 RAG 思想 | `content/blog/tech/ai-engineering/from-rag-technique-to-rag-philosophy.mdx` | 超长文章；结合研究笔记核对时间线和主论点 |
-| 17 | 待审 | 2026-07-05 | PI Agent | `content/blog/tech/ai-engineering/pi-agent.mdx` | 检查术语解释、项目事实与作者判断的区分 |
-| 18 | 待审 | 2026-07-13 | skill 的演化与评估 | `content/blog/tech/ai-engineering/skill-evaluation.mdx` | 检查评估框架是否可执行、结论是否有依据 |
+| 11 | 待审 | 2025-05-30 | Efficient Go \| Go如何使用CPU资源（宏观视角：从CPU到Go Runtime调度器） | `content/blog/tech/go/efficient-go-cpu-macro.mdx` | 技术事实、术语和代码示例深审 |
+| 12 | 待审 | 2025-11-25 | iOS 云真机平台实现指南（Host–Device 侧） | `content/blog/tech/general/ios-cloud-platform-guide.mdx` | 长文；重点核对架构完整性与时效性 |
+| 13 | 待审 | 2025-05-01 | 大模型 Agent 简史：从 AutoGPT 到自主工作流 | `content/blog/tech/general/agent.mdx` | 核对时间线、来源与是否存在事后概括 |
+| 14 | 待审 | 2026-07-04 | Agent Tool：Function Calling 如何连接大模型与外部世界 | `content/blog/tech/ai-engineering/agent-tool.mdx` | 检查核心概念、示例和段落重复 |
+| 15 | 待审 | 2026-04-26 | 从 RAG 技术到 RAG 思想 | `content/blog/tech/ai-engineering/from-rag-technique-to-rag-philosophy.mdx` | 超长文章；结合研究笔记核对时间线和主论点 |
+| 16 | 待审 | 2026-07-05 | PI Agent | `content/blog/tech/ai-engineering/pi-agent.mdx` | 检查术语解释、项目事实与作者判断的区分 |
+| 17 | 待审 | 2026-07-13 | skill 的演化与评估 | `content/blog/tech/ai-engineering/skill-evaluation.mdx` | 检查评估框架是否可执行、结论是否有依据 |
 
 ### 第四阶段：设计、产品与创意文章
 
 | # | 状态 | 日期 | 文章 | 文件 | 初步备注 |
 | --- | --- | --- | --- | --- | --- |
-| 19 | 待审 | 2025-06-19 | 如何绘制旅行地图 | `content/blog/creative/notes/map-drawing-guide.mdx` | 检查步骤完整性、工具时效性与作品示例 |
-| 20 | 待审 | 2025-06-22 | 解锁 iPhone 摄影新视界：ProRAW 拍摄与 Lightroom 修图全攻略 | `content/blog/creative/notes/iphone-proraw-lightroom-guide.mdx` | 检查标题风格、教程冗余与软件时效性 |
-| 21 | 待审 | 2025-07-03 | Notion 与禅与我 | `content/blog/creative/product/notion-zen.mdx` | 重点保留个人体验，压缩抽象产品话语 |
-| 22 | 待审 | 2025-08-01 | Figma：重新定义创造 | `content/blog/creative/product/figma-redefining-creation.mdx` | 检查产品叙事、事实来源与泛化结论 |
-| 23 | 待审 | 2025-11-26 | 四大基本设计原则 | `content/blog/creative/design/design-principles-basic.mdx` | 超长文章；检查教程结构、重复内容与示例归属 |
-| 24 | 待审 | 2025-12-10 | 颜色基础知识 | `content/blog/creative/design/color-basics.mdx` | 检查概念准确性、层级和图例支撑 |
-| 25 | 待审 | 2025-12-14 | Typography排版基础 | `content/blog/creative/design/typography-basics.mdx` | 检查中英文术语、标题格式与教程连贯性 |
-| 26 | 待审 | 2026-07-12 | 个人主页设计札记 | `content/blog/creative/notes/personal-homepage-design-notes.mdx` | 作为近期创作记录，检查是否形成清晰设计判断 |
-| 27 | 待审 | 2026-07-16 | Obsidian：面向未来的笔记工具 | `content/blog/creative/product/obsidian-future-note-making.mdx` | 最新文章；用于最后校准修订后的整体写作标准 |
+| 18 | 待审 | 2025-06-19 | 如何绘制旅行地图 | `content/blog/creative/notes/map-drawing-guide.mdx` | 检查步骤完整性、工具时效性与作品示例 |
+| 19 | 待审 | 2025-06-22 | 解锁 iPhone 摄影新视界：ProRAW 拍摄与 Lightroom 修图全攻略 | `content/blog/creative/notes/iphone-proraw-lightroom-guide.mdx` | 检查标题风格、教程冗余与软件时效性 |
+| 20 | 待审 | 2025-07-03 | Notion 与禅与我 | `content/blog/creative/product/notion-zen.mdx` | 重点保留个人体验，压缩抽象产品话语 |
+| 21 | 待审 | 2025-08-01 | Figma：重新定义创造 | `content/blog/creative/product/figma-redefining-creation.mdx` | 检查产品叙事、事实来源与泛化结论 |
+| 22 | 待审 | 2025-11-26 | 四大基本设计原则 | `content/blog/creative/design/design-principles-basic.mdx` | 超长文章；检查教程结构、重复内容与示例归属 |
+| 23 | 待审 | 2025-12-10 | 颜色基础知识 | `content/blog/creative/design/color-basics.mdx` | 检查概念准确性、层级和图例支撑 |
+| 24 | 待审 | 2025-12-14 | Typography排版基础 | `content/blog/creative/design/typography-basics.mdx` | 检查中英文术语、标题格式与教程连贯性 |
+| 25 | 待审 | 2026-07-12 | 个人主页设计札记 | `content/blog/creative/notes/personal-homepage-design-notes.mdx` | 作为近期创作记录，检查是否形成清晰设计判断 |
+| 26 | 待审 | 2026-07-16 | Obsidian：面向未来的笔记工具 | `content/blog/creative/product/obsidian-future-note-making.mdx` | 最新文章；用于最后校准修订后的整体写作标准 |
 
 ## 未索引资料
 
 | 状态 | 文件 | 处理方式 |
 | --- | --- | --- |
-| 待处理 | `content/blog/tech/general/from-rag-technique-to-rag-philosophy-research.md` | 当前是正式 RAG 文章的调研笔记，不进入站点索引；审完第 16 篇后决定保留原处、移入资料目录或删除 |
+| 待处理 | `content/blog/tech/general/from-rag-technique-to-rag-philosophy-research.md` | 当前是正式 RAG 文章的调研笔记，不进入站点索引；审完第 15 篇后决定保留原处、移入资料目录或删除 |
 
 ## 每轮记录格式
 

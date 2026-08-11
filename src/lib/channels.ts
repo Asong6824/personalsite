@@ -54,20 +54,9 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
   },
   finance: {
     name: "金融",
-    description: "投资交易与金融市场分析",
+    description: "内容筹备中",
     icon: "/images/placeholders/default.svg",
-    columns: {
-      finance: {
-        name: "财经投资",
-        description: "财经分析与投资心得",
-        cover: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop",
-      },
-      "investment-methodology": {
-        name: "投资方法论",
-        description: "投资哲学、价值投资与长期决策框架",
-        cover: "",
-      },
-    },
+    columns: {},
   },
   creative: {
     name: "创意",

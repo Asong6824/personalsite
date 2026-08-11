@@ -1,32 +1,29 @@
-// src/app/blog/finance/page.jsx
-import FinanceHomeClient from '@/components/finance/FinanceHomeClient';
-import { CHANNELS_CONFIG } from '@/lib/channels';
-import { getPostsByChannel, getPostsByColumn } from '@/lib/post';
-import { getFeaturedMarketStudy } from '@/lib/finance/market-study-loader';
-import MarketStudySection from '@/components/finance/market-study/MarketStudySection';
+import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 export const metadata = {
     title: '金融频道 | 阿松的个人网站',
-    description: '投资交易与金融市场分析，包含交易策略、投资理财、市场分析等专栏内容。',
+    description: '金融频道内容筹备中。',
 };
 
-export default async function FinanceChannelPage() {
-    const channelConfig = CHANNELS_CONFIG['finance'];
-    const allPosts = getPostsByChannel('finance');
-
-    // 按专栏获取文章
-    const postsByColumn = {};
-    for (const columnKey of Object.keys(channelConfig.columns)) {
-        postsByColumn[columnKey] = getPostsByColumn('finance', columnKey);
-    }
-    const featuredMarketStudy = await getFeaturedMarketStudy();
-
+export default function FinanceChannelPage() {
     return (
-        <FinanceHomeClient
-            channelConfig={channelConfig}
-            postsByColumn={postsByColumn}
-            allPosts={allPosts}
-            marketStudySection={featuredMarketStudy ? <MarketStudySection study={featuredMarketStudy} compact /> : null}
-        />
+        <main
+            className="flex min-h-[calc(100svh-5rem)] items-center justify-center px-6 py-24 text-center"
+            style={{ backgroundColor: SITE_WARM_BACKGROUND }}
+        >
+            <div className="max-w-md">
+                <p className="mb-4 text-xs font-medium uppercase tracking-[0.28em] text-neutral-500">
+                    Finance Channel
+                </p>
+                <h1
+                    className="text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl"
+                    style={{ fontFamily: 'var(--font-noto-serif-sc)' }}
+                >
+                    金融
+                </h1>
+                <div className="mx-auto my-8 h-px w-16 bg-neutral-300" />
+                <p className="text-base leading-7 text-neutral-500">暂无内容</p>
+            </div>
+        </main>
     );
 }

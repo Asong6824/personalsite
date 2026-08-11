@@ -88,7 +88,7 @@ nextReads:
 
 - **tech**（技术）：Golang 精进之路、通用技术、AI 工程
 - **life**（生活）：日本行纪、年度总结、杂记
-- **finance**（金融）：财经投资、投资方法论
+- **finance**（金融）：当前无专栏，频道页显示「暂无内容」
 - **creative**（创意）：设计美学、产品设计、创意手记
 
 每篇文章的频道与专栏归属完全由 frontmatter 中的 `channel`/`column` 字段决定。`channel` 必须是 `CHANNELS_CONFIG` 中存在的频道 key，`column` 必须是对应频道下的专栏 key，否则构建会失败。

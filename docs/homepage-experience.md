@@ -36,7 +36,7 @@ HomeExperienceClient
 - **组件目录**：`src/components/home/`
 - **渲染方式**：客户端组件内初始化 Three.js，浏览器 API 必须隔离在 `"use client"` 组件中
 - **加载状态**：`THREE.LoadingManager` 控制首屏加载遮罩，资源加载完成后隐藏
-- **Create Gallery 资源**：`CreativeRingField` 使用 `public/home-experience/stages/create/cr-*.png` 中的 8 张图片，按配置顺序分别映射到 8 个 Gallery 面板
+- **Create Gallery 资源**：`CreativeRingField` 使用 `src/data/creative-gallery.ts` 中标记为 `home` 的 8 张图片，按配置顺序分别映射到 8 个 Gallery 面板；同一清单通过 `surfaces` 控制频道展示范围，当前只有 3D 打印同时标记为 `creative`。图片文件位于 `public/home-experience/stages/create/cr-*.png`
 - **外部资源原则**：首页不应保留临时参考站点的品牌、文案或资源 URL
 
 ---

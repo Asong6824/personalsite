@@ -37,8 +37,8 @@
 | `src/components/home/` | 首页 3D WebGL 体验 | `HomeExperienceClient` |
 | `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
 | `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
-| `src/components/finance/` | 金融频道专属 | `FinanceHomeClient`、`FinanceColumnLayout`、`market-study/*` |
-| `src/components/creative/` | 创意频道专属 | `LiquidGlassWrapper`、`GlassCard` |
+| `src/components/finance/` | 金融研究与未挂载实验组件 | `market-study/*`、`TempoBackground` |
+| `src/components/creative/` | 创意频道专属 | `CreativeInfiniteCanvas`、`LiquidGlassWrapper`、`GlassCard` |
 | `src/components/magicui/` | 特效/装饰性 | `Highlighter`、`rainbow-button` |
 | `src/components/layout/` | 布局组件 | `Navbar`、`RouteTransitionFeedback`、`RouteLoadingSkeleton` |
 | `src/components/stamps/` | 印章收藏页专属 | `StampsPageClient`（无限画布 + 紧密 Bento 收藏墙 + 3×2 重排展开详情 + 线路/地域/铁路公司组织筛选） |
@@ -48,7 +48,9 @@
 
 > **关于旧版首页组件**：`HomeScrollExperience`、`AboutMeSection`、`FootprintsSection`、`ActiveDaysSection`、`RecentPosts` 等组件曾用于旧版首页，现随首页重构为 `HomeExperienceClient` 而不再挂载于首页。其中 `ProgrammerDetails` 已迁移至技术频道页，`TravelSection` 已迁移至生活频道页，其余组件当前处于未使用状态。
 
-> **关于金融频道实验组件**：`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`TempoBackground`、`DataWall`、`DebugPanel` 当前没有被 `/blog/finance` 挂载。金融频道真实入口是 `src/app/blog/finance/page.tsx` → `FinanceHomeClient`，金融专栏页是 `src/app/blog/finance/[columnSlug]/page.tsx` → `FinanceColumnLayout`。
+> **关于金融频道**：`/blog/finance` 当前由 `src/app/blog/finance/page.tsx` 直接渲染「暂无内容」占位状态，不读取文章、专栏或市场研究。`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`TempoBackground`、`DataWall`、`DebugPanel` 是未挂载的历史实验组件。
+
+> **创意频道自动排版**：`CreativeInfiniteCanvas` 负责卡片渲染、最小单元组件和 GSAP 横向循环；`src/lib/creative/canvas-entries.ts` 负责固定尺寸配额与跨内容类型的槽位匹配，`src/lib/creative/canvas-layout.ts` 负责从大到小的精确密铺、占位检测和必要的 `1×1` 封口。两层算法都不依赖 DOM，可在 Node 环境中独立测试；组件不应再手写新增卡片的 `col-start` / `row-start`。8 张首页 Creative 素材维护在 `src/data/creative-gallery.ts`，通过 `surfaces` 独立控制是否进入频道。
 
 ---
 

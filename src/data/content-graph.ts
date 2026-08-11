@@ -43,6 +43,7 @@ export const CONTENT_GRAPH_TRAILS: ContentGraphTrail[] = [
     articles: [
       "creative/product/notion-zen",
       "creative/product/obsidian-future-note-making",
+      "tech/knowledge-management/ai-era-personal-knowledge-management",
       "tech/ai-engineering/from-rag-technique-to-rag-philosophy",
     ],
   },
@@ -80,7 +81,6 @@ export const CONTENT_GRAPH_TRAILS: ContentGraphTrail[] = [
     articles: [
       "life/thoughts/2025-mid-review",
       "life/misc/2026-07-01-half-year-reflection",
-      "finance/investment-methodology/value-investing-first-principles",
       "creative/notes/personal-homepage-design-notes",
     ],
   },
@@ -206,12 +206,6 @@ export const CONTENT_GRAPH_RELATIONS: ContentGraphRelation[] = [
     to: "life/misc/2026-07-01-half-year-reflection",
     type: "reflection",
     reason: "两个时间切片共同记录个人对变化和成长的判断。",
-  },
-  {
-    from: "life/thoughts/2025-mid-review",
-    to: "finance/investment-methodology/value-investing-first-principles",
-    type: "reflection",
-    reason: "个人发展与长期投资都在讨论如何面对变化并建立稳定判断。",
   },
   {
     from: "life/misc/2026-07-01-half-year-reflection",

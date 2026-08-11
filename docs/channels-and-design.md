@@ -46,7 +46,7 @@
 - 技术、生活、金融、创造频道共享米色纸感背景，只在排版、卡片形态、动效和局部强调色上区分。
 - 日本行纪专栏使用 `.theme-muji`，是生活频道内的特殊表达，但仍复用同一组背景、纸张、边框和文字 token。
 - 创造频道可以使用液态玻璃和极淡光晕，但主背景仍来自 `SITE_WARM_BACKGROUND`。
-- 金融频道当前主实现是杂志式 Editorial 页面；`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`DataWall`、`DebugPanel` 属于未挂载的历史/实验实现，不能作为频道默认风格依据。
+- 金融频道当前只显示「暂无内容」占位状态；`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`DataWall`、`DebugPanel` 属于未挂载的历史/实验实现，不能作为频道默认风格依据。
 
 ### 博客聚合页（`/blog`）
 
@@ -108,29 +108,7 @@
 
 ### 金融（finance）
 
-| 专栏 key | 名称 | 标签 | 封面 |
-|----------|------|------|------|
-| `finance` | 财经投资 | `财经`, `finance`, `投资`, `investment` | Unsplash |
-| `investment-methodology` | 投资方法论 | `价值投资`, `第一性原理`, `方法论` | — |
-
-**频道页设计风格**
-
-- **整体色调**：站点统一米色 `#F0EEE7`（纸质感主背景），深炭灰 `#1a1c19`（主文字），深绿 `#506354`（数据标签/点缀），中灰 `#444748`（次要文字），浅灰 `#c4c7c7`（装饰线）。组件卡片仍使用 `#f4f4ef` / `#e3e3de` 做层次区分。
-- **字体栈**：
-  - 正文：`Inter`
-  - 大标题：`Noto Serif SC`（衬线，font-black tracking-tighter，杂志感）
-  - 数据标签：`JetBrains Mono`（等宽， Insight #01、METHOD_01 等编号）
-  - 装饰引用：`Newsreader`（斜体，Footer 品牌名）
-- **Hero**：非全屏，顶部留白 `pt-32`，12 列网格（左 8 右 4）。左侧大字标语「在波动中寻找秩序，在不确定性中寻找确定性。」（Noto Serif SC，7xl，leading-[1.1]）。左下角装饰线（`h-px w-12 rgba(196,199,199,0.4)`）+ 英文斜体引言。右侧等宽数字 `0.618` + 「Market Efficiency Ratio」标签。
-- **精选专题 Bento Grid**：
-  - 大卡片（8 列）：背景图 `grayscale + mix-blend-multiply + opacity-80`，底部黑色渐变遮罩 + 白色文字，hover `scale-105`（duration-700）。标签使用琥珀色 `#ffdea5` 背景 + `#261900` 文字。
-  - 竖卡（4 列）：`#e3e3de` 背景，上下分栏（标题 + 底部日期分隔线）。
-  - 三小卡（各 4 列）：`#f4f4ef` 背景，底部 4px 彩色下划线（绿/琥珀/红半透明）。
-- **两栏归档**：左侧「财经投资」（文章列表带缩略图，灰度图 hover 恢复彩色），右侧「投资方法论」（卡片式，hover 左侧 2px 绿色边框高亮）。
-- **专栏网格**：`#f4f4ef rounded-xl p-8`，hover `shadow-lg`，顶部 JetBrains Mono 编号 `01 ::`。
-- **Newsletter CTA**：深色背景 `#1a1c19`，左侧 emoji 装饰（opacity 10%），输入框 `rgba(255,255,255,0.1)` 背景，按钮琥珀色 `#ffdea5`。
-- **Footer**：三栏网格，左侧 `Newsreader` 斜体「金融 Editorial」，中间导航与 Legal，右侧版权。hover 金色 `#d4af37`。
-- **动效**：Framer Motion `FADE_UP`（opacity 0→1, y 20→0, duration 0.6）+ `STAGGER`（staggerChildren 0.1）。
+当前没有专栏和文章。`/blog/finance` 使用全站暖色背景，居中显示频道名和「暂无内容」，不渲染 Hero、精选、归档、专栏或市场研究区块。
 
 ---
 
@@ -144,18 +122,27 @@
 
 **频道页设计风格**
 
-- **整体色调**：站点统一米色 `#F0EEE7` 作为频道主背景，叠加极淡的白色与 `#E2DBCE` 环境光晕，保持液态玻璃的轻盈感但不脱离全站背景体系。
-- **标题区**：居中对齐。上方标签「Creative Channel」（等宽字体，tracking-[0.3em] uppercase，`rounded-full border border-neutral-200`）。主标题「创意」（`text-6xl sm:text-7xl md:text-8xl font-extralight tracking-tight text-neutral-900`）。副标题「逻辑与感性的液态交汇」（`text-lg md:text-xl text-neutral-500 font-light`）。
-- **分隔线**：`w-24 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent`，scaleX 从 0 展开的入场动画。
-- **专栏卡片**：核心视觉元素。
-  - 尺寸固定 `300×200 px`，`rounded-[32px]`。
-  - **液态玻璃效果**：使用 `LiquidGlassWrapper`，鼠标跟随的折射/模糊/色散效果。
-  - 参数：`displacementScale=60`，`blurAmount=0.3`，`saturation=140`，`aberrationIntensity=2`，`elasticity=0.15`，`cornerRadius=32`。
-  - Fallback 状态：`rounded-[32px] border border-neutral-200/50 shadow-sm`。
-  - Hover：外部叠加一层 `pointer-events-none` 的边框，`opacity-0 group-hover:opacity-100 transition-opacity duration-500`。
-- **卡片内容**：等宽序号、专栏名（2xl semibold）、描述（sm neutral-500）、「进入专栏 →」（hover translate-x-1）。
-- **底部导航**：返回博客主页按钮，`rounded-full border border-neutral-200 hover:border-neutral-300`。
-- **动效**：Framer Motion，标题 `y: -30 → 0`，卡片 `opacity: 0, y: 40 → 1, 0`（错开 0.15s），分隔线 `scaleX: 0 → 1`。
+- **页面模型**：固定为一个视口高度（`100svh`）的横向创意画布，不产生纵向内容流。视口只展示整个画布的一部分。
+- **无限循环**：画布周期重复三次，GSAP 将轨道位置限制在相邻周期之间；越过边界时归一化到内容相同的位置，因此没有可见回卷。周期宽度由排版结果动态计算，不再固定为 `2760px`。
+- **输入映射**：GSAP `ScrollTrigger.observe()` 统一接收鼠标滚轮、触控板、触摸和指针拖拽。垂直滚轮输入转换为水平位移；左右方向键和 Page Up / Page Down 作为键盘入口。
+- **底层网格**：每个周期固定 4 行、最少 15 列。列宽 `160px`、间距 `24px`；内容不足时保持 15 列，内容增加时以 5 列为一个阶段向右扩展。网格单元两侧绘制低对比度虚线，卡片遮住网格，空白处暴露构造线。
+- **组合方式**：采用“有约束的不规则”。卡片均落在共同网格上，通过固定的原子尺寸、不同起始位置和内容形式形成错落关系，不使用瀑布流、随机绝对定位或空网格单元。
+- **内容差异**：专栏、文章与获准进入频道的视觉素材共用同一套槽位，不按内容层级绑定大小；各卡片仍按稳定哈希选择影像、深色、浅色、紫色、珊瑚色或绿色表达。统一的是圆角、细边框和柔和阴影，不统一卡片配色与内部模板。
+- **视觉裁切**：初始相位在左边保留上一周期的尾部，让画布呈现向两侧继续延伸的感觉；左右边缘使用轻微背景渐隐。
+- **动效降级**：`prefers-reduced-motion` 下取消惯性时长，仍保留直接位移与键盘访问。
+- **实现入口**：路由页保持 Server Component，读取文章与专栏数据；`src/components/creative/CreativeInfiniteCanvas.tsx` 是独立 Client Component，负责 GSAP、DOM 测量和输入事件清理。
+
+**自动分布算法**
+
+- 只有频道标题保留固定锚点；专栏、文章和视觉素材都进入自动布局，不再由内容层级决定固定尺寸。
+- 尺寸等级完全原子化：XL=`5×3`、L=`4×2`、M=`3×2`、S=`2×1`、XS=`1×1`。每个等级只有一个尺寸，不提供 `1×2` 竖卡或同等级候选尺寸。
+- `src/lib/creative/canvas-entries.ts` 先搜索一组可密铺的尺寸配额，再按编辑精选、封面表现力、标题长度、摘要、日期、专栏重复度和内容形态重复度，让专栏、文章、图片共同竞争 XL→L→M→S 槽位。内容类型本身不映射尺寸；稳定哈希只用于同分决胜、色调和视觉变体。
+- `src/lib/creative/canvas-layout.ts` 按面积从大到小处理槽位，并通过精确覆盖求解器从首个空单元递归铺设固定矩形。算法优先寻找最短的完整画布；只有内容总面积或形状确实不能整铺时，才用 `1×1` 小组件补齐剩余单元。
+- 每一列使用 4-bit 位掩码记录占用状态；候选位置在评分前必须通过逐列位运算碰撞检查，因此两个卡片不能共享网格单元。
+- 精确密铺失败时保留评分式降级路径，候选评分考虑扩展新列、同色/同尺寸相邻、孤立单格孔洞、边缘对齐、行节奏和稳定哈希微扰。
+- 排版以专栏 key、文章 slug 或素材 ID 和固定 seed 保证同一内容集结果稳定，不使用运行时随机尺寸。
+- 当前频道页展示全部创意专栏、全部创意文章，以及首页 Create Gallery 中唯一标记为 `creative` 的 3D 打印素材。8 张素材仍统一维护在 `src/data/creative-gallery.ts`，通过 `surfaces` 控制展示范围；以后只需给素材增加 `creative` 即可扩充。
+- 新增内容后算法会重新搜索尺寸配额与密铺方案，允许可控重排；空间不足时画布以 5 列为步长扩展。算法输出 `columns`、`placements` 和 `byId`，组件据此生成 CSS Grid 坐标与周期宽度。对应单元测试覆盖原子尺寸、内容匹配、精确密铺、最小单元封口、确定性、动态扩列和无重叠约束。
 
 ---
 
@@ -176,25 +163,9 @@
 - **文章列表**：`muji-card`，hover `shadow-lg`，标题 `font-light`，标签使用 `#F0EBE5` 背景 + `var(--muji-wood)` 文字 + `var(--muji-border)` 边框。
 - **分隔线**：12px 水平线，`var(--muji-accent)`，opacity 0.6。
 
-### 财经投资（`/blog/finance/finance`）— 杂志式 Editorial
-
-金融专栏页与金融频道页共享同一套 Editorial 设计语言，但布局更聚焦：
-
-- **面包屑**：首页 › 博客 › 金融 › 专栏名（`text-sm`，`#444748`，hover `#1a1c19`）。
-- **列标题区**：Flex 左右对齐。左侧 `Noto Serif SC` 大标题（5xl~6xl，font-black tracking-tighter）+ 描述段落。右侧「Editorial Column」（JetBrains Mono，uppercase tracking-widest，深绿色 `#506354`）+ 底部黑色粗线（`h-1 w-24 #1a1c19`）。
-- **标签过滤**：顶部 Pill 按钮栏，`rounded-full px-5 py-2`。Active 状态：`#1a1c19` 背景 + 白字。Inactive 状态：`#f4f4ef` 背景 + 黑字。
-- **主内容区（8 列）**：文章列表为左图右文卡片。左侧 1/3 灰度图（`grayscale`，hover `grayscale-0 transition-all duration-700`），右侧标题带 `#ffdea5` 下划线装饰色，底部「READ ARTICLE →」（uppercase tracking-widest）。
-- **侧边栏（4 列）**：
-  - **专栏洞察**：`#f4f4ef` 背景卡片，含文章数量 / 作者数 / 最近更新（JetBrains Mono 数据）+「订阅此专栏」按钮（`#1a1c19` 背景白字）。
-  - **热点议题**：前 3 篇文章标题列表，编号 `01 / TOPIC`（JetBrains Mono）。
-  - **引用卡片**：深色背景 `#1a1c19`，aspect-[3/4]，底部 Buffett 名言（Noto Serif SC 斜体）。
-- **空状态**：📭 图标 + 居中提示「该专栏暂无文章」。
-- **Footer**：同金融频道页，三栏网格，Newsreader 斜体品牌名。
-
 ### 其他专栏
 
 技术、生活（除日本外）、创造频道的专栏页统一使用 `ColumnLayout` 组件，但会按频道保留轻量差异：
 
 - 技术、生活专栏页通过 `data-tech-page` / `data-life-page` 使用 `--channel-*` warm editorial 变量。
 - 创造专栏页使用 `SITE_WARM_BACKGROUND` 作为页面背景，文章列表卡片使用 `GlassCard` 的深色玻璃表达。
-- 金融专栏页不走 `ColumnLayout`，而是使用 `FinanceColumnLayout`，与金融频道首页共享杂志式 Editorial 语言。

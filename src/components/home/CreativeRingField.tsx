@@ -4,25 +4,18 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { getCreativeGalleryItems } from "@/data/creative-gallery";
 import { CREATE_STAGE_SCROLL_OFFSET } from "./scrollTimings";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const GALLERY_ITEM_COUNT = 8;
+const HOME_GALLERY_ITEMS = getCreativeGalleryItems("home");
+const GALLERY_ITEM_COUNT = HOME_GALLERY_ITEMS.length;
 const GALLERY_ASPECT_RATIO = 0.8;
 
-const GALLERY_IMAGE_URLS = [
-  "/home-experience/stages/create/cr-coding.png",
-  "/home-experience/stages/create/cr-gsap.png",
-  "/home-experience/stages/create/cr-data.png",
-  "/home-experience/stages/create/cr-kos.png",
-  "/home-experience/stages/create/cr-3d-print.png",
-  "/home-experience/stages/create/cr-map.png",
-  "/home-experience/stages/create/cr-ekistamp.png",
-  "/home-experience/stages/create/cr-coffee.png",
-] as const;
+const GALLERY_IMAGE_URLS = HOME_GALLERY_ITEMS.map((item) => item.src);
 
 const DESKTOP_GALLERY_SCALE = 0.67;
 const MOBILE_GALLERY_SCALE = 0.72;

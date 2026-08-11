@@ -11,8 +11,7 @@
 | `/blog/tech/[columnSlug]` | 技术频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
 | `/blog/life` | 生活频道页 |
 | `/blog/life/[columnSlug]` | 生活频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
-| `/blog/finance` | 金融频道页 |
-| `/blog/finance/[columnSlug]` | 金融频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
+| `/blog/finance` | 金融频道暂无内容占位页 |
 | `/blog/finance/market-studies/[studyId]` | 固定阶段市场研究详情页；参数来自已发布研究目录并静态生成 |
 | `/blog/creative` | 创意频道页 |
 | `/blog/creative/[columnSlug]` | 创意频道专栏页 |
