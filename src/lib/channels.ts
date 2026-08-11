@@ -60,7 +60,7 @@ export const CHANNELS_CONFIG: ChannelsConfig = {
   },
   creative: {
     name: "创意",
-    description: "逻辑与感性的液态交汇",
+    description: "让有趣发生",
     icon: "/images/placeholders/default.svg",
     columns: {
       design: {
