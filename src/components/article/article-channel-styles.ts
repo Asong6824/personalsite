@@ -35,7 +35,7 @@ export const ARTICLE_CHANNEL_STYLES: Record<ArticleChannelKey, ArticleChannelSty
     containerBg: "",
     containerStyle: { backgroundColor: SITE_WARM_BACKGROUND },
     prose:
-      "prose-headings:text-[#141413] prose-a:text-purple-700 hover:prose-a:text-purple-900 prose-strong:text-[#141413] prose-blockquote:border-l-purple-500/60 prose-blockquote:text-[#68645d] prose-p:text-[#141413] prose-li:text-[#141413]",
+      "prose-headings:text-[#141413] prose-a:text-[#6B5B95] hover:prose-a:text-[#443A6B] prose-strong:text-[#141413] prose-blockquote:border-l-[#776DFF] prose-blockquote:text-[#68645d] prose-p:text-[#141413] prose-li:text-[#141413]",
     headerTitle: "text-[#141413]",
     headerMeta: "text-[#68645d]",
     tagBg: "bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413] border border-[#D8D0C3]",

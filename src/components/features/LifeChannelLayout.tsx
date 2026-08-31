@@ -39,7 +39,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
     return (
         <div
             className={`min-h-screen ${styles.scholarlyPalette}`}
-            style={{ backgroundColor: '#F0EEE7' }}
+            style={{ backgroundColor: 'var(--channel-bg,#f0eee7)' }}
             data-life-page
         >
             {/* Content Layers */}

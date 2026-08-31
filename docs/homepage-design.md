@@ -69,8 +69,8 @@ WebGL Canvas 固定覆盖视口；滚动容器由 DOM 内容自然撑开，并�
 
 ### Create
 
-- `CreativeRingField` 使用独立 Three.js 场景展示 8 张 4:5 海报面板组成的 Gallery 环。
-- 当前海报资源为 `public/home-experience/stages/create/cr-*.png`，8 个面板分别使用一张独立纹理；原始文件保持不转码、不裁剪。
+- `CreativeRingField` 使用独立 Three.js 场景展示 8 张海报面板组成的 Gallery 环。
+- Create 运行时纹理为 `public/home-experience/stages/create/cr-*.webp`，8 个面板分别使用一张独立纹理；纹理按原图比例缩放到 960px 高，不裁剪、不拉伸。PNG 文件保留为源图，不再由运行时加载。
 - 主场景中的 Create 标题会缩放并暂时停靠，为后续展示让出空间。
 - 对应标题资源为 `titles/create.svg`。
 

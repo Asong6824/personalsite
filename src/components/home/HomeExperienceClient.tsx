@@ -299,7 +299,7 @@ function ChannelRailLinks() {
             }}
           >
             <motion.div
-              className="absolute inset-y-0 left-0 w-full bg-[#f0eee7]"
+              className="absolute inset-y-0 left-0 w-full bg-[var(--channel-bg,#f0eee7)]"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               transition={{ duration: 0.56, ease: [0.76, 0, 0.24, 1] }}

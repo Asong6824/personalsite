@@ -116,7 +116,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                             <GlassCard hover className="p-6 md:p-8">
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div className="flex-1 min-w-0">
-                                                        <h2 className="text-xl md:text-2xl font-bold text-white transition-colors mb-3 line-clamp-2 group-hover:text-purple-300">
+                                                        <h2 className="text-xl md:text-2xl font-bold text-white transition-colors mb-3 line-clamp-2 group-hover:text-[#B7ADC9]">
                                                             {post.title}
                                                         </h2>
 
@@ -162,11 +162,11 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
 
                                                     <div className="flex flex-col items-end gap-2">
                                                         {post.pinned && (
-                                                            <span className="inline-flex items-center px-2 py-1 bg-purple-500/10 text-purple-300 text-xs font-medium rounded-full border border-purple-500/20">
+                                                            <span className="inline-flex items-center px-2 py-1 bg-[#776DFF]/10 text-[#B7ADC9] text-xs font-medium rounded-full border border-[#776DFF]/20">
                                                                 置顶
                                                             </span>
                                                         )}
-                                                        <svg className="w-6 h-6 text-white/20 group-hover:text-purple-300/60 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg className="w-6 h-6 text-white/20 group-hover:text-[#B7ADC9]/60 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                         </svg>
                                                     </div>

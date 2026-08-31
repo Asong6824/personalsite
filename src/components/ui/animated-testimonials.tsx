@@ -116,7 +116,7 @@ export const AnimatedTestimonials = ({
                     draggable={false}
                     className={`h-full w-full rounded-3xl ${testimonial.src?.includes('tech-cover.svg') ? 'object-contain' : 'object-cover'} object-center`}
                     style={{
-                      backgroundColor: testimonial.src?.includes('tech-cover.svg') ? '#E2DBCE' : '#f5f5f5'
+                      backgroundColor: testimonial.src?.includes('tech-cover.svg') ? 'var(--channel-card,#e2dbce)' : '#f5f5f5'
                     }} />
                 </motion.div>
               ))}

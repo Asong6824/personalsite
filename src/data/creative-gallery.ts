@@ -18,7 +18,7 @@ export type CreativeGallerySurface = "home" | "creative";
 export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   {
     id: "coding",
-    src: "/home-experience/stages/create/cr-coding.png",
+    src: "/home-experience/stages/create/cr-coding.webp",
     title: "Coding",
     eyebrow: "Build · Break · Learn",
     alt: "关于编程工作流的手绘创意海报",
@@ -26,7 +26,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "gsap",
-    src: "/home-experience/stages/create/cr-gsap.png",
+    src: "/home-experience/stages/create/cr-gsap.webp",
     title: "Motion with GSAP",
     eyebrow: "Motion study",
     alt: "GSAP 动效研究创意海报",
@@ -34,7 +34,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "data",
-    src: "/home-experience/stages/create/cr-data.png",
+    src: "/home-experience/stages/create/cr-data.webp",
     title: "Data Visualization",
     eyebrow: "Observe · Understand",
     alt: "数据可视化主题手绘海报",
@@ -42,7 +42,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "kos",
-    src: "/home-experience/stages/create/cr-kos.png",
+    src: "/home-experience/stages/create/cr-kos.webp",
     title: "KOS Framework",
     eyebrow: "Knowledge · Action",
     alt: "KOS 知识行动框架海报",
@@ -50,7 +50,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "3d-print",
-    src: "/home-experience/stages/create/cr-3d-print.png",
+    src: "/home-experience/stages/create/cr-3d-print.webp",
     title: "3D Printing",
     eyebrow: "Form by layer",
     alt: "展示支撑结构与逐层制造的 3D 打印海报",
@@ -59,7 +59,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "map",
-    src: "/home-experience/stages/create/cr-map.png",
+    src: "/home-experience/stages/create/cr-map.webp",
     title: "Map Stories",
     eyebrow: "Spatial notes",
     alt: "地图与空间叙事创意海报",
@@ -67,7 +67,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "ekistamp",
-    src: "/home-experience/stages/create/cr-ekistamp.png",
+    src: "/home-experience/stages/create/cr-ekistamp.webp",
     title: "Eki Stamp",
     eyebrow: "Collected traces",
     alt: "日本车站印章收藏创意海报",
@@ -75,7 +75,7 @@ export const CREATIVE_GALLERY_ITEMS: readonly CreativeGalleryItem[] = [
   },
   {
     id: "coffee",
-    src: "/home-experience/stages/create/cr-coffee.png",
+    src: "/home-experience/stages/create/cr-coffee.webp",
     title: "Coffee Notes",
     eyebrow: "Daily ritual",
     alt: "咖啡与日常仪式创意海报",

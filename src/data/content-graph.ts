@@ -31,6 +31,7 @@ export const CONTENT_GRAPH_TRAILS: ContentGraphTrail[] = [
       "tech/ai-engineering/agent-tool",
       "tech/ai-engineering/from-rag-technique-to-rag-philosophy",
       "tech/ai-engineering/harness-engineering",
+      "tech/ai-engineering/cordis-harness",
       "tech/ai-engineering/pi-agent",
       "tech/ai-engineering/skill-evaluation",
     ],
@@ -125,6 +126,12 @@ export const CONTENT_GRAPH_RELATIONS: ContentGraphRelation[] = [
   },
   {
     from: "tech/ai-engineering/harness-engineering",
+    to: "tech/ai-engineering/cordis-harness",
+    type: "related",
+    reason: "从 Harness 的整体工程范式，深入 Cordis 对动态组件生命周期与依赖关系的底层抽象。",
+  },
+  {
+    from: "tech/ai-engineering/harness-engineering",
     to: "tech/ai-engineering/pi-agent",
     type: "applied-in",
     reason: "PI Agent 展示了极简 Harness 如何落实为可观察、可扩展的 Coding Agent。",
@@ -146,6 +153,24 @@ export const CONTENT_GRAPH_RELATIONS: ContentGraphRelation[] = [
     to: "tech/ai-engineering/from-rag-technique-to-rag-philosophy",
     type: "related",
     reason: "从本地知识库延伸到 Agent 时代知识如何在需要时回到工作现场。",
+  },
+  {
+    from: "creative/product/obsidian-future-note-making",
+    to: "tech/knowledge-management/ai-era-personal-knowledge-management",
+    type: "related",
+    reason: "从 Obsidian 这一具体工具，延伸到 AI 时代个人知识管理的系统方法论，两篇互为印证。",
+  },
+  {
+    from: "creative/product/obsidian-future-note-making",
+    to: "tech/ai-engineering/agent-tool",
+    type: "related",
+    reason: "Obsidian 仓库作为本地 Agent 可读写的个人 RAG，与工具调用如何连接大模型与外部世界相呼应。",
+  },
+  {
+    from: "creative/product/obsidian-future-note-making",
+    to: "creative/product/figma-redefining-creation",
+    type: "related",
+    reason: "两篇同属创意频道产品专栏，分别从笔记工具与设计工具出发，讨论工具如何重新定义人的创造与组织方式。",
   },
   {
     from: "creative/product/notion-zen",

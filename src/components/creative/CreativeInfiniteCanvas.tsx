@@ -221,11 +221,11 @@ function CreativeEntryCard({
                 ? 'text-xl sm:text-2xl'
                 : 'text-3xl';
     const variantClasses = [
-        'border-[#d8d0c2] bg-[#eee8dc] text-neutral-950',
+        'border-[#D8D0C3] bg-[#eee8dc] text-neutral-950',
         'border-neutral-200 bg-white text-neutral-950',
         'border-neutral-800 bg-[#181818] text-white',
         'border-[#cfc9ff] bg-[#dedaff] text-[#2f286f]',
-        'border-[#ffc4ad] bg-[#ff684f] text-[#32140e]',
+        'border-[#ffc4ad] bg-[#FF5A1F] text-[#32140e]',
         'border-[#becbad] bg-[#dbe5cc] text-[#24331f]',
     ];
     const content = (
@@ -299,7 +299,7 @@ function UnitWidget({
     const variant = creativeEntryVariant(placement.id);
     const baseClass = 'relative z-10 flex items-center justify-center overflow-hidden rounded-[26px] border shadow-[0_12px_34px_rgba(30,30,30,0.07)]';
     const content = [
-        <span key="dot" className="h-12 w-12 rounded-full bg-[#ff684f]" />,
+        <span key="dot" className="h-12 w-12 rounded-full bg-[#FF5A1F]" />,
         <div key="index" className="text-center font-mono text-neutral-500">
             <span className="block text-[9px] uppercase tracking-[0.2em]">Index</span>
             <span className="mt-1 block text-2xl text-neutral-950">{String(index + 1).padStart(2, '0')}</span>
@@ -307,13 +307,13 @@ function UnitWidget({
         <div key="cross" className="relative h-14 w-14 text-[#776dff]" aria-hidden="true">
             <span className="absolute left-1/2 top-0 h-full w-px bg-current" />
             <span className="absolute left-0 top-1/2 h-px w-full bg-current" />
-            <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-current bg-[#f4f3ef]" />
+            <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-current bg-[#F0EEE7]" />
         </div>,
         <ArrowUpRight key="arrow" className="h-10 w-10 text-neutral-700" strokeWidth={1.25} aria-hidden="true" />,
         <div key="palette" className="grid grid-cols-2 gap-2" aria-hidden="true">
-            <span className="h-5 w-5 rounded-full bg-[#ff6b5f]" />
+            <span className="h-5 w-5 rounded-full bg-[#FF5A1F]" />
             <span className="h-5 w-5 rounded-full bg-[#776dff]" />
-            <span className="h-5 w-5 rounded-full bg-[#f1c94a]" />
+            <span className="h-5 w-5 rounded-full bg-[#D4AF37]" />
             <span className="h-5 w-5 rounded-full bg-[#121212]" />
         </div>,
         <div key="signal" className="w-20 space-y-2" aria-hidden="true">
@@ -519,7 +519,7 @@ export function CreativeInfiniteCanvas({ columns }: CreativeInfiniteCanvasProps)
             role="region"
             aria-roledescription="无限横向创意画布"
             aria-label="创意频道。上下滚动、左右拖拽或使用方向键浏览。"
-            className="relative h-svh w-full touch-none cursor-grab overflow-hidden overscroll-none bg-[#f4f3ef] text-neutral-950 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#776dff] active:cursor-grabbing"
+            className="relative h-svh w-full touch-none cursor-grab overflow-hidden overscroll-none bg-[#F0EEE7] text-neutral-950 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#776dff] active:cursor-grabbing"
         >
             <div
                 ref={trackRef}
@@ -535,7 +535,7 @@ export function CreativeInfiniteCanvas({ columns }: CreativeInfiniteCanvasProps)
                 ))}
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-end justify-between bg-gradient-to-t from-[#f4f3ef] via-[#f4f3ef]/75 to-transparent px-5 pb-5 pt-14 sm:px-8 sm:pb-7">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-end justify-between bg-gradient-to-t from-[#F0EEE7] via-[#F0EEE7]/75 to-transparent px-5 pb-5 pt-14 sm:px-8 sm:pb-7">
                 <div className="flex items-center gap-2 rounded-full border border-neutral-300/80 bg-white/85 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-600 shadow-sm backdrop-blur-sm">
                     <MousePointer2 className="h-3.5 w-3.5" aria-hidden="true" />
                     滚动浏览
@@ -546,8 +546,8 @@ export function CreativeInfiniteCanvas({ columns }: CreativeInfiniteCanvasProps)
                 </div>
             </div>
 
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-[#f4f3ef] to-transparent sm:w-20" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-[#f4f3ef] to-transparent sm:w-20" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-[#F0EEE7] to-transparent sm:w-20" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-[#F0EEE7] to-transparent sm:w-20" />
         </div>
     );
 }

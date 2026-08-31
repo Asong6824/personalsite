@@ -76,7 +76,7 @@ export function ArticleRecommendations({
               className="group grid min-h-44 overflow-hidden rounded-lg border border-[var(--channel-border,#D8D0C3)] bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_48%,transparent)] transition-colors hover:bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_68%,transparent)] md:grid-cols-[9rem_1fr]"
             >
               {recommendation.coverImage ? (
-                <div className="relative min-h-36 border-b border-[var(--channel-border,#D8D0C3)] bg-[#E2DBCE] md:border-b-0 md:border-r">
+                <div className="relative min-h-36 border-b border-[var(--channel-border,#D8D0C3)] bg-[var(--channel-card,#e2dbce)] md:border-b-0 md:border-r">
                   <Image
                     src={recommendation.coverImage}
                     alt={`${recommendation.title} 封面图`}
@@ -86,7 +86,7 @@ export function ArticleRecommendations({
                   />
                 </div>
               ) : (
-                <div className="flex min-h-28 items-center justify-center border-b border-[var(--channel-border,#D8D0C3)] bg-[#E2DBCE] text-[var(--channel-muted,#68645d)] md:min-h-0 md:border-b-0 md:border-r">
+                <div className="flex min-h-28 items-center justify-center border-b border-[var(--channel-border,#D8D0C3)] bg-[var(--channel-card,#e2dbce)] text-[var(--channel-muted,#68645d)] md:min-h-0 md:border-b-0 md:border-r">
                   <BookOpen className="h-7 w-7" aria-hidden="true" />
                 </div>
               )}

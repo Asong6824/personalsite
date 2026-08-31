@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>绘图配色方案 · 大盈若冲</title>
+<style>
+  :root {
+    --bg: #F0EEE7;
+    --card: #E2DBCE;
+    --border: #D8D0C3;
+    --ink: #141413;
+    --muted: #68645d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .container { max-width: 1120px; margin: 0 auto; padding: 56px 24px 96px; }
+  code { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
+
+  /* Header */
+  header { padding: 16px 0 8px; }
+  .eyebrow {
+    font-family: ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted);
+  }
+  header h1 {
+    font-family: Georgia, "Songti SC", "Noto Serif SC", "STSong", serif;
+    font-size: clamp(32px, 5.4vw, 52px);
+    font-weight: 600; letter-spacing: -0.02em; line-height: 1.12; margin-top: 14px;
+  }
+  .lede { max-width: 680px; margin-top: 18px; color: var(--muted); font-size: 15px; }
+  .lede code { color: var(--ink); }
+  .legend {
+    margin-top: 22px; padding: 10px 14px; display: inline-flex; flex-wrap: wrap; gap: 14px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    font-size: 13px; color: var(--ink);
+  }
+  .legend b { font-weight: 600; }
+
+  /* Sections */
+  .section { margin-top: 64px; }
+  .section > h2 {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 24px; font-weight: 600; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .section > h2 .num { font-family: ui-monospace, monospace; font-size: 13px; color: var(--muted); }
+  .section > .desc { margin-top: 8px; color: var(--muted); font-size: 14px; max-width: 720px; }
+
+  /* Swatch */
+  .swatch {
+    border-radius: 12px; border: 1px solid rgba(20,20,19,0.10);
+    padding: 16px 16px 14px; display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 128px; cursor: pointer; position: relative; overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .swatch:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(20,20,19,0.14); }
+  .swatch:active { transform: translateY(0); }
+  .sw-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.10em;
+    opacity: 0.82; display: flex; justify-content: space-between; align-items: center;
+  }
+  .sw-main { margin-top: auto; padding-top: 10px; }
+  .sw-hex { font-family: ui-monospace, monospace; font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+  .sw-oklch { font-family: ui-monospace, monospace; font-size: 11px; opacity: 0.78; margin-top: 4px; }
+  .sw-cr { font-family: ui-monospace, monospace; font-size: 11px; opacity: 0.78; margin-top: 2px; }
+
+  /* Neutrals */
+  .neutrals-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 22px; }
+  .neutrals-grid .swatch { min-height: 150px; }
+
+  /* Hues */
+  .hues { margin-top: 22px; display: grid; gap: 18px; }
+  .hue-card { border: 1px solid var(--border); border-radius: 16px; background: rgba(226,219,206,0.28); padding: 18px; }
+  .hue-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .hue-name { font-family: Georgia, "Songti SC", serif; font-size: 17px; font-weight: 600; }
+  .hue-anchor {
+    font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px; background: var(--bg);
+  }
+  .hue-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .hue-swatches .swatch:only-child { grid-column: span 4; }
+
+  /* Categorical */
+  .cat-strip {
+    margin-top: 22px; display: grid; grid-template-columns: repeat(12, 1fr);
+    border-radius: 14px; overflow: hidden; border: 1px solid rgba(20,20,19,0.10);
+  }
+  .cat-cell { aspect-ratio: 5 / 7; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px 8px; cursor: pointer; transition: filter 0.15s; }
+  .cat-cell:hover { filter: brightness(0.92); }
+  .cat-idx { font-family: ui-monospace, monospace; font-size: 12px; font-weight: 700; }
+  .cat-list { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 24px; }
+  .cat-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 6px 8px; border-radius: 8px; cursor: pointer; transition: background 0.12s; }
+  .cat-item:hover { background: rgba(226,219,206,0.55); }
+  .cat-dot { width: 14px; height: 14px; border-radius: 4px; flex: none; border: 1px solid rgba(20,20,19,0.12); }
+  .cat-no { font-family: ui-monospace, monospace; color: var(--muted); font-size: 11px; width: 18px; }
+  .cat-name { font-weight: 500; }
+  .cat-hex { font-family: ui-monospace, monospace; color: var(--muted); font-size: 12px; margin-left: auto; }
+
+  /* Scales */
+  .scales { margin-top: 20px; }
+  .scale-row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: center; margin-bottom: 14px; }
+  .scale-name { font-size: 13px; font-weight: 500; color: var(--ink); text-align: right; }
+  .scale-cells { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .scale-cell {
+    border-radius: 9px; min-height: 54px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: 1px solid rgba(20,20,19,0.08);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .scale-cell:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(20,20,19,0.14); }
+  .sc-hex { font-family: ui-monospace, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.01em; }
+
+  /* Semantic */
+  .semantic-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+
+  footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+
+  #toast {
+    position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--bg); font-family: ui-monospace, monospace; font-size: 13px;
+    padding: 10px 18px; border-radius: 999px; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease; z-index: 99;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 860px) {
+    .neutrals-grid { grid-template-columns: repeat(2, 1fr); }
+    .hue-swatches { grid-template-columns: repeat(2, 1fr); }
+    .cat-list { grid-template-columns: repeat(2, 1fr); }
+    .semantic-grid { grid-template-columns: repeat(2, 1fr); }
+    .scale-row { grid-template-columns: 1fr; gap: 8px; align-items: start; }
+    .scale-name { text-align: left; }
+  }
+  @media (max-width: 520px) {
+    .cat-strip { grid-template-columns: repeat(6, 1fr); }
+    .cat-cell { aspect-ratio: 5 / 6; }
+    .cat-list { grid-template-columns: 1fr; }
+    .container { padding: 40px 16px 72px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">DA YING RUO CHONG · Plot Palette</div>
+    <h1>绘图配色方案</h1>
+    <p class="lede">与全站 <strong>warm editorial</strong>（暖色编辑纸张）风格同源的图表与数据可视化色板：低饱和、暖色温，色相覆盖红橙黄绿青蓝紫棕，并按 <code>#F0EEE7</code> 画布对比度分三档。点击任意色块复制 hex。</p>
+    <div class="legend">
+      <span><b>◆</b> 深 · 文字 ≥ 4.5:1</span>
+      <span><b>◇</b> 主 · 填充 ≥ 3:1</span>
+      <span><b>○</b> 浅 · 淡底 &lt; 3:1</span>
+      <span>锚点 = 复用站点既有频道色</span>
+    </div>
+  </header>
+
+  <section class="section" id="neutrals">
+    <h2><span class="num">01</span>中性基底</h2>
+    <p class="desc">图表画布、轴线与文字复用站点核心暖色（<code>PLOT_NEUTRALS</code>），保证绘图与页面零违和。</p>
+    <div class="grid neutrals-grid" id="neutralsGrid"></div>
+  </section>
+
+  <section class="section" id="hues">
+    <h2><span class="num">02</span>九色相 · 三档梯度</h2>
+    <p class="desc">每个色相提供深 / 主 / 备选 / 浅四档（<code>PLOT_HUES</code>）。带「锚点」标记的色值复用站点既有频道 / 页面色。</p>
+    <div class="hues" id="huesGrid"></div>
+  </section>
+
+  <section class="section" id="categorical">
+    <h2><span class="num">03</span>分类顺序色板 · 12 色</h2>
+    <p class="desc">多系列折线 / 柱状 / 饼图按序取色（<code>PLOT_CATEGORICAL</code>），≤8 系列取前 8 色。</p>
+    <div class="cat-strip" id="catStrip"></div>
+    <div class="cat-list" id="catList"></div>
+  </section>
+
+  <section class="section" id="scales">
+    <h2><span class="num">04</span>五档色阶 · 12 色 × 浅 → 深</h2>
+    <p class="desc">每个分类色向浅、深两侧各扩两档（第 3 档为原色），从左到右由浅到深，可用于热力图、面积图或连续渐变。</p>
+    <div class="scales" id="scalesGrid"></div>
+  </section>
+
+  <section class="section" id="semantic">
+    <h2><span class="num">05</span>语义标注色</h2>
+    <p class="desc">绘图注释与状态表达（<code>PLOT_SEMANTIC</code>）。金融涨跌沿用中国习惯：涨红跌绿，如需西方习惯对调红绿。</p>
+    <div class="grid semantic-grid" id="semanticGrid"></div>
+  </section>
+
+  <footer>
+    <p>本页为 <code>docs/color-system.md</code>「八、内容可视化与媒体」的可视化补充，色值与 <code>src/lib/plot-palette.ts</code> 保持一致。对比度以 <code>#F0EEE7</code> 画布为基准计算（WCAG）。</p>
+  </footer>
+</div>
+<div id="toast">已复制</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- 工具：对比度与文字色 ---------- */
+  function relLuminance(hex) {
+    var h = hex.replace('#', '');
+    var chans = [0, 2, 4].map(function (i) {
+      var v = parseInt(h.slice(i, i + 2), 16) / 255;
+      return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * chans[0] + 0.7152 * chans[1] + 0.0722 * chans[2];
+  }
+  function contrast(a, b) {
+    var l1 = relLuminance(a), l2 = relLuminance(b);
+    var hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+  function textColorOn(hex) {
+    var dark = contrast(hex, '#141413');
+    var light = contrast(hex, '#FFFCF5');
+    return dark >= light ? '#141413' : '#FFFCF5';
+  }
+
+  /* ---------- 复制 ---------- */
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 1400);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function copyHex(hex) {
+    var after = function () { showToast('已复制 ' + hex); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(hex).then(after).catch(function () {
+        fallbackCopy(hex); after();
+      });
+    } else {
+      fallbackCopy(hex); after();
+    }
+  }
+
+  /* ---------- 数据 ---------- */
+  var neutrals = [
+    { role: '画布背景', hex: '#F0EEE7', oklch: 'oklch(0.949 0.010 93.6)', note: '图表画布 / 底色' },
+    { role: '卡片', hex: '#E2DBCE', oklch: 'oklch(0.893 0.019 83.1)', note: '图例底 / 区块' },
+    { role: '边框', hex: '#D8D0C3', oklch: 'oklch(0.860 0.020 80.1)', note: '网格线 / 轴线' },
+    { role: '主墨', hex: '#141413', oklch: 'oklch(0.191 0.002 106.6)', note: '主文字 / 主轴', cr: '15.9 : 1' },
+    { role: '灰墨', hex: '#68645d', oklch: 'oklch(0.505 0.012 81.8)', note: '次文字 / 次网格', cr: '5.1 : 1' }
+  ];
+
+  var hues = [
+    { name: '红 · 陶土', anchor: '', swatches: [
+      { label: '深 · 文字', hex: '#8C3B2E', oklch: 'oklch(0.459 0.113 31.1)', cr: '6.5 : 1' },
+      { label: '主 · 填充', hex: '#B85C4A', oklch: 'oklch(0.582 0.123 32.4)', cr: '3.9 : 1' },
+      { label: '浅 · 淡底', hex: '#E0A898', oklch: 'oklch(0.780 0.070 36.5)', cr: '1.8 : 1' }
+    ]},
+    { name: '红 · 莓果', anchor: '品红补位', swatches: [
+      { label: '深 · 文字', hex: '#7E3B4F', oklch: 'oklch(0.445 0.095 2.8)', cr: '6.9 : 1' },
+      { label: '主 · 填充', hex: '#A6506B', oklch: 'oklch(0.545 0.117 1.8)', cr: '4.5 : 1' }
+    ]},
+    { name: '橙', anchor: '信号橙 = 首页锚点', swatches: [
+      { label: '深 · 文字', hex: '#A3541F', oklch: 'oklch(0.533 0.122 50.4)', cr: '4.7 : 1' },
+      { label: '主 · 填充', hex: '#FF5A1F', oklch: 'oklch(0.682 0.211 37.7)', cr: '2.7 : 1' },
+      { label: '备选', hex: '#D97A2B', oklch: 'oklch(0.672 0.147 55.5)', cr: '2.7 : 1' },
+      { label: '浅 · 淡底', hex: '#EEC39B', oklch: 'oklch(0.845 0.072 64.5)', cr: '1.4 : 1' }
+    ]},
+    { name: '黄', anchor: '金 = 金融锚点', swatches: [
+      { label: '深 · 文字', hex: '#7A5F1B', oklch: 'oklch(0.500 0.090 86.1)', cr: '5.2 : 1' },
+      { label: '主 · 填充', hex: '#C9A227', oklch: 'oklch(0.728 0.138 89.7)', cr: '2.1 : 1' },
+      { label: '备选', hex: '#D4AF37', oklch: 'oklch(0.767 0.139 91.1)', cr: '1.8 : 1' },
+      { label: '浅 · 淡底', hex: '#EAD9A8', oklch: 'oklch(0.887 0.067 91.2)', cr: '1.2 : 1' }
+    ]},
+    { name: '绿', anchor: '金融绿 = 金融锚点', swatches: [
+      { label: '深 · 文字', hex: '#3A4A3C', oklch: 'oklch(0.391 0.031 148.4)', cr: '8.1 : 1' },
+      { label: '主 · 填充', hex: '#708238', oklch: 'oklch(0.575 0.102 121.1)', cr: '3.7 : 1' },
+      { label: '备选', hex: '#506354', oklch: 'oklch(0.479 0.033 151.3)', cr: '5.6 : 1' },
+      { label: '浅 · 淡底', hex: '#A9B89A', oklch: 'oklch(0.763 0.045 129.1)', cr: '1.8 : 1' }
+    ]},
+    { name: '青', anchor: '', swatches: [
+      { label: '深 · 文字', hex: '#2E5250', oklch: 'oklch(0.411 0.042 191.1)', cr: '7.4 : 1' },
+      { label: '主 · 填充', hex: '#3E6E6B', oklch: 'oklch(0.503 0.053 190.5)', cr: '5.0 : 1' },
+      { label: '浅 · 淡底', hex: '#A8C2BD', oklch: 'oklch(0.793 0.029 182.7)', cr: '1.6 : 1' }
+    ]},
+    { name: '蓝', anchor: 'Blue Bottle = 生活锚点', swatches: [
+      { label: '深 · 文字', hex: '#0A4D68', oklch: 'oklch(0.395 0.076 231.8)', cr: '8.0 : 1' },
+      { label: '主 · 填充', hex: '#0077A3', oklch: 'oklch(0.536 0.111 233.2)', cr: '4.3 : 1' },
+      { label: '备选', hex: '#5B6375', oklch: 'oklch(0.499 0.030 266.3)', cr: '5.2 : 1' },
+      { label: '浅 · 淡底', hex: '#9BB8C4', oklch: 'oklch(0.765 0.036 224.8)', cr: '1.8 : 1' }
+    ]},
+    { name: '紫', anchor: '创意紫 = 创意锚点', swatches: [
+      { label: '深 · 文字', hex: '#443A6B', oklch: 'oklch(0.383 0.082 291.4)', cr: '8.8 : 1' },
+      { label: '主 · 填充', hex: '#776DFF', oklch: 'oklch(0.622 0.210 281.5)', cr: '3.3 : 1' },
+      { label: '备选', hex: '#6B5B95', oklch: 'oklch(0.511 0.091 295.7)', cr: '5.1 : 1' },
+      { label: '浅 · 淡底', hex: '#B7ADC9', oklch: 'oklch(0.765 0.041 301.7)', cr: '1.8 : 1' }
+    ]},
+    { name: '棕', anchor: '木色 = 创意锚点', swatches: [
+      { label: '深 · 文字', hex: '#6B4F3A', oklch: 'oklch(0.452 0.050 58.0)', cr: '6.5 : 1' },
+      { label: '主 · 填充', hex: '#A18072', oklch: 'oklch(0.627 0.046 44.2)', cr: '3.1 : 1' },
+      { label: '浅 · 淡底', hex: '#C4A88A', oklch: 'oklch(0.749 0.053 68.8)', cr: '1.9 : 1' }
+    ]}
+  ];
+
+  var categorical = [
+    '#B85C4A', '#D97A2B', '#C9A227', '#708238', '#506354', '#3E6E6B',
+    '#0077A3', '#5B6375', '#6B5B95', '#A6506B', '#6B4F3A', '#0A4D68'
+  ];
+  var categoricalNames = [
+    '陶土红', '暖橙', '芥末黄', '橄榄绿', '金融绿', '灰青',
+    'Blue Bottle', '蓝灰', '灰紫', '莓果', '深棕', '深海蓝'
+  ];
+
+  var scales = [
+    { name: '陶土红', shades: ['#EED0CA', '#D69B8E', '#B85C4A', '#883526', '#5A1B0F'] },
+    { name: '暖橙', shades: ['#FFE5D1', '#F5B990', '#D97A2B', '#A75100', '#783500'] },
+    { name: '芥末黄', shades: ['#F5EBCF', '#F0D89B', '#C9A227', '#9B7700', '#725600'] },
+    { name: '橄榄绿', shades: ['#D3D9C5', '#A3B085', '#708238', '#4A590E', '#2C3700'] },
+    { name: '金融绿', shades: ['#B2B9B3', '#849086', '#506354', '#2C3D2F', '#111E14'] },
+    { name: '灰青', shades: ['#B5C2C1', '#7E9A98', '#3E6E6B', '#184644', '#012624'] },
+    { name: 'Blue Bottle', shades: ['#B6CDDA', '#73A5C0', '#0077A3', '#004E75', '#002D4B'] },
+    { name: '蓝灰', shades: ['#BABDC6', '#8D929E', '#5B6375', '#363D4D', '#1A1F2B'] },
+    { name: '灰紫', shades: ['#C2BED1', '#988FB4', '#6B5B95', '#443568', '#251940'] },
+    { name: '莓果', shades: ['#E0C4CA', '#C68E9D', '#A6506B', '#772A45', '#4C1027'] },
+    { name: '深棕', shades: ['#B6ADA6', '#928072', '#6B4F3A', '#432A18', '#210F03'] },
+    { name: '深海蓝', shades: ['#90A0A8', '#587889', '#0A4D68', '#00283F', '#001527'] }
+  ];
+
+  var semantic = [
+    { label: '成功 / 跌', hex: '#4F7A5C', oklch: 'oklch(0.539 0.067 153.3)', cr: '4.2 : 1' },
+    { label: '失败 / 涨', hex: '#A64040', oklch: 'oklch(0.511 0.135 23.1)', cr: '5.3 : 1' },
+    { label: '警告', hex: '#8A6D1F', oklch: 'oklch(0.549 0.100 87.4)', cr: '4.2 : 1' },
+    { label: '信息', hex: '#3E6D8E', oklch: 'oklch(0.515 0.074 240.8)', cr: '4.8 : 1' }
+  ];
+
+  /* ---------- 渲染 ---------- */
+  function swatchHtml(s, note) {
+    var c = textColorOn(s.hex);
+    var meta = '<div class="sw-oklch">' + s.oklch + '</div>';
+    if (s.cr) meta += '<div class="sw-cr">' + s.cr + '</div>';
+    if (note) meta += '<div class="sw-cr">' + note + '</div>';
+    return '<div class="swatch" data-hex="' + s.hex + '" style="background:' + s.hex + ';color:' + c + '">'
+      + '<div class="sw-label">' + s.label + '</div>'
+      + '<div class="sw-main"><div class="sw-hex">' + s.hex + '</div>' + meta + '</div>'
+      + '</div>';
+  }
+
+  // 中性基底
+  document.getElementById('neutralsGrid').innerHTML = neutrals.map(function (n) {
+    var s = { label: n.role, hex: n.hex, oklch: n.oklch, cr: n.cr };
+    return swatchHtml(s, n.note);
+  }).join('');
+
+  // 九色相
+  document.getElementById('huesGrid').innerHTML = hues.map(function (h) {
+    var anchor = h.anchor ? '<span class="hue-anchor">' + h.anchor + '</span>' : '';
+    var sw = h.swatches.map(function (s) { return swatchHtml(s); }).join('');
+    return '<div class="hue-card">'
+      + '<div class="hue-head"><span class="hue-name">' + h.name + '</span>' + anchor + '</div>'
+      + '<div class="hue-swatches">' + sw + '</div>'
+      + '</div>';
+  }).join('');
+
+  // 分类顺序色板
+  document.getElementById('catStrip').innerHTML = categorical.map(function (hex, i) {
+    var c = textColorOn(hex);
+    return '<div class="cat-cell" data-hex="' + hex + '" style="background:' + hex + ';color:' + c + '">'
+      + '<div class="cat-idx">' + String(i + 1).padStart(2, '0') + '</div>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('catList').innerHTML = categorical.map(function (hex, i) {
+    return '<div class="cat-item" data-hex="' + hex + '">'
+      + '<span class="cat-dot" style="background:' + hex + '"></span>'
+      + '<span class="cat-no">' + String(i + 1).padStart(2, '0') + '</span>'
+      + '<span class="cat-name">' + categoricalNames[i] + '</span>'
+      + '<span class="cat-hex">' + hex + '</span>'
+      + '</div>';
+  }).join('');
+
+  // 五档色阶
+  document.getElementById('scalesGrid').innerHTML = scales.map(function (row) {
+    var cells = row.shades.map(function (hex) {
+      var c = textColorOn(hex);
+      return '<div class="scale-cell" data-hex="' + hex + '" style="background:' + hex + ';color:' + c + '">'
+        + '<span class="sc-hex">' + hex + '</span>'
+        + '</div>';
+    }).join('');
+    return '<div class="scale-row">'
+      + '<div class="scale-name">' + row.name + '</div>'
+      + '<div class="scale-cells">' + cells + '</div>'
+      + '</div>';
+  }).join('');
+
+  // 语义色
+  document.getElementById('semanticGrid').innerHTML = semantic.map(function (s) {
+    return swatchHtml(s);
+  }).join('');
+
+  /* ---------- 复制交互 ---------- */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-hex]');
+    if (el) copyHex(el.getAttribute('data-hex'));
+  });
+})();
+</script>
+</body>
+</html>

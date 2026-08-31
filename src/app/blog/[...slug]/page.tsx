@@ -11,7 +11,7 @@ import { CHANNELS_CONFIG } from '@/lib/channels';
 import { MDXRemote } from 'next-mdx-remote/rsc'; // 用于 App Router (RSC)渲染 MDX
 import { TableOfContents } from '@/components/ui/TableOfContents';
 import { ArticleInfoItem } from '@/components/article/ArticleInfoItem';
-import { ArticleRecommendations } from '@/components/article/ArticleRecommendations';
+import { ArticleRelationGraph } from '@/components/article/ArticleRelationGraph';
 import { getArticleChannelStyle } from '@/components/article/article-channel-styles';
 import { createArticleMdxComponents } from '@/components/article/mdx-components';
 import { articleMdxOptions } from '@/lib/article/mdx-options';
@@ -205,11 +205,11 @@ export default async function PostPage({ params }) {
             [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-sm
             [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none
 
-            prose-pre:bg-[#E2DBCE] dark:prose-pre:bg-[#E2DBCE] 
-            prose-pre:text-[#141413] 
+            prose-pre:bg-[var(--channel-card,#e2dbce)] dark:prose-pre:bg-[var(--channel-card,#e2dbce)] 
+            prose-pre:text-[var(--channel-ink,#141413)] 
             prose-pre:rounded-xl 
             prose-pre:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.5)] 
-            prose-pre:border prose-pre:border-[#D8D0C3]
+            prose-pre:border prose-pre:border-[var(--channel-card-hover,#d8d0c3)]
             prose-pre:p-4
             prose-pre:my-6`}
                             >
@@ -220,10 +220,14 @@ export default async function PostPage({ params }) {
                                 />
                             </div>
 
-                            <ArticleRecommendations recommendations={recommendations} />
+                            <ArticleRelationGraph
+                    currentTitle={frontmatter.title}
+                    currentSlug={articleSlug}
+                    recommendations={recommendations}
+                  />
 
-                            <div className="mt-14 pt-8 border-t border-[#D8D0C3] text-center">
-                                <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-[#506354] hover:text-[#1a1c19]' : isTechChannel || isLifeChannel ? 'text-[#141413] hover:text-[#68645d]' : 'text-blue-400 hover:text-blue-300'}`}>
+                            <div className="mt-14 pt-8 border-t border-[var(--channel-card-hover,#d8d0c3)] text-center">
+                                <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-[#506354] hover:text-[#1a1c19]' : isTechChannel || isLifeChannel ? 'text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]' : 'text-blue-400 hover:text-blue-300'}`}>
                                     &larr; 返回博客列表
                                 </Link>
                             </div>

@@ -102,10 +102,10 @@ export const ColumnTimeline = ({
                                 <span className="font-medium">{column.articleCount || 0} 篇文章</span>
                                 <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${
                                   ['技术', '生活', '创造'].includes(column.channel)
-                                    ? 'bg-[#F0EEE7] text-[#141413]'
+                                    ? 'bg-[var(--channel-bg,#f0eee7)] text-[var(--channel-ink,#141413)]'
                                     : column.channel === '金融'
-                                      ? 'bg-[#E2DBCE] text-[#506354]'
-                                      : 'bg-[#E2DBCE] text-[#141413]'
+                                      ? 'bg-[var(--channel-card,#e2dbce)] text-[#506354]'
+                                      : 'bg-[var(--channel-card,#e2dbce)] text-[var(--channel-ink,#141413)]'
                                 }`}>
                                   {column.channel}
                                 </span>
@@ -129,10 +129,10 @@ export const ColumnTimeline = ({
                               <span className="font-medium">{column.articleCount || 0} 篇文章</span>
                               <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${
                                 ['技术', '生活', '创造'].includes(column.channel)
-                                  ? 'bg-[#F0EEE7] text-[#141413]'
+                                  ? 'bg-[var(--channel-bg,#f0eee7)] text-[var(--channel-ink,#141413)]'
                                   : column.channel === '金融'
-                                    ? 'bg-[#E2DBCE] text-[#506354]'
-                                    : 'bg-[#E2DBCE] text-[#141413]'
+                                    ? 'bg-[var(--channel-card,#e2dbce)] text-[#506354]'
+                                    : 'bg-[var(--channel-card,#e2dbce)] text-[var(--channel-ink,#141413)]'
                               }`}>
                                 {column.channel}
                               </span>

@@ -83,7 +83,7 @@ export function HomeColumnsListStage({ postCounts = {} }: { postCounts?: Record<
           <div
             className={[
               "pointer-events-none absolute z-20 hidden aspect-[4/3] w-[min(22vw,340px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden",
-              "border border-[#0a0c20]/10 bg-[#f0eee7] shadow-[0_24px_80px_rgba(10,12,32,0.14)] transition duration-300 md:block",
+              "border border-[#0a0c20]/10 bg-[var(--channel-bg,#f0eee7)] shadow-[0_24px_80px_rgba(10,12,32,0.14)] transition duration-300 md:block",
               activeItem ? "opacity-100 blur-0" : "opacity-0 blur-sm",
             ].join(" ")}
             style={{
