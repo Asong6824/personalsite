@@ -27,6 +27,16 @@ const fixedRoutes: ResponsiveRoute[] = [
     kind: "canvas",
     label: "station-stamps",
   },
+  {
+    path: "/blog/life/bookshelf",
+    kind: "canvas",
+    label: "life-bookshelf",
+  },
+  {
+    path: "/blog/life/sketchbook/singapore",
+    kind: "canvas",
+    label: "life-sketchbook",
+  },
   { path: "/dev/datasets-demo", kind: "data", label: "datasets-demo" },
 ];
 

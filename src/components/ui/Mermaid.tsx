@@ -32,7 +32,7 @@ export function Mermaid({ chart }) {
                 } catch (error) {
                     console.error('Mermaid render error:', error);
                     // In case of error, we might want to show the raw code or an error message
-                    setSvg(`<pre class="text-red-500 text-xs p-2 bg-red-50 rounded">${error.message}</pre>`);
+                    setSvg(`<pre class="text-site-red-500 text-xs p-2 bg-site-red-50 rounded">${error.message}</pre>`);
                 }
             }
         };

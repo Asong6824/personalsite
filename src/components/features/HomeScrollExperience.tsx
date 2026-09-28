@@ -311,7 +311,7 @@ export default function HomeScrollExperience() {
         <div
           ref={viewportRef}
           className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
-          style={{ background: '#FFFFFF' }}
+          style={{ background: 'var(--color-site-neutral-50)' }}
         >
           {/* Asong 文字 */}
           <div
@@ -320,7 +320,7 @@ export default function HomeScrollExperience() {
               display: 'inline-block', position: 'relative', zIndex: 10,
               fontFamily: '"Helvetica Neue", Arial, sans-serif',
               fontSize: 'clamp(64px, 10vw, 120px)', fontWeight: 400,
-              color: '#3D3A36', lineHeight: 1,
+              color: 'var(--color-site-stone-700)', lineHeight: 1,
             }}
           >
             <span ref={(el) => { letterRefs.current[0] = el }}
@@ -354,7 +354,7 @@ export default function HomeScrollExperience() {
             ref={cardRef}
             style={{
               position: 'absolute', width: '75vw', height: '75vh', borderRadius: '32px',
-              background: '#EBE3D5', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+              background: 'var(--color-site-stone-200)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
               boxShadow: '0 25px 80px rgba(61, 58, 54, 0.08)',
             }}
@@ -363,13 +363,13 @@ export default function HomeScrollExperience() {
               <div style={{
                 fontFamily: '"Helvetica Neue", Arial, sans-serif',
                 fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 300,
-                color: '#00A9E0', letterSpacing: '0.05em', lineHeight: 1.4, textAlign: 'center',
+                color: 'var(--color-site-sky-500)', letterSpacing: '0.05em', lineHeight: 1.4, textAlign: 'center',
               }}>
                 The story<br />continues...
               </div>
               <div style={{
                 marginTop: '2rem', fontSize: 'clamp(0.875rem, 2vw, 1.25rem)',
-                fontWeight: 300, color: '#00A9E0', letterSpacing: '0.15em', textTransform: 'uppercase',
+                fontWeight: 300, color: 'var(--color-site-sky-500)', letterSpacing: '0.15em', textTransform: 'uppercase',
               }}>
                 Scroll to begin
               </div>

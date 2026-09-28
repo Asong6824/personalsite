@@ -93,11 +93,11 @@ export const ColorWheelSteps = () => {
     };
 
     return (
-        <div className="my-8 py-8 px-4 bg-gray-50 dark:bg-zinc-900/50 rounded-2xl border border-gray-100 dark:border-zinc-800 flex flex-col items-center">
+        <div className="my-8 py-8 px-4 bg-site-gray-50 dark:bg-site-zinc-900/50 rounded-2xl border border-site-gray-100 dark:border-site-zinc-800 flex flex-col items-center">
 
             <div className="relative w-64 h-64 mb-8">
                 {/* Visual Ring Track - Outer Border */}
-                <div className="absolute inset-0 rounded-full border border-gray-200 dark:border-zinc-700"></div>
+                <div className="absolute inset-0 rounded-full border border-site-gray-200 dark:border-site-zinc-700"></div>
 
                 {/* The Color Wheel Gradient */}
                 <motion.div
@@ -109,8 +109,8 @@ export const ColorWheelSteps = () => {
                 </motion.div>
 
                 {/* Inner Mask to create Ring */}
-                <div className="absolute inset-16 bg-gray-50 dark:bg-zinc-900 rounded-full shadow-inner flex items-center justify-center p-4 text-center z-10">
-                    <span className="text-gray-400 text-xs font-mono">
+                <div className="absolute inset-16 bg-site-gray-50 dark:bg-site-zinc-900 rounded-full shadow-inner flex items-center justify-center p-4 text-center z-10">
+                    <span className="text-site-gray-400 text-xs font-mono">
                         {step === 1 ? "3 Colors" : step === 2 ? "6 Colors" : "12 Colors"}
                     </span>
                 </div>
@@ -119,16 +119,16 @@ export const ColorWheelSteps = () => {
                 {step >= 1 && (
                     <>
                         {/* Red Top */}
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-500">R</div>
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-site-gray-500">R</div>
                     </>
                 )}
             </div>
 
             <div className="text-center space-y-4 max-w-lg">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="text-lg font-bold text-site-gray-900 dark:text-site-gray-100">
                     {step === 1 ? "Primary Colors" : step === 2 ? "Secondary Colors" : "Tertiary Colors"}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 min-h-[3rem]">
+                <p className="text-sm text-site-gray-600 dark:text-site-gray-400 min-h-[3rem]">
                     {getDescription()}
                 </p>
 
@@ -137,8 +137,8 @@ export const ColorWheelSteps = () => {
                         onClick={prevStep}
                         disabled={step === 1}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${step === 1
-                                ? "bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-zinc-700 dark:text-gray-200"
+                                ? "bg-site-gray-100 text-site-gray-400 cursor-not-allowed dark:bg-site-zinc-800 dark:text-site-zinc-600"
+                                : "bg-site-gray-200 text-site-gray-700 hover:bg-site-gray-300 dark:bg-site-zinc-700 dark:text-site-gray-200"
                             }`}
                     >
                         上一步
@@ -147,8 +147,8 @@ export const ColorWheelSteps = () => {
                         onClick={nextStep}
                         disabled={step === 3}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${step === 3
-                                ? "bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
-                                : "bg-blue-600 text-white hover:bg-blue-700"
+                                ? "bg-site-gray-100 text-site-gray-400 cursor-not-allowed dark:bg-site-zinc-800 dark:text-site-zinc-600"
+                                : "bg-site-blue-600 text-site-neutral-50 hover:bg-site-blue-700"
                             }`}
                     >
                         {step === 2 ? "下一步：复色" : "下一步：混合"}

@@ -3,6 +3,7 @@ import * as echarts from 'echarts/core';
 import { GridComponent, TooltipComponent, GraphicComponent } from 'echarts/components';
 import { LineChart, ScatterChart, BarChart, CustomChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
+import { SITE_FOUNDATION, SITE_NEUTRAL_PALETTE } from '@/lib/site-palette';
 
 // Register components (module-scoped flag to avoid duplicating registration)
 let CIRCADIAN_REGISTERED = typeof window !== 'undefined' ? (window as any).__CIRCADIAN_REGISTERED__ : false;
@@ -50,7 +51,7 @@ export default function CircadianChart({ hourly = [], height = 200, latitude = 3
     const dotBaseColor = (cssVars.getPropertyValue('--primary').trim() || cssVars.getPropertyValue('--chart-1').trim() || cssVars.getPropertyValue('--foreground').trim());
     const gridColor = cssVars.getPropertyValue('--border').trim() || (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)');
     
-    const fgColor = cssVars.getPropertyValue('--foreground').trim() || (isDark ? '#f5f5f5' : '#111111');
+    const fgColor = cssVars.getPropertyValue('--foreground').trim() || (isDark ? SITE_NEUTRAL_PALETTE.neutral[50] : SITE_FOUNDATION.ink);
     const dayNightRects = [
       // day: 6..18（使用前景色的低不透明度叠加，暗色变亮、亮色变暗）
       { x0: 6, x1: 18, color: fgColor, opacity: isDark ? 0.06 : 0.06 },

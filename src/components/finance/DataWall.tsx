@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useMemo } from 'react';
+import { SITE_FOUNDATION, SITE_NEUTRAL_PALETTE } from '@/lib/site-palette';
 
 export const DataWall = ({ config, targetTwist, theme }) => {
     const canvasRef = useRef(null);
@@ -95,9 +96,9 @@ export const DataWall = ({ config, targetTwist, theme }) => {
             // Instant Twist Update
             currentTwistRef.current = targetTwist;
 
-            const bg = theme.bg || '#000000';
-            const textColor = theme.text || '#ffffff';
-            const accentColor = theme.accent || '#333333';
+            const bg = theme.bg || SITE_NEUTRAL_PALETTE.neutral[950];
+            const textColor = theme.text || SITE_FOUNDATION.canvas;
+            const accentColor = theme.accent || SITE_NEUTRAL_PALETTE.neutral[700];
 
             // Fill Background
             ctx.fillStyle = bg;

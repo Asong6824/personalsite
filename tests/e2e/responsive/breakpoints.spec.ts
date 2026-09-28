@@ -16,6 +16,8 @@ const representativeRoutes = [
   "/blog/finance/finance",
   "/blog/tech/ai-engineering/agent-tool",
   "/blog/life/japan/stamps",
+  "/blog/life/bookshelf",
+  "/blog/life/sketchbook",
   "/dev/datasets-demo",
 ];
 

@@ -52,27 +52,27 @@ const CHANNEL_STYLES: Record<
 > = {
   tech: {
     name: "技术",
-    fill: "#A68A7D",
-    active: "#76584C",
-    dotClassName: "bg-[#A68A7D]",
+    fill: "var(--color-site-orange-400)",
+    active: "var(--color-site-orange-700)",
+    dotClassName: "bg-site-orange-400",
   },
   creative: {
     name: "创意",
-    fill: "#9A849D",
-    active: "#6E5972",
-    dotClassName: "bg-[#9A849D]",
+    fill: "var(--color-site-violet-400)",
+    active: "var(--color-site-violet-700)",
+    dotClassName: "bg-site-violet-400",
   },
   life: {
     name: "生活",
-    fill: "#82917B",
-    active: "#566650",
-    dotClassName: "bg-[#82917B]",
+    fill: "var(--color-site-lime-500)",
+    active: "var(--color-site-lime-700)",
+    dotClassName: "bg-site-lime-500",
   },
   finance: {
     name: "金融",
-    fill: "#A08A62",
-    active: "#755F39",
-    dotClassName: "bg-[#A08A62]",
+    fill: "var(--color-site-amber-500)",
+    active: "var(--color-site-amber-700)",
+    dotClassName: "bg-site-amber-500",
   },
 };
 
@@ -226,11 +226,11 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
   return (
     <section
       aria-labelledby="knowledge-map-heading"
-      className="border-b border-[var(--channel-ink,#141413)]/25 py-12 lg:py-16"
+      className="border-b border-[var(--channel-ink)]/25 py-12 lg:py-16"
     >
       <div className="mb-9 grid gap-5 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-4">
-          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--channel-muted,#68645d)]">
+          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--channel-muted)]">
             Knowledge map / 内容地图
           </p>
           <h2
@@ -241,7 +241,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
           </h2>
         </div>
         <div className="max-w-2xl lg:col-span-8 lg:pt-7">
-          <p className="text-base leading-7 text-[#4f4b45] sm:text-lg sm:leading-8">
+          <p className="text-base leading-7 text-site-stone-600 sm:text-lg sm:leading-8">
             频道是目录，连线是文章之间真实的思想脉络。选择一个主题，看看技术、创作与生活如何在不同地方相遇。
           </p>
         </div>
@@ -257,8 +257,8 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
           aria-pressed={activeTrailId === "all"}
           className={`shrink-0 border px-4 py-2 font-mono text-[11px] tracking-[0.08em] transition-colors ${
             activeTrailId === "all"
-              ? "border-[var(--channel-ink,#141413)] bg-[var(--channel-ink,#141413)] text-[var(--channel-bg,#f0eee7)]"
-              : "border-[var(--channel-ink,#141413)]/25 text-[#4f4b45] hover:bg-[var(--channel-card,#e2dbce)]"
+              ? "border-[var(--channel-ink)] bg-[var(--channel-ink)] text-[var(--channel-bg)]"
+              : "border-[var(--channel-ink)]/25 text-site-stone-600 hover:bg-[var(--channel-card)]"
           }`}
         >
           全部关系
@@ -271,8 +271,8 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
             aria-pressed={activeTrailId === trail.id}
             className={`shrink-0 border px-4 py-2 text-sm transition-colors ${
               activeTrailId === trail.id
-                ? "border-[var(--channel-ink,#141413)] bg-[var(--channel-ink,#141413)] text-[var(--channel-bg,#f0eee7)]"
-                : "border-[var(--channel-ink,#141413)]/25 text-[#4f4b45] hover:bg-[var(--channel-card,#e2dbce)]"
+                ? "border-[var(--channel-ink)] bg-[var(--channel-ink)] text-[var(--channel-bg)]"
+                : "border-[var(--channel-ink)]/25 text-site-stone-600 hover:bg-[var(--channel-card)]"
             }`}
           >
             {trail.name}
@@ -280,9 +280,9 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
         ))}
       </div>
 
-      <div className="hidden min-h-[640px] grid-cols-[minmax(0,1fr)_21rem] border border-[var(--channel-ink,#141413)]/20 bg-[#E9E5DC]/45 md:grid">
-        <div className="relative min-w-0 overflow-hidden border-r border-[var(--channel-ink,#141413)]/20">
-          <div className="pointer-events-none absolute left-5 top-5 z-10 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--channel-muted,#68645d)]">
+      <div className="hidden min-h-[640px] grid-cols-[minmax(0,1fr)_21rem] border border-[var(--channel-ink)]/20 bg-site-stone-100/45 md:grid">
+        <div className="relative min-w-0 overflow-hidden border-r border-[var(--channel-ink)]/20">
+          <div className="pointer-events-none absolute left-5 top-5 z-10 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--channel-muted)]">
             {activeTrail ? activeTrail.label : `${nodes.length} 篇文章 · ${links.length} 条联系`}
           </div>
           <svg
@@ -316,7 +316,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
                     y1={source.y}
                     x2={target.x}
                     y2={target.y}
-                    stroke="#4F4B45"
+                    stroke="var(--color-site-stone-600)"
                     strokeWidth={touchesSelected ? 1.7 : 1}
                     strokeDasharray={
                       link.type === "related" || link.type === "reflection"
@@ -377,13 +377,13 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
                     <circle
                       r={radius}
                       fill={isSelected ? channelStyle.active : channelStyle.fill}
-                      stroke="var(--channel-bg,#f0eee7)"
+                      stroke="var(--channel-bg)"
                       strokeWidth="2"
                     />
                     <text
                       x={radius + 7}
                       y={secondLine ? -2 : 4}
-                      fill="#2B2925"
+                      fill="var(--color-site-stone-800)"
                       fontSize="11.5"
                       fontWeight={isSelected ? 650 : 500}
                     >
@@ -404,7 +404,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
             {Object.entries(CHANNEL_STYLES).map(([key, style]) => (
               <span
                 key={key}
-                className="flex items-center gap-1.5 text-[11px] text-[var(--channel-muted,#68645d)]"
+                className="flex items-center gap-1.5 text-[11px] text-[var(--channel-muted)]"
               >
                 <span
                   className={`h-2 w-2 rounded-full ${style.dotClassName}`}
@@ -417,7 +417,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
 
         <aside className="flex flex-col p-6 lg:p-7" aria-live="polite">
           <div className="mb-auto">
-            <div className="mb-5 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--channel-muted,#68645d)]">
+            <div className="mb-5 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--channel-muted)]">
               <span>{CHANNEL_STYLES[selectedNode.channel]?.name}</span>
               <time dateTime={selectedNode.date}>
                 {selectedNode.date.replaceAll("-", ".")}
@@ -427,7 +427,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
               {selectedNode.title}
             </h3>
             {selectedNode.excerpt && (
-              <p className="mt-4 text-sm leading-6 text-[var(--channel-muted,#68645d)]">
+              <p className="mt-4 text-sm leading-6 text-[var(--channel-muted)]">
                 {selectedNode.excerpt}
               </p>
             )}
@@ -435,7 +435,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
               {selectedNode.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="border border-[var(--channel-ink,#141413)]/15 px-2 py-1 text-[11px] text-[var(--channel-muted,#68645d)]"
+                  className="border border-[var(--channel-ink)]/15 px-2 py-1 text-[11px] text-[var(--channel-muted)]"
                 >
                   {tag}
                 </span>
@@ -443,8 +443,8 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
             </div>
 
             {selectedRelations.length > 0 && (
-              <div className="mt-8 border-t border-[var(--channel-ink,#141413)]/20 pt-5">
-                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--channel-muted,#68645d)]">
+              <div className="mt-8 border-t border-[var(--channel-ink)]/20 pt-5">
+                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--channel-muted)]">
                   为什么相连
                 </p>
                 <div className="space-y-4">
@@ -468,13 +468,13 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
                         onClick={() => setSelectedSlug(otherNode.slug)}
                         className="block w-full text-left"
                       >
-                        <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#7b746b]">
+                        <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-site-stone-500">
                           {RELATION_LABELS[relation.type]}
                         </span>
                         <span className="mt-1 block text-sm font-medium leading-5">
                           {otherNode.title}
                         </span>
-                        <span className="mt-1 block text-xs leading-5 text-[var(--channel-muted,#68645d)]">
+                        <span className="mt-1 block text-xs leading-5 text-[var(--channel-muted)]">
                           {relation.reason}
                         </span>
                       </button>
@@ -487,7 +487,7 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
 
           <Link
             href={`/blog/${selectedNode.slug}`}
-            className="mt-8 flex items-center justify-between border-t border-[var(--channel-ink,#141413)] pt-4 text-sm font-medium transition-opacity hover:opacity-60"
+            className="mt-8 flex items-center justify-between border-t border-[var(--channel-ink)] pt-4 text-sm font-medium transition-opacity hover:opacity-60"
           >
             阅读这篇文章
             <span aria-hidden="true">→</span>
@@ -495,9 +495,9 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
         </aside>
       </div>
 
-      <div className="border-t border-[var(--channel-ink,#141413)]/25 md:hidden">
+      <div className="border-t border-[var(--channel-ink)]/25 md:hidden">
         {activeTrail && (
-          <p className="border-b border-[var(--channel-ink,#141413)]/20 py-4 text-sm leading-6 text-[var(--channel-muted,#68645d)]">
+          <p className="border-b border-[var(--channel-ink)]/20 py-4 text-sm leading-6 text-[var(--channel-muted)]">
             {activeTrail.description}
           </p>
         )}
@@ -505,16 +505,16 @@ export function BlogKnowledgeMap({ posts }: BlogKnowledgeMapProps) {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="grid grid-cols-[2rem_1fr_auto] items-start gap-3 border-b border-[var(--channel-ink,#141413)]/20 py-4"
+            className="grid grid-cols-[2rem_1fr_auto] items-start gap-3 border-b border-[var(--channel-ink)]/20 py-4"
           >
-            <span className="pt-1 font-mono text-[10px] text-[var(--channel-muted,#68645d)]">
+            <span className="pt-1 font-mono text-[10px] text-[var(--channel-muted)]">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span>
               <span className="block font-serif text-lg leading-snug">
                 {post.title}
               </span>
-              <span className="mt-1 block text-xs text-[var(--channel-muted,#68645d)]">
+              <span className="mt-1 block text-xs text-[var(--channel-muted)]">
                 {CHANNEL_STYLES[post.channel]?.name}
               </span>
             </span>

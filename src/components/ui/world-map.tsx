@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import DottedMap from "dotted-map";
 
 import { useTheme } from "next-themes";
+import { SITE_CHROMATIC_PALETTE, SITE_NEUTRAL_PALETTE } from "@/lib/site-palette";
 
 const projectPoint = (lat, lng) => {
   const x = (lng + 180) * (800 / 360);
@@ -22,7 +23,7 @@ const createCurvedPath = (
 
 export default function WorldMap({
   dots = [],
-  lineColor = "#0ea5e9"
+  lineColor = SITE_CHROMATIC_PALETTE.sky[600]
 }) {
   const svgRef = useRef(null);
   const { theme } = useTheme();
@@ -31,15 +32,15 @@ export default function WorldMap({
     const map = new DottedMap({ height: 100, grid: "diagonal" });
     return map.getSVG({
       radius: 0.22,
-      color: theme === "dark" ? "#FFFFFF40" : "#00000040",
+      color: `${theme === "dark" ? SITE_NEUTRAL_PALETTE.neutral[50] : SITE_NEUTRAL_PALETTE.neutral[950]}40`,
       shape: "circle",
-      backgroundColor: theme === "dark" ? "black" : "white",
+      backgroundColor: theme === "dark" ? SITE_NEUTRAL_PALETTE.neutral[950] : SITE_NEUTRAL_PALETTE.neutral[50],
     });
   }, [theme]);
 
   return (
     <div
-      className="w-full aspect-[2/1] dark:bg-black bg-white rounded-lg  relative font-sans">
+      className="w-full aspect-[2/1] dark:bg-site-neutral-950 bg-site-neutral-50 rounded-lg  relative font-sans">
       <img
         src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
         className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none"

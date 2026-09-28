@@ -109,7 +109,7 @@ export async function createArticleMdxComponents({
       if (name === "Highlighter") {
         components[name] = ({
           children,
-          color = "#a18072",
+          color = "var(--color-site-stone-500)",
           action = "highlight",
           ...props
         }) => (

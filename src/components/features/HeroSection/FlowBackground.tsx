@@ -3,6 +3,7 @@ import React, { useRef, useMemo, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { motion } from "framer-motion";
+import { SITE_CHROMATIC_PALETTE } from "@/lib/site-palette";
 
 const flowVert = `
 varying vec2 vUv;
@@ -114,8 +115,8 @@ const FlowBackground = ({ uProgress, scrollYProgress }) => {
             uProgress: { value: 0 },
             uGlobalScroll: { value: 0 },
             uTime: { value: 0 },
-            uColorTop: { value: new THREE.Color("#4AA9FF") }, // More vibrant Sky Blue to defeat greys
-            uColorBottom: { value: new THREE.Color("#FFD580") }, // More vibrant Peach
+            uColorTop: { value: new THREE.Color(SITE_CHROMATIC_PALETTE.sky[500]) },
+            uColorBottom: { value: new THREE.Color(SITE_CHROMATIC_PALETTE.amber[300]) },
         }),
         []
     );
@@ -143,7 +144,7 @@ const FlowBackground = ({ uProgress, scrollYProgress }) => {
             <motion.div
                 className="absolute inset-0"
                 style={{
-                    background: "linear-gradient(135deg, #FFD580 0%, #4AA9FF 100%)",
+                    background: "linear-gradient(135deg, var(--color-site-amber-300) 0%, var(--color-site-sky-500) 100%)",
                     opacity: uProgress,
                 }}
             />

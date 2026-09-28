@@ -209,7 +209,7 @@ export default function HeroOrbSection() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#FFFFFF',
+          background: 'var(--color-site-neutral-50)',
           position: 'relative',
         }}
       >
@@ -223,7 +223,7 @@ export default function HeroOrbSection() {
             fontFamily: '"Helvetica Neue", Arial, sans-serif',
             fontSize: 'clamp(64px, 10vw, 120px)',
             fontWeight: 400,
-            color: '#3D3A36',
+            color: 'var(--color-site-stone-700)',
             lineHeight: 1,
           }}
         >
@@ -271,7 +271,7 @@ export default function HeroOrbSection() {
             width: '75vw',
             height: '75vh',
             borderRadius: '32px',
-            background: '#EBE3D5',
+            background: 'var(--color-site-stone-200)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             zIndex: 20,
@@ -288,7 +288,7 @@ export default function HeroOrbSection() {
                 fontFamily: '"Helvetica Neue", Arial, sans-serif',
                 fontSize: 'clamp(2rem, 5vw, 4rem)',
                 fontWeight: 300,
-                color: '#00A9E0',
+                color: 'var(--color-site-sky-500)',
                 letterSpacing: '0.05em',
                 lineHeight: 1.4,
                 textAlign: 'center',
@@ -301,7 +301,7 @@ export default function HeroOrbSection() {
                 marginTop: '2rem',
                 fontSize: 'clamp(0.875rem, 2vw, 1.25rem)',
                 fontWeight: 300,
-                color: '#00A9E0',
+                color: 'var(--color-site-sky-500)',
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
               }}

@@ -12,7 +12,7 @@ export const AuroraBackground = ({
     <main>
       <div
         className={cn(
-          "transition-bg relative flex h-[100vh] flex-col items-center justify-center bg-zinc-50 text-slate-950 dark:bg-zinc-900",
+          "transition-bg relative flex h-[100vh] flex-col items-center justify-center bg-site-zinc-50 text-site-slate-950 dark:bg-site-zinc-900",
           className
         )}
         {...props}>
@@ -29,13 +29,13 @@ export const AuroraBackground = ({
               "--white-gradient":
                 "repeating-linear-gradient(100deg,#fff_0%,#fff_7%,transparent_10%,transparent_12%,#fff_16%)",
 
-              "--blue-300": "#93c5fd",
-              "--blue-400": "#60a5fa",
-              "--blue-500": "#3b82f6",
-              "--indigo-300": "#a5b4fc",
-              "--violet-200": "#ddd6fe",
-              "--black": "#000",
-              "--white": "#fff",
+              "--blue-300": "var(--color-site-blue-300)",
+              "--blue-400": "var(--color-site-blue-400)",
+              "--blue-500": "var(--color-site-blue-500)",
+              "--indigo-300": "var(--color-site-indigo-300)",
+              "--violet-200": "var(--color-site-violet-200)",
+              "--black": "var(--color-site-neutral-950)",
+              "--white": "var(--color-site-neutral-50)",
               "--transparent": "transparent"
             } as any
           }>

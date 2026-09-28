@@ -1,20 +1,28 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import gsap from 'gsap';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import booksData from '../../../content/books.json';
+import {
+  bookshelfBooks,
+  getBookshelfOpenHref,
+  type BookshelfBook,
+} from '@/data/bookshelf-books';
 
-const items = booksData.map((book, i) => ({
-  id: book.id || String(i),
-  year: book.year,
-  title: book.title,
-  volume: book.author || `Vol. ${i + 1}`, // map author to the volume subtext area
-  description: book.description,
-  coverUrl: book.coverUrl,
-}));
+interface DisplayBook extends BookshelfBook {
+  volume: string;
+}
 
-export function BookShelf() {
+interface BookShelfProps {
+  books?: readonly BookshelfBook[];
+}
+
+export function BookShelf({ books = bookshelfBooks }: BookShelfProps) {
+  const items = useMemo<DisplayBook[]>(() => books.map((book, index) => ({
+    ...book,
+    volume: book.author || `Vol. ${index + 1}`,
+  })), [books]);
   const containerRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -25,6 +33,7 @@ export function BookShelf() {
   const targetIndexRef = useRef<number>(initialActiveIndex);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const activeBook = items[activeIndex];
+  const activeBookHref = getBookshelfOpenHref(activeBook);
 
   const selectAdjacentBook = (direction: -1 | 1) => {
     targetIndexRef.current = Math.max(
@@ -187,7 +196,7 @@ export function BookShelf() {
       }
       intersectionObserver.disconnect();
     };
-  }, []);
+  }, [items]);
 
   return (
     <div className="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden select-none font-sans">
@@ -226,7 +235,7 @@ export function BookShelf() {
 
             {/* --- 3D FACE: FRONT --- */}
             <div 
-              className="absolute inset-0 flex bg-white"
+              className="absolute inset-0 flex bg-site-neutral-50"
               style={{
                 transform: 'translateZ(16px)', 
                 backfaceVisibility: 'hidden',
@@ -242,15 +251,15 @@ export function BookShelf() {
                    sizes="317px"
                    className="object-cover"
                  />
-                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                 <div className="absolute inset-0 border-[3px] border-white pointer-events-none" />
+                 <div className="absolute inset-0 bg-site-neutral-950/10 group-hover:bg-transparent transition-colors duration-500" />
+                 <div className="absolute inset-0 border-[3px] border-site-neutral-50 pointer-events-none" />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none z-30" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-site-neutral-50/5 to-site-neutral-50/10 pointer-events-none z-30" />
             </div>
 
             {/* --- 3D FACE: BACK --- */}
             <div 
-              className="absolute inset-0 bg-[#e8e8e8]"
+              className="absolute inset-0 bg-site-neutral-100"
               style={{
                 transform: 'rotateY(180deg) translateZ(16px)',
                 boxShadow: 'inset 0 0 0 3px white',
@@ -259,7 +268,7 @@ export function BookShelf() {
 
             {/* --- 3D FACE: RIGHT (Paper Edge) --- */}
             <div 
-              className="absolute top-0 bg-[#f4f1e9]"
+              className="absolute top-0 bg-site-stone-50"
               style={{
                 width: '32px', height: '100%', left: '50%', marginLeft: '-16px',
                 transform: 'rotateY(90deg) translateZ(90px)',
@@ -271,7 +280,7 @@ export function BookShelf() {
 
             {/* --- 3D FACE: LEFT (Paper Edge) --- */}
             <div 
-              className="absolute top-0 bg-[#f4f1e9]"
+              className="absolute top-0 bg-site-stone-50"
               style={{
                 width: '32px', height: '100%', left: '50%', marginLeft: '-16px',
                 transform: 'rotateY(-90deg) translateZ(90px)',
@@ -282,7 +291,7 @@ export function BookShelf() {
 
             {/* --- 3D FACE: TOP (Paper Edge) --- */}
             <div 
-              className="absolute left-0 bg-[#f4f1e9]"
+              className="absolute left-0 bg-site-stone-50"
               style={{
                 width: '100%', height: '32px', top: '50%', marginTop: '-16px',
                 transform: 'rotateX(90deg) translateZ(126px)',
@@ -293,7 +302,7 @@ export function BookShelf() {
 
             {/* --- 3D FACE: BOTTOM (Paper Edge) --- */}
             <div 
-              className="absolute left-0 bg-[#f4f1e9]"
+              className="absolute left-0 bg-site-stone-50"
               style={{
                 width: '100%', height: '32px', top: '50%', marginTop: '-16px',
                 transform: 'rotateX(-90deg) translateZ(126px)',
@@ -313,7 +322,7 @@ export function BookShelf() {
         aria-live="polite"
       >
         <h2 
-          className="text-[20px] md:text-[28px] font-medium text-gray-800 dark:text-gray-100 mb-3 leading-tight max-w-full line-clamp-3"
+          className="text-[20px] md:text-[28px] font-medium text-site-gray-800 dark:text-site-gray-100 mb-3 leading-tight max-w-full line-clamp-3"
           title={activeBook.title}
         >
           {activeBook.title}
@@ -326,11 +335,11 @@ export function BookShelf() {
             disabled={activeIndex === 0}
             aria-label="选择上一册"
             title="上一册"
-            className="size-9 shrink-0 inline-flex items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            className="size-9 shrink-0 inline-flex items-center justify-center text-site-gray-500 hover:text-site-gray-900 disabled:opacity-30 disabled:pointer-events-none transition-colors"
           >
             <ChevronLeft className="size-5" aria-hidden="true" />
           </button>
-          <p className="text-[13px] md:text-[14px] font-bold text-[#df3926] uppercase text-center max-w-[min(65vw,32rem)]">
+          <p className="text-[13px] md:text-[14px] font-bold text-site-red-600 uppercase text-center max-w-[min(65vw,32rem)]">
             {activeBook.volume}
           </p>
           <button
@@ -339,30 +348,40 @@ export function BookShelf() {
             disabled={activeIndex === items.length - 1}
             aria-label="选择下一册"
             title="下一册"
-            className="size-9 shrink-0 inline-flex items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            className="size-9 shrink-0 inline-flex items-center justify-center text-site-gray-500 hover:text-site-gray-900 disabled:opacity-30 disabled:pointer-events-none transition-colors"
           >
             <ChevronRight className="size-5" aria-hidden="true" />
           </button>
         </div>
         
         <p 
-          className="text-[13px] md:text-[15px] font-serif text-gray-500 max-w-2xl mx-auto leading-relaxed mb-5 line-clamp-2"
+          className="text-[13px] md:text-[15px] font-serif text-site-gray-500 max-w-2xl mx-auto leading-relaxed mb-5 line-clamp-2"
         >
           {activeBook.description}
         </p>
 
-        <button 
-          type="button"
-          onClick={() => {
-            if (items[activeIndexRef.current]) {
-              setOpenedBook(items[activeIndexRef.current]);
-            }
-          }}
-          aria-label={`翻开《${activeBook.title}》`}
-          className="relative pointer-events-auto px-8 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-black text-sm font-medium rounded-full shadow-xl hover:scale-105 hover:bg-black dark:hover:bg-neutral-200 transition-all z-[60]"
-        >
-          翻开阅读
-        </button>
+        {activeBookHref ? (
+          <Link
+            href={activeBookHref}
+            aria-label={`打开《${activeBook.title}》`}
+            className="relative pointer-events-auto z-[60] rounded-full bg-site-neutral-900 px-8 py-2.5 text-sm font-medium text-site-neutral-50 shadow-xl transition-all hover:scale-105 hover:bg-site-neutral-950 dark:bg-site-neutral-50 dark:text-site-ink dark:hover:bg-site-neutral-200"
+          >
+            {activeBook.open.type === 'sketchbook' ? '展开游记' : '阅读笔记'}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              if (items[activeIndexRef.current]) {
+                setOpenedBook(items[activeIndexRef.current]);
+              }
+            }}
+            aria-label={`翻开《${activeBook.title}》`}
+            className="relative pointer-events-auto z-[60] rounded-full bg-site-neutral-900 px-8 py-2.5 text-sm font-medium text-site-neutral-50 shadow-xl transition-all hover:scale-105 hover:bg-site-neutral-950 dark:bg-site-neutral-50 dark:text-site-ink dark:hover:bg-site-neutral-200"
+          >
+            翻开阅读
+          </button>
+        )}
       </div>
 
       {/* --- OPENED BOOK 3D VIEWER OVERLAY --- */}
@@ -373,7 +392,7 @@ export function BookShelf() {
   );
 }
 
-function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () => void }) {
+function OpenBookViewer({ book, onClose }: { book: DisplayBook, onClose: () => void }) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -400,14 +419,14 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
       role="dialog"
       aria-modal="true"
       aria-label={`《${book.title}》详情`}
-      className={`fixed inset-0 z-[100] bg-[#f4f6f7]/95 dark:bg-[#0c0c0c]/95 backdrop-blur-md flex items-center justify-center font-sans transition-opacity duration-700 ease-out ${step > 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 z-[100] bg-site-gray-50/95 dark:bg-site-neutral-950/95 backdrop-blur-md flex items-center justify-center font-sans transition-opacity duration-700 ease-out ${step > 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
     >
       <button 
         type="button"
         onClick={onClose}
         autoFocus
         aria-label="关闭书籍详情"
-        className="absolute top-4 right-4 md:top-8 md:right-8 z-[110] size-11 inline-flex items-center justify-center text-gray-500 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+        className="absolute top-4 right-4 md:top-8 md:right-8 z-[110] size-11 inline-flex items-center justify-center text-site-gray-500 hover:text-site-neutral-950 dark:hover:text-site-neutral-50 bg-site-neutral-950/5 dark:bg-site-neutral-50/5 hover:bg-site-neutral-950/10 dark:hover:bg-site-neutral-50/10 rounded-full transition-colors cursor-pointer"
       >
         <X className="size-5" aria-hidden="true" />
       </button>
@@ -423,13 +442,21 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
         >
            {/* RIGHT SIDE STATIC SPREAD */}
            <div 
-             className="absolute inset-0 bg-[#faf9f6] flex flex-col px-4 py-5 sm:px-10 sm:py-12 shadow-2xl items-center justify-start text-center border-l shadow-[-10px_0_20px_rgba(0,0,0,0.05)] border-gray-200"
+             className="absolute inset-0 bg-site-stone-50 flex flex-col px-4 py-5 sm:px-10 sm:py-12 shadow-2xl items-center justify-start text-center border-l shadow-[-10px_0_20px_rgba(0,0,0,0.05)] border-site-gray-200"
            >
-              <h3 className="text-[9px] sm:text-[11px] font-bold text-gray-400 mb-3 sm:mb-8 uppercase line-clamp-1 text-black">{book.title}</h3>
+              <h3 className="text-[9px] sm:text-[11px] font-bold text-site-gray-400 mb-3 sm:mb-8 uppercase line-clamp-1 text-site-neutral-950">{book.title}</h3>
               <Image src={book.coverUrl} alt={`${book.title} cover`} width={340} height={224} className="w-full h-[42%] sm:h-56 object-cover mb-3 sm:mb-8 rounded-sm shadow-inner grayscale contrast-125 opacity-90" />
-              <p className="text-gray-600 leading-relaxed text-[10px] sm:text-[13px] font-serif text-justify line-clamp-4 text-black">
+              <p className="text-site-gray-600 leading-relaxed text-[10px] sm:text-[13px] font-serif text-justify line-clamp-4 text-site-neutral-950">
                 {book.description}
               </p>
+              {book.href ? (
+                <Link
+                  href={book.href}
+                  className="mt-4 inline-flex min-h-9 items-center rounded-full border border-site-gray-300 px-4 text-[10px] text-site-neutral-950 transition-colors hover:bg-site-neutral-950 hover:text-site-neutral-50 sm:mt-6 sm:text-xs"
+                >
+                  阅读相关笔记 →
+                </Link>
+              ) : null}
            </div>
 
            {/* FRONT COVER */}
@@ -441,16 +468,16 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
                zIndex: 40 
              }}
            >
-             <div className="absolute inset-0 bg-white" style={{ backfaceVisibility: 'hidden' }}>
+             <div className="absolute inset-0 bg-site-neutral-50" style={{ backfaceVisibility: 'hidden' }}>
                 <Image src={book.coverUrl} alt={`${book.title} cover`} width={340} height={476} className="w-full h-full object-cover shadow-2xl" />
              </div>
-             <div className="absolute inset-0 bg-[#faf9f6] flex flex-col px-4 py-5 sm:px-10 sm:py-12 shadow-inner items-center justify-center text-center font-serif text-gray-800 border-l border-gray-100" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+             <div className="absolute inset-0 bg-site-stone-50 flex flex-col px-4 py-5 sm:px-10 sm:py-12 shadow-inner items-center justify-center text-center font-serif text-site-gray-800 border-l border-site-gray-100" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
                 <h2 className="text-[11px] sm:text-[18px] font-medium mb-3 sm:mb-5 italic leading-snug line-clamp-5">{book.title}</h2>
-                <div className="w-12 h-px bg-[#df3926] mb-4 sm:mb-8"></div>
-                <p className="text-[9px] sm:text-xs text-gray-500 leading-relaxed font-sans uppercase">
+                <div className="w-12 h-px bg-site-red-600 mb-4 sm:mb-8"></div>
+                <p className="text-[9px] sm:text-xs text-site-gray-500 leading-relaxed font-sans uppercase">
                    Author:<br/>{book.volume}
                 </p>
-                <div className="mt-4 sm:mt-8 text-[9px] sm:text-[11px] text-gray-400 font-sans">
+                <div className="mt-4 sm:mt-8 text-[9px] sm:text-[11px] text-site-gray-400 font-sans">
                   Pg. {book.year}
                 </div>
              </div>
@@ -465,10 +492,10 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
                zIndex: 30 
              }}
            >
-             <div className="absolute inset-0 bg-white border-r border-[#f0f0f0]" style={{ backfaceVisibility: 'hidden' }}>
+             <div className="absolute inset-0 bg-site-neutral-50 border-r border-site-neutral-100" style={{ backfaceVisibility: 'hidden' }}>
                 <Image src={book.coverUrl} alt="" aria-hidden="true" width={340} height={476} className="w-full h-full object-cover opacity-10" />
              </div>
-             <div className="absolute inset-0 bg-[#faf9f6]" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
+             <div className="absolute inset-0 bg-site-stone-50" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
            </div>
            
            {/* FLIPPING PAGE 2 */}
@@ -480,12 +507,12 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
                zIndex: 20 
              }}
            >
-             <div className="absolute inset-0 bg-white border-r border-[#f0f0f0] p-4 sm:p-10 flex flex-col justify-end" style={{ backfaceVisibility: 'hidden' }}>
-                <div className="w-full h-1/2 bg-gray-100 rounded-sm mb-4 bg-cover bg-center" style={{ backgroundImage: `url(${book.coverUrl})`, opacity: 0.2 }}></div>
-                <div className="h-4 bg-gray-200 w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 w-1/2"></div>
+             <div className="absolute inset-0 bg-site-neutral-50 border-r border-site-neutral-100 p-4 sm:p-10 flex flex-col justify-end" style={{ backfaceVisibility: 'hidden' }}>
+                <div className="w-full h-1/2 bg-site-gray-100 rounded-sm mb-4 bg-cover bg-center" style={{ backgroundImage: `url(${book.coverUrl})`, opacity: 0.2 }}></div>
+                <div className="h-4 bg-site-gray-200 w-3/4 mb-2"></div>
+                <div className="h-4 bg-site-gray-200 w-1/2"></div>
              </div>
-             <div className="absolute inset-0 bg-[#f4f1e9]" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
+             <div className="absolute inset-0 bg-site-stone-50" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
            </div>
 
            {/* FLIPPING PAGE 3 */}
@@ -497,10 +524,10 @@ function OpenBookViewer({ book, onClose }: { book: typeof items[0], onClose: () 
                zIndex: 10
              }}
            >
-             <div className="absolute inset-0 bg-white border-r border-[#f0f0f0]" style={{ backfaceVisibility: 'hidden' }}>
+             <div className="absolute inset-0 bg-site-neutral-50 border-r border-site-neutral-100" style={{ backfaceVisibility: 'hidden' }}>
              </div>
              
-             <div className="absolute inset-0 bg-[#f4f1e9]" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
+             <div className="absolute inset-0 bg-site-stone-50" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}></div>
            </div>
            
         </div>

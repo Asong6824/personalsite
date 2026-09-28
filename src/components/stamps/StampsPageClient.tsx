@@ -354,11 +354,11 @@ function getRouteType(line?: string) {
 }
 
 function getRouteClass(routeType: string) {
-  if (routeType === "shinkansen") return "text-sky-600 dark:text-sky-300";
-  if (routeType === "air") return "text-amber-500 dark:text-amber-300";
-  if (routeType === "subway") return "text-emerald-600 dark:text-emerald-300";
-  if (routeType === "monorail") return "text-fuchsia-600 dark:text-fuchsia-300";
-  return "text-neutral-600 dark:text-neutral-300";
+  if (routeType === "shinkansen") return "text-site-sky-600 dark:text-site-sky-300";
+  if (routeType === "air") return "text-site-amber-500 dark:text-site-amber-300";
+  if (routeType === "subway") return "text-site-emerald-600 dark:text-site-emerald-300";
+  if (routeType === "monorail") return "text-site-fuchsia-600 dark:text-site-fuchsia-300";
+  return "text-site-neutral-600 dark:text-site-neutral-300";
 }
 
 function getStationPoint(stamp: Stamp): GeoPoint | null {
@@ -419,8 +419,8 @@ function RailDiagramMap({
   if (!diagram) return null;
 
   return (
-    <div className="flex h-full flex-col rounded-xl bg-neutral-100/55 px-3 py-2 dark:bg-neutral-900/55">
-      <div className="mb-1 flex items-center justify-between text-[10px] font-mono text-neutral-400 dark:text-neutral-500">
+    <div className="flex h-full flex-col rounded-xl bg-site-neutral-100/55 px-3 py-2 dark:bg-site-neutral-900/55">
+      <div className="mb-1 flex items-center justify-between text-[10px] font-mono text-site-neutral-400 dark:text-site-neutral-500">
         <span>rail diagram</span>
         <span>{connections.length} routes</span>
       </div>
@@ -432,7 +432,7 @@ function RailDiagramMap({
           height="148"
           rx="14"
           fill="currentColor"
-          className="text-white/35 dark:text-black/10"
+          className="text-site-neutral-50/35 dark:text-site-neutral-950/10"
         />
         {diagram.lines.map((line, index) => (
           <g key={line.label}>
@@ -443,7 +443,7 @@ function RailDiagramMap({
               strokeWidth={(line.strokeWidth ?? 3) + 2.2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-white/85 dark:text-neutral-950/70"
+              className="text-site-neutral-50/85 dark:text-site-neutral-950/70"
             />
             <motion.path
               d={line.path}
@@ -494,10 +494,10 @@ function RailDiagramMap({
                   cx={node.x}
                   cy={node.y}
                   r={isCurrent ? 6.5 : 4.6}
-                  fill={isCurrent ? "currentColor" : "#ffffff"}
+                  fill={isCurrent ? "currentColor" : "var(--color-site-neutral-50)"}
                   stroke="currentColor"
                   strokeWidth={isCollected ? 2 : 0}
-                  className={isCurrent ? "text-neutral-950 dark:text-white" : "text-blue-600"}
+                  className={isCurrent ? "text-site-neutral-950 dark:text-site-neutral-50" : "text-site-blue-600"}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.22, delay: 0.36 + index * 0.045 }}
@@ -507,7 +507,7 @@ function RailDiagramMap({
                 x={labelX}
                 y={labelY}
                 textAnchor={labelAnchor}
-                className={isCurrent ? "fill-neutral-950 text-[12px] font-semibold dark:fill-white" : isCollected ? "fill-neutral-800 text-[10px] font-medium dark:fill-neutral-200" : "fill-neutral-500 text-[8.5px] font-medium dark:fill-neutral-400"}
+                className={isCurrent ? "fill-site-neutral-950 text-[12px] font-semibold dark:fill-site-neutral-50" : isCollected ? "fill-site-neutral-800 text-[10px] font-medium dark:fill-site-neutral-200" : "fill-site-neutral-500 text-[8.5px] font-medium dark:fill-site-neutral-400"}
                 stroke={isCurrent ? "none" : "rgba(246,246,242,0.86)"}
                 strokeWidth={isCurrent ? 0 : 3}
                 paintOrder="stroke"
@@ -545,7 +545,7 @@ function RailDiagramMap({
                     x={x + width / 2}
                     y="80"
                     textAnchor="middle"
-                    className="fill-white text-[9px] font-bold"
+                    className="fill-site-neutral-50 text-[9px] font-bold"
                   >
                     {badge.label}
                   </text>
@@ -570,15 +570,15 @@ function RailDiagramMap({
           return (
             <div
               key={connection.stationId}
-              className="flex items-center justify-between gap-2 rounded-lg bg-white/45 px-2 py-1 text-[10px] text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+              className="flex items-center justify-between gap-2 rounded-lg bg-site-neutral-50/45 px-2 py-1 text-[10px] text-site-neutral-500 dark:bg-site-neutral-50/5 dark:text-site-neutral-400"
             >
               <span className="flex min-w-0 items-center gap-1.5">
                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full bg-current ${getRouteClass(routeType)}`} />
-                <span className="truncate font-medium text-neutral-700 dark:text-neutral-300">
+                <span className="truncate font-medium text-site-neutral-700 dark:text-site-neutral-300">
                   {connection.target.station.name}
                 </span>
               </span>
-              <span className="shrink-0 font-mono text-neutral-400 dark:text-neutral-500">
+              <span className="shrink-0 font-mono text-site-neutral-400 dark:text-site-neutral-500">
                 {connection.duration ?? connection.line ?? "--"}
               </span>
             </div>
@@ -605,7 +605,7 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
   const startPoint = getStationPoint(stamp);
   if (!startPoint) {
     return (
-      <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-neutral-300/70 text-[11px] text-neutral-400 dark:border-neutral-700 dark:text-neutral-500">
+      <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-site-neutral-300/70 text-[11px] text-site-neutral-400 dark:border-site-neutral-700 dark:text-site-neutral-500">
         位置データ未配置
       </div>
     );
@@ -621,7 +621,7 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
 
   if (drawableConnections.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-neutral-300/70 text-[11px] text-neutral-400 dark:border-neutral-700 dark:text-neutral-500">
+      <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-site-neutral-300/70 text-[11px] text-site-neutral-400 dark:border-site-neutral-700 dark:text-site-neutral-500">
         接続データ未配置
       </div>
     );
@@ -654,8 +654,8 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
   });
 
   return (
-    <div className="flex h-full flex-col rounded-xl bg-neutral-100/55 px-3 py-2 dark:bg-neutral-900/55">
-      <div className="mb-1 flex items-center justify-between text-[10px] font-mono text-neutral-400 dark:text-neutral-500">
+    <div className="flex h-full flex-col rounded-xl bg-site-neutral-100/55 px-3 py-2 dark:bg-site-neutral-900/55">
+      <div className="mb-1 flex items-center justify-between text-[10px] font-mono text-site-neutral-400 dark:text-site-neutral-500">
         <span>geo routes</span>
         <span>{drawableConnections.length} routes</span>
       </div>
@@ -669,7 +669,7 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
           fill="none"
           stroke="currentColor"
           strokeDasharray="1 7"
-          className="text-neutral-300/80 dark:text-neutral-700/80"
+          className="text-site-neutral-300/80 dark:text-site-neutral-700/80"
         />
         {targets.map((target, index) => (
           <motion.path
@@ -692,7 +692,7 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
           cy={start.y}
           r="6.5"
           fill="currentColor"
-          className="text-neutral-900 dark:text-neutral-100"
+          className="text-site-neutral-900 dark:text-site-neutral-100"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.25, delay: 0.1 }}
@@ -701,7 +701,7 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
           x={Math.min(190, Math.max(30, start.x))}
           y={Math.min(144, start.y + 16)}
           textAnchor="middle"
-          className="fill-neutral-700 text-[9px] dark:fill-neutral-300"
+          className="fill-site-neutral-700 text-[9px] dark:fill-site-neutral-300"
         >
           {stamp.station.name.replace("駅", "")}
         </text>
@@ -721,7 +721,7 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
               <motion.text
                 x={Math.min(188, Math.max(28, target.point.x + 8))}
                 y={Math.min(144, Math.max(10, target.point.y + 3))}
-                className="fill-neutral-700 text-[9px] dark:fill-neutral-300"
+                className="fill-site-neutral-700 text-[9px] dark:fill-site-neutral-300"
                 initial={{ opacity: 0, x: target.point.x + 4 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.25, delay: 0.45 + index * 0.14 }}
@@ -736,15 +736,15 @@ function StampRouteMap({ stamp, stamps }: { stamp: Stamp; stamps: Stamp[] }) {
         {targets.map((connection) => (
           <div
             key={connection.stationId}
-            className="flex items-center justify-between gap-2 rounded-lg bg-white/45 px-2 py-1 text-[10px] text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+            className="flex items-center justify-between gap-2 rounded-lg bg-site-neutral-50/45 px-2 py-1 text-[10px] text-site-neutral-500 dark:bg-site-neutral-50/5 dark:text-site-neutral-400"
           >
             <span className="flex min-w-0 items-center gap-1.5">
               <span className={`h-1.5 w-1.5 shrink-0 rounded-full bg-current ${connection.routeClass}`} />
-              <span className="truncate font-medium text-neutral-700 dark:text-neutral-300">
+              <span className="truncate font-medium text-site-neutral-700 dark:text-site-neutral-300">
                 {connection.target.station.name}
               </span>
             </span>
-            <span className="shrink-0 font-mono text-neutral-400 dark:text-neutral-500">
+            <span className="shrink-0 font-mono text-site-neutral-400 dark:text-site-neutral-500">
               {connection.duration ?? connection.line ?? "--"}
             </span>
           </div>
@@ -768,8 +768,8 @@ function StampImage({
   return (
     <div className="relative h-full w-full">
       {imageFailed ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border border-dashed border-neutral-300/80 bg-neutral-100/45 text-center text-neutral-500 dark:border-neutral-700/80 dark:bg-neutral-900/45 dark:text-neutral-400">
-          <span className="text-[10px] text-neutral-400 dark:text-neutral-500">画像未配置</span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border border-dashed border-site-neutral-300/80 bg-site-neutral-100/45 text-center text-site-neutral-500 dark:border-site-neutral-700/80 dark:bg-site-neutral-900/45 dark:text-site-neutral-400">
+          <span className="text-[10px] text-site-neutral-400 dark:text-site-neutral-500">画像未配置</span>
         </div>
       ) : (
         <Image
@@ -830,7 +830,7 @@ function StampCard({
       <div
         role="button"
         tabIndex={0}
-        className="relative bg-white dark:bg-[#1e1e1c] rounded-2xl h-full w-full transition-all duration-300 hover:shadow-md overflow-hidden cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 dark:focus-visible:ring-white/40"
+        className="relative bg-site-neutral-50 dark:bg-site-neutral-900 rounded-2xl h-full w-full transition-all duration-300 hover:shadow-md overflow-hidden cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-site-neutral-900/30 dark:focus-visible:ring-site-neutral-50/40"
         onClick={(event) => {
           event.stopPropagation();
           if (!isActive) onOpen();
@@ -843,9 +843,9 @@ function StampCard({
           }
         }}
       >
-        <div className="pointer-events-none absolute left-4 right-4 top-3 z-10 flex items-center justify-between text-[10px] font-mono tracking-wide text-neutral-500/70 dark:text-neutral-400/65">
+        <div className="pointer-events-none absolute left-4 right-4 top-3 z-10 flex items-center justify-between text-[10px] font-mono tracking-wide text-site-neutral-500/70 dark:text-site-neutral-400/65">
           <span>{stamp.date}</span>
-          <span className="truncate text-[11px] font-medium text-neutral-500/80 dark:text-neutral-400/75">
+          <span className="truncate text-[11px] font-medium text-site-neutral-500/80 dark:text-site-neutral-400/75">
             {stamp.station.name}
           </span>
         </div>
@@ -854,7 +854,7 @@ function StampCard({
             <button
               type="button"
               aria-label="关闭车站详情"
-              className="absolute right-3 top-9 z-20 flex h-7 w-7 items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-200/70 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
+              className="absolute right-3 top-9 z-20 flex h-7 w-7 items-center justify-center rounded-full text-site-neutral-500 transition-colors hover:bg-site-neutral-200/70 hover:text-site-neutral-900 dark:text-site-neutral-400 dark:hover:bg-site-neutral-800 dark:hover:text-site-neutral-50"
               onClick={(event) => {
                 event.stopPropagation();
                 onClose();
@@ -863,24 +863,24 @@ function StampCard({
               <X className="h-4 w-4" />
             </button>
             <div className="mb-3 pr-9">
-              <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+              <h2 className="text-2xl font-semibold tracking-tight text-site-neutral-900 dark:text-site-neutral-50">
                 {stamp.station.name}
               </h2>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="mt-1 text-xs text-site-neutral-500 dark:text-site-neutral-400">
                 {stamp.station.line} · {stamp.station.prefecture} · {stamp.station.operator ?? stamp.station.city}
               </p>
               {stamp.collectedAt && (
-                <p className="mt-1 text-[11px] text-neutral-400 dark:text-neutral-500">
+                <p className="mt-1 text-[11px] text-site-neutral-400 dark:text-site-neutral-500">
                   {stamp.collectedAt}
                 </p>
               )}
             </div>
             <div className="grid min-h-0 flex-1 grid-cols-[0.75fr_1.25fr] gap-4">
-              <div className="min-h-0 rounded-xl bg-neutral-100/55 p-4 dark:bg-neutral-900/55">
-                <p className="mb-2 text-[10px] font-mono uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+              <div className="min-h-0 rounded-xl bg-site-neutral-100/55 p-4 dark:bg-site-neutral-900/55">
+                <p className="mb-2 text-[10px] font-mono uppercase tracking-wide text-site-neutral-400 dark:text-site-neutral-500">
                   story
                 </p>
-                <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+                <p className="text-sm leading-relaxed text-site-neutral-700 dark:text-site-neutral-300">
                   {story}
                 </p>
               </div>
@@ -1325,14 +1325,14 @@ export default function StampsPageClient({
       ref={viewportRef}
       aria-hidden={!interactive}
       inert={!interactive ? true : undefined}
-      className={`theme-muji relative select-none overflow-hidden dark:bg-neutral-950 ${
+      className={`theme-muji relative select-none overflow-hidden dark:bg-site-neutral-950 ${
         embedded ? "h-full w-full" : "h-screen w-screen"
       }`}
       style={{ backgroundColor: "var(--muji-bg)" }}
     >
       {!ready && (
         <div className="h-full w-full flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 border-t-neutral-900 dark:border-t-white animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-site-neutral-300 dark:border-site-neutral-600 border-t-neutral-900 dark:border-t-white animate-spin" />
         </div>
       )}
 
@@ -1373,10 +1373,10 @@ export default function StampsPageClient({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="bg-white dark:bg-[#1a1a18] rounded-2xl px-6 py-5 h-full w-full flex flex-col justify-between overflow-hidden shadow-sm"
+              className="bg-site-neutral-50 dark:bg-site-neutral-900 rounded-2xl px-6 py-5 h-full w-full flex flex-col justify-between overflow-hidden shadow-sm"
             >
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                <h1 className="text-2xl font-bold text-site-neutral-900 dark:text-site-neutral-50 tracking-tight">
                   駅スタンプ <span className="inline-block animate-pulse">👋</span>
                 </h1>
                 {validNavLinks.length > 0 && (
@@ -1385,9 +1385,9 @@ export default function StampsPageClient({
                       <Link
                         key={link.label}
                         href={link.href}
-                        className="flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors group"
+                        className="flex items-center gap-1 text-xs font-medium text-site-neutral-700 dark:text-site-neutral-300 hover:text-site-neutral-900 dark:hover:text-site-neutral-50 transition-colors group"
                       >
-                        <span className="flex items-center justify-center w-4 h-4 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-[8px] group-hover:scale-110 transition-transform">
+                        <span className="flex items-center justify-center w-4 h-4 rounded-full bg-site-neutral-900 dark:bg-site-neutral-50 text-site-neutral-50 dark:text-site-neutral-900 text-[8px] group-hover:scale-110 transition-transform">
                           <Plus className="w-2.5 h-2.5" />
                         </span>
                         {link.label}
@@ -1396,7 +1396,7 @@ export default function StampsPageClient({
                   </div>
                 )}
               </div>
-              <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200 leading-relaxed max-w-md">
+              <p className="text-sm font-medium text-site-neutral-800 dark:text-site-neutral-200 leading-relaxed max-w-md">
                 这是我的日本车站印章收藏。每一次旅行，每一个车站，都留下了独特的印记。
               </p>
               <div className="flex items-end justify-between gap-4">
@@ -1415,8 +1415,8 @@ export default function StampsPageClient({
                           }}
                           className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${
                             isSelected
-                              ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                              : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                              ? "bg-site-neutral-900 text-site-neutral-50 dark:bg-site-neutral-50 dark:text-site-neutral-900"
+                              : "bg-site-neutral-200/65 text-site-neutral-600 hover:bg-site-neutral-300/70 dark:bg-site-neutral-800 dark:text-site-neutral-300 dark:hover:bg-site-neutral-700"
                           }`}
                         >
                           {mode.label}
@@ -1433,8 +1433,8 @@ export default function StampsPageClient({
                       }}
                       className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
                         selectedGroupValue === null
-                          ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                          : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                          ? "bg-site-neutral-900 text-site-neutral-50 dark:bg-site-neutral-50 dark:text-site-neutral-900"
+                          : "bg-site-neutral-200/65 text-site-neutral-600 hover:bg-site-neutral-300/70 dark:bg-site-neutral-800 dark:text-site-neutral-300 dark:hover:bg-site-neutral-700"
                       }`}
                     >
                       All
@@ -1451,8 +1451,8 @@ export default function StampsPageClient({
                           }}
                           className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
                             isSelected
-                              ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                              : "bg-neutral-200/65 text-neutral-600 hover:bg-neutral-300/70 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                              ? "bg-site-neutral-900 text-site-neutral-50 dark:bg-site-neutral-50 dark:text-site-neutral-900"
+                              : "bg-site-neutral-200/65 text-site-neutral-600 hover:bg-site-neutral-300/70 dark:bg-site-neutral-800 dark:text-site-neutral-300 dark:hover:bg-site-neutral-700"
                           }`}
                           title={`${option.value} · ${option.count}`}
                         >
@@ -1462,7 +1462,7 @@ export default function StampsPageClient({
                     })}
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-mono text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
+                <div className="flex items-center gap-2 text-xs font-mono text-site-neutral-600 dark:text-site-neutral-400 whitespace-nowrap">
                   <span>東京 JST</span>
                   <span className="tabular-nums">{tokyoTime || "--:--:--"}</span>
                 </div>
@@ -1494,7 +1494,7 @@ export default function StampsPageClient({
         <div
           role="group"
           aria-label="画布缩放"
-          className="absolute bottom-4 left-1/2 z-40 flex h-11 -translate-x-1/2 items-center overflow-hidden rounded-md border border-neutral-900/10 bg-white/90 text-neutral-800 shadow-md backdrop-blur-sm dark:border-white/15 dark:bg-neutral-900/90 dark:text-white"
+          className="absolute bottom-4 left-1/2 z-40 flex h-11 -translate-x-1/2 items-center overflow-hidden rounded-md border border-site-neutral-900/10 bg-site-neutral-50/90 text-site-neutral-800 shadow-md backdrop-blur-sm dark:border-site-neutral-50/15 dark:bg-site-neutral-900/90 dark:text-site-neutral-50"
         >
           <button
             type="button"
@@ -1502,7 +1502,7 @@ export default function StampsPageClient({
             title="缩小画布"
             disabled={zoom <= MIN_ZOOM + 0.001}
             onClick={() => zoomAtViewportCenter(zoomRef.current - ZOOM_STEP)}
-            className="flex h-full w-11 items-center justify-center transition-colors hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800"
+            className="flex h-full w-11 items-center justify-center transition-colors hover:bg-site-neutral-100 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-site-neutral-800"
           >
             <ZoomOut className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -1511,7 +1511,7 @@ export default function StampsPageClient({
             aria-label="恢复百分之百缩放"
             title="恢复 100%"
             onClick={() => zoomAtViewportCenter(1)}
-            className="h-full min-w-16 border-x border-neutral-900/10 px-3 text-xs font-medium tabular-nums transition-colors hover:bg-neutral-100 dark:border-white/15 dark:hover:bg-neutral-800"
+            className="h-full min-w-16 border-x border-site-neutral-900/10 px-3 text-xs font-medium tabular-nums transition-colors hover:bg-site-neutral-100 dark:border-site-neutral-50/15 dark:hover:bg-site-neutral-800"
           >
             {Math.round(zoom * 100)}%
           </button>
@@ -1521,7 +1521,7 @@ export default function StampsPageClient({
             title="放大画布"
             disabled={zoom >= MAX_ZOOM - 0.001}
             onClick={() => zoomAtViewportCenter(zoomRef.current + ZOOM_STEP)}
-            className="flex h-full w-11 items-center justify-center transition-colors hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800"
+            className="flex h-full w-11 items-center justify-center transition-colors hover:bg-site-neutral-100 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-site-neutral-800"
           >
             <ZoomIn className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -1530,7 +1530,7 @@ export default function StampsPageClient({
             aria-label="适配画布内容"
             title="适配画布内容"
             onClick={fitContent}
-            className="flex h-full w-11 items-center justify-center border-l border-neutral-900/10 transition-colors hover:bg-neutral-100 dark:border-white/15 dark:hover:bg-neutral-800"
+            className="flex h-full w-11 items-center justify-center border-l border-site-neutral-900/10 transition-colors hover:bg-site-neutral-100 dark:border-site-neutral-50/15 dark:hover:bg-site-neutral-800"
           >
             <Scan className="h-4 w-4" aria-hidden="true" />
           </button>

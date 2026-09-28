@@ -144,10 +144,10 @@ export function SketchyRAGOverview() {
         <div className="text-center mt-2 text-xs space-y-1" style={{ color: "var(--channel-muted, #6b7280)" }}>
           <p>鼠标悬停在线条、节点上查看交互效果</p>
           <p style={{ color: "var(--channel-muted, #9ca3af)", opacity: 0.72 }}>
-            <span className="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1" />自然语言生成
-            <span className="inline-block w-2 h-2 rounded-full bg-amber-400 mx-1 ml-3" />大模型系统工程
-            <span className="inline-block w-2 h-2 rounded-full bg-orange-400 mx-1 ml-3" />RAG 工程
-            <span className="inline-block w-2 h-2 rounded-full bg-green-400 mx-1 ml-3" />知识管理
+            <span className="inline-block w-2 h-2 rounded-full bg-site-blue-400 mr-1" />自然语言生成
+            <span className="inline-block w-2 h-2 rounded-full bg-site-amber-400 mx-1 ml-3" />大模型系统工程
+            <span className="inline-block w-2 h-2 rounded-full bg-site-orange-400 mx-1 ml-3" />RAG 工程
+            <span className="inline-block w-2 h-2 rounded-full bg-site-green-400 mx-1 ml-3" />知识管理
           </p>
         </div>
       </div>

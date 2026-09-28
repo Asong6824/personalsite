@@ -58,6 +58,8 @@
 
 项目使用 npm，锁文件为 `package-lock.json`。CI 通过 `npm ci --legacy-peer-deps` 安装依赖；不要同时维护 pnpm/yarn lockfile。
 
+项目开发与构建统一使用 Node.js 24 LTS，精确版本记录在根目录 `.nvmrc`。项目同时将相同版本的 `node` 安装为开发依赖；npm 执行脚本时会优先使用 `node_modules/.bin/node`，因此即使系统默认是 Node.js 26，直接运行 `npm run dev`、`npm run build` 等项目脚本也会自动进入 Node.js 24，无需手工切换。`package.json#engines` 用于在安装环境版本不匹配时给出明确提示。
+
 ### 依赖安全
 
 - 使用 `npm audit` 复查生产与开发依赖，不执行 `npm audit fix --force`，避免审计工具跨主版本降级或升级核心框架。

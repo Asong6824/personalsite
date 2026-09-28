@@ -217,12 +217,12 @@ const C_LINE    = "#9ca3af";
 
 // ===================== 富内容渲染 =====================
 function renderBlock(block, isIndexing) {
-  const textColor = isIndexing ? "text-amber-900" : "text-blue-900";
-  const subColor = isIndexing ? "text-amber-800" : "text-blue-800";
-  const mutedColor = isIndexing ? "text-amber-700" : "text-blue-700";
-  const tableHeader = isIndexing ? "bg-amber-100/70" : "bg-blue-100/70";
-  const tableBorder = isIndexing ? "border-amber-200" : "border-blue-200";
-  const bulletColor = isIndexing ? "bg-amber-400" : "bg-blue-400";
+  const textColor = isIndexing ? "text-site-amber-900" : "text-site-blue-900";
+  const subColor = isIndexing ? "text-site-amber-800" : "text-site-blue-800";
+  const mutedColor = isIndexing ? "text-site-amber-700" : "text-site-blue-700";
+  const tableHeader = isIndexing ? "bg-site-amber-100/70" : "bg-site-blue-100/70";
+  const tableBorder = isIndexing ? "border-site-amber-200" : "border-site-blue-200";
+  const bulletColor = isIndexing ? "bg-site-amber-400" : "bg-site-blue-400";
 
   switch (block.type) {
     case "paragraph":
@@ -235,7 +235,7 @@ function renderBlock(block, isIndexing) {
       return (
         <ul className="space-y-2">
           {block.items.map((item, j) => (
-            <li key={j} className="flex items-start gap-2 text-sm text-gray-700">
+            <li key={j} className="flex items-start gap-2 text-sm text-site-gray-700">
               <span className={`mt-2 w-1.5 h-1.5 rounded-full shrink-0 ${bulletColor}`} />
               <span>{item}</span>
             </li>
@@ -258,9 +258,9 @@ function renderBlock(block, isIndexing) {
             </thead>
             <tbody>
               {block.rows.map((row, j) => (
-                <tr key={j} className="border-b border-gray-100 last:border-0">
+                <tr key={j} className="border-b border-site-gray-100 last:border-0">
                   {row.map((cell, k) => (
-                    <td key={k} className={`px-2 py-1.5 text-gray-600 ${k < row.length - 1 ? `border-r ${tableBorder}` : ""}`}>
+                    <td key={k} className={`px-2 py-1.5 text-site-gray-600 ${k < row.length - 1 ? `border-r ${tableBorder}` : ""}`}>
                       {cell}
                     </td>
                   ))}
@@ -408,17 +408,17 @@ export function RAGFlowDiagram() {
             >
               <div className={`rounded-xl border p-5 ${
                 isIndexing
-                  ? "bg-amber-50/80 border-amber-200"
-                  : "bg-blue-50/80 border-blue-200"
+                  ? "bg-site-amber-50/80 border-site-amber-200"
+                  : "bg-site-blue-50/80 border-site-blue-200"
               }`}>
                 <div className="flex items-center gap-2.5 mb-4">
                   <span className={`text-sm font-bold px-2.5 py-0.5 rounded-full ${
-                    isIndexing ? "bg-amber-100 text-amber-800" : "bg-blue-100 text-blue-800"
+                    isIndexing ? "bg-site-amber-100 text-site-amber-800" : "bg-site-blue-100 text-site-blue-800"
                   }`}>
                     {techData.phase}
                   </span>
                   <h4 className={`text-base font-bold ${
-                    isIndexing ? "text-amber-900" : "text-blue-900"
+                    isIndexing ? "text-site-amber-900" : "text-site-blue-900"
                   }`}>
                     {techData.title}
                   </h4>
@@ -441,7 +441,7 @@ export function RAGFlowDiagram() {
           )}
         </AnimatePresence>
 
-        <p className="text-center text-gray-400 text-xs mt-3">
+        <p className="text-center text-site-gray-400 text-xs mt-3">
           点击节点查看该阶段技术选型，再次点击收起 · 上方为离线索引侧，下方为在线检索侧
         </p>
       </div>

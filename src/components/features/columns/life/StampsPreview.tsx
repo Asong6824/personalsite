@@ -87,9 +87,9 @@ export function StampsPreview() {
               exit={{ opacity: 0 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
               onClick={() => setIsExpanded(true)}
-              className="group absolute inset-0 z-20 cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-900/60"
+              className="group absolute inset-0 z-20 cursor-zoom-in outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-site-neutral-900/60"
             >
-              <span className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-sm border border-neutral-900/10 bg-white/90 text-neutral-800 shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white dark:border-white/15 dark:bg-neutral-900/90 dark:text-white dark:group-hover:bg-neutral-900">
+              <span className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-sm border border-site-neutral-900/10 bg-site-neutral-50/90 text-site-neutral-800 shadow-sm backdrop-blur-sm transition-colors group-hover:bg-site-neutral-50 dark:border-site-neutral-50/15 dark:bg-site-neutral-900/90 dark:text-site-neutral-50 dark:group-hover:bg-site-neutral-900">
                 <Maximize2 className="h-5 w-5" aria-hidden="true" />
               </span>
             </motion.button>
@@ -106,7 +106,7 @@ export function StampsPreview() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
             onClick={() => setIsExpanded(false)}
-            className="fixed right-4 top-4 z-[110] flex h-11 w-11 items-center justify-center rounded-sm border border-neutral-900/10 bg-white/90 text-neutral-800 shadow-md backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/60 dark:border-white/15 dark:bg-neutral-900/90 dark:text-white dark:hover:bg-neutral-900"
+            className="fixed right-4 top-4 z-[110] flex h-11 w-11 items-center justify-center rounded-sm border border-site-neutral-900/10 bg-site-neutral-50/90 text-site-neutral-800 shadow-md backdrop-blur-sm transition-colors hover:bg-site-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-site-neutral-900/60 dark:border-site-neutral-50/15 dark:bg-site-neutral-900/90 dark:text-site-neutral-50 dark:hover:bg-site-neutral-900"
           >
             <Minimize2 className="h-5 w-5" aria-hidden="true" />
           </motion.button>

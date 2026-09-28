@@ -335,7 +335,7 @@ export default function TravelRouteMap({
       />
       {!loaded && (
         <div
-          className="flex items-center justify-center text-sm text-gray-400"
+          className="flex items-center justify-center text-sm text-site-gray-400"
           style={{ height: dimensions.height }}
         >
           地图加载中…

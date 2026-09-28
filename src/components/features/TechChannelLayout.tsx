@@ -60,8 +60,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                 谦逊，自驱，持续
                             </p>
                             <p className="text-base md:text-lg max-w-2xl mx-auto lg:mx-0" style={{ color: 'var(--channel-muted)' }}>
-                                在这里，我们深入探讨前端开发、后端架构、数据库设计等技术领域，
-                                分享实战经验与最佳实践，与你一起在技术的道路上不断前行。
+                                拥抱变化，持续进步。探索技术与系统的边界，让有趣发生
                             </p>
                         </motion.div>
 
@@ -127,7 +126,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                 sizes="(max-width: 768px) 100vw, 50vw"
                                             />
                                         ) : (
-                                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                            <div className="w-full h-full bg-site-gray-200 flex items-center justify-center">
                                                 <span className="text-sm" style={{ color: 'var(--channel-muted)' }}>专栏首图占位 (16:9)</span>
                                             </div>
                                         )}
@@ -198,7 +197,7 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                                <div className="w-full h-full bg-site-gray-200 flex items-center justify-center">
                                                     <span className="text-xs sm:text-sm" style={{ color: 'var(--channel-muted)' }}>文章首图占位 (16:9)</span>
                                                 </div>
                                             )}
@@ -206,12 +205,12 @@ export default function TechChannelLayout({ channelKey, channelConfig, posts }) 
                                             {/* 置顶和分类标签 */}
                                             <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex gap-1 sm:gap-2">
                                                 {post.pinned && (
-                                                    <span className="bg-red-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium">
+                                                    <span className="bg-site-red-500 text-site-neutral-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium">
                                                         置顶
                                                     </span>
                                                 )}
                                                 {post.column && (
-                                                    <span className="bg-blue-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium">
+                                                    <span className="bg-site-blue-500 text-site-neutral-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium">
                                                         {postsByColumn[post.column]?.config?.name}
                                                     </span>
                                                 )}

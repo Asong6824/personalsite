@@ -61,11 +61,11 @@ export function BookCard({ book, index, scrollX, onClick, xStride, zStride }: Bo
           className="w-full h-full object-cover rounded-sm pointer-events-none"
         />
         {/* Shiny glass overlay for realism */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/20 pointer-events-none mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-site-neutral-50/10 via-transparent to-site-neutral-50/20 pointer-events-none mix-blend-overlay" />
         
         {/* Book spine simulation (gives the illusion of thickness on the left edge since rotateY is negative) */}
-        <div className="absolute left-0 top-0 bottom-0 w-[12px] bg-gradient-to-r from-black/80 via-black/40 to-transparent pointer-events-none" />
-        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white/30 pointer-events-none shadow-[2px_0_4px_rgba(0,0,0,0.5)]" />
+        <div className="absolute left-0 top-0 bottom-0 w-[12px] bg-gradient-to-r from-site-neutral-950/80 via-site-neutral-950/40 to-transparent pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-site-neutral-50/30 pointer-events-none shadow-[2px_0_4px_rgba(0,0,0,0.5)]" />
       </motion.div>
     </motion.div>
   );

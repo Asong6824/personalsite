@@ -11,6 +11,9 @@
 | `/blog/tech/[columnSlug]` | 技术频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
 | `/blog/life` | 生活频道页 |
 | `/blog/life/[columnSlug]` | 生活频道专栏页（`[columnSlug]` 只匹配**单个**路径段） |
+| `/blog/life/bookshelf` | 生活频道 3D 翻页书房；`?book=<id>` 可深链接到共享书目中的指定书籍 |
+| `/blog/life/sketchbook` | 生活频道旅行手绘本；`?spread=<id>` 可深链接到指定跨页，跨页可绑定文章 URL |
+| `/blog/life/sketchbook/[volumeId]` | 单册旅行手绘本静态页；册 ID 来自 `travelSketchbookVolumes`，并继续支持 `?spread=<id>` |
 | `/blog/finance` | 金融频道暂无内容占位页 |
 | `/blog/finance/market-studies/[studyId]` | 固定阶段市场研究详情页；参数来自已发布研究目录并静态生成 |
 | `/blog/creative` | 创意频道页 |
@@ -41,7 +44,7 @@
 - 进度条从用户按下站内链接时开始，在 pathname 或 search params 实际变化后结束；同路由和纯 hash 跳转不会触发。
 - 使用 `router.push()` 的程序化跳转必须先调用 `src/lib/route-transition.ts` 中的 `startRouteTransition(href)`，确保与普通 `<Link>` 使用同一套反馈。
 - `src/components/layout/RouteLoadingSkeleton.tsx` 提供 overview、channel、article、canvas 四种无客户端 JavaScript 的 Suspense 骨架。
-- `src/app/loading.tsx` 和 `src/app/blog/loading.tsx` 使用 overview 骨架；各频道父级使用 channel，文章 catch-all 使用 article，印章页使用 canvas。Navbar 另外提供当前入口的 pending 状态。
+- `src/app/loading.tsx` 和 `src/app/blog/loading.tsx` 使用 overview 骨架；各频道父级使用 channel，文章 catch-all 使用 article，印章页、翻页书房与手绘本使用 canvas/沉浸式加载状态。Navbar 另外提供当前入口的 pending 状态。
 
 ---
 

@@ -80,6 +80,7 @@ npm run audit:dependencies  # 检查中危及以上依赖漏洞
 | 文件 | 职责 |
 |------|------|
 | `src/lib/channels.ts` | 频道/专栏定义 |
+| `src/lib/site-palette.ts` | 站点扩展色轮（17 个彩色家族、5 个中性色家族、50–950 阶梯） |
 | `src/lib/post-index.ts` | 文章索引构建 |
 | `src/lib/post.ts` | 文章数据读取 |
 | `src/lib/article/mdx-options.ts` | 文章 MDX remark/rehype 插件配置 |
@@ -107,6 +108,7 @@ npm run audit:dependencies  # 检查中危及以上依赖漏洞
 | `scripts/validate-content-graph.ts` | 内容图谱和文章推荐完整性门禁 |
 | `scripts/build-finance-studies.ts` | 市场研究构建期物化脚本 |
 | `src/app/globals.css` | 全局样式与字体导入 |
+| `src/app/site-palette.css` | Tailwind v4 扩展色板变量（`site-*` 工具类） |
 | `next.config.ts` | Next.js 配置（远程图片白名单等） |
 
 ---

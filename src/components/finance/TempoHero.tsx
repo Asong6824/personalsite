@@ -37,27 +37,27 @@ export default function TempoHero({ title, subtitle, description }) {
                 animate="visible"
             >
                 <motion.h1
-                    className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white mb-6 leading-tight"
+                    className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-site-neutral-50 mb-6 leading-tight"
                     variants={itemVariants}
                 >
                     {title}
                     <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-site-blue-400 to-site-purple-500">
                         {subtitle}
                     </span>
                 </motion.h1>
 
                 <motion.p
-                    className="text-xl sm:text-2xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed"
+                    className="text-xl sm:text-2xl text-site-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed"
                     variants={itemVariants}
                 >
                     {description}
                 </motion.p>
 
                 <motion.div variants={itemVariants}>
-                    <button className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-white/10 backdrop-blur-sm border border-white/20 rounded-full overflow-hidden transition-all hover:bg-white/20 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900">
+                    <button className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-site-neutral-50 bg-site-neutral-50/10 backdrop-blur-sm border border-site-neutral-50/20 rounded-full overflow-hidden transition-all hover:bg-site-neutral-50/20 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-site-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900">
                         <span className="relative z-10">Explore Content</span>
-                        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-site-blue-600 to-site-purple-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                     </button>
                 </motion.div>
             </motion.div>

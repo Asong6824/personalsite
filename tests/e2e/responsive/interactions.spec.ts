@@ -48,6 +48,91 @@ test("station stamp canvas controls remain usable", async ({ page }, testInfo) =
   await expect(regionMode).toBeVisible();
 });
 
+test("life bookshelf selects and opens a volume", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-standard");
+  test.setTimeout(120_000);
+
+  await page.goto("/blog/life/bookshelf", {
+    waitUntil: "domcontentloaded",
+  });
+
+  const shelfControls = page.getByRole("group", { name: "书架控制" });
+  await expect(shelfControls).toBeVisible({ timeout: 30_000 });
+
+  await page.getByRole("button", { name: "选择下一册" }).click();
+  await expect(page.getByTestId("bookshelf-selection")).toContainText("02 / 07");
+  await expect(page).toHaveURL(/book=book-2/);
+
+  await page.getByRole("button", { name: "打开这册" }).click();
+  await expect(page.getByRole("group", { name: "阅读控制" })).toBeVisible({
+    timeout: 20_000,
+  });
+});
+
+test("travelogue volume leaves the 3D shelf for its sketchbook", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-standard");
+  test.setTimeout(120_000);
+
+  await page.goto("/blog/life/bookshelf?book=travel-singapore", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.getByTestId("bookshelf-selection")).toContainText("07 / 07", {
+    timeout: 30_000,
+  });
+  await page.getByRole("button", { name: "展开游记" }).click();
+  await expect(page).toHaveURL(
+    /\/blog\/life\/sketchbook\/singapore\?spread=marina-bay-skyline&fromBook=travel-singapore/,
+    { timeout: 20_000 },
+  );
+  await expect(page.getByRole("region", { name: "旅行手绘翻页书" })).toHaveAttribute(
+    "data-sketchbook-status",
+    "ready",
+    { timeout: 30_000 },
+  );
+  await expect(page.getByRole("link", { name: "返回书架" })).toHaveAttribute(
+    "href",
+    "/blog/life/bookshelf?book=travel-singapore",
+  );
+  await page.locator("#sbRight").click();
+  await expect(page.getByRole("region", { name: "旅行手绘翻页书" })).toHaveAttribute(
+    "data-current-spread",
+    "singapore-river",
+    { timeout: 10_000 },
+  );
+  await expect(page).toHaveURL(/spread=singapore-river/);
+});
+
+test("life sketchbook loads and its paper controls remain interactive", async ({ page }, testInfo) => {
+  test.skip(!focusedProjects.has(testInfo.project.name));
+  test.setTimeout(120_000);
+
+  await page.goto("/blog/life/sketchbook", {
+    waitUntil: "domcontentloaded",
+  });
+
+  const experience = page.getByRole("region", { name: "旅行手绘翻页书" });
+  await expect(experience).toHaveAttribute("data-sketchbook-status", "ready", {
+    timeout: 30_000,
+  });
+  await expect(experience).toHaveAttribute(
+    "data-current-spread",
+    "marina-bay-skyline",
+  );
+
+  const zoomReadout = page.locator("#zRead");
+  await expect(zoomReadout).toHaveText("100%");
+  await page.locator("#zIn").click();
+  await expect(zoomReadout).not.toHaveText("100%");
+
+  const caption = page.locator("#sbCaptions");
+  const before = await caption.innerText();
+  await page.locator("#sbRight").click();
+  await expect.poll(async () => caption.innerText()).not.toBe(before);
+  await expect(experience).toHaveAttribute("data-current-spread", "singapore-river");
+  await expect(page).toHaveURL(/spread=singapore-river/);
+});
+
 test("dataset chart keeps its canvas inside the viewport", async ({ page }, testInfo) => {
   test.skip(!focusedProjects.has(testInfo.project.name));
 

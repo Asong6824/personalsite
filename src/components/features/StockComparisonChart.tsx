@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import * as echarts from 'echarts'
+import { SITE_CHROMATIC_PALETTE, SITE_NEUTRAL_PALETTE } from '@/lib/site-palette'
 
 function formatDateLabel(iso) {
   const d = new Date(iso)
@@ -127,11 +128,11 @@ export default function StockComparisonChart({
   const sourceLabel = payload?.meta?.source ? (payload.meta.source === 'mock' ? 'Mock' : payload.meta.source.toUpperCase()) : (source === 'alpha' ? 'ALPHA' : source)
 
   return (
-    <div style={{ border: '1px solid', borderColor: isDark ? '#444' : '#ddd', borderRadius: 8, padding: 12 }}>
+    <div style={{ border: '1px solid', borderColor: isDark ? SITE_NEUTRAL_PALETTE.neutral[700] : SITE_NEUTRAL_PALETTE.neutral[200], borderRadius: 8, padding: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ fontWeight: 600 }}>Stock Comparison</div>
-          <span style={{ fontSize: 12, padding: '2px 6px', borderRadius: 6, border: '1px solid', borderColor: isDark ? '#555' : '#ccc', color: isDark ? '#bbb' : '#666' }}>Source: {sourceLabel}</span>
+          <span style={{ fontSize: 12, padding: '2px 6px', borderRadius: 6, border: '1px solid', borderColor: isDark ? SITE_NEUTRAL_PALETTE.neutral[600] : SITE_NEUTRAL_PALETTE.neutral[300], color: isDark ? SITE_NEUTRAL_PALETTE.neutral[300] : SITE_NEUTRAL_PALETTE.neutral[600] }}>Source: {sourceLabel}</span>
         </div>
         {!hasSingleRange && (
           <div style={{ display: 'flex', gap: 8 }}>
@@ -143,9 +144,9 @@ export default function StockComparisonChart({
                   padding: '6px 10px',
                   borderRadius: 6,
                   border: '1px solid',
-                  borderColor: selectedRangeId === r.id ? (isDark ? '#88f' : '#66f') : (isDark ? '#555' : '#ccc'),
-                  background: selectedRangeId === r.id ? (isDark ? '#223' : '#eef') : (isDark ? '#222' : '#fff'),
-                  color: isDark ? '#ddd' : '#333',
+                  borderColor: selectedRangeId === r.id ? (isDark ? SITE_CHROMATIC_PALETTE.indigo[400] : SITE_CHROMATIC_PALETTE.indigo[600]) : (isDark ? SITE_NEUTRAL_PALETTE.neutral[600] : SITE_NEUTRAL_PALETTE.neutral[300]),
+                  background: selectedRangeId === r.id ? (isDark ? SITE_CHROMATIC_PALETTE.indigo[950] : SITE_CHROMATIC_PALETTE.indigo[100]) : (isDark ? SITE_NEUTRAL_PALETTE.neutral[800] : SITE_NEUTRAL_PALETTE.neutral[50]),
+                  color: isDark ? SITE_NEUTRAL_PALETTE.neutral[200] : SITE_NEUTRAL_PALETTE.neutral[700],
                   cursor: 'pointer'
                 }}
               >{r.label}</button>
@@ -154,7 +155,7 @@ export default function StockComparisonChart({
         )}
       </div>
 
-      <div style={{ position: 'relative', height: 320, width: '100%', background: isDark ? '#171717' : '#fafafa' }}>
+      <div style={{ position: 'relative', height: 320, width: '100%', background: isDark ? SITE_NEUTRAL_PALETTE.neutral[900] : SITE_NEUTRAL_PALETTE.neutral[50] }}>
         {loading && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
             加载中...
@@ -171,7 +172,7 @@ export default function StockComparisonChart({
       <div style={{ marginTop: 12, maxWidth: '100%', overflowX: 'auto' }}>
         <table style={{ width: '100%', minWidth: 620, borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ textAlign: 'left', borderBottom: `1px solid ${isDark ? '#444' : '#ddd'}` }}>
+            <tr style={{ textAlign: 'left', borderBottom: `1px solid ${isDark ? SITE_NEUTRAL_PALETTE.neutral[700] : SITE_NEUTRAL_PALETTE.neutral[200]}` }}>
               <th style={{ padding: '8px 4px' }}>Symbol</th>
               <th style={{ padding: '8px 4px' }}>Name</th>
               <th style={{ padding: '8px 4px' }}>Price</th>
@@ -183,11 +184,11 @@ export default function StockComparisonChart({
           <tbody>
             {(payload?.series || []).map(s => {
               const up = (s.latest?.change || 0) >= 0
-              const color = up ? (isDark ? '#5bd36d' : '#089f49') : (isDark ? '#f26d6d' : '#c62828')
+              const color = up ? (isDark ? SITE_CHROMATIC_PALETTE.emerald[400] : SITE_CHROMATIC_PALETTE.emerald[700]) : (isDark ? SITE_CHROMATIC_PALETTE.red[400] : SITE_CHROMATIC_PALETTE.red[700])
               return (
-                <tr key={s.symbol} style={{ borderBottom: `1px solid ${isDark ? '#333' : '#eee'}` }}>
+                <tr key={s.symbol} style={{ borderBottom: `1px solid ${isDark ? SITE_NEUTRAL_PALETTE.neutral[700] : SITE_NEUTRAL_PALETTE.neutral[100]}` }}>
                   <td style={{ padding: '6px 4px', fontWeight: 600 }}>{s.symbol}</td>
-                  <td style={{ padding: '6px 4px', color: isDark ? '#bbb' : '#666' }}>{s.name}</td>
+                  <td style={{ padding: '6px 4px', color: isDark ? SITE_NEUTRAL_PALETTE.neutral[300] : SITE_NEUTRAL_PALETTE.neutral[600] }}>{s.name}</td>
                   <td style={{ padding: '6px 4px' }}>{s.latest?.price?.toFixed(2)}</td>
                   <td style={{ padding: '6px 4px', color }}>{up ? `+${s.latest?.change?.toFixed(2)}` : s.latest?.change?.toFixed(2)}</td>
                   <td style={{ padding: '6px 4px', color }}>{up ? `+${s.latest?.changePct?.toFixed(2)}%` : `${s.latest?.changePct?.toFixed(2)}%`}</td>

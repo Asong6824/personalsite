@@ -18,8 +18,8 @@ export default function ClientChannelSwitcher({ serverPosts }) {
                 {Object.entries(CHANNELS_CONFIG).map(([key, config]) => (
                     <button
                         key={key}
-                        className={`px-6 py-2 rounded-full font-semibold border transition-colors duration-300 ${activeChannel === key ? 'bg-primary text-white' : 'bg-white text-gray-800 border-gray-300'}`}
-                        style={activeChannel === key && config.bgColor ? { background: config.bgColor, color: '#fff' } : {}}
+                        className={`px-6 py-2 rounded-full font-semibold border transition-colors duration-300 ${activeChannel === key ? 'bg-primary text-site-canvas' : 'bg-site-canvas text-site-gray-800 border-site-gray-300'}`}
+                        style={activeChannel === key && config.bgColor ? { background: config.bgColor, color: 'var(--color-site-neutral-50)' } : {}}
                         onClick={() => setActiveChannel(key)}
                     >
                         {config.name}

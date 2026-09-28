@@ -75,13 +75,13 @@ export default function TravelSection() {
                                         />
 
                                         {/* 遮罩层 */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent transition-opacity duration-300 group-hover/card:from-black/70"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-site-neutral-950/60 via-site-neutral-950/30 to-transparent transition-opacity duration-300 group-hover/card:from-site-neutral-950/70"></div>
 
                                         {/* 顶部作者信息 */}
                                         <div className="flex flex-row items-center space-x-3 z-10 relative p-4">
                                             <div className="flex flex-col">
                                                 {/* 显示地点和日期 */}
-                                                <p className="text-sm text-gray-200 relative">
+                                                <p className="text-sm text-site-gray-200 relative">
                                                     {experience.location} - {experience.date}
                                                 </p>
                                             </div>
@@ -89,11 +89,11 @@ export default function TravelSection() {
 
                                         {/* 底部内容 */}
                                         <div className="relative z-10 p-4">
-                                            <h3 className="font-bold text-xl md:text-2xl text-gray-50 relative">
+                                            <h3 className="font-bold text-xl md:text-2xl text-site-gray-50 relative">
                                                 {experience.title}
                                             </h3>
                                             {experience.description && (
-                                                <p className="font-normal text-sm text-gray-50 relative my-4 max-h-20 overflow-hidden text-ellipsis">
+                                                <p className="font-normal text-sm text-site-gray-50 relative my-4 max-h-20 overflow-hidden text-ellipsis">
                                                     {experience.description.substring(0,100) + (experience.description.length > 100 ? "..." : "")}
                                                 </p>
                                             )}

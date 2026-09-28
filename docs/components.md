@@ -36,6 +36,8 @@
 |------|------|------|
 | `src/components/home/` | 首页 3D WebGL 体验 | `HomeExperienceClient` |
 | `src/components/features/` | 页面级区块 | `HeroSection`、`BlogAggregatedView`、`PostLayout`、`ChannelLayout` |
+| `src/components/features/LifeBookshelf/` | 生活频道 3D 翻页书房 | `LifeBookshelfExperience`（React 控制层）与迁移自 ThreeUI 的本地 Three.js renderer |
+| `src/components/features/LifeSketchbook/` | 生活频道交互手绘本 | `TravelSketchbook`（可配置 React 组件）、`sketchbookRenderer.js`（命令式动画内核）与 `LifeSketchbookPromo`（频道入口） |
 | `src/components/ui/` | 通用 UI 原语 | `bento-grid`、`TableOfContents`、`BeforeAfter`、`Mermaid` |
 | `src/components/finance/` | 金融研究与未挂载实验组件 | `market-study/*`、`TempoBackground` |
 | `src/components/creative/` | 创意频道专属 | `CreativeInfiniteCanvas`、`LiquidGlassWrapper`、`GlassCard` |
@@ -51,6 +53,16 @@
 > **关于金融频道**：`/blog/finance` 当前由 `src/app/blog/finance/page.tsx` 直接渲染「暂无内容」占位状态，不读取文章、专栏或市场研究。`FinanceChannelClient`、`TempoHero`、`TempoGrid`、`TempoBackground`、`DataWall`、`DebugPanel` 是未挂载的历史实验组件。
 
 > **创意频道自动排版**：`CreativeInfiniteCanvas` 负责卡片渲染、最小单元组件和 GSAP 横向循环；`src/lib/creative/canvas-entries.ts` 负责固定尺寸配额与跨内容类型的槽位匹配，`src/lib/creative/canvas-layout.ts` 负责从大到小的精确密铺、占位检测和必要的 `1×1` 封口。两层算法都不依赖 DOM，可在 Node 环境中独立测试；组件不应再手写新增卡片的 `col-start` / `row-start`。8 张首页 Creative 素材维护在 `src/data/creative-gallery.ts`，通过 `surfaces` 独立控制是否进入频道。
+
+> **生活频道翻页书房**：书籍内容统一由 `src/data/bookshelf-books.ts` 读取并规范化 `src/content/books.json`，其中只包含书名、作者、简介、封面、年份、页数、章节与打开目标，不包含展示算法。`open` 是可辨识联合：`three-book` 留在 Three.js 书内阅读，`sketchbook` 指向一册旅行手绘本，`article` 指向站内文章。频道中的 `BookShelf3D/BookShelf` 使用 React + GSAP + CSS 3D 做快速陈列；独立页中的 `LifeBookshelfExperience` 使用同一批数据，但由 `bookshelfRenderer.js` 保留 ThreeUI `BookshelfScene` 的书本建模、纸张弯曲、材质、灯光与交互状态机。两种展示不共享动画状态或渲染代码，只共享 `BookshelfBook` 数据契约。
+
+> 独立书架中的游记或文章仍先完成“抽书”动画，再由 React Router 进入目标页面；页面切换时旧 Three.js renderer 会销毁，因此不会和手绘本 renderer 同时驻留。书架会通过受控的 `fromBook` 参数传递来源，手绘本翻页时保留它，返回操作可恢复原书架选中项。生活频道内嵌书架则直接使用普通链接，维持更轻的预览体验。
+
+> Three.js 书房现在直接加载每本书的 `coverUrl`，失败时退回程序化布面封面，不再依赖固定数量和固定裁切坐标的 cover atlas；`?book=<id>` 保存当前选中书籍。渲染器复用项目统一的 Three.js 版本，不安装 `@designcodeio/threeui` 或旧版 Three.js 别名。来源与 MIT 许可记录在同目录 `UPSTREAM.md`。
+
+> **生活频道交互手绘本**：`TravelSketchbook` 是可配置的客户端组件，接收强类型跨页数据、初始页和页面打开/切换回调；`LifeSketchbookExperience` 将一册 `TravelSketchbookVolume` 连接至 Next.js Router，并用 `?spread=<id>` 保留当前跨页。多册数据注册在 `src/data/travel-sketchbook.ts`，由 `/blog/life/sketchbook/[volumeId]` 静态生成独立页面和 metadata。服务端路由只向客户端传递稳定的 `volumeId`，客户端再从注册表解析卷册，避免查询参数更新时重复序列化数据和重建动画控制器。原有 18 段页片曲面、弹簧翻页、逐片光照、倾斜、缩放和放大镜继续由 `sketchbookRenderer.js` 直接更新 DOM/CSS 变量，避免逐帧触发 React 重渲染。场景 CSS 通过组件内部的 Shadow DOM 隔离，图片和 Instrument Serif / Newsreader 字体全部本地化，不依赖 iframe、npm 包或运行时 CDN。
+
+> 跨页内容统一维护在 `src/data/travel-sketchbook.ts`。发布图片必须保持 `1760×1240` 透明画布和居中的书脊结构；可提供 `880×620` 的 `mobileImage`。渲染器首屏只等待当前页和相邻页，其余页面在浏览器空闲时预载。跨页配置 `href` 后，稳定态标题下会显示“阅读这段旅程”，由 React 外壳校验 `/blog/` 路径后执行站内跳转。
 
 ---
 

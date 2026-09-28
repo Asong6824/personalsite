@@ -23,14 +23,14 @@ export function GlassCard({
         <Tag
             className={cn(
                 "relative overflow-hidden rounded-3xl",
-                "bg-white/[0.03] dark:bg-white/[0.03]",
+                "bg-site-neutral-50/[0.03] dark:bg-site-neutral-50/[0.03]",
                 "backdrop-blur-xl saturate-[140%]",
-                "border border-white/[0.08]",
+                "border border-site-neutral-50/[0.08]",
                 "shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]",
                 hover && "transition-all duration-500 ease-out",
-                hover && "hover:bg-white/[0.06] hover:border-white/[0.15]",
+                hover && "hover:bg-site-neutral-50/[0.06] hover:border-site-neutral-50/[0.15]",
                 hover && "hover:shadow-[0_12px_48px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.15)]",
-                glow && "before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/[0.1] before:via-transparent before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100",
+                glow && "before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-site-neutral-50/[0.1] before:via-transparent before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100",
                 className
             )}
             {...props}

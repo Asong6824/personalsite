@@ -82,8 +82,8 @@ export default function ObserveSignalField() {
       className="observe-signal-field fixed inset-0 z-20 pointer-events-none overflow-hidden opacity-0"
       aria-hidden="true"
     >
-      <div className="observe-signal-crosshair observe-signal-crosshair-x absolute left-0 top-1/2 h-px w-full border-t border-dashed border-[#0a0c20]/20 opacity-0" />
-      <div className="observe-signal-crosshair observe-signal-crosshair-y absolute left-1/2 top-0 h-full w-px border-l border-dashed border-[#0a0c20]/20 opacity-0" />
+      <div className="observe-signal-crosshair observe-signal-crosshair-x absolute left-0 top-1/2 h-px w-full border-t border-dashed border-site-ink/20 opacity-0" />
+      <div className="observe-signal-crosshair observe-signal-crosshair-y absolute left-1/2 top-0 h-full w-px border-l border-dashed border-site-ink/20 opacity-0" />
 
       {observeSignals.map((signal, index) => (
         <figure
@@ -96,7 +96,7 @@ export default function ObserveSignalField() {
             "--observe-desktop-width": `${signal.desktopWidth}px`,
           } as CSSProperties}
         >
-          <div className="overflow-hidden border border-[#0a0c20]/18 bg-[#f7f8f1]/82 shadow-[0_10px_30px_rgba(10,12,32,0.08)] backdrop-blur-sm">
+          <div className="overflow-hidden border border-site-ink/18 bg-site-lime-50/82 shadow-[0_10px_30px_rgba(10,12,32,0.08)] backdrop-blur-sm">
             <Image
               className="block h-auto w-full object-contain"
               src={signal.src}

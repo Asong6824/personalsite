@@ -37,9 +37,9 @@ import { IoLogoJavascript } from "react-icons/io";
 
 import { VscCode } from "react-icons/vsc"; // 一个通用的代码图标
 
-const TechHeader = ({ Visual, bgColor = "bg-neutral-700/80" }) => (
+const TechHeader = ({ Visual, bgColor = "bg-site-neutral-700/80" }) => (
     <div className={`flex flex-1 w-full h-full min-h-[6rem] rounded-xl ${bgColor} items-center justify-center`}>
-        {React.isValidElement(Visual) ? Visual : <Visual className="h-20 w-20 text-white opacity-80" />}
+        {React.isValidElement(Visual) ? Visual : <Visual className="h-20 w-20 text-site-neutral-50 opacity-80" />}
     </div>
 );
 
@@ -49,32 +49,32 @@ const techItems = [
         id: "frontend-main",
         title: "前端：React & Next.js",
         description: "构建高性能、可交互的用户界面和全栈Web应用",
-        header: <TechHeader Visual={SiReact} bgColor="bg-sky-500/80" />, // 视觉头部
-        icon: <SiNextdotjs className="h-5 w-5 text-neutral-400" />, // 小图标
+        header: <TechHeader Visual={SiReact} bgColor="bg-site-sky-500/80" />, // 视觉头部
+        icon: <SiNextdotjs className="h-5 w-5 text-site-neutral-400" />, // 小图标
         className: "md:col-span-2", // 占据两列
     },
     {
         id: "javascript",
         title: "JavaScript",
         description: "前端开发的核心",
-        header: <TechHeader Visual={IoLogoJavascript} bgColor="bg-yellow-500/80" />,
-        icon: <VscCode className="h-5 w-5 text-neutral-400" />,
+        header: <TechHeader Visual={IoLogoJavascript} bgColor="bg-site-yellow-500/80" />,
+        icon: <VscCode className="h-5 w-5 text-site-neutral-400" />,
         className: "md:col-span-1",
     },
     {
         id: "backend-nodejs",
         title: "后端：Golang",
         description: "专为构建高性能、可扩展的系统和服务而设计",
-        header: <TechHeader Visual={FaGolang} bgColor="bg-blue-500/80" />,
-        icon: <VscCode className="h-5 w-5 text-neutral-400" />,
+        header: <TechHeader Visual={FaGolang} bgColor="bg-site-blue-500/80" />,
+        icon: <VscCode className="h-5 w-5 text-site-neutral-400" />,
         className: "md:col-span-1",
     },
     {
         id: "backend-python",
         title: "后端：C++",
         description: "广泛应用于系统开发、游戏引擎和高要求性能场景",
-        header: <TechHeader Visual={TbBrandCpp} bgColor="bg-purple-500/80" />,
-        icon: <VscCode className="h-5 w-5 text-neutral-400" />,
+        header: <TechHeader Visual={TbBrandCpp} bgColor="bg-site-purple-500/80" />,
+        icon: <VscCode className="h-5 w-5 text-site-neutral-400" />,
         className: "md:col-span-2",
     },
     {
@@ -82,12 +82,12 @@ const techItems = [
         title: "DevOps & 工具",
         description: "Docker容器化、AWS云服务、Git版本控制等。",
         header: (
-            <div className="flex h-full w-full items-center justify-center gap-4 bg-orange-500/80 rounded-lg">
-                <SiDocker className="h-12 w-12 text-white opacity-70" />
-                <SiGit className="h-12 w-12 text-white opacity-70" />
+            <div className="flex h-full w-full items-center justify-center gap-4 bg-site-orange-500/80 rounded-lg">
+                <SiDocker className="h-12 w-12 text-site-neutral-50 opacity-70" />
+                <SiGit className="h-12 w-12 text-site-neutral-50 opacity-70" />
             </div>
         ),
-        icon: <VscCode className="h-5 w-5 text-neutral-400" />,
+        icon: <VscCode className="h-5 w-5 text-site-neutral-400" />,
         className: "md:col-span-2", // 占据三列
     },
     {
@@ -95,12 +95,12 @@ const techItems = [
         title: "数据库技术",
         description: "熟悉关系型 (MySQL) 和 NoSQL (Redis) 数据库。",
         header: ( // 组合图标示例
-            (<div className="flex h-full w-full items-center justify-center gap-4 bg-red-500/80 rounded-lg">
-                <SiMysql className="h-16 w-16 text-white opacity-70" />
-                <DiRedis className="h-16 w-16 text-white opacity-70" />
+            (<div className="flex h-full w-full items-center justify-center gap-4 bg-site-red-500/80 rounded-lg">
+                <SiMysql className="h-16 w-16 text-site-neutral-50 opacity-70" />
+                <DiRedis className="h-16 w-16 text-site-neutral-50 opacity-70" />
             </div>)
         ),
-        icon: <VscCode className="h-5 w-5 text-neutral-400" />,
+        icon: <VscCode className="h-5 w-5 text-site-neutral-400" />,
         className: "md:col-span-1", // 调整为1，如果上方Python占2
     },
 ];
@@ -115,7 +115,7 @@ const ProgrammerDetails = () => {
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
                         技术世界
                     </h2>
-                    <p className="mt-4 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto">
+                    <p className="mt-4 text-lg md:text-xl text-site-neutral-400 max-w-2xl mx-auto">
                         以下是我常用和喜爱的技术与工具。
                     </p>
                 </div>

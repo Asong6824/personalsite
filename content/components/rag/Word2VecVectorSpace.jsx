@@ -41,7 +41,7 @@ export function Word2VecVectorSpace() {
           {/* 虚线连接：King → Queen */}
           <SketchyDashedLine x1={157} y1={113} x2={273} y2={122} dashArray={[5, 4]} />
         </SketchySvg>
-        <p className="text-center text-gray-400 text-xs mt-1">
+        <p className="text-center text-site-gray-400 text-xs mt-1">
           向量空间中，king − man + woman ≈ queen 的几何示意
         </p>
       </div>

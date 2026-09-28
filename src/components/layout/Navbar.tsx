@@ -178,7 +178,7 @@ const Navbar = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -10 }}
                             transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-                            className="md:hidden bg-[var(--channel-bg,#f0eee7)]/95 backdrop-blur-md border-b border-[var(--site-nav-border)]"
+                            className="md:hidden bg-[var(--channel-bg)]/95 backdrop-blur-md border-b border-[var(--site-nav-border)]"
                             id="mobile-menu"
                         >
                             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">

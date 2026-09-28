@@ -27,7 +27,7 @@ export default function HomePage() {
 
     return (
         <main
-            className="min-h-screen w-full text-slate-900 overflow-x-hidden"
+            className="min-h-screen w-full text-site-slate-900 overflow-x-hidden"
             style={{ backgroundColor: SITE_WARM_BACKGROUND }}
         >
             <HomeExperienceClient recentPosts={recentPosts} columnPostCounts={columnPostCounts} />

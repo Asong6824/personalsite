@@ -1,3 +1,5 @@
+import { SITE_CHROMATIC_PALETTE, SITE_FOUNDATION } from "@/lib/site-palette";
+
 // 参考 Excalidraw 的三档手绘风格预设
 export const SKETCHY_PRESETS = {
   architect: {
@@ -21,7 +23,7 @@ export const SKETCHY_PRESETS = {
 export const DEFAULT_OPTIONS = {
   roughness: 1,
   bowing: 1,
-  stroke: '#1a1a1a',
+  stroke: SITE_FOUNDATION.ink,
   strokeWidth: 1.5,
   fill: 'transparent',
   fillStyle: 'hachure',
@@ -34,6 +36,6 @@ export const DEFAULT_OPTIONS = {
 
 // hover 时的视觉变化
 export const HOVER_OPTIONS = {
-  stroke: '#3b82f6',
+  stroke: SITE_CHROMATIC_PALETTE.blue[500],
   strokeWidthMultiplier: 1.5,
 };

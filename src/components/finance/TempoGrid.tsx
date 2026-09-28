@@ -39,10 +39,10 @@ export default function TempoGrid({ columns }) {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                    <h2 className="text-4xl md:text-5xl font-bold text-site-neutral-50 mb-6">
                         Selected Columns
                     </h2>
-                    <div className="h-1 w-20 bg-blue-500 rounded-full" />
+                    <div className="h-1 w-20 bg-site-blue-500 rounded-full" />
                 </motion.div>
 
                 <motion.div
@@ -57,24 +57,24 @@ export default function TempoGrid({ columns }) {
                             key={key}
                             variants={itemVariants}
                             whileHover={{ y: -5 }}
-                            className="group relative bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-colors duration-300"
+                            className="group relative bg-site-neutral-50/5 backdrop-blur-md border border-site-neutral-50/10 rounded-2xl overflow-hidden hover:bg-site-neutral-50/10 transition-colors duration-300"
                         >
                             <Link href={`/blog/finance/${key}`} className="block p-8 h-full">
                                 <div className="flex flex-col h-full">
                                     <div className="mb-6">
-                                        <span className="text-sm font-mono text-blue-400">
+                                        <span className="text-sm font-mono text-site-blue-400">
                                             0{index + 1} ::
                                         </span>
-                                        <h3 className="text-2xl font-bold text-white mt-2 group-hover:text-blue-300 transition-colors">
+                                        <h3 className="text-2xl font-bold text-site-neutral-50 mt-2 group-hover:text-site-blue-300 transition-colors">
                                             {column.name}
                                         </h3>
                                     </div>
 
-                                    <p className="text-gray-400 mb-8 flex-grow leading-relaxed">
+                                    <p className="text-site-gray-400 mb-8 flex-grow leading-relaxed">
                                         {column.description}
                                     </p>
 
-                                    <div className="flex items-center justify-between text-sm text-gray-500 border-t border-white/10 pt-6">
+                                    <div className="flex items-center justify-between text-sm text-site-gray-500 border-t border-site-neutral-50/10 pt-6">
                                         <span>{column.posts?.length || 0} Articles</span>
                                         <span className="group-hover:translate-x-1 transition-transform duration-300">
                                             →

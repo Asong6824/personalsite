@@ -2,6 +2,7 @@
 import React, { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { SITE_CHROMATIC_PALETTE } from "@/lib/site-palette";
 
 const OrbShaderMaterial = () => {
     const materialRef = useRef<any>(null);
@@ -15,8 +16,8 @@ const OrbShaderMaterial = () => {
     const uniforms = useMemo(
         () => ({
             uTime: { value: 0 },
-            uColorTop: { value: new THREE.Color("#89CFF0") }, // Light Sky Blue
-            uColorBottom: { value: new THREE.Color("#FFE5B4") }, // Peach / Pale Orange
+            uColorTop: { value: new THREE.Color(SITE_CHROMATIC_PALETTE.sky[400]) },
+            uColorBottom: { value: new THREE.Color(SITE_CHROMATIC_PALETTE.orange[200]) },
         }),
         []
     );

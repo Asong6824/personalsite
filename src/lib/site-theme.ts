@@ -1,7 +1,12 @@
-export const SITE_WARM_BACKGROUND = "#F0EEE7";
-export const SITE_WARM_BACKGROUND_THREE = 0xf0eee7;
+import { SITE_FOUNDATION, SITE_NEUTRAL_PALETTE } from "./site-palette";
 
-export const SITE_WARM_SURFACE = "#E2DBCE";
-export const SITE_WARM_SURFACE_HIGH = "#D8D0C3";
-export const SITE_WARM_INK = "#141413";
-export const SITE_WARM_MUTED = "#68645d";
+export const SITE_WARM_BACKGROUND = SITE_FOUNDATION.canvas;
+export const SITE_WARM_BACKGROUND_THREE = Number.parseInt(
+  SITE_WARM_BACKGROUND.slice(1),
+  16,
+);
+
+export const SITE_WARM_SURFACE = SITE_NEUTRAL_PALETTE.stone[200];
+export const SITE_WARM_SURFACE_HIGH = SITE_NEUTRAL_PALETTE.stone[300];
+export const SITE_WARM_INK = SITE_FOUNDATION.ink;
+export const SITE_WARM_MUTED = SITE_NEUTRAL_PALETTE.stone[600];

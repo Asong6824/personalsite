@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { GlassCard } from '@/components/creative/GlassCard';
-import { SITE_WARM_BACKGROUND } from '@/lib/site-theme';
 
 export default function ColumnLayout({ channelKey, channelConfig, columnKey, columnConfig, posts }) {
     // 检查频道类型
@@ -21,32 +20,32 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
         switch (channelKey) {
             case 'life':
                 return {
-                    primary: '#141413',
-                    primaryHover: '#68645d',
+                    primary: 'var(--color-site-blue-700)',
+                    primaryHover: 'var(--color-site-blue-800)',
                     cardRadius: 'rounded-none', // 直角
                 };
             case 'tech':
                 return {
-                    primary: '#141413',
-                    primaryHover: '#68645d',
+                    primary: 'var(--color-site-ink)',
+                    primaryHover: 'var(--color-site-stone-600)',
                     cardRadius: 'rounded-2xl',
                 };
             case 'finance':
                 return {
-                    primary: 'rgb(34, 197, 94)', // 绿色
-                    primaryHover: '#22c55e',
+                    primary: 'var(--color-site-lime-700)',
+                    primaryHover: 'var(--color-site-lime-800)',
                     cardRadius: 'rounded-2xl',
                 };
             case 'creative':
                 return {
-                    primary: 'rgb(167, 139, 250)', // 浅紫色
-                    primaryHover: '#a78bfa',
+                    primary: 'var(--color-site-violet-700)',
+                    primaryHover: 'var(--color-site-violet-800)',
                     cardRadius: 'rounded-3xl',
                 };
             default:
                 return {
-                    primary: 'rgb(139, 90, 60)',
-                    primaryHover: '#8b5a3c',
+                    primary: 'var(--color-site-orange-700)',
+                    primaryHover: 'var(--color-site-orange-800)',
                     cardRadius: 'rounded-2xl',
                 };
         }
@@ -59,7 +58,7 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
     return (
         <div
             className="min-h-screen"
-            style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)' } : isCreativeChannel ? { backgroundColor: SITE_WARM_BACKGROUND } : {}}
+            style={{ backgroundColor: 'var(--site-page-bg)' }}
             {...(isTechChannel && { 'data-tech-page': true })}
             {...(isLifeChannel && { 'data-life-page': true })}
         >
@@ -81,18 +80,18 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                     </p>
 
                     {/* 面包屑导航 */}
-                    <nav className="mt-6 text-sm text-gray-500 dark:text-gray-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
-                        <Link href="/" className="transition-colors hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>首页</Link>
+                    <nav className="mt-6 text-sm text-site-neutral-500 dark:text-site-slate-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
+                        <Link href="/" className="transition-colors hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>首页</Link>
                         <span className="mx-2">{'>'}</span>
-                        <Link href="/blog" className="transition-colors hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>博客</Link>
+                        <Link href="/blog" className="transition-colors hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>博客</Link>
                         <span className="mx-2">{'>'}</span>
-                        <Link href={`/blog/${channelKey}`} className="transition-colors hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { 'color': '#6b7280' }}>{channelConfig.name}</Link>
+                        <Link href={`/blog/${channelKey}`} className="transition-colors hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>{channelConfig.name}</Link>
                         <span className="mx-2">{'>'}</span>
                         <span style={{ color: theme.primary }}>{columnConfig.name}</span>
                     </nav>
 
                     {/* 文章统计 */}
-                    <div className="mt-4 text-sm text-gray-500 dark:text-gray-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
+                    <div className="mt-4 text-sm text-site-neutral-500 dark:text-site-slate-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
                         共 {posts.length} 篇文章
                     </div>
 
@@ -116,17 +115,17 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                             <GlassCard hover className="p-6 md:p-8">
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div className="flex-1 min-w-0">
-                                                        <h2 className="text-xl md:text-2xl font-bold text-white transition-colors mb-3 line-clamp-2 group-hover:text-[#B7ADC9]">
+                                                        <h2 className="text-xl md:text-2xl font-bold text-site-stone-50 transition-colors mb-3 line-clamp-2 group-hover:text-site-violet-300">
                                                             {post.title}
                                                         </h2>
 
                                                         {post.excerpt && (
-                                                            <p className="text-white/50 mb-4 line-clamp-3">
+                                                            <p className="text-site-stone-50/50 mb-4 line-clamp-3">
                                                                 {post.excerpt}
                                                             </p>
                                                         )}
 
-                                                        <div className="flex items-center gap-4 text-sm text-white/40">
+                                                        <div className="flex items-center gap-4 text-sm text-site-stone-50/40">
                                                             <span className="flex items-center gap-1">
                                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -147,12 +146,12 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                                         {post.tags && post.tags.length > 0 && (
                                                             <div className="flex flex-wrap gap-2 mt-4">
                                                                 {post.tags.slice(0, 4).map(tag => (
-                                                                    <span key={tag} className="px-2.5 py-1 bg-white/5 text-white/40 border border-white/10 rounded-full text-xs">
+                                                                    <span key={tag} className="px-2.5 py-1 bg-site-stone-50/5 text-site-stone-50/40 border border-site-stone-50/10 rounded-full text-xs">
                                                                         #{tag}
                                                                     </span>
                                                                 ))}
                                                                 {post.tags.length > 4 && (
-                                                                    <span className="px-2.5 py-1 bg-white/5 text-white/30 border border-white/10 rounded-full text-xs">
+                                                                    <span className="px-2.5 py-1 bg-site-stone-50/5 text-site-stone-50/30 border border-site-stone-50/10 rounded-full text-xs">
                                                                         +{post.tags.length - 4}
                                                                     </span>
                                                                 )}
@@ -162,11 +161,11 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
 
                                                     <div className="flex flex-col items-end gap-2">
                                                         {post.pinned && (
-                                                            <span className="inline-flex items-center px-2 py-1 bg-[#776DFF]/10 text-[#B7ADC9] text-xs font-medium rounded-full border border-[#776DFF]/20">
+                                                            <span className="inline-flex items-center px-2 py-1 bg-site-violet-600/10 text-site-violet-300 text-xs font-medium rounded-full border border-site-violet-600/20">
                                                                 置顶
                                                             </span>
                                                         )}
-                                                        <svg className="w-6 h-6 text-white/20 group-hover:text-[#B7ADC9]/60 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg className="w-6 h-6 text-site-stone-50/20 group-hover:text-site-violet-300/60 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                         </svg>
                                                     </div>
@@ -179,17 +178,17 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                             >
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div className="flex-1 min-w-0">
-                                                        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white transition-colors mb-3 line-clamp-2 group-hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}}>
+                                                        <h2 className="text-xl md:text-2xl font-bold text-site-neutral-900 dark:text-site-stone-50 transition-colors mb-3 line-clamp-2 group-hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}}>
                                                             {post.title}
                                                         </h2>
 
                                                         {post.excerpt && (
-                                                            <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
+                                                            <p className="text-site-neutral-600 dark:text-site-slate-400 mb-4 line-clamp-3" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
                                                                 {post.excerpt}
                                                             </p>
                                                         )}
 
-                                                        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
+                                                        <div className="flex items-center gap-4 text-sm text-site-neutral-500 dark:text-site-slate-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
                                                             <span className="flex items-center gap-1">
                                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -210,12 +209,12 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                                                         {post.tags && post.tags.length > 0 && (
                                                             <div className="flex flex-wrap gap-2 mt-4">
                                                                 {post.tags.slice(0, 4).map(tag => (
-                                                                    <span key={tag} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-xs" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)', color: 'var(--channel-ink)', border: '1px solid var(--channel-border)' } : {}}>
+                                                                    <span key={tag} className="px-2 py-1 bg-site-stone-100 dark:bg-site-slate-700 text-site-neutral-600 dark:text-site-slate-300 rounded text-xs" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)', color: 'var(--channel-ink)', border: '1px solid var(--channel-border)' } : {}}>
                                                                         #{tag}
                                                                     </span>
                                                                 ))}
                                                                 {post.tags.length > 4 && (
-                                                                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded text-xs" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)', color: 'var(--channel-muted)', border: '1px solid var(--channel-border)' } : {}}>
+                                                                    <span className="px-2 py-1 bg-site-stone-100 dark:bg-site-slate-700 text-site-neutral-500 dark:text-site-slate-400 rounded text-xs" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-bg)', color: 'var(--channel-muted)', border: '1px solid var(--channel-border)' } : {}}>
                                                                         +{post.tags.length - 4}
                                                                     </span>
                                                                 )}
@@ -225,11 +224,11 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
 
                                                     <div className="flex flex-col items-end gap-2">
                                                         {post.pinned && (
-                                                            <span className="inline-flex items-center px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium rounded">
+                                                            <span className="inline-flex items-center px-2 py-1 bg-site-red-100 dark:bg-site-red-900/30 text-site-red-700 dark:text-site-red-400 text-xs font-medium rounded">
                                                                 📌 置顶
                                                             </span>
                                                         )}
-                                                        <svg className="w-6 h-6 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg className="w-6 h-6 text-site-neutral-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                         </svg>
                                                     </div>
@@ -249,15 +248,15 @@ export default function ColumnLayout({ channelKey, channelConfig, columnKey, col
                         className="text-center py-12"
                     >
                         <div className="text-6xl mb-4">📝</div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        <h3 className="text-xl font-semibold text-site-neutral-900 dark:text-site-stone-50 mb-2">
                             暂无文章
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        <p className="text-site-neutral-600 dark:text-site-slate-400 mb-6">
                             该专栏下暂时还没有文章，敬请期待！
                         </p>
                         <Link
                             href={`/blog/${channelKey}`}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

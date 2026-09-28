@@ -11,44 +11,44 @@ export default function ColumnsPageClient({ allColumnsData }) {
     // 频道主题配置
     const channelThemes = {
         all: {
-            background: 'bg-[#F0EEE7]',
-            title: 'text-gray-900 dark:text-white',
-            filterBg: 'bg-[#E2DBCE]/80 dark:bg-gray-800/80',
-            activeButton: 'bg-[#141413] text-[#F0EEE7]',
-            timelineBg: 'bg-[#F0EEE7]',
-            cardBg: 'bg-[#E2DBCE] dark:bg-neutral-900'
+            background: 'bg-site-canvas',
+            title: 'text-site-neutral-900 dark:text-site-stone-50',
+            filterBg: 'bg-site-stone-200/80 dark:bg-site-slate-800/80',
+            activeButton: 'bg-site-ink text-site-canvas',
+            timelineBg: 'bg-site-canvas',
+            cardBg: 'bg-site-stone-200 dark:bg-site-slate-900'
         },
         tech: {
-            background: 'bg-[#F0EEE7]',
-            title: 'text-[#141413]',
-            filterBg: 'bg-[#E2DBCE]/80',
-            activeButton: 'bg-[#141413] text-[#F0EEE7]',
-            timelineBg: 'bg-[#F0EEE7]',
-            cardBg: 'bg-[#E2DBCE]'
+            background: 'bg-site-canvas',
+            title: 'text-site-ink',
+            filterBg: 'bg-site-stone-200/80',
+            activeButton: 'bg-site-ink text-site-canvas',
+            timelineBg: 'bg-site-canvas',
+            cardBg: 'bg-site-stone-200'
         },
         life: {
-            background: 'bg-[#F0EEE7]',
-            title: 'text-[#141413]',
-            filterBg: 'bg-[#E2DBCE]/80',
-            activeButton: 'bg-[#141413] text-[#F0EEE7]',
-            timelineBg: 'bg-[#F0EEE7]',
-            cardBg: 'bg-[#E2DBCE]'
+            background: 'bg-site-canvas',
+            title: 'text-site-ink',
+            filterBg: 'bg-site-stone-200/80',
+            activeButton: 'bg-site-blue-700 text-site-stone-50',
+            timelineBg: 'bg-site-canvas',
+            cardBg: 'bg-site-stone-200'
         },
         finance: {
-            background: 'bg-[#F0EEE7]',
-            title: 'text-[#1a1c19]',
-            filterBg: 'bg-[#E2DBCE]/80 dark:bg-gray-800/80',
-            activeButton: 'bg-[#506354] text-white',
-            timelineBg: 'bg-[#F0EEE7]',
-            cardBg: 'bg-[#f4f4ef] dark:bg-gray-800'
+            background: 'bg-site-canvas',
+            title: 'text-site-neutral-900',
+            filterBg: 'bg-site-stone-200/80 dark:bg-site-slate-800/80',
+            activeButton: 'bg-site-lime-700 text-site-stone-50',
+            timelineBg: 'bg-site-canvas',
+            cardBg: 'bg-site-lime-50 dark:bg-site-slate-800'
         },
         create: {
-            background: 'bg-[#F0EEE7]',
-            title: 'text-[#141413]',
-            filterBg: 'bg-[#E2DBCE]/80',
-            activeButton: 'bg-[#141413] text-[#F0EEE7]',
-            timelineBg: 'bg-[#F0EEE7]',
-            cardBg: 'bg-[#E2DBCE]'
+            background: 'bg-site-canvas',
+            title: 'text-site-ink',
+            filterBg: 'bg-site-stone-200/80',
+            activeButton: 'bg-site-violet-700 text-site-stone-50',
+            timelineBg: 'bg-site-canvas',
+            cardBg: 'bg-site-stone-200'
         }
     };
     
@@ -107,13 +107,13 @@ export default function ColumnsPageClient({ allColumnsData }) {
                     <h1 className={`text-4xl md:text-5xl font-bold ${currentTheme.title} mb-4`}>
                         全部专栏
                     </h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                    <p className="text-lg text-site-stone-600 dark:text-site-slate-300 mb-8">
                         按文章数量展示的专栏时间轴
                     </p>
                     
                     {/* 频道筛选器 - 按钮组 */}
                     <div className="flex justify-center">
-                        <div className={`flex flex-wrap gap-3 p-2 ${currentTheme.filterBg} backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg`}>
+                        <div className={`flex flex-wrap gap-3 p-2 ${currentTheme.filterBg} backdrop-blur-sm border border-site-stone-300 dark:border-site-slate-700 rounded-xl shadow-lg`}>
                             {allChannels.map((channel) => (
                                 <button
                                     key={channel.key}
@@ -121,7 +121,7 @@ export default function ColumnsPageClient({ allColumnsData }) {
                                     className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                                         channel.key === selectedChannel
                                             ? `${currentTheme.activeButton} shadow-md`
-                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                            : 'text-site-stone-700 dark:text-site-slate-300 hover:bg-site-stone-100 dark:hover:bg-site-slate-700'
                                     }`}
                                 >
                                     {channel.name}

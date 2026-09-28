@@ -278,7 +278,7 @@ function ChannelRailLinks() {
             onPointerLeave={() => dispatchChannelHover(null)}
             onFocus={() => dispatchChannelHover(activeChannel.id)}
             onBlur={() => dispatchChannelHover(null)}
-            className="pointer-events-auto absolute left-1/2 top-[52%] h-[28vh] min-h-40 w-[82vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-sm bg-transparent outline-none md:h-[30vh] md:w-[70vw] lg:w-[62vw] focus-visible:ring-1 focus-visible:ring-[#0a0c20]/35"
+            className="pointer-events-auto absolute left-1/2 top-[52%] h-[28vh] min-h-40 w-[82vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-sm bg-transparent outline-none md:h-[30vh] md:w-[70vw] lg:w-[62vw] focus-visible:ring-1 focus-visible:ring-site-ink/35"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -299,19 +299,19 @@ function ChannelRailLinks() {
             }}
           >
             <motion.div
-              className="absolute inset-y-0 left-0 w-full bg-[var(--channel-bg,#f0eee7)]"
+              className="absolute inset-y-0 left-0 w-full bg-[var(--channel-bg)]"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               transition={{ duration: 0.56, ease: [0.76, 0, 0.24, 1] }}
             />
             <motion.div
-              className="absolute inset-y-0 left-0 w-px bg-[#0a0c20]/25"
+              className="absolute inset-y-0 left-0 w-px bg-site-ink/25"
               initial={{ x: "-100vw", opacity: 0 }}
               animate={{ x: "100vw", opacity: [0, 0.7, 0] }}
               transition={{ duration: 0.56, ease: [0.76, 0, 0.24, 1] }}
             />
             <motion.div
-              className="absolute left-1/2 top-1/2 flex h-14 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-end text-[#0a0c20]"
+              className="absolute left-1/2 top-1/2 flex h-14 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-end text-site-ink"
               initial={{ x: -28, opacity: 0 }}
               animate={{ x: 120, opacity: [0, 1, 0] }}
               transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
@@ -1187,7 +1187,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
         className="fixed inset-0 z-50 flex flex-col items-center justify-center"
         style={{ backgroundColor: SITE_WARM_BACKGROUND }}
       >
-        <span className="text-xs font-semibold tracking-widest text-[#0a0c20] uppercase animate-pulse">
+        <span className="text-xs font-semibold tracking-widest text-site-ink uppercase animate-pulse">
           Initializing WebGL...
         </span>
       </div>
@@ -1195,20 +1195,20 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
   }
 
   return (
-    <div className="relative w-full text-[#0a0c20]">
+    <div className="relative w-full text-site-ink">
       {/* 1. LOADING SCREEN */}
       {isLoading && (
         <div
           className="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-700"
           style={{ backgroundColor: SITE_WARM_BACKGROUND }}
         >
-          <div className="w-64 h-1 bg-slate-300/40 rounded-full overflow-hidden relative">
+          <div className="w-64 h-1 bg-site-slate-300/40 rounded-full overflow-hidden relative">
             <div 
-              className="absolute left-0 top-0 h-full bg-[#0a0c20] transition-all duration-300 ease-out" 
+              className="absolute left-0 top-0 h-full bg-site-ink transition-all duration-300 ease-out"
               style={{ width: `${loadingProgress}%` }} 
             />
           </div>
-          <span className="mt-4 text-xs font-semibold tracking-widest text-[#0a0c20] uppercase">
+          <span className="mt-4 text-xs font-semibold tracking-widest text-site-ink uppercase">
             正在加载体验 ({loadingProgress}%)
           </span>
         </div>
@@ -1254,7 +1254,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
           className="home-about-stage relative z-20 flex min-h-screen w-full items-center p-8 md:p-16 lg:p-24 pointer-events-none"
           style={{ minHeight: `${HOME_DOM_LAYOUT.aboutSectionVh}vh` }}
         >
-          <div className="w-full text-left text-[#0a0c20]">
+          <div className="w-full text-left text-site-ink">
             <div className="space-y-7 text-2xl font-medium leading-[1.35] tracking-tight md:space-y-9 md:text-4xl lg:space-y-10 lg:text-5xl">
               <h2 id="home-about-title">
                 我是阿松
@@ -1278,9 +1278,9 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
             marginTop: `-${HOME_DOM_LAYOUT.channelIntroOverlapVh}vh`,
           }}
         >
-          <div className="sticky top-0 z-10 flex h-screen items-center justify-center px-8 text-center text-[#0a0c20] md:px-12 lg:px-16">
+          <div className="sticky top-0 z-10 flex h-screen items-center justify-center px-8 text-center text-site-ink md:px-12 lg:px-16">
             <div className="max-w-5xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-site-ink/55">
                 Channels
               </p>
               <h2
@@ -1303,7 +1303,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
           aria-labelledby="home-contact-title"
           className="home-contact-stage relative z-20 w-full px-8 pb-10 pt-16 md:px-12 md:pb-14 md:pt-20 lg:px-16 lg:pb-16"
         >
-          <footer className="min-h-[420px] w-full text-[#0a0c20] md:min-h-[460px]">
+          <footer className="min-h-[420px] w-full text-site-ink md:min-h-[460px]">
             <div className="grid min-h-[inherit] gap-16 pt-8 md:grid-cols-2 md:gap-12 md:pt-10">
               <div className="flex min-h-[320px] flex-col justify-between md:min-h-0">
                 <nav
@@ -1314,7 +1314,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
                     <Link
                       key={linkItem.label}
                       href={linkItem.href}
-                      className="transition-colors hover:text-[#0a0c20]/55"
+                      className="transition-colors hover:text-site-ink/55"
                     >
                       {linkItem.label}
                     </Link>
@@ -1325,7 +1325,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
                   <h2 id="home-contact-title" className="text-3xl font-semibold tracking-tight md:text-4xl">
                     大盈若冲
                   </h2>
-                  <p className="mt-3 max-w-md text-sm leading-6 text-[#0a0c20]/60 md:text-base">
+                  <p className="mt-3 max-w-md text-sm leading-6 text-site-ink/60 md:text-base">
                     写作、技术实验与长期观察的个人站点。
                   </p>
                 </div>
@@ -1334,7 +1334,7 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
               <div className="flex min-h-[320px] flex-col justify-between md:min-h-0 md:items-end md:text-right">
                 <div className="md:w-[min(22rem,100%)]">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/45">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-site-ink/45">
                       Friends
                     </p>
                   </div>
@@ -1349,23 +1349,23 @@ export default function HomeExperienceClient({ recentPosts = [], columnPostCount
                           <Link
                             key={friend.href}
                             href={friend.href}
-                            className="transition-colors hover:text-[#0a0c20]/55"
+                            className="transition-colors hover:text-site-ink/55"
                           >
                             {friend.label}
                           </Link>
                         ))}
                       </nav>
                     ) : (
-                      <p className="max-w-xs text-xl font-medium leading-tight tracking-tight text-[#0a0c20]/45 md:text-2xl">
+                      <p className="max-w-xs text-xl font-medium leading-tight tracking-tight text-site-ink/45 md:text-2xl">
                         友链整理中
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex w-full flex-col gap-3 text-sm font-medium text-[#0a0c20]/50 md:items-end">
+                <div className="flex w-full flex-col gap-3 text-sm font-medium text-site-ink/50 md:items-end">
                   <p className="uppercase tracking-[0.18em]">© 2026 Asong</p>
-                  <Link className="pointer-events-auto transition-colors hover:text-[#0a0c20]" href="/blog">
+                  <Link className="pointer-events-auto transition-colors hover:text-site-ink" href="/blog">
                     查看全部文章
                   </Link>
                 </div>

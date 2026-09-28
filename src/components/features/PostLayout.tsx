@@ -44,7 +44,7 @@ export default async function PostLayout({
     const mdxComponents = {
         // 添加Highlighter组件，仅在技术频道使用
         ...(isTechChannel && {
-            Highlighter: ({ children, color = "#a18072", action = "highlight", ...props }) => (
+            Highlighter: ({ children, color = "var(--color-site-stone-500)", action = "highlight", ...props }) => (
                 <Highlighter
                     color={color}
                     action={action}
@@ -76,17 +76,17 @@ export default async function PostLayout({
             </Link>
         ),
         h2: ({ children, ...props }) => (
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props}>
+            <h2 className="text-2xl font-bold text-site-gray-900 dark:text-site-neutral-50 mt-8 mb-4" {...props}>
                 {children}
             </h2>
         ),
         h3: ({ children, ...props }) => (
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-6 mb-3" {...props}>
+            <h3 className="text-xl font-semibold text-site-gray-900 dark:text-site-neutral-50 mt-6 mb-3" {...props}>
                 {children}
             </h3>
         ),
         pre: ({ children, ...props }) => (
-            <pre className="!bg-[#1e1e1e] !text-[#d4d4d4] rounded-md p-4 overflow-x-auto my-6 border border-[#3c3c3c] font-mono text-sm leading-relaxed [&_*]:!text-[#d4d4d4] [&_.token.keyword]:!text-[#569cd6] [&_.token.string]:!text-[#ce9178] [&_.token.comment]:!text-[#6a9955] [&_.token.function]:!text-[#dcdcaa] [&_.token.number]:!text-[#b5cea8] [&_.token.operator]:!text-[#d4d4d4] [&_.token.punctuation]:!text-[#d4d4d4]" {...props}>
+            <pre className="!bg-site-neutral-900 !text-site-neutral-300 rounded-md p-4 overflow-x-auto my-6 border border-site-neutral-700 font-mono text-sm leading-relaxed [&_*]:!text-site-neutral-300 [&_.token.keyword]:!text-site-blue-500 [&_.token.string]:!text-site-orange-400 [&_.token.comment]:!text-site-green-600 [&_.token.function]:!text-site-yellow-400 [&_.token.number]:!text-site-lime-400 [&_.token.operator]:!text-site-neutral-300 [&_.token.punctuation]:!text-site-neutral-300" {...props}>
                 {children}
             </pre>
         ),
@@ -94,7 +94,7 @@ export default async function PostLayout({
             const isInline = !className;
             if (isInline) {
                 return (
-                    <code className="bg-[#f3f3f3] dark:bg-[#2d2d30] text-[#e01e5a] dark:text-[#ce9178] px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+                    <code className="bg-site-neutral-100 dark:bg-site-neutral-800 text-site-pink-700 dark:text-site-orange-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
                         {children}
                     </code>
                 );
@@ -134,36 +134,36 @@ export default async function PostLayout({
                 {/* 面包屑导航 */}
                 <nav className="mb-8 text-sm">
                     <Link href="/" className="transition-colors hover:opacity-80"
-                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>首页</Link>
-                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
+                        style={{ color: 'var(--channel-muted)' }}>首页</Link>
+                    <span className="mx-2" style={{ color: 'var(--channel-muted)' }}>{'>'}</span>
                     <Link href="/blog" className="transition-colors hover:opacity-80"
-                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>博客</Link>
-                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
+                        style={{ color: 'var(--channel-muted)' }}>博客</Link>
+                    <span className="mx-2" style={{ color: 'var(--channel-muted)' }}>{'>'}</span>
                     <Link href={`/blog/${channelKey}`} className="transition-colors hover:opacity-80"
-                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{channelConfig.name}</Link>
-                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
+                        style={{ color: 'var(--channel-muted)' }}>{channelConfig.name}</Link>
+                    <span className="mx-2" style={{ color: 'var(--channel-muted)' }}>{'>'}</span>
                     <Link href={`/blog/${channelKey}/${columnKey}`} className="transition-colors hover:opacity-80"
-                        style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{columnConfig.name}</Link>
-                    <span className="mx-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>{'>'}</span>
-                    <span style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : { color: '#eaddd7' }}>{frontmatter.title}</span>
+                        style={{ color: 'var(--channel-muted)' }}>{columnConfig.name}</Link>
+                    <span className="mx-2" style={{ color: 'var(--channel-muted)' }}>{'>'}</span>
+                    <span style={{ color: 'var(--channel-ink)' }}>{frontmatter.title}</span>
                 </nav>
 
                 <div className="max-w-4xl mx-auto">
                     {/* 文章头部 */}
                     <header className="mb-12 text-center">
-                        <h1 className={`text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight ${isLifeChannel ? 'font-light' : 'font-bold text-gray-900 dark:text-white'}`}
+                        <h1 className={`text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight ${isLifeChannel ? 'font-light' : 'font-bold text-site-gray-900 dark:text-site-neutral-50'}`}
                             style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)', letterSpacing: '0.02em' } : {}}>
                             {frontmatter.title}
                         </h1>
 
                         {frontmatter.excerpt && (
-                            <p className={`text-lg mb-8 max-w-2xl mx-auto ${isLifeChannel ? 'font-light' : 'text-gray-600 dark:text-gray-400'}`}
+                            <p className={`text-lg mb-8 max-w-2xl mx-auto ${isLifeChannel ? 'font-light' : 'text-site-gray-600 dark:text-site-gray-400'}`}
                                 style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)', letterSpacing: '0.01em' } : {}}>
                                 {frontmatter.excerpt}
                             </p>
                         )}
 
-                        <div className="flex items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-8">
+                        <div className="flex items-center justify-center gap-6 text-sm text-site-gray-500 dark:text-site-gray-400 mb-8">
                             {frontmatter.date && (
                                 <span className="flex items-center gap-2">
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,7 +186,7 @@ export default async function PostLayout({
                         {frontmatter.tags && frontmatter.tags.length > 0 && (
                             <div className="flex flex-wrap justify-center gap-2 mb-8">
                                 {frontmatter.tags.map(tag => (
-                                    <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-card)', color: 'var(--channel-ink)' } : {}}>
+                                    <span key={tag} className="px-3 py-1 bg-site-gray-100 dark:bg-site-gray-700 text-site-gray-600 dark:text-site-gray-300 rounded-full text-sm" style={isTechChannel || isLifeChannel ? { backgroundColor: 'var(--channel-card)', color: 'var(--channel-ink)' } : {}}>
                                         #{tag}
                                     </span>
                                 ))}
@@ -214,8 +214,8 @@ export default async function PostLayout({
 
                     {/* 相关文章 */}
                     {relatedPosts.length > 0 && (
-                        <section className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+                        <section className="mt-16 pt-8 border-t border-site-gray-200 dark:border-site-gray-700">
+                            <h2 className="text-2xl font-bold text-site-gray-900 dark:text-site-neutral-50 mb-8 text-center">
                                 相关文章
                             </h2>
                             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -225,17 +225,17 @@ export default async function PostLayout({
                                         href={`/blog/${channelKey}/${columnKey}/${relatedPost.slug}`}
                                         className="group"
                                     >
-                                        <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
-                                            <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors mb-2 line-clamp-2">
+                                        <div className="bg-site-neutral-50/50 dark:bg-site-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50/80 dark:hover:bg-site-gray-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+                                            <h3 className="font-semibold text-site-gray-900 dark:text-site-neutral-50 group-hover:text-primary transition-colors mb-2 line-clamp-2">
                                                 {relatedPost.title}
                                             </h3>
                                             {relatedPost.excerpt && (
-                                                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-3">
+                                                <p className="text-sm text-site-gray-600 dark:text-site-gray-400 line-clamp-3 mb-3">
                                                     {relatedPost.excerpt}
                                                 </p>
                                             )}
                                             {relatedPost.date && (
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                <p className="text-xs text-site-gray-500 dark:text-site-gray-400">
                                                     {format(parseDate(relatedPost.date), 'yyyy年MM月dd日', { locale: zhCN })}
                                                 </p>
                                             )}

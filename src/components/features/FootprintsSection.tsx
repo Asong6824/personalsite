@@ -41,9 +41,9 @@ export default function FootprintsSection() { // 将 WorldMapDemo 重命名为 F
         // id 用于 Navbar 滚动定位
         <section id="footprints" className="py-16 md:py-24 bg-background w-full">
             <div className="max-w-7xl mx-auto text-center px-4">
-                <h2 className="font-bold text-xl md:text-4xl dark:text-white text-black mb-4">
+                <h2 className="font-bold text-xl md:text-4xl dark:text-site-neutral-50 text-site-neutral-950 mb-4">
                     足迹{" "}
-                    <span className="text-neutral-400">
+                    <span className="text-site-neutral-400">
                         {"探索过的世界".split("").map((char, idx) => ( // 修改了文字和变量名
                             <motion.span
                                 key={idx}
@@ -57,7 +57,7 @@ export default function FootprintsSection() { // 将 WorldMapDemo 重命名为 F
                         ))}
                     </span>
                 </h2>
-                <p className="text-sm md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto py-4">
+                <p className="text-sm md:text-lg text-site-neutral-500 dark:text-site-neutral-400 max-w-2xl mx-auto py-4">
                     那些我去过、感受过、留下回忆的城市和角落。
                 </p>
             </div>
@@ -82,10 +82,10 @@ export default function FootprintsSection() { // 将 WorldMapDemo 重命名为 F
 
             {/* 可选：在地图下方列出一些去过的城市名称 */}
             <div className="max-w-3xl mx-auto mt-12 text-center px-4">
-                <p className="text-neutral-500 dark:text-neutral-400 text-sm">已探索的区域：</p>
+                <p className="text-site-neutral-500 dark:text-site-neutral-400 text-sm">已探索的区域：</p>
                 <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 mt-3">
                     {visitedPlaces.map(place => (
-                        <span key={place.name} className="px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-full text-xs shadow-sm">
+                        <span key={place.name} className="px-3 py-1.5 bg-site-neutral-100 dark:bg-site-neutral-800 text-site-neutral-700 dark:text-site-neutral-300 rounded-full text-xs shadow-sm">
                             {place.name}
                         </span>
                     ))}

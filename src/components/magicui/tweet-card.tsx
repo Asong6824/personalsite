@@ -91,7 +91,7 @@ export const TweetHeader = ({ tweet }) => (
                 <div className="flex items-center whitespace-nowrap font-semibold text-foreground"> {/* 保留样式 */}
                     {truncate(tweet.user.name, 20)}
                     {(tweet.user.verified || tweet.user.is_blue_verified) && (
-                        <Verified className="ml-1 inline size-4 text-blue-500" />
+                        <Verified className="ml-1 inline size-4 text-site-blue-500" />
                     )}
                 </div>
 
@@ -125,7 +125,7 @@ export const TweetBody = ({ tweet }) => (
                             href={entity.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline" // Standard link styling
+                            className="text-site-blue-500 hover:underline" // Standard link styling
                         >
                             {entity.text}
                         </a>
@@ -137,7 +137,7 @@ export const TweetBody = ({ tweet }) => (
                             href={entity.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
+                            className="text-site-blue-500 hover:underline"
                         >
                             {entity.text}
                         </a>
@@ -149,7 +149,7 @@ export const TweetBody = ({ tweet }) => (
                             href={entity.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
+                            className="text-site-blue-500 hover:underline"
                         >
                             {entity.text}
                         </a>
@@ -161,7 +161,7 @@ export const TweetBody = ({ tweet }) => (
                             href={entity.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
+                            className="text-site-blue-500 hover:underline"
                         >
                             {entity.text}
                         </a>

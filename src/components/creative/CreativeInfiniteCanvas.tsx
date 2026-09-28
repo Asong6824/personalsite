@@ -164,7 +164,7 @@ function buildCreativeCanvasModel(columns: CreativeCanvasColumn[]): CreativeCanv
 
 function GridGuides({ columns }: { columns: number }) {
     return (
-        <div className="pointer-events-none absolute inset-0 text-neutral-400/45" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-0 text-site-neutral-400/45" aria-hidden="true">
             <div
                 className="absolute inset-0 grid gap-6 pr-6"
                 style={{ gridTemplateColumns: `repeat(${columns}, ${CELL_WIDTH}px)` }}
@@ -221,12 +221,12 @@ function CreativeEntryCard({
                 ? 'text-xl sm:text-2xl'
                 : 'text-3xl';
     const variantClasses = [
-        'border-[#D8D0C3] bg-[#eee8dc] text-neutral-950',
-        'border-neutral-200 bg-white text-neutral-950',
-        'border-neutral-800 bg-[#181818] text-white',
-        'border-[#cfc9ff] bg-[#dedaff] text-[#2f286f]',
-        'border-[#ffc4ad] bg-[#FF5A1F] text-[#32140e]',
-        'border-[#becbad] bg-[#dbe5cc] text-[#24331f]',
+        'border-site-stone-300 bg-site-stone-100 text-site-neutral-950',
+        'border-site-neutral-200 bg-site-stone-50 text-site-neutral-950',
+        'border-site-neutral-800 bg-site-neutral-900 text-site-stone-50',
+        'border-site-violet-300 bg-site-violet-200 text-site-violet-900',
+        'border-site-orange-300 bg-site-orange-500 text-site-orange-950',
+        'border-site-lime-300 bg-site-lime-200 text-site-lime-950',
     ];
     const content = (
         <>
@@ -240,7 +240,7 @@ function CreativeEntryCard({
                     sizes={`${placement.columns * (CELL_WIDTH + CELL_GAP)}px`}
                 />
             ) : null}
-            <div className={`relative flex h-full flex-col justify-between ${compact ? 'p-5 sm:p-6' : 'p-7 sm:p-8'} ${hasBackgroundImage ? 'text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.72)]' : ''}`}>
+            <div className={`relative flex h-full flex-col justify-between ${compact ? 'p-5 sm:p-6' : 'p-7 sm:p-8'} ${hasBackgroundImage ? 'text-site-neutral-50 [text-shadow:0_2px_16px_rgba(0,0,0,0.72)]' : ''}`}>
                 <div className="flex items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.22em] opacity-55">
                     <span className="truncate">{entry.eyebrow}</span>
                     <span className="shrink-0">{entry.date?.slice(0, 4) || (entry.kind === 'gallery' ? 'Object' : 'Index')}</span>
@@ -299,36 +299,36 @@ function UnitWidget({
     const variant = creativeEntryVariant(placement.id);
     const baseClass = 'relative z-10 flex items-center justify-center overflow-hidden rounded-[26px] border shadow-[0_12px_34px_rgba(30,30,30,0.07)]';
     const content = [
-        <span key="dot" className="h-12 w-12 rounded-full bg-[#FF5A1F]" />,
-        <div key="index" className="text-center font-mono text-neutral-500">
+        <span key="dot" className="h-12 w-12 rounded-full bg-site-orange-500" />,
+        <div key="index" className="text-center font-mono text-site-neutral-500">
             <span className="block text-[9px] uppercase tracking-[0.2em]">Index</span>
-            <span className="mt-1 block text-2xl text-neutral-950">{String(index + 1).padStart(2, '0')}</span>
+            <span className="mt-1 block text-2xl text-site-neutral-950">{String(index + 1).padStart(2, '0')}</span>
         </div>,
-        <div key="cross" className="relative h-14 w-14 text-[#776dff]" aria-hidden="true">
+        <div key="cross" className="relative h-14 w-14 text-site-violet-600" aria-hidden="true">
             <span className="absolute left-1/2 top-0 h-full w-px bg-current" />
             <span className="absolute left-0 top-1/2 h-px w-full bg-current" />
-            <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-current bg-[#F0EEE7]" />
+            <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-current bg-site-canvas" />
         </div>,
-        <ArrowUpRight key="arrow" className="h-10 w-10 text-neutral-700" strokeWidth={1.25} aria-hidden="true" />,
+        <ArrowUpRight key="arrow" className="h-10 w-10 text-site-neutral-700" strokeWidth={1.25} aria-hidden="true" />,
         <div key="palette" className="grid grid-cols-2 gap-2" aria-hidden="true">
-            <span className="h-5 w-5 rounded-full bg-[#FF5A1F]" />
-            <span className="h-5 w-5 rounded-full bg-[#776dff]" />
-            <span className="h-5 w-5 rounded-full bg-[#D4AF37]" />
-            <span className="h-5 w-5 rounded-full bg-[#121212]" />
+            <span className="h-5 w-5 rounded-full bg-site-orange-500" />
+            <span className="h-5 w-5 rounded-full bg-site-violet-600" />
+            <span className="h-5 w-5 rounded-full bg-site-amber-500" />
+            <span className="h-5 w-5 rounded-full bg-site-neutral-900" />
         </div>,
         <div key="signal" className="w-20 space-y-2" aria-hidden="true">
-            <span className="block h-1 w-8 rounded-full bg-[#776dff]" />
-            <span className="block h-1 w-16 rounded-full bg-[#776dff]" />
-            <span className="block h-1 w-11 rounded-full bg-[#776dff]" />
+            <span className="block h-1 w-8 rounded-full bg-site-violet-600" />
+            <span className="block h-1 w-16 rounded-full bg-site-violet-600" />
+            <span className="block h-1 w-11 rounded-full bg-site-violet-600" />
         </div>,
     ][variant];
     const variantClass = [
-        'border-[#ffc7b8] bg-[#ffe0d7]',
-        'border-neutral-200 bg-white',
-        'border-[#d2cdfd] bg-[#e3e0ff]',
-        'border-[#cbd6bd] bg-[#e1ead5]',
-        'border-neutral-200 bg-[#f7f3e8]',
-        'border-neutral-800 bg-[#181818]',
+        'border-site-orange-300 bg-site-orange-100',
+        'border-site-neutral-200 bg-site-stone-50',
+        'border-site-violet-300 bg-site-violet-100',
+        'border-site-lime-300 bg-site-lime-100',
+        'border-site-neutral-200 bg-site-stone-50',
+        'border-site-neutral-800 bg-site-neutral-900',
     ][variant];
 
     return (
@@ -361,22 +361,22 @@ function CreativeArtboard({ model, duplicate, cycleRef }: CreativeArtboardProps)
                 style={placementStyle(model.layout.byId.intro)}
                 className="relative z-10 flex max-w-[720px] flex-col justify-center px-8 sm:px-12"
             >
-                <div className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.28em] text-neutral-500">
+                <div className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.28em] text-site-neutral-500">
                     <span>Creative channel</span>
-                    <span className="h-px w-10 bg-neutral-400" />
+                    <span className="h-px w-10 bg-site-neutral-400" />
                     <span>Infinite index</span>
                 </div>
-                <h1 className="max-w-[680px] text-4xl font-semibold leading-[0.98] tracking-[-0.055em] text-neutral-950 sm:text-5xl lg:text-6xl">
+                <h1 className="max-w-[680px] text-4xl font-semibold leading-[0.98] tracking-[-0.055em] text-site-neutral-950 sm:text-5xl lg:text-6xl">
                     <span className="block">把想法，排成一张</span>
-                    <span className="whitespace-nowrap text-[#776dff]">不断延伸</span>的画布。
+                    <span className="whitespace-nowrap text-site-violet-600">不断延伸</span>的画布。
                 </h1>
-                <p className="mt-6 max-w-lg text-sm leading-6 text-neutral-600 sm:text-base">
+                <p className="mt-6 max-w-lg text-sm leading-6 text-site-neutral-600 sm:text-base">
                     专栏、文章与视觉实验不再按等级占位。滚动或拖拽，在完整而错落的秩序里继续探索。
                 </p>
                 <Link
                     href="/blog"
                     tabIndex={tabIndex}
-                    className="mt-7 inline-flex w-fit items-center gap-2 text-xs font-medium text-neutral-500 transition-colors hover:text-neutral-950"
+                    className="mt-7 inline-flex w-fit items-center gap-2 text-xs font-medium text-site-neutral-500 transition-colors hover:text-site-neutral-950"
                 >
                     <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
                     返回博客索引
@@ -519,7 +519,7 @@ export function CreativeInfiniteCanvas({ columns }: CreativeInfiniteCanvasProps)
             role="region"
             aria-roledescription="无限横向创意画布"
             aria-label="创意频道。上下滚动、左右拖拽或使用方向键浏览。"
-            className="relative h-svh w-full touch-none cursor-grab overflow-hidden overscroll-none bg-[#F0EEE7] text-neutral-950 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#776dff] active:cursor-grabbing"
+            className="relative h-svh w-full touch-none cursor-grab overflow-hidden overscroll-none bg-site-canvas text-site-neutral-950 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-site-violet-600 active:cursor-grabbing"
         >
             <div
                 ref={trackRef}
@@ -535,19 +535,19 @@ export function CreativeInfiniteCanvas({ columns }: CreativeInfiniteCanvasProps)
                 ))}
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-end justify-between bg-gradient-to-t from-[#F0EEE7] via-[#F0EEE7]/75 to-transparent px-5 pb-5 pt-14 sm:px-8 sm:pb-7">
-                <div className="flex items-center gap-2 rounded-full border border-neutral-300/80 bg-white/85 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-600 shadow-sm backdrop-blur-sm">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-end justify-between bg-gradient-to-t from-site-canvas via-site-canvas/75 to-transparent px-5 pb-5 pt-14 sm:px-8 sm:pb-7">
+                <div className="flex items-center gap-2 rounded-full border border-site-neutral-300/80 bg-site-stone-50/85 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.18em] text-site-neutral-600 shadow-sm backdrop-blur-sm">
                     <MousePointer2 className="h-3.5 w-3.5" aria-hidden="true" />
                     滚动浏览
                 </div>
-                <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
+                <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-site-neutral-500">
                     <MoveHorizontal className="h-4 w-4" aria-hidden="true" />
                     Drag · Wheel · Arrow keys
                 </div>
             </div>
 
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-[#F0EEE7] to-transparent sm:w-20" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-[#F0EEE7] to-transparent sm:w-20" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-site-canvas to-transparent sm:w-20" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-site-canvas to-transparent sm:w-20" />
         </div>
     );
 }

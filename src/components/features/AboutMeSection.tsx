@@ -8,6 +8,7 @@ import { scrollToSection } from '@/lib/scrollUtils';
 import { RainbowButton } from "@/components/magicui/rainbow-button"; // 确保路径正确
 import Image from "next/image";
 import { BookShelf } from "./BookShelf3D/BookShelf";
+import { bookshelfBooks } from "@/data/bookshelf-books";
 import { startRouteTransition } from "@/lib/route-transition";
 
 // IdentityCardContent 子组件
@@ -15,7 +16,7 @@ const IdentityCardContent = ({ title, description, targetId, imageUrl }) => {
     const router = useRouter();
     return (
         // 使用全局定义的卡片背景和前景颜色
-        <div className="bg-card text-card-foreground p-8 md:p-10 rounded-3xl mb-4 shadow-lg dark:shadow-neutral-700/50">
+        <div className="bg-card text-card-foreground p-8 md:p-10 rounded-3xl mb-4 shadow-lg dark:shadow-site-neutral-700/50">
             <h3 className="text-xl md:text-3xl font-bold text-center mb-4"> {/* 文本颜色继承自父级的 text-card-foreground */}
                 {title}
             </h3>
@@ -183,16 +184,16 @@ export function AboutMeSection() {
                 </div>
             </section>
 
-            <section id="bookshelf" className="w-full relative bg-[#f2f2f2] dark:bg-[#0c0c0c]">
+            <section id="bookshelf" className="w-full relative bg-site-neutral-100 dark:bg-site-neutral-950">
                 <div className="absolute top-12 left-0 right-0 z-10 pointer-events-none">
-                    <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white font-sans text-center">
+                    <h2 className="text-3xl md:text-5xl font-bold text-site-neutral-900 dark:text-site-neutral-50 font-sans text-center">
                         书籍收藏
                     </h2>
-                    <p className="text-center text-neutral-500 mt-2 max-w-2xl mx-auto">
+                    <p className="text-center text-site-neutral-500 mt-2 max-w-2xl mx-auto">
                         沉浸式的思考空间
                     </p>
                 </div>
-                <BookShelf />
+                <BookShelf books={bookshelfBooks} />
             </section>
         </>
     );

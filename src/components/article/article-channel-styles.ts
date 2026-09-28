@@ -14,49 +14,49 @@ export interface ArticleChannelStyle {
 
 export const ARTICLE_CHANNEL_STYLES: Record<ArticleChannelKey, ArticleChannelStyle> = {
   tech: {
-    containerBg: "bg-[#F0EEE7]",
+    containerBg: "bg-site-canvas",
     containerStyle: undefined,
     prose:
-      "prose-headings:text-[#141413] prose-p:text-[#141413] prose-li:text-[#141413] prose-a:text-[#141413] hover:prose-a:text-[#68645d] prose-strong:text-[#141413] prose-blockquote:border-l-[#141413] prose-blockquote:text-[#68645d]",
-    headerTitle: "text-[#141413]",
-    headerMeta: "text-[#68645d]",
-    tagBg: "bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413]",
+      "prose-headings:text-site-ink prose-p:text-site-ink prose-li:text-site-ink prose-a:text-site-ink hover:prose-a:text-site-stone-600 prose-strong:text-site-ink prose-blockquote:border-l-site-ink prose-blockquote:text-site-stone-600",
+    headerTitle: "text-site-ink",
+    headerMeta: "text-site-stone-600",
+    tagBg: "bg-site-stone-200 hover:bg-site-stone-300 text-site-ink",
   },
   life: {
-    containerBg: "bg-[#F0EEE7]",
+    containerBg: "bg-site-canvas",
     containerStyle: undefined,
     prose:
-      "prose-headings:text-[#141413] prose-p:text-[#141413] prose-li:text-[#141413] prose-a:text-[#141413] hover:prose-a:text-[#68645d] prose-strong:text-[#141413] prose-blockquote:border-l-[#141413] prose-blockquote:text-[#68645d]",
-    headerTitle: "text-[#141413]",
-    headerMeta: "text-[#68645d]",
-    tagBg: "bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413]",
+      "prose-headings:text-site-ink prose-p:text-site-ink prose-li:text-site-ink prose-a:text-site-blue-700 hover:prose-a:text-site-blue-800 prose-strong:text-site-ink prose-blockquote:border-l-site-blue-500 prose-blockquote:text-site-stone-600",
+    headerTitle: "text-site-ink",
+    headerMeta: "text-site-stone-600",
+    tagBg: "bg-site-stone-200 hover:bg-site-blue-200 text-site-ink",
   },
   creative: {
     containerBg: "",
     containerStyle: { backgroundColor: SITE_WARM_BACKGROUND },
     prose:
-      "prose-headings:text-[#141413] prose-a:text-[#6B5B95] hover:prose-a:text-[#443A6B] prose-strong:text-[#141413] prose-blockquote:border-l-[#776DFF] prose-blockquote:text-[#68645d] prose-p:text-[#141413] prose-li:text-[#141413]",
-    headerTitle: "text-[#141413]",
-    headerMeta: "text-[#68645d]",
-    tagBg: "bg-[#E2DBCE] hover:bg-[#D8D0C3] text-[#141413] border border-[#D8D0C3]",
+      "prose-headings:text-site-ink prose-a:text-site-purple-700 hover:prose-a:text-site-purple-800 prose-strong:text-site-ink prose-blockquote:border-l-site-violet-600 prose-blockquote:text-site-stone-600 prose-p:text-site-ink prose-li:text-site-ink",
+    headerTitle: "text-site-ink",
+    headerMeta: "text-site-stone-600",
+    tagBg: "bg-site-stone-200 hover:bg-site-violet-200 text-site-ink border border-site-stone-300",
   },
   finance: {
-    containerBg: "bg-[#F0EEE7]",
+    containerBg: "bg-site-canvas",
     containerStyle: undefined,
     prose:
-      "prose-headings:text-[#1a1c19] prose-a:text-[#506354] hover:prose-a:text-[#1a1c19] prose-strong:text-[#1a1c19] prose-blockquote:border-l-[#506354] prose-blockquote:text-[#444748] prose-p:text-[#444748]",
-    headerTitle: "text-[#1a1c19]",
-    headerMeta: "text-[#747878]",
-    tagBg: "bg-[#f4f4ef] hover:bg-[#e3e3de] text-[#444748]",
+      "prose-headings:text-site-neutral-900 prose-a:text-site-lime-700 hover:prose-a:text-site-lime-800 prose-strong:text-site-neutral-900 prose-blockquote:border-l-site-lime-600 prose-blockquote:text-site-neutral-700 prose-p:text-site-neutral-700",
+    headerTitle: "text-site-neutral-900",
+    headerMeta: "text-site-neutral-500",
+    tagBg: "bg-site-lime-50 hover:bg-site-lime-100 text-site-neutral-700",
   },
   default: {
-    containerBg: "bg-white dark:bg-neutral-950",
+    containerBg: "bg-site-canvas dark:bg-site-slate-950",
     containerStyle: undefined,
     prose:
-      "prose-headings:text-neutral-800 dark:prose-headings:text-sky-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:text-blue-500 dark:hover:prose-a:text-blue-300 prose-strong:text-neutral-900 dark:prose-strong:text-neutral-100 prose-blockquote:border-l-sky-500 prose-blockquote:text-neutral-600 dark:prose-blockquote:text-neutral-300",
-    headerTitle: "text-neutral-900 dark:text-white",
-    headerMeta: "text-neutral-400",
-    tagBg: "bg-sky-700/70 hover:bg-sky-600/70 text-sky-200",
+      "prose-headings:text-site-neutral-800 dark:prose-headings:text-site-sky-300 prose-a:text-site-blue-700 dark:prose-a:text-site-blue-400 hover:prose-a:text-site-blue-800 dark:hover:prose-a:text-site-blue-300 prose-strong:text-site-neutral-900 dark:prose-strong:text-site-neutral-100 prose-blockquote:border-l-site-sky-500 prose-blockquote:text-site-neutral-600 dark:prose-blockquote:text-site-neutral-300",
+    headerTitle: "text-site-neutral-900 dark:text-site-stone-50",
+    headerMeta: "text-site-neutral-500",
+    tagBg: "bg-site-sky-700/70 hover:bg-site-sky-600/70 text-site-sky-100",
   },
 };
 

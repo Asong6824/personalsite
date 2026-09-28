@@ -1,6 +1,7 @@
 "use client";
 
 import rough from "roughjs";
+import { SITE_CHROMATIC_PALETTE } from "@/lib/site-palette";
 
 // 辅助函数：将 rough.js 生成的元素添加到 DOM
 export function appendRoughElements(group, elements) {
@@ -35,7 +36,7 @@ export function mergeOptions(defaultOpts, props, isHovered) {
   };
 
   if (isHovered) {
-    opts.stroke = props.hoverStroke || "#3b82f6";
+    opts.stroke = props.hoverStroke || SITE_CHROMATIC_PALETTE.blue[500];
     opts.strokeWidth = (opts.strokeWidth || 1.5) * (props.hoverStrokeWidthMultiplier || 1.5);
   }
 

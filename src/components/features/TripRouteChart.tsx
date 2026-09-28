@@ -1,17 +1,18 @@
 "use client"
 import React, { useEffect, useRef } from "react"
+import { SITE_CHROMATIC_PALETTE, SITE_NEUTRAL_PALETTE } from "@/lib/site-palette"
 
 function hexToNum(hex) {
-  if (!hex) return 0xc83830
+  if (!hex) return Number.parseInt(SITE_CHROMATIC_PALETTE.red[600].slice(1), 16)
   const s = hex.startsWith("#") ? hex.slice(1) : hex
   const n = parseInt(s, 16)
-  return Number.isNaN(n) ? 0xc83830 : n
+  return Number.isNaN(n) ? Number.parseInt(SITE_CHROMATIC_PALETTE.red[600].slice(1), 16) : n
 }
 
 export default function TripRouteChart({
   points = [],
-  mainColor = "#8B7355",
-  secondaryColor = "#d9cec8",
+  mainColor = SITE_NEUTRAL_PALETTE.stone[600],
+  secondaryColor = SITE_NEUTRAL_PALETTE.stone[300],
   height = 600,
   layout = "split",
   mapConfig = {} as any

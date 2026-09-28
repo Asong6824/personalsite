@@ -50,11 +50,11 @@ function CodingActivityPeriods() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            className={`px-2 py-1 text-xs rounded border ${mode === 'day' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'border-neutral-700 text-neutral-300'}`}
+            className={`px-2 py-1 text-xs rounded border ${mode === 'day' ? 'bg-site-indigo-50 border-site-indigo-200 text-site-indigo-700' : 'border-site-neutral-700 text-site-neutral-300'}`}
             onClick={() => setMode('day')}
           >日</button>
           <button
-            className={`px-2 py-1 text-xs rounded border ${mode === 'week' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'border-neutral-700 text-neutral-300'}`}
+            className={`px-2 py-1 text-xs rounded border ${mode === 'week' ? 'bg-site-indigo-50 border-site-indigo-200 text-site-indigo-700' : 'border-site-neutral-700 text-site-neutral-300'}`}
             onClick={() => setMode('week')}
           >周</button>
         </div>
@@ -149,12 +149,12 @@ function buildMonthLabels(weeks) {
 }
 
 function colorForCount(c) {
-  if (c <= 0) return "#EDEFF2"; // no data
-  if (c <= 1) return "#e7f5ff";
-  if (c <= 2) return "#a5d8ff";
-  if (c <= 3) return "#4dabf7";
-  if (c <= 4) return "#228be6";
-  return "#1971c2"; // 5+
+  if (c <= 0) return "var(--color-site-neutral-100)";
+  if (c <= 1) return "var(--color-site-blue-100)";
+  if (c <= 2) return "var(--color-site-blue-300)";
+  if (c <= 3) return "var(--color-site-blue-500)";
+  if (c <= 4) return "var(--color-site-blue-700)";
+  return "var(--color-site-blue-900)";
 }
 
 function generateSampleData(weeks) {
@@ -225,12 +225,12 @@ export default function ActiveDaysSection() {
     <section id="active-days" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="flex flex-col gap-6">
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
+          <div className="rounded-xl border border-site-gray-200 bg-site-neutral-50 p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl md:text-2xl font-semibold">Active Days</h2>
               <div className="flex items-center gap-1" aria-label="强度示例">
-                {['#e7f5ff','#a5d8ff','#4dabf7','#228be6','#1971c2'].map((c, i) => (
-                  <div key={i} className="w-5 h-5 rounded-[2px] border border-gray-200" style={{ backgroundColor: c }} />
+                {['var(--color-site-blue-100)','var(--color-site-blue-300)','var(--color-site-blue-500)','var(--color-site-blue-700)','var(--color-site-blue-900)'].map((c, i) => (
+                  <div key={i} className="w-5 h-5 rounded-[2px] border border-site-gray-200" style={{ backgroundColor: c }} />
                 ))}
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function ActiveDaysSection() {
                         return (
                           <div
                             key={key}
-                            className="rounded-[2px] border border-gray-200 hover:border-indigo-500/70 hover:ring-1 hover:ring-indigo-300/50 transition-transform hover:scale-105"
+                            className="rounded-[2px] border border-site-gray-200 hover:border-site-indigo-500/70 hover:ring-1 hover:ring-site-indigo-300/50 transition-transform hover:scale-105"
                             style={{ backgroundColor: bg, width: colWidth, height: colWidth }}
                             title={`${key}: ${count}`}
                           />
@@ -308,7 +308,7 @@ export default function ActiveDaysSection() {
                       {Array.from({ length: cIdx === columnsCount - 1 ? lastColumnCount : 7 }).map((_, rIdx) => (
                         <div
                           key={`s-${cIdx}-${rIdx}`}
-                          className="rounded-[2px] border border-gray-200 bg-[#EDEFF2]"
+                          className="rounded-[2px] border border-site-gray-200 bg-site-neutral-100"
                           style={{ width: colWidth, height: colWidth }}
                           title="loading"
                         />

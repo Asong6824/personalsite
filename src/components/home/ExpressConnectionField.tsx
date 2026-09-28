@@ -149,21 +149,21 @@ function markerPath(node: ExpressNode) {
   if (node.kind === "research") {
     return (
       <g>
-        <rect x={x - 8} y={y - 8} width={16} height={16} fill="none" stroke="#0a0c20" strokeWidth="1.6" />
-        <circle cx={x} cy={y} r={2.4} fill="#0a0c20" />
+        <rect x={x - 8} y={y - 8} width={16} height={16} fill="none" stroke="var(--color-site-ink)" strokeWidth="1.6" />
+        <circle cx={x} cy={y} r={2.4} fill="var(--color-site-ink)" />
       </g>
     );
   }
   if (node.kind === "initiative") {
-    return <path d={`M ${x} ${y - 11} L ${x + 10} ${y + 8} L ${x - 10} ${y + 8} Z`} fill="none" stroke="#0a0c20" strokeWidth="1.8" />;
+    return <path d={`M ${x} ${y - 11} L ${x + 10} ${y + 8} L ${x - 10} ${y + 8} Z`} fill="none" stroke="var(--color-site-ink)" strokeWidth="1.8" />;
   }
   if (node.kind === "artifact") {
-    return <rect x={x - 9} y={y - 9} width={18} height={18} fill="white" stroke="#0a0c20" strokeWidth="1.5" />;
+    return <rect x={x - 9} y={y - 9} width={18} height={18} fill="var(--color-site-canvas)" stroke="var(--color-site-ink)" strokeWidth="1.5" />;
   }
   if (node.kind === "information") {
     return (
       <g>
-        <circle cx={x} cy={y} r={10} fill="#0a0c20" />
+        <circle cx={x} cy={y} r={10} fill="var(--color-site-ink)" />
         <circle cx={x} cy={y} r={2.3} fill="white" />
       </g>
     );
@@ -174,10 +174,10 @@ function markerPath(node: ExpressNode) {
         <path
           d={`M ${x - 12} ${y - 2} L ${x - 5} ${y - 14} L ${x + 8} ${y - 12} L ${x + 14} ${y} L ${x + 6} ${y + 12} L ${x - 8} ${y + 10} Z`}
           fill="white"
-          stroke="#0a0c20"
+          stroke="var(--color-site-ink)"
           strokeWidth="1.8"
         />
-        <text x={x} y={y + 4} textAnchor="middle" className="fill-[#0a0c20] text-[10px] font-medium">
+        <text x={x} y={y + 4} textAnchor="middle" className="fill-site-ink text-[10px] font-medium">
           {node.ordinal}
         </text>
       </g>
@@ -196,9 +196,9 @@ function centerMarker() {
         const angle = (index / 9) * Math.PI * 2;
         const px = x + Math.cos(angle) * 10;
         const py = y + Math.sin(angle) * 10;
-        return <circle key={index} cx={px} cy={py} r={5.4} fill="#ff5a1f" />;
+        return <circle key={index} cx={px} cy={py} r={5.4} fill="var(--color-site-orange-500)" />;
       })}
-      <circle cx={x} cy={y} r={7.6} fill="#ff5a1f" />
+      <circle cx={x} cy={y} r={7.6} fill="var(--color-site-orange-500)" />
     </g>
   );
 }
@@ -301,7 +301,7 @@ export default function ExpressConnectionField() {
                 className={`express-edge express-edge-level-${link.level}`}
                 d={createPath(link)}
                 fill="none"
-                stroke="#0a0c20"
+                stroke="var(--color-site-ink)"
                 strokeWidth={link.level === 1 ? 1.9 : 1.35}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -333,7 +333,7 @@ export default function ExpressConnectionField() {
                     strokeWidth={7}
                     strokeLinejoin="round"
                     paintOrder="stroke"
-                    className={`fill-[#0a0c20] ${node.id === "expression" ? "text-[17px]" : "text-[14px]"} font-medium`}
+                    className={`fill-site-ink ${node.id === "expression" ? "text-[17px]" : "text-[14px]"} font-medium`}
                   >
                     {node.label}
                   </text>
@@ -346,7 +346,7 @@ export default function ExpressConnectionField() {
                       strokeWidth={4}
                       strokeLinejoin="round"
                       paintOrder="stroke"
-                      className="fill-[#5b6375] text-[9px]"
+                      className="fill-site-slate-600 text-[9px]"
                     >
                       {node.sublabel}
                     </text>

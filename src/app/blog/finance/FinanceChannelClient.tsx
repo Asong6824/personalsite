@@ -6,16 +6,17 @@ import TempoBackground from '@/components/finance/TempoBackground';
 import TempoHero from '@/components/finance/TempoHero';
 import TempoGrid from '@/components/finance/TempoGrid';
 import DebugPanel from '@/components/finance/DebugPanel';
+import { SITE_CHROMATIC_PALETTE, SITE_NEUTRAL_PALETTE } from '@/lib/site-palette';
 
 const THEMES = [
-    { name: 'Midnight', bg: '#050505', text: '#3b82f6', accent: '#1d4ed8' },
-    { name: 'Blueprint', bg: '#1e3a8a', text: '#93c5fd', accent: '#60a5fa' },
-    { name: 'Terminal', bg: '#0c0c0c', text: '#22c55e', accent: '#15803d' },
-    { name: 'Crimson', bg: '#2a0a0a', text: '#f87171', accent: '#dc2626' },
-    { name: 'Slate', bg: '#0f172a', text: '#cbd5e1', accent: '#475569' },
-    { name: 'Gold', bg: '#1a1a1a', text: '#fbbf24', accent: '#d97706' },
-    { name: 'Violet', bg: '#2e1065', text: '#d8b4fe', accent: '#a855f7' },
-    { name: 'Cyber', bg: '#000000', text: '#22d3ee', accent: '#0891b2' },
+    { name: 'Midnight', bg: SITE_NEUTRAL_PALETTE.neutral[950], text: SITE_CHROMATIC_PALETTE.blue[400], accent: SITE_CHROMATIC_PALETTE.blue[700] },
+    { name: 'Blueprint', bg: SITE_CHROMATIC_PALETTE.blue[900], text: SITE_CHROMATIC_PALETTE.blue[300], accent: SITE_CHROMATIC_PALETTE.blue[500] },
+    { name: 'Terminal', bg: SITE_NEUTRAL_PALETTE.zinc[950], text: SITE_CHROMATIC_PALETTE.emerald[400], accent: SITE_CHROMATIC_PALETTE.emerald[700] },
+    { name: 'Crimson', bg: SITE_CHROMATIC_PALETTE.red[950], text: SITE_CHROMATIC_PALETTE.red[400], accent: SITE_CHROMATIC_PALETTE.red[700] },
+    { name: 'Slate', bg: SITE_NEUTRAL_PALETTE.slate[900], text: SITE_NEUTRAL_PALETTE.slate[300], accent: SITE_NEUTRAL_PALETTE.slate[600] },
+    { name: 'Gold', bg: SITE_NEUTRAL_PALETTE.stone[900], text: SITE_CHROMATIC_PALETTE.amber[400], accent: SITE_CHROMATIC_PALETTE.amber[600] },
+    { name: 'Violet', bg: SITE_CHROMATIC_PALETTE.violet[950], text: SITE_CHROMATIC_PALETTE.violet[300], accent: SITE_CHROMATIC_PALETTE.violet[600] },
+    { name: 'Cyber', bg: SITE_NEUTRAL_PALETTE.neutral[950], text: SITE_CHROMATIC_PALETTE.cyan[400], accent: SITE_CHROMATIC_PALETTE.cyan[700] },
 ];
 
 export default function FinanceChannelClient() {
@@ -94,7 +95,7 @@ export default function FinanceChannelClient() {
     const currentTheme = THEMES[config.themeId] || THEMES[0];
 
     return (
-        <div className={`relative min-h-screen transition-colors duration-500 overflow-hidden ${config.isDark ? 'bg-[#1d1d1d] text-white' : 'bg-gray-100 text-black'}`}>
+        <div className={`relative min-h-screen transition-colors duration-500 overflow-hidden ${config.isDark ? 'bg-site-neutral-900 text-site-neutral-50' : 'bg-site-gray-100 text-site-ink'}`}>
             {/* 3D Background Layer */}
             <TempoBackground
                 config={config}
@@ -113,7 +114,7 @@ export default function FinanceChannelClient() {
                 <TempoGrid columns={channelConfig.columns} />
 
                 {/* Footer / Additional Content */}
-                <footer className="py-12 text-center text-gray-500 text-sm">
+                <footer className="py-12 text-center text-site-gray-500 text-sm">
                     <p>Press [SPACEBAR] to randomize theme</p>
                     <p className="mt-2">© 2024 Personal Site. All rights reserved.</p>
                 </footer>
@@ -131,7 +132,7 @@ export default function FinanceChannelClient() {
 
             {/* Toggle Hint (if panel hidden) */}
             {!config.showDebug && (
-                <div className="fixed top-24 right-6 z-[100] px-3 py-1 bg-black/50 text-white text-xs font-mono rounded backdrop-blur-md border border-white/10 cursor-pointer" onClick={toggleDebug}>
+                <div className="fixed top-24 right-6 z-[100] px-3 py-1 bg-site-neutral-950/50 text-site-neutral-50 text-xs font-mono rounded backdrop-blur-md border border-site-neutral-50/10 cursor-pointer" onClick={toggleDebug}>
                     PRESS [D]
                 </div>
             )}

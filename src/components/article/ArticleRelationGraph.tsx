@@ -54,8 +54,8 @@ function nodeMarkerPath(node: RelationNode) {
     // 文章节点：圆环 + 中心点
     return (
       <g>
-        <circle cx={x} cy={y} r={12} fill="none" stroke="#0a0c20" strokeWidth="1.6" />
-        <circle cx={x} cy={y} r={3} fill="#0a0c20" />
+        <circle cx={x} cy={y} r={12} fill="none" stroke="var(--color-site-ink)" strokeWidth="1.6" />
+        <circle cx={x} cy={y} r={3} fill="var(--color-site-ink)" />
       </g>
     );
   }
@@ -75,9 +75,9 @@ function centerMarker() {
   return (
     <g>
       {CENTER_DOT_OFFSETS.map(([dx, dy], index) => (
-        <circle key={index} cx={x + dx} cy={y + dy} r={5.4} fill="#ff5a1f" />
+        <circle key={index} cx={x + dx} cy={y + dy} r={5.4} fill="var(--color-site-orange-500)" />
       ))}
-      <circle cx={x} cy={y} r={7.6} fill="#ff5a1f" />
+      <circle cx={x} cy={y} r={7.6} fill="var(--color-site-orange-500)" />
     </g>
   );
 }
@@ -268,13 +268,13 @@ export function ArticleRelationGraph({
     >
       <div className="mb-7 flex items-center justify-between gap-4">
         <div>
-          <p className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--channel-muted,#68645d)]">
-            <span className="inline-block h-2 w-2 rounded-full bg-[#ff5a1f]" aria-hidden="true" />
+          <p className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--channel-muted)]">
+            <span className="inline-block h-2 w-2 rounded-full bg-site-orange-500" aria-hidden="true" />
             Next Reads
           </p>
           <h2
             id="article-relation-graph-title"
-            className="text-2xl font-semibold tracking-normal text-[var(--channel-ink,#141413)]"
+            className="text-2xl font-semibold tracking-normal text-[var(--channel-ink)]"
           >
             接下来阅读
           </h2>
@@ -283,7 +283,7 @@ export function ArticleRelationGraph({
 
       {/* 桌面端：手绘关系图 */}
       <div className="hidden md:block">
-        <div className="relative overflow-hidden rounded-lg border border-[var(--channel-border,#D8D0C3)] bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_48%,transparent)]">
+        <div className="relative overflow-hidden rounded-lg border border-[var(--channel-border)] bg-[color-mix(in_srgb,var(--channel-card)_48%,transparent)]">
           <svg
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
             className="block h-auto w-full"
@@ -304,7 +304,7 @@ export function ArticleRelationGraph({
                   }}
                   d={createPath(link)}
                   fill="none"
-                  stroke={isActive ? "#0a0c20" : "#4f4b45"}
+                  stroke={isActive ? "var(--color-site-ink)" : "var(--color-site-stone-600)"}
                   strokeWidth={1.6}
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -362,7 +362,7 @@ export function ArticleRelationGraph({
                           strokeWidth={6}
                           strokeLinejoin="round"
                           paintOrder="stroke"
-                          className="fill-[#0a0c20] text-[13px] font-medium"
+                          className="fill-site-ink text-[13px] font-medium"
                         >
                           {node.label.length > 18
                             ? node.label.slice(0, 18) + "…"
@@ -379,7 +379,7 @@ export function ArticleRelationGraph({
                         strokeWidth={7}
                         strokeLinejoin="round"
                         paintOrder="stroke"
-                        className="fill-[#0a0c20] text-[15px] font-semibold"
+                        className="fill-site-ink text-[15px] font-semibold"
                       >
                         {node.label}
                       </text>
@@ -391,13 +391,13 @@ export function ArticleRelationGraph({
           </svg>
 
           {/* 图例 */}
-          <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-3 text-[10px] uppercase tracking-[0.14em] text-[var(--channel-muted,#68645d)]">
+          <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-3 text-[10px] uppercase tracking-[0.14em] text-[var(--channel-muted)]">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2 w-2 rounded-full bg-[#ff5a1f]" />
+              <span className="inline-block h-2 w-2 rounded-full bg-site-orange-500" />
               当前文章
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-3 w-3 rounded-full border border-[#0a0c20]" />
+              <span className="inline-block h-3 w-3 rounded-full border border-site-ink" />
               推荐阅读
             </span>
           </div>
@@ -410,12 +410,12 @@ export function ArticleRelationGraph({
           <Link
             key={recommendation.slug}
             href={`/blog/${recommendation.slug}`}
-            className="group grid min-h-28 rounded-lg border border-[var(--channel-border,#D8D0C3)] bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_48%,transparent)] p-5 transition-colors hover:bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_68%,transparent)]"
+            className="group grid min-h-28 rounded-lg border border-[var(--channel-border)] bg-[color-mix(in_srgb,var(--channel-card)_48%,transparent)] p-5 transition-colors hover:bg-[color-mix(in_srgb,var(--channel-card)_68%,transparent)]"
           >
-            <p className="text-xs font-medium text-[var(--channel-muted,#68645d)]">
+            <p className="text-xs font-medium text-[var(--channel-muted)]">
               Next · {recommendation.title}
             </p>
-            <h3 className="mt-2 line-clamp-2 text-lg font-semibold leading-snug tracking-normal text-[var(--channel-ink,#141413)]">
+            <h3 className="mt-2 line-clamp-2 text-lg font-semibold leading-snug tracking-normal text-[var(--channel-ink)]">
               {recommendation.title}
             </h3>
           </Link>

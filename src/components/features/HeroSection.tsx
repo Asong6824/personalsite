@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 
 const GradientOrbCanvas = dynamic(() => import("./HeroSection/GradientOrbCanvas"), {
     ssr: false,
-    loading: () => <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#eee" }} />,
+    loading: () => <div style={{ width: 80, height: 80, borderRadius: "50%", background: "var(--color-site-neutral-100)" }} />,
 });
 
 const FlowBackground = dynamic(() => import("./HeroSection/FlowBackground"), {
@@ -59,7 +59,7 @@ const HeroSection = () => {
         <div ref={containerRef} className="relative h-[500vh]">
             <div className="sticky top-0 h-screen w-full overflow-hidden">
                 {/* White background */}
-                <div className="absolute inset-0 bg-white" />
+                <div className="absolute inset-0 bg-site-neutral-50" />
 
                 {/* FlowBackground R3F Canvas */}
                 <div className="absolute inset-0 z-0">
@@ -79,7 +79,7 @@ const HeroSection = () => {
                         }}
                     >
                         <span
-                            className="text-7xl md:text-8xl lg:text-9xl font-bold text-gray-900 tracking-tight"
+                            className="text-7xl md:text-8xl lg:text-9xl font-bold text-site-gray-900 tracking-tight"
                             style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif" }}
                         >
                             As
@@ -99,7 +99,7 @@ const HeroSection = () => {
                         </motion.div>
 
                         <span
-                            className="text-7xl md:text-8xl lg:text-9xl font-bold text-gray-900 tracking-tight"
+                            className="text-7xl md:text-8xl lg:text-9xl font-bold text-site-gray-900 tracking-tight"
                             style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif" }}
                         >
                             ng
@@ -110,7 +110,7 @@ const HeroSection = () => {
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
                         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
                             <motion.span
-                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-white"
+                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-site-neutral-50"
                                 style={{
                                     opacity: quote1Opacity,
                                     y: quote1Y,
@@ -122,7 +122,7 @@ const HeroSection = () => {
                             </motion.span>
 
                             <motion.span
-                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-white"
+                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-site-neutral-50"
                                 style={{
                                     opacity: quote2Opacity,
                                     y: quote2Y,
@@ -134,7 +134,7 @@ const HeroSection = () => {
                             </motion.span>
 
                             <motion.span
-                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-white"
+                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-site-neutral-50"
                                 style={{
                                     opacity: quote3Opacity,
                                     y: quote3Y,
@@ -146,7 +146,7 @@ const HeroSection = () => {
                             </motion.span>
 
                             <motion.span
-                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-white"
+                                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-[0.15em] text-site-neutral-50"
                                 style={{
                                     opacity: quote4Opacity,
                                     y: quote4Y,
@@ -165,7 +165,7 @@ const HeroSection = () => {
                     className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-30"
                     style={{ opacity: scrollHintOpacity }}
                 >
-                    <span className="text-sm text-gray-400 tracking-[0.3em] uppercase font-light">
+                    <span className="text-sm text-site-gray-400 tracking-[0.3em] uppercase font-light">
                         Scroll
                     </span>
                     <motion.div
@@ -173,7 +173,7 @@ const HeroSection = () => {
                         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     >
                         <svg
-                            className="w-5 h-5 text-gray-400"
+                            className="w-5 h-5 text-site-gray-400"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

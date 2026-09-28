@@ -7,7 +7,7 @@ import LiquidGlass from './liquid-glass/index';
 function GlassFallback({ children, style }: any) {
     return (
         <div
-            className="rounded-[32px] border border-neutral-200/60 bg-white/80 backdrop-blur-md"
+            className="rounded-[32px] border border-site-neutral-200/60 bg-site-neutral-50/80 backdrop-blur-md"
             style={style}
         >
             {children}

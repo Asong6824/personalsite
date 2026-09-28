@@ -1,0 +1,297 @@
+.experience {
+  position: relative;
+  min-height: calc(100svh - 5rem);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-site-zinc-900);
+  color: var(--color-site-stone-50);
+}
+
+.bookshelf {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  outline: none;
+  background: var(--color-site-zinc-900);
+  container-type: inline-size;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  touch-action: none;
+  transition: opacity 500ms ease;
+}
+
+.canvasReady {
+  opacity: 1;
+}
+
+.sourceControls {
+  display: none;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgb(200 112 70 / 18%), transparent 25rem),
+    var(--color-site-zinc-900);
+  transition: opacity 400ms ease, visibility 400ms ease;
+}
+
+.loadingHidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.loadingMark {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgb(244 238 230 / 26%);
+  border-top-color: var(--color-site-orange-500);
+  border-radius: 999px;
+  animation: bookshelf-spin 1s linear infinite;
+}
+
+.chrome {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.topCopy {
+  position: absolute;
+  top: clamp(1rem, 3vw, 2.5rem);
+  left: clamp(1rem, 4vw, 4rem);
+  max-width: min(30rem, calc(100vw - 2rem));
+  text-shadow: 0 1px 30px rgb(0 0 0 / 44%);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.topCopyDetail {
+  opacity: 0;
+  transform: translateY(-0.5rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.55rem;
+  color: var(--color-site-stone-300);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4.75rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+}
+
+.hint {
+  margin: 0.8rem 0 0;
+  max-width: 34rem;
+  color: rgb(244 238 230 / 64%);
+  font-size: clamp(0.72rem, 1.2vw, 0.86rem);
+  line-height: 1.6;
+}
+
+.status {
+  position: absolute;
+  right: clamp(1rem, 4vw, 4rem);
+  bottom: clamp(5.5rem, 9vw, 7.5rem);
+  max-width: min(20rem, calc(100vw - 2rem));
+  color: rgb(244 238 230 / 72%);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-align: right;
+  text-transform: uppercase;
+  text-shadow: 0 1px 20px rgb(0 0 0 / 52%);
+}
+
+.controls {
+  position: absolute;
+  right: 50%;
+  bottom: clamp(1rem, 3vw, 2rem);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem;
+  border: 1px solid rgb(244 238 230 / 16%);
+  border-radius: 999px;
+  background: rgb(15 17 24 / 72%);
+  box-shadow: 0 1rem 4rem rgb(0 0 0 / 28%);
+  backdrop-filter: blur(18px);
+  transform: translateX(50%);
+  pointer-events: auto;
+}
+
+.controlButton,
+.primaryButton {
+  display: inline-flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.controlButton {
+  padding: 0 0.8rem;
+  color: rgb(244 238 230 / 76%);
+  background: transparent;
+}
+
+.controlButton:hover {
+  color: var(--color-site-stone-50);
+  background: rgb(244 238 230 / 9%);
+}
+
+.controlButton:disabled {
+  cursor: default;
+  opacity: 0.32;
+}
+
+.primaryButton {
+  padding: 0 1.15rem;
+  color: var(--color-site-zinc-900);
+  background: var(--color-site-stone-50);
+}
+
+.primaryButton:hover {
+  background: var(--color-site-stone-50);
+  transform: translateY(-1px);
+}
+
+.controlButton:focus-visible,
+.primaryButton:focus-visible,
+.backLink:focus-visible {
+  outline: 2px solid var(--color-site-amber-400);
+  outline-offset: 3px;
+}
+
+.backLink {
+  position: absolute;
+  top: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 4vw, 4rem);
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  border: 1px solid rgb(244 238 230 / 16%);
+  border-radius: 999px;
+  color: rgb(244 238 230 / 78%);
+  background: rgb(15 17 24 / 42%);
+  font-size: 0.78rem;
+  text-decoration: none;
+  backdrop-filter: blur(14px);
+  pointer-events: auto;
+}
+
+.backLink:hover {
+  color: var(--color-site-stone-50);
+  background: rgb(244 238 230 / 8%);
+}
+
+.unavailable {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  color: var(--color-site-stone-50);
+  text-align: center;
+  background: var(--color-site-zinc-900);
+}
+
+@keyframes bookshelf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 720px) {
+  .topCopy {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .title {
+    font-size: clamp(1.8rem, 10vw, 3rem);
+  }
+
+  .hint {
+    max-width: 22rem;
+    padding-right: 4rem;
+    line-height: 1.45;
+  }
+
+  .backLink {
+    top: 1rem;
+    right: 1rem;
+    width: 2.75rem;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .backLabel,
+  .buttonLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .status {
+    right: 1rem;
+    bottom: 5.25rem;
+    max-width: calc(100vw - 2rem);
+    font-size: 0.64rem;
+  }
+
+  .controls {
+    bottom: 0.85rem;
+    max-width: calc(100vw - 1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas,
+  .loading,
+  .topCopy,
+  .controlButton,
+  .primaryButton {
+    transition: none;
+  }
+
+  .loadingMark {
+    animation: none;
+    border-color: var(--color-site-orange-500);
+  }
+}

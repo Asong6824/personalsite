@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
+import { SITE_CHROMATIC_PALETTE, SITE_FOUNDATION } from '@/lib/site-palette'
 
 export default function SankeyChart() {
   const ref = useRef(null)
@@ -35,8 +36,8 @@ export default function SankeyChart() {
             emphasis: { focus: 'adjacency' },
             label: { show: true, formatter: (p) => formatLabel(p.name) },
             levels: [
-              { depth: 0, itemStyle: { color: '#3b82f6' }, label: { color: '#1f2937' } }, // Goals
-              { depth: 1, itemStyle: { color: '#10b981' }, label: { color: '#1f2937' } }, // KRs
+              { depth: 0, itemStyle: { color: SITE_CHROMATIC_PALETTE.blue[500] }, label: { color: SITE_FOUNDATION.ink } }, // Goals
+              { depth: 1, itemStyle: { color: SITE_CHROMATIC_PALETTE.emerald[500] }, label: { color: SITE_FOUNDATION.ink } }, // KRs
             ],
             ...leftSeries
           },
@@ -48,8 +49,8 @@ export default function SankeyChart() {
             emphasis: { focus: 'adjacency' },
             label: { show: true, formatter: (p) => formatLabel(p.name) },
             levels: [
-              { depth: 0, itemStyle: { color: '#10b981' }, label: { color: '#1f2937' } }, // KRs
-              { depth: 1, itemStyle: { color: '#f59e0b' }, label: { color: '#1f2937' } },  // Activities
+              { depth: 0, itemStyle: { color: SITE_CHROMATIC_PALETTE.emerald[500] }, label: { color: SITE_FOUNDATION.ink } }, // KRs
+              { depth: 1, itemStyle: { color: SITE_CHROMATIC_PALETTE.amber[500] }, label: { color: SITE_FOUNDATION.ink } },  // Activities
             ],
             ...rightSeries
           }

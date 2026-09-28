@@ -62,15 +62,15 @@ function StepCard({
     const activeCode = activeTab === "request" ? step.code?.request : step.code?.response;
 
     return (
-        <div className="rounded-xl border border-[#D8D0C3] bg-[#F5F3EE] p-5 md:p-6">
+        <div className="rounded-xl border border-site-stone-300 bg-site-stone-50 p-5 md:p-6">
             <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                     <div className="mb-1 flex items-center gap-2 text-sm">
-                        <span className="text-[#68645d]">Step {step.step}</span>
-                        <span className="text-[#a18072]">·</span>
-                        <span className="font-medium text-[#a18072]">{step.label}</span>
+                        <span className="text-site-stone-600">Step {step.step}</span>
+                        <span className="text-site-stone-500">·</span>
+                        <span className="font-medium text-site-stone-500">{step.label}</span>
                     </div>
-                    <h3 className="text-lg font-semibold leading-snug text-[#141413] md:text-xl">
+                    <h3 className="text-lg font-semibold leading-snug text-site-ink md:text-xl">
                         {step.title}
                     </h3>
                 </div>
@@ -80,8 +80,8 @@ function StepCard({
                         aria-expanded={isOpen}
                         aria-label={isOpen ? "收起代码" : "展开代码"}
                         className={cn(
-                            "flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-[#D8D0C3] bg-white text-[#141413] transition-colors hover:border-[#a18072] hover:text-[#a18072]",
-                            isOpen && "border-[#a18072] text-[#a18072]"
+                            "flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-site-stone-300 bg-site-neutral-50 text-site-ink transition-colors hover:border-site-stone-500 hover:text-site-stone-500",
+                            isOpen && "border-site-stone-500 text-site-stone-500"
                         )}
                     >
                         <Code2 size={18} strokeWidth={1.8} />
@@ -96,9 +96,9 @@ function StepCard({
                 )}
             >
                 <div className="overflow-hidden">
-                    <div className="mt-5 border-t border-[#D8D0C3] pt-4">
+                    <div className="mt-5 border-t border-site-stone-300 pt-4">
                         {step.code?.request && step.code?.response ? (
-                            <div className="mb-3 flex gap-6 border-b border-[#D8D0C3]">
+                            <div className="mb-3 flex gap-6 border-b border-site-stone-300">
                                 <TabButton
                                     active={activeTab === "request"}
                                     onClick={() => setActiveTab("request")}
@@ -114,7 +114,7 @@ function StepCard({
                             </div>
                         ) : null}
                         {activeCode ? (
-                            <pre className="overflow-x-auto rounded-lg bg-[#E2DBCE]/60 p-4 font-mono text-sm text-[#141413]">
+                            <pre className="overflow-x-auto rounded-lg bg-site-stone-200/60 p-4 font-mono text-sm text-site-ink">
                                 <code>{activeCode}</code>
                             </pre>
                         ) : null}
@@ -139,11 +139,11 @@ function TabButton({
             onClick={onClick}
             className={cn(
                 "relative pb-2 text-sm font-medium transition-colors",
-                active ? "text-[#a18072]" : "text-[#68645d] hover:text-[#141413]"
+                active ? "text-site-stone-500" : "text-site-stone-600 hover:text-site-ink"
             )}
         >
             {children}
-            {active && <span className="absolute bottom-0 left-0 h-0.5 w-full bg-[#a18072]" />}
+            {active && <span className="absolute bottom-0 left-0 h-0.5 w-full bg-site-stone-500" />}
         </button>
     );
 }

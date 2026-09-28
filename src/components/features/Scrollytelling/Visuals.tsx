@@ -21,9 +21,9 @@ export const CreativeVisual = () => (
         <div className="border-b border-[var(--theme-outline-variant)] pb-4 mb-6 flex justify-between items-center">
             <h4 className="font-mono text-xs uppercase tracking-widest text-[var(--theme-outline)]">创意</h4>
             <div className="flex gap-2">
-                <div className="w-2 h-2 bg-[#84816a] opacity-40"></div>
-                <div className="w-2 h-2 bg-[#84816a] opacity-40"></div>
-                <div className="w-2 h-2 bg-[#84816a] opacity-40"></div>
+                <div className="w-2 h-2 bg-site-yellow-600 opacity-40"></div>
+                <div className="w-2 h-2 bg-site-yellow-600 opacity-40"></div>
+                <div className="w-2 h-2 bg-site-yellow-600 opacity-40"></div>
             </div>
         </div>
 
@@ -48,16 +48,16 @@ export const CreativeVisual = () => (
 );
 
 export const LifeVisual = () => (
-    <div className="w-full h-full bg-[#0f0e08] text-[#a09d92] p-6 font-mono text-sm flex flex-col overflow-hidden relative">
-        <div className="flex items-center justify-between mb-4 border-b border-[#a09d92]/30 pb-2">
+    <div className="w-full h-full bg-site-stone-950 text-site-stone-400 p-6 font-mono text-sm flex flex-col overflow-hidden relative">
+        <div className="flex items-center justify-between mb-4 border-b border-site-stone-400/30 pb-2">
             <span className="text-xs">life — journal — 80x24</span>
         </div>
         <div className="space-y-4 z-10">
             <div>
-                <span className="text-[#a09d92]">➜</span> <span>~</span> cd blog/life
+                <span className="text-site-stone-400">➜</span> <span>~</span> cd blog/life
             </div>
             <div>
-                <span className="text-[#a09d92]">➜</span> <span>life</span> ls -la
+                <span className="text-site-stone-400">➜</span> <span>life</span> ls -la
             </div>
             <div className="pl-4">
                 <p>drwxr-xr-x  japan/</p>
@@ -65,9 +65,9 @@ export const LifeVisual = () => (
                 <p>drwxr-xr-x  misc/</p>
             </div>
             <div>
-                <span className="text-[#a09d92]">➜</span> <span>life</span> cat 2025-summary.md
+                <span className="text-site-stone-400">➜</span> <span>life</span> cat 2025-summary.md
             </div>
-            <div className="text-[#fef9e9] pl-4">
+            <div className="text-site-stone-50 pl-4">
                 <p>年度回顾 | 2025</p>
                 <p>✓ 日本生活持续中</p>
             </div>

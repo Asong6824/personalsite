@@ -90,13 +90,13 @@ export default async function PostPage({ params }) {
             <div className="pt-20">
                 <div className="flex h-16 w-full items-center px-8 sm:px-10 lg:px-16 xl:px-24">
                     <div className={`flex flex-wrap items-center gap-x-2 gap-y-2 text-sm md:text-base ${currentStyle.headerMeta}`}>
-                        <Link href="/blog" className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]">博客</Link>
+                        <Link href="/blog" className="font-medium text-[var(--channel-ink)] hover:text-[var(--channel-muted)]">博客</Link>
                         {channelConfig && (
                             <>
                                 <span>/</span>
                                 <Link
                                     href={`/blog/${frontmatter.channel}`}
-                                    className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
+                                    className="font-medium text-[var(--channel-ink)] hover:text-[var(--channel-muted)]"
                                 >
                                     {channelConfig.name}
                                 </Link>
@@ -107,7 +107,7 @@ export default async function PostPage({ params }) {
                                 <span>/</span>
                                 <Link
                                     href={`/blog/${frontmatter.channel}/${frontmatter.column}`}
-                                    className="font-medium text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]"
+                                    className="font-medium text-[var(--channel-ink)] hover:text-[var(--channel-muted)]"
                                 >
                                     {columnConfig.name}
                                 </Link>
@@ -163,12 +163,12 @@ export default async function PostPage({ params }) {
                     {mediaType && (
                         <section className="mx-auto grid w-full xl:grid-cols-12 xl:gap-x-[2.2%]">
                             {InteractiveHero && (
-                                <div className="not-prose article-top-media rounded-xl border border-[var(--channel-border,#D8D0C3)] bg-[color-mix(in_srgb,var(--channel-card,#E2DBCE)_42%,transparent)] p-4 md:p-6 xl:col-span-10 xl:col-start-2 [&>div]:my-0">
+                                <div className="not-prose article-top-media rounded-xl border border-[var(--channel-border)] bg-[color-mix(in_srgb,var(--channel-card)_42%,transparent)] p-4 md:p-6 xl:col-span-10 xl:col-start-2 [&>div]:my-0">
                                     <InteractiveHero />
                                 </div>
                             )}
                             {mediaType === 'video' && (
-                                <div className="article-top-media overflow-hidden rounded-xl border border-[var(--channel-border,#D8D0C3)] bg-black xl:col-span-10 xl:col-start-2">
+                                <div className="article-top-media overflow-hidden rounded-xl border border-[var(--channel-border)] bg-site-neutral-950 xl:col-span-10 xl:col-start-2">
                                     <iframe
                                         src={frontmatter.heroVideo || frontmatter.videoUrl}
                                         title={`${frontmatter.title} 视频`}
@@ -179,7 +179,7 @@ export default async function PostPage({ params }) {
                                 </div>
                             )}
                             {mediaType === 'image' && (
-                                <div className="article-top-media relative aspect-[16/9] overflow-hidden rounded-xl border border-[var(--channel-border,#D8D0C3)] xl:col-span-10 xl:col-start-2">
+                                <div className="article-top-media relative aspect-[16/9] overflow-hidden rounded-xl border border-[var(--channel-border)] xl:col-span-10 xl:col-start-2">
                                     <Image
                                         src={frontmatter.coverImage}
                                         alt={`${frontmatter.title} 封面图`}
@@ -199,17 +199,17 @@ export default async function PostPage({ params }) {
                                 className={`prose article-reading-prose dark:prose-invert max-w-none
             ${currentStyle.prose}
 
-            [&_:not(pre)>code]:text-pink-600 dark:[&_:not(pre)>code]:text-pink-400
-            [&_:not(pre)>code]:bg-neutral-200/50 dark:[&_:not(pre)>code]:bg-neutral-800/50
+            [&_:not(pre)>code]:text-site-pink-600 dark:[&_:not(pre)>code]:text-site-pink-400
+            [&_:not(pre)>code]:bg-site-neutral-200/50 dark:[&_:not(pre)>code]:bg-site-neutral-800/50
             [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:rounded-md
             [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-sm
             [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none
 
-            prose-pre:bg-[var(--channel-card,#e2dbce)] dark:prose-pre:bg-[var(--channel-card,#e2dbce)] 
-            prose-pre:text-[var(--channel-ink,#141413)] 
+            prose-pre:bg-[var(--channel-card)] dark:prose-pre:bg-[var(--channel-card)]
+            prose-pre:text-[var(--channel-ink)]
             prose-pre:rounded-xl 
             prose-pre:shadow-[inset_2px_2px_6px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.5)] 
-            prose-pre:border prose-pre:border-[var(--channel-card-hover,#d8d0c3)]
+            prose-pre:border prose-pre:border-[var(--channel-card-hover)]
             prose-pre:p-4
             prose-pre:my-6`}
                             >
@@ -226,8 +226,8 @@ export default async function PostPage({ params }) {
                     recommendations={recommendations}
                   />
 
-                            <div className="mt-14 pt-8 border-t border-[var(--channel-card-hover,#d8d0c3)] text-center">
-                                <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-[#506354] hover:text-[#1a1c19]' : isTechChannel || isLifeChannel ? 'text-[var(--channel-ink,#141413)] hover:text-[var(--channel-muted,#68645d)]' : 'text-blue-400 hover:text-blue-300'}`}>
+                            <div className="mt-14 pt-8 border-t border-[var(--channel-card-hover)] text-center">
+                                <Link href="/blog" className={`font-medium ${isFinanceChannel ? 'text-site-lime-700 hover:text-site-neutral-900' : isTechChannel || isLifeChannel ? 'text-[var(--channel-ink)] hover:text-[var(--channel-muted)]' : 'text-site-blue-600 hover:text-site-blue-500'}`}>
                                     &larr; 返回博客列表
                                 </Link>
                             </div>

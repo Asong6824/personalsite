@@ -8,8 +8,10 @@ import { format, parseISO } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 
 import { BookShelf } from '@/components/features/BookShelf3D';
+import { LifeSketchbookPromo } from '@/components/features/LifeSketchbook/LifeSketchbookPromo';
 import TravelSection from '@/components/features/TravelSection';
 import SunlitBackground from '@/components/features/SunlitBackground';
+import { bookshelfBooks } from '@/data/bookshelf-books';
 import styles from '@/app/home.module.css';
 
 export default function LifeChannelLayout({ channelKey, channelConfig, posts }) {
@@ -39,7 +41,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
     return (
         <div
             className={`min-h-screen ${styles.scholarlyPalette}`}
-            style={{ backgroundColor: 'var(--channel-bg,#f0eee7)' }}
+            style={{ backgroundColor: 'var(--channel-bg)' }}
             data-life-page
         >
             {/* Content Layers */}
@@ -64,9 +66,30 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                 {/* 旅行记忆 */}
                 <TravelSection />
 
+                {/* 新加坡交互手绘本 */}
+                <LifeSketchbookPromo />
+
             {/* 3D Digital Bookshelf Section */}
-            <section className="relative w-full h-[100dvh]">
-                <BookShelf />
+            <section className="relative w-full h-[100dvh]" aria-labelledby="life-bookshelf-heading">
+                <div className="pointer-events-none absolute inset-x-0 top-8 z-30 px-4 md:top-12 md:px-10">
+                    <div className="mx-auto flex max-w-6xl items-start justify-between gap-6">
+                        <div className="max-w-xl">
+                            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--theme-outline)]">
+                                Interactive library
+                            </p>
+                            <h2 id="life-bookshelf-heading" className="mt-2 font-serif text-3xl text-[var(--theme-ink)] md:text-5xl">
+                                可翻阅的书房
+                            </h2>
+                        </div>
+                        <Link
+                            href="/blog/life/bookshelf"
+                            className="pointer-events-auto inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-[var(--theme-ink)] px-5 text-sm text-[var(--theme-surface)] shadow-lg transition-transform duration-300 hover:-translate-y-0.5"
+                        >
+                            进入完整体验 →
+                        </Link>
+                    </div>
+                </div>
+                <BookShelf books={bookshelfBooks} />
             </section>
 
             {/* 精选专栏 */}
@@ -106,8 +129,8 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                                 sizes="(max-width: 768px) 100vw, 50vw"
                                             />
                                         ) : (
-                                            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                                <span className="text-gray-400">专栏首图占位 (16:9)</span>
+                                            <div className="w-full h-full bg-site-gray-200 dark:bg-site-gray-700 flex items-center justify-center">
+                                                <span className="text-site-gray-400">专栏首图占位 (16:9)</span>
                                             </div>
                                         )}
                                     </div>
@@ -171,7 +194,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                 >
                                     <Link href={`/blog/${post.slug}`}>
                                         {/* 文章图片 */}
-                                        <div className="aspect-video bg-gray-200 dark:bg-gray-700 flex items-center justify-center relative overflow-hidden">
+                                        <div className="aspect-video bg-site-gray-200 dark:bg-site-gray-700 flex items-center justify-center relative overflow-hidden">
                                             {post.coverImage ? (
                                                 <img
                                                     src={post.coverImage}
@@ -179,7 +202,7 @@ export default function LifeChannelLayout({ channelKey, channelConfig, posts }) 
                                                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                                 />
                                             ) : (
-                                                <span className="text-gray-400">文章首图占位 (16:9)</span>
+                                                <span className="text-site-gray-400">文章首图占位 (16:9)</span>
                                             )}
                                         </div>
                                         

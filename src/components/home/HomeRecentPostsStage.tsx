@@ -64,12 +64,12 @@ export function HomeRecentPostsStage({ posts }: HomeRecentPostsStageProps) {
   return (
     <section
       aria-labelledby="home-recent-posts-title"
-      className="relative z-20 w-full overflow-hidden px-8 py-20 text-[#0a0c20] md:px-12 md:py-24 lg:px-16 lg:py-28"
+      className="relative z-20 w-full overflow-hidden px-8 py-20 text-site-ink md:px-12 md:py-24 lg:px-16 lg:py-28"
     >
       <div className="pointer-events-auto">
-        <div className="relative flex items-end justify-between gap-6 border-b border-[#0a0c20]/70 pb-8 md:pb-10">
+        <div className="relative flex items-end justify-between gap-6 border-b border-site-ink/70 pb-8 md:pb-10">
           <div className="max-w-5xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-site-ink/55">
               Articles
             </p>
             <h2
@@ -81,7 +81,7 @@ export function HomeRecentPostsStage({ posts }: HomeRecentPostsStageProps) {
           </div>
           <Link
             href="/blog"
-            className="mb-1 hidden shrink-0 rounded-full border border-[#0a0c20]/70 px-3 py-1 text-sm font-medium leading-none transition-colors hover:bg-[#0a0c20] hover:text-[#f3efe6] md:block"
+            className="mb-1 hidden shrink-0 rounded-full border border-site-ink/70 px-3 py-1 text-sm font-medium leading-none transition-colors hover:bg-site-ink hover:text-site-canvas md:block"
           >
             查看全部
           </Link>
@@ -92,9 +92,9 @@ export function HomeRecentPostsStage({ posts }: HomeRecentPostsStageProps) {
             <Link
               key={item.slug}
               href={item.href}
-              className="group relative grid gap-6 border-b border-[#0a0c20]/70 py-8 transition-colors md:grid-cols-[minmax(260px,33.333%)_minmax(0,1fr)_2.5rem] md:gap-10"
+              className="group relative grid gap-6 border-b border-site-ink/70 py-8 transition-colors md:grid-cols-[minmax(260px,33.333%)_minmax(0,1fr)_2.5rem] md:gap-10"
             >
-              <div className="relative aspect-[16/9] overflow-hidden bg-[#e7e1d6] md:aspect-auto md:h-[18vw] md:min-h-[210px]">
+              <div className="relative aspect-[16/9] overflow-hidden bg-site-stone-200 md:aspect-auto md:h-[18vw] md:min-h-[210px]">
                 <Image
                   src={item.image}
                   alt=""
@@ -109,14 +109,14 @@ export function HomeRecentPostsStage({ posts }: HomeRecentPostsStageProps) {
                   {item.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-white/80 bg-black/10 px-2 py-1 text-xs font-medium leading-none text-white backdrop-blur-sm"
+                      className="rounded-full border border-site-neutral-50/80 bg-site-neutral-950/10 px-2 py-1 text-xs font-medium leading-none text-site-neutral-50 backdrop-blur-sm"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="absolute inset-0 hidden items-center justify-center bg-black/25 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:flex">
-                  <span className="font-mono text-4xl uppercase leading-none text-white">Read</span>
+                <div className="absolute inset-0 hidden items-center justify-center bg-site-neutral-950/25 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:flex">
+                  <span className="font-mono text-4xl uppercase leading-none text-site-neutral-50">Read</span>
                 </div>
               </div>
 
@@ -124,16 +124,16 @@ export function HomeRecentPostsStage({ posts }: HomeRecentPostsStageProps) {
                 <h3 className="max-w-3xl text-2xl font-medium leading-[1.08] tracking-tight md:text-3xl lg:text-4xl">
                   {item.title}
                 </h3>
-                <div className="flex items-center gap-3 text-sm text-[#0a0c20]/72 md:text-base">
-                  <span className="font-semibold text-[#0a0c20]">{item.columnLabel}</span>
-                  <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#0a0c20]" />
+                <div className="flex items-center gap-3 text-sm text-site-ink/72 md:text-base">
+                  <span className="font-semibold text-site-ink">{item.columnLabel}</span>
+                  <span aria-hidden="true" className="h-1 w-1 rounded-full bg-site-ink" />
                   <time dateTime={item.date}>{formatDate(item.date)}</time>
                 </div>
               </div>
 
               <span
                 aria-hidden="true"
-                className="hidden self-start text-3xl leading-none text-[#0a0c20]/70 transition-transform duration-300 group-hover:translate-x-1 md:block"
+                className="hidden self-start text-3xl leading-none text-site-ink/70 transition-transform duration-300 group-hover:translate-x-1 md:block"
               >
                 →
               </span>
@@ -143,7 +143,7 @@ export function HomeRecentPostsStage({ posts }: HomeRecentPostsStageProps) {
 
         <Link
           href="/blog"
-          className="mt-8 inline-flex rounded-full border border-[#0a0c20]/70 px-3 py-1 text-sm font-medium leading-none transition-colors hover:bg-[#0a0c20] hover:text-[#f3efe6] md:hidden"
+          className="mt-8 inline-flex rounded-full border border-site-ink/70 px-3 py-1 text-sm font-medium leading-none transition-colors hover:bg-site-ink hover:text-site-canvas md:hidden"
         >
           查看全部
         </Link>

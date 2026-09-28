@@ -5,6 +5,7 @@ import ThreeGlobe from "three-globe";
 import { useThree, Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "@/data/globe.json";
+import { SITE_CHROMATIC_PALETTE, SITE_NEUTRAL_PALETTE } from "@/lib/site-palette";
 
 extend({ ThreeGlobe: ThreeGlobe });
 
@@ -24,12 +25,12 @@ export function Globe({
 
   const defaultProps = {
     pointSize: 1,
-    atmosphereColor: "#ffffff",
+    atmosphereColor: SITE_NEUTRAL_PALETTE.neutral[50],
     showAtmosphere: true,
     atmosphereAltitude: 0.1,
     polygonColor: "rgba(255,255,255,0.7)",
-    globeColor: "#1d072e",
-    emissive: "#000000",
+    globeColor: SITE_CHROMATIC_PALETTE.purple[950],
+    emissive: SITE_NEUTRAL_PALETTE.neutral[950],
     emissiveIntensity: 0.1,
     shininess: 0.9,
     arcTime: 2000,

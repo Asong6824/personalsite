@@ -17,7 +17,7 @@ export default function TakeoverLinks({ items = [], variant = 'fullscreen', clas
 
   return (
     <div
-      className={`relative bg-white text-black ${className}`}
+      className={`relative bg-site-neutral-50 text-site-neutral-950 ${className}`}
       onMouseLeave={handleLeaveContainer}
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) { setActiveIndex(null); } }}
     >

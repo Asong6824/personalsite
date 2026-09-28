@@ -156,9 +156,9 @@ export const RotatableColorWheel = () => {
     };
 
     return (
-        <div className="my-8 flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800">
-            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">交互式 18 色轮</h3>
-            <p className="text-sm text-gray-500 mb-6 text-center max-w-md">
+        <div className="my-8 flex flex-col items-center p-6 bg-site-neutral-50 dark:bg-site-zinc-900 rounded-2xl border border-site-gray-200 dark:border-site-zinc-800">
+            <h3 className="text-lg font-bold mb-4 text-site-gray-900 dark:text-site-gray-100">交互式 18 色轮</h3>
+            <p className="text-sm text-site-gray-500 mb-6 text-center max-w-md">
                 点击圆环左侧逆时针旋转，点击右侧顺时针旋转。尝试对齐不同的颜色来观察色彩关系。
             </p>
 
@@ -189,7 +189,7 @@ export const RotatableColorWheel = () => {
                     />
 
                     {/* Center Hole */}
-                    <circle cx="200" cy="200" r="40" fill="currentColor" className="text-white dark:text-zinc-900" />
+                    <circle cx="200" cy="200" r="40" fill="currentColor" className="text-site-neutral-50 dark:text-site-zinc-900" />
                 </svg>
 
                 {/* Decoration: Indicator arrow at top */}
@@ -205,10 +205,10 @@ export const RotatableColorWheel = () => {
                         setRotMiddle(-120);
                         setRotInner(-240);
                     }}
-                    className="flex flex-col items-center p-3 bg-gray-50 hover:bg-blue-50 dark:bg-zinc-800/50 dark:hover:bg-blue-900/20 rounded-xl border border-gray-200 dark:border-zinc-700 transition-colors group"
+                    className="flex flex-col items-center p-3 bg-site-gray-50 hover:bg-site-blue-50 dark:bg-site-zinc-800/50 dark:hover:bg-site-blue-900/20 rounded-xl border border-site-gray-200 dark:border-site-zinc-700 transition-colors group"
                 >
-                    <span className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">三色组</span>
-                    <span className="text-xs text-gray-400 mt-1">Triadic</span>
+                    <span className="font-bold text-site-gray-900 dark:text-site-gray-100 group-hover:text-site-blue-600 dark:group-hover:text-site-blue-400">三色组</span>
+                    <span className="text-xs text-site-gray-400 mt-1">Triadic</span>
                 </button>
 
                 <button
@@ -217,10 +217,10 @@ export const RotatableColorWheel = () => {
                         setRotMiddle(-160);
                         setRotInner(-200);
                     }}
-                    className="flex flex-col items-center p-3 bg-gray-50 hover:bg-purple-50 dark:bg-zinc-800/50 dark:hover:bg-purple-900/20 rounded-xl border border-gray-200 dark:border-zinc-700 transition-colors group"
+                    className="flex flex-col items-center p-3 bg-site-gray-50 hover:bg-site-purple-50 dark:bg-site-zinc-800/50 dark:hover:bg-site-purple-900/20 rounded-xl border border-site-gray-200 dark:border-site-zinc-700 transition-colors group"
                 >
-                    <span className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400">分裂互补</span>
-                    <span className="text-xs text-gray-400 mt-1">Split-Comp</span>
+                    <span className="font-bold text-site-gray-900 dark:text-site-gray-100 group-hover:text-site-purple-600 dark:group-hover:text-site-purple-400">分裂互补</span>
+                    <span className="text-xs text-site-gray-400 mt-1">Split-Comp</span>
                 </button>
 
                 <button
@@ -229,16 +229,16 @@ export const RotatableColorWheel = () => {
                         setRotMiddle(-20);
                         setRotInner(-40);
                     }}
-                    className="flex flex-col items-center p-3 bg-gray-50 hover:bg-orange-50 dark:bg-zinc-800/50 dark:hover:bg-orange-900/20 rounded-xl border border-gray-200 dark:border-zinc-700 transition-colors group"
+                    className="flex flex-col items-center p-3 bg-site-gray-50 hover:bg-site-orange-50 dark:bg-site-zinc-800/50 dark:hover:bg-site-orange-900/20 rounded-xl border border-site-gray-200 dark:border-site-zinc-700 transition-colors group"
                 >
-                    <span className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400">类似色</span>
-                    <span className="text-xs text-gray-400 mt-1">Analogous</span>
+                    <span className="font-bold text-site-gray-900 dark:text-site-gray-100 group-hover:text-site-orange-600 dark:group-hover:text-site-orange-400">类似色</span>
+                    <span className="text-xs text-site-gray-400 mt-1">Analogous</span>
                 </button>
             </div>
 
             <button
                 onClick={reset}
-                className="mt-4 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline"
+                className="mt-4 text-xs text-site-gray-400 hover:text-site-gray-600 dark:hover:text-site-gray-300 underline"
             >
                 重置位置
             </button>

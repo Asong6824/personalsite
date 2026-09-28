@@ -100,8 +100,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
                         onClick={() => handleChannelClick(null)}
                         className={`group relative px-8 py-4 rounded-2xl text-base font-semibold transition-all duration-300 backdrop-blur-sm
                             ${!selectedChannel
-                                ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/25'
-                                : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                                ? 'bg-gradient-to-r from-primary to-primary/80 text-site-neutral-50 shadow-lg shadow-primary/25'
+                                : 'bg-site-neutral-50/80 dark:bg-site-gray-800/80 text-site-gray-700 dark:text-site-gray-300 border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50 dark:hover:bg-site-gray-800 hover:shadow-md'
                             }`}
                     >
                         {!selectedChannel && (
@@ -128,8 +128,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
                             onClick={() => handleChannelClick(key)}
                             className={`group relative px-8 py-4 rounded-2xl text-base font-semibold transition-all duration-300 backdrop-blur-sm
                                 ${selectedChannel === key
-                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/25'
-                                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-site-neutral-50 shadow-lg shadow-primary/25'
+                                    : 'bg-site-neutral-50/80 dark:bg-site-gray-800/80 text-site-gray-700 dark:text-site-gray-300 border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50 dark:hover:bg-site-gray-800 hover:shadow-md'
                                 }`}
                         >
                             {selectedChannel === key && (
@@ -167,8 +167,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
                             onClick={() => setSelectedColumn(null)}
                             className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 backdrop-blur-sm
                                 ${!selectedColumn
-                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/25'
-                                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-site-neutral-50 shadow-lg shadow-primary/25'
+                                    : 'bg-site-neutral-50/80 dark:bg-site-gray-800/80 text-site-gray-700 dark:text-site-gray-300 border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50 dark:hover:bg-site-gray-800 hover:shadow-md'
                                 }`}
                         >
                             {!selectedColumn && (
@@ -195,8 +195,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                 onClick={() => handleColumnClick(column.key)}
                                 className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 backdrop-blur-sm
                                     ${selectedColumn === column.key
-                                        ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/25'
-                                        : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                                        ? 'bg-gradient-to-r from-primary to-primary/80 text-site-neutral-50 shadow-lg shadow-primary/25'
+                                        : 'bg-site-neutral-50/80 dark:bg-site-gray-800/80 text-site-gray-700 dark:text-site-gray-300 border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50 dark:hover:bg-site-gray-800 hover:shadow-md'
                                     }`}
                             >
                                 {selectedColumn === column.key && (
@@ -234,8 +234,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
                             onClick={() => handleTagClick(null)}
                             className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 backdrop-blur-sm
                                 ${!selectedTag
-                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/25'
-                                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-site-neutral-50 shadow-lg shadow-primary/25'
+                                    : 'bg-site-neutral-50/80 dark:bg-site-gray-800/80 text-site-gray-700 dark:text-site-gray-300 border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50 dark:hover:bg-site-gray-800 hover:shadow-md'
                                 }`}
                         >
                             {!selectedTag && (
@@ -262,8 +262,8 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                 onClick={() => handleTagClick(tag)}
                                 className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 backdrop-blur-sm
                                     ${selectedTag === tag
-                                        ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/25'
-                                        : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md'
+                                        ? 'bg-gradient-to-r from-primary to-primary/80 text-site-neutral-50 shadow-lg shadow-primary/25'
+                                        : 'bg-site-neutral-50/80 dark:bg-site-gray-800/80 text-site-gray-700 dark:text-site-gray-300 border border-site-gray-200/50 dark:border-site-gray-700/50 hover:bg-site-neutral-50 dark:hover:bg-site-gray-800 hover:shadow-md'
                                     }`}
                             >
                                 {selectedTag === tag && (
@@ -307,22 +307,22 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                 }}
                                 className={`group relative overflow-hidden rounded-3xl transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10
                                     ${pinned 
-                                        ? 'bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 dark:from-amber-900/20 dark:via-gray-900 dark:to-orange-900/10 border-2 border-amber-200/50 dark:border-amber-800/30' 
-                                        : 'bg-gradient-to-br from-white via-gray-50/50 to-blue-50/30 dark:from-gray-900 dark:via-gray-800/50 dark:to-blue-900/10 border border-gray-200/50 dark:border-gray-700/50'
+                                        ? 'bg-gradient-to-br from-site-amber-50/80 via-site-neutral-50 to-site-orange-50/60 dark:from-site-amber-900/20 dark:via-site-gray-900 dark:to-site-orange-900/10 border-2 border-site-amber-200/50 dark:border-site-amber-800/30'
+                                        : 'bg-gradient-to-br from-site-neutral-50 via-site-gray-50/50 to-site-blue-50/30 dark:from-site-gray-900 dark:via-site-gray-800/50 dark:to-site-blue-900/10 border border-site-gray-200/50 dark:border-site-gray-700/50'
                                     }
                                 `}
                             >
                                 {/* 置顶文章的特殊装饰 */}
                                 {pinned && (
                                     <>
-                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-site-amber-400 via-site-orange-400 to-site-amber-500" />
                                         <motion.div 
                                             className="absolute top-6 right-6 z-20"
                                             initial={{ scale: 0, rotate: -180 }}
                                             animate={{ scale: 1, rotate: 0 }}
                                             transition={{ delay: 0.3, type: "spring", bounce: 0.6 }}
                                         >
-                                            <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg">
+                                            <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-site-amber-500 to-site-orange-500 text-site-neutral-50 text-xs font-bold rounded-full shadow-lg">
                                                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                                                 </svg>
@@ -345,10 +345,10 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                                         className="w-full h-full object-cover transition-all duration-700 group-hover/image:scale-110 group-hover/image:brightness-110" 
                                                     />
                                                     {/* 图片遮罩 */}
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-500" />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-site-neutral-950/20 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-500" />
                                                     {/* 阅读按钮 */}
                                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-500">
-                                                        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-semibold text-gray-900 dark:text-white shadow-lg transform translate-y-4 group-hover/image:translate-y-0">
+                                                        <div className="bg-site-neutral-50/90 dark:bg-site-gray-900/90 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-semibold text-site-gray-900 dark:text-site-neutral-50 shadow-lg transform translate-y-4 group-hover/image:translate-y-0">
                                                             阅读文章
                                                         </div>
                                                     </div>
@@ -360,7 +360,7 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                     {/* 内容区域 */}
                                     <div className="p-8 lg:p-10">
                                         {/* 元信息 */}
-                                        <div className="flex items-center gap-4 mb-6 text-sm text-gray-600 dark:text-gray-400">
+                                        <div className="flex items-center gap-4 mb-6 text-sm text-site-gray-600 dark:text-site-gray-400">
                                             <div className="flex items-center gap-2">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -373,14 +373,14 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                         <h2 className="text-2xl lg:text-3xl font-bold mb-4 leading-tight">
                                             <Link 
                                                 href={`/blog/${slug}`} 
-                                                className="text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary transition-colors duration-300 group-hover:text-primary"
+                                                className="text-site-gray-900 dark:text-site-neutral-50 hover:text-primary dark:hover:text-primary transition-colors duration-300 group-hover:text-primary"
                                             >
                                                 {title || '未命名文章'}
                                             </Link>
                                         </h2>
 
                                         {/* 摘要 */}
-                                        <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base lg:text-lg">
+                                        <p className="text-site-gray-700 dark:text-site-gray-300 mb-6 leading-relaxed text-base lg:text-lg">
                                             {excerpt ? `${excerpt.substring(0, 180)}${excerpt.length > 180 ? '...' : ''}` : '暂无摘要'}
                                         </p>
 
@@ -397,7 +397,7 @@ export default function BlogListClient({ initialPosts, allTags }) {
                                                     </span>
                                                 ))}
                                                 {tags.length > 4 && (
-                                                    <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                                    <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-site-gray-500 dark:text-site-gray-400">
                                                         +{tags.length - 4} 更多
                                                     </span>
                                                 )}
@@ -424,15 +424,15 @@ export default function BlogListClient({ initialPosts, allTags }) {
                         className="text-center py-20"
                     >
                         <div className="max-w-md mx-auto">
-                            <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center">
-                                <svg className="w-10 h-10 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-site-gray-100 to-site-gray-200 dark:from-site-gray-800 dark:to-site-gray-700 rounded-full flex items-center justify-center">
+                                <svg className="w-10 h-10 text-site-gray-400 dark:text-site-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                            <h3 className="text-xl font-semibold text-site-gray-900 dark:text-site-neutral-50 mb-2">
                                 未找到相关文章
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-400">
+                            <p className="text-site-gray-600 dark:text-site-gray-400">
                                 {(() => {
                                     if (selectedTag) {
                                         return `没有找到标签为 "${selectedTag}" 的文章，试试其他标签吧`;

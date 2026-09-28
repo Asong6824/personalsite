@@ -66,9 +66,9 @@ export function HomeColumnsListStage({ postCounts = {} }: { postCounts?: Record<
       aria-labelledby="home-columns-title"
       className="home-columns-list-stage relative z-20 h-screen w-full overflow-visible px-8 pb-8 pt-24 md:px-12 md:pb-10 md:pt-28 lg:px-16"
     >
-      <div className="pointer-events-auto relative z-10 flex h-full flex-col text-[#0a0c20]">
+      <div className="pointer-events-auto relative z-10 flex h-full flex-col text-site-ink">
         <div className="max-w-5xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0a0c20]/55">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-site-ink/55">
             Columns
           </p>
           <h2
@@ -83,7 +83,7 @@ export function HomeColumnsListStage({ postCounts = {} }: { postCounts?: Record<
           <div
             className={[
               "pointer-events-none absolute z-20 hidden aspect-[4/3] w-[min(22vw,340px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden",
-              "border border-[#0a0c20]/10 bg-[var(--channel-bg,#f0eee7)] shadow-[0_24px_80px_rgba(10,12,32,0.14)] transition duration-300 md:block",
+              "border border-site-ink/10 bg-[var(--channel-bg)] shadow-[0_24px_80px_rgba(10,12,32,0.14)] transition duration-300 md:block",
               activeItem ? "opacity-100 blur-0" : "opacity-0 blur-sm",
             ].join(" ")}
             style={{
@@ -131,8 +131,8 @@ export function HomeColumnsListStage({ postCounts = {} }: { postCounts?: Record<
                   }}
                   onMouseMove={updatePreviewPosition}
                   className={[
-                    "group grid grid-cols-[1fr_auto] items-center border-t border-[#0a0c20]/28 py-7 transition duration-200 last:border-b md:grid-cols-[minmax(0,1fr)_auto_2.5rem] md:gap-5 md:py-9 lg:py-10",
-                    hasHover && !isActive ? "text-[#0a0c20]/28" : "text-[#0a0c20]",
+                    "group grid grid-cols-[1fr_auto] items-center border-t border-site-ink/28 py-7 transition duration-200 last:border-b md:grid-cols-[minmax(0,1fr)_auto_2.5rem] md:gap-5 md:py-9 lg:py-10",
+                    hasHover && !isActive ? "text-site-ink/28" : "text-site-ink",
                   ].join(" ")}
                 >
                   <div className="min-w-0">

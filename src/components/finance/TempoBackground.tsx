@@ -5,7 +5,7 @@ import { DataWall } from './DataWall';
 
 export default function TempoBackground({ config, targetTwist, theme }) {
     return (
-        <div className="fixed inset-0 z-0 pointer-events-none bg-black">
+        <div className="fixed inset-0 z-0 pointer-events-none bg-site-neutral-950">
             <DataWall
                 config={config}
                 targetTwist={targetTwist}

@@ -1,43 +1,43 @@
 /* src/app/home.module.css */
 .scholarlyTheme {
   /* Override global Tailwind variables within this scope */
-  --background: #F0EEE7;
-  --foreground: #141413;
+  --background: var(--site-page-bg);
+  --foreground: var(--color-site-ink);
 
-  --primary: #0077A3;
-  --primary-foreground: #F0EEE7;
+  --primary: var(--color-site-blue-500);
+  --primary-foreground: var(--color-site-ink);
 
-  --card: #E2DBCE;
-  --card-foreground: #141413;
+  --card: var(--color-site-stone-200);
+  --card-foreground: var(--color-site-ink);
 
-  --secondary: #E2DBCE;
-  --secondary-foreground: #141413;
+  --secondary: var(--color-site-stone-200);
+  --secondary-foreground: var(--color-site-ink);
 
-  --muted: #E2DBCE;
-  --muted-foreground: #68645d;
+  --muted: var(--color-site-stone-200);
+  --muted-foreground: var(--color-site-stone-600);
 
-  --accent: #E2DBCE;
-  --accent-foreground: #141413;
+  --accent: var(--color-site-blue-200);
+  --accent-foreground: var(--color-site-ink);
 
-  --border: #D8D0C3;
-  --input: #D8D0C3;
-  --ring: #00A9E0;
+  --border: var(--color-site-stone-300);
+  --input: var(--color-site-stone-300);
+  --ring: var(--color-site-blue-500);
 
   --radius: 0.5rem;
 
   /* Custom Theme Tokens for easy access */
-  --theme-surface: #F0EEE7;
-  --theme-surface-low: rgba(226, 219, 206, 0.48);
-  --theme-surface-high: #E2DBCE;
-  --theme-surface-highest: #D8D0C3;
+  --theme-surface: var(--site-page-bg);
+  --theme-surface-low: color-mix(in srgb, var(--color-site-stone-200) 48%, transparent);
+  --theme-surface-high: var(--color-site-stone-200);
+  --theme-surface-highest: var(--color-site-stone-300);
 
-  --theme-primary: #0077A3; /* Deep Blue Bottle Blue */
-  --theme-primary-dim: #00A9E0; /* Blue Bottle Blue */
+  --theme-primary: var(--color-site-blue-500);
+  --theme-primary-dim: var(--color-site-sky-500);
 
-  --theme-ink: #141413;
+  --theme-ink: var(--color-site-ink);
 
-  --theme-outline: #68645d;
-  --theme-outline-variant: #D8D0C3;
+  --theme-outline: var(--color-site-stone-600);
+  --theme-outline-variant: var(--color-site-stone-300);
 
   /* Base styling */
   background-color: var(--theme-surface);
@@ -67,28 +67,28 @@
 
 /* Glassmorphism utility for floating components */
 .scholarlyTheme .glassFloating {
-  background-color: rgba(247, 243, 236, 0.8) !important; /* surface at 80% */
+  background-color: color-mix(in srgb, var(--color-site-stone-50) 80%, transparent) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
 /* Palette-only class for channel pages that want the color system without the global overrides */
 .scholarlyPalette {
-  --theme-surface: #F0EEE7;
-  --theme-surface-low: rgba(226, 219, 206, 0.48);
-  --theme-surface-high: #E2DBCE;
-  --theme-surface-highest: #D8D0C3;
-  --theme-primary: #0077A3;
-  --theme-primary-dim: #00A9E0;
-  --theme-ink: #141413;
-  --theme-outline: #68645d;
-  --theme-outline-variant: #D8D0C3;
+  --theme-surface: var(--site-page-bg);
+  --theme-surface-low: color-mix(in srgb, var(--color-site-stone-200) 48%, transparent);
+  --theme-surface-high: var(--color-site-stone-200);
+  --theme-surface-highest: var(--color-site-stone-300);
+  --theme-primary: var(--color-site-blue-500);
+  --theme-primary-dim: var(--color-site-sky-500);
+  --theme-ink: var(--color-site-ink);
+  --theme-outline: var(--color-site-stone-600);
+  --theme-outline-variant: var(--color-site-stone-300);
 }
 
 /* Custom gradients & interactive textures */
 .scholarlyTheme .primaryButton {
-  background: linear-gradient(155deg, #0077A3, #005f82) !important;
-  color: #F7F3EC !important;
+  background: linear-gradient(155deg, var(--color-site-blue-600), var(--color-site-blue-800)) !important;
+  color: var(--color-site-stone-50) !important;
   border: none !important;
 }
 

@@ -6,7 +6,7 @@
   height: 100vh;
   pointer-events: none;
   overflow: hidden;
-  --shadow: var(--theme-primary, #1A1A1A);
+  --shadow: var(--theme-primary, var(--color-site-neutral-900));
   z-index: 0;
   mask-image: linear-gradient(
     to bottom,

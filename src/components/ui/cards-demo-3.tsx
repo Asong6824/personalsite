@@ -45,10 +45,10 @@ const Skeleton = () => {
           <ClaudeLogo className="h-4 w-4 " />
         </Container>
         <Container className="h-12 w-12 circle-2">
-          <GoCopilot className="h-6 w-6 dark:text-white" />
+          <GoCopilot className="h-6 w-6 dark:text-site-neutral-50" />
         </Container>
         <Container className="circle-3">
-          <OpenAILogo className="h-8 w-8 dark:text-white" />
+          <OpenAILogo className="h-8 w-8 dark:text-site-neutral-50" />
         </Container>
         <Container className="h-12 w-12 circle-4">
           <MetaIconOutline className="h-6 w-6 " />
@@ -58,7 +58,7 @@ const Skeleton = () => {
         </Container>
       </div>
       <div
-        className="h-40 w-px absolute top-20 m-auto z-40 bg-gradient-to-b from-transparent via-cyan-500 to-transparent animate-move">
+        className="h-40 w-px absolute top-20 m-auto z-40 bg-gradient-to-b from-transparent via-site-cyan-500 to-transparent animate-move">
         <div className="w-10 h-32 top-1/2 -translate-y-1/2 absolute -left-10">
           <Sparkles />
         </div>
@@ -95,7 +95,7 @@ const Sparkles = () => {
             borderRadius: "50%",
             zIndex: 1,
           }}
-          className="inline-block bg-black dark:bg-white"></motion.span>
+          className="inline-block bg-site-neutral-950 dark:bg-site-neutral-50"></motion.span>
       ))}
     </div>
   );
@@ -108,7 +108,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "max-w-sm w-full mx-auto p-8 rounded-xl border border-[rgba(255,255,255,0.10)] dark:bg-[rgba(40,40,40,0.70)] bg-gray-100 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.06)_inset] group",
+        "max-w-sm w-full mx-auto p-8 rounded-xl border border-[rgba(255,255,255,0.10)] dark:bg-[rgba(40,40,40,0.70)] bg-site-gray-100 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.06)_inset] group",
         className
       )}>
       {children}
@@ -122,7 +122,7 @@ export const CardTitle = ({
 }: any) => {
   return (
     <h3
-      className={cn("text-lg font-semibold text-gray-800 dark:text-white py-2", className)}>
+      className={cn("text-lg font-semibold text-site-gray-800 dark:text-site-neutral-50 py-2", className)}>
       {children}
     </h3>
   );
@@ -135,7 +135,7 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        "text-sm font-normal text-neutral-600 dark:text-neutral-400 max-w-sm",
+        "text-sm font-normal text-site-neutral-600 dark:text-site-neutral-400 max-w-sm",
         className
       )}>
       {children}
@@ -151,7 +151,7 @@ export const CardSkeletonContainer = ({
   return (
     <div
       className={cn("h-[15rem] md:h-[20rem] rounded-xl z-40", className, showGradient &&
-        "bg-neutral-300 dark:bg-[rgba(40,40,40,0.70)] [mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)]")}>
+        "bg-site-neutral-300 dark:bg-[rgba(40,40,40,0.70)] [mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)]")}>
       {children}
     </div>
   );

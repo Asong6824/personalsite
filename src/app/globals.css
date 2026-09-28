@@ -12,6 +12,7 @@
 }
 
 @import "tailwindcss";
+@import "./site-palette.css";
 @plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 
@@ -25,17 +26,17 @@
 }
 
 /* VS Code 风格的代码高亮样式 */
-/* GitHub Light 风格的代码高亮样式 (适配 #EAE8E0 背景) */
+/* GitHub Light 风格的代码高亮样式（适配站点暖纸背景） */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #6a737d !important;
+  color: var(--color-site-slate-600) !important;
   /* 灰色注释 */
 }
 
 .token.punctuation {
-  color: #24292e !important;
+  color: var(--color-site-neutral-800) !important;
   /* 深灰标点 */
 }
 
@@ -46,7 +47,7 @@
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: #005cc5 !important;
+  color: var(--color-site-blue-700) !important;
   /* 蓝色常量/数值 */
 }
 
@@ -56,7 +57,7 @@
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #032f62 !important;
+  color: var(--color-site-blue-800) !important;
   /* 深蓝字符串 */
 }
 
@@ -65,27 +66,27 @@
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: #d73a49 !important;
+  color: var(--color-site-red-700) !important;
   /* 红色运算符 */
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: #d73a49 !important;
+  color: var(--color-site-red-700) !important;
   /* 红色关键字 */
 }
 
 .token.function,
 .token.class-name {
-  color: #6f42c1 !important;
+  color: var(--color-site-purple-700) !important;
   /* 紫色函数/类名 */
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-  color: #e36209 !important;
+  color: var(--color-site-orange-700) !important;
   /* 橙色变量/正则 */
 }
 
@@ -104,9 +105,9 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #3b82f6;
+  background: var(--color-site-blue-600);
   cursor: pointer;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--color-site-stone-50);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -114,18 +115,18 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #3b82f6;
+  background: var(--color-site-blue-600);
   cursor: pointer;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--color-site-stone-50);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .dark .slider::-webkit-slider-thumb {
-  border-color: #374151;
+  border-color: var(--color-site-slate-700);
 }
 
 .dark .slider::-moz-range-thumb {
-  border-color: #374151;
+  border-color: var(--color-site-slate-700);
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -222,104 +223,69 @@
 
 :root {
   --radius: 0.625rem;
-  /* 半径保持不变或按需调整 */
-  --site-page-bg: #F0EEE7;
 
-  --site-nav-ink: #141413;
-  --site-nav-muted: #68645d;
-  --site-nav-hover-surface: rgba(226, 219, 206, 0.42);
-  --site-nav-active-surface: rgba(216, 208, 195, 0.78);
-  --site-nav-pending-surface: rgba(216, 208, 195, 0.9);
-  --site-nav-border: rgba(104, 100, 93, 0.18);
-  --site-nav-focus: rgba(104, 100, 93, 0.35);
+  /* 站点核心语义：保留暖纸画布，其余角色从扩展色板选取。 */
+  --site-page-bg: var(--color-site-canvas);
+  --site-nav-ink: var(--color-site-ink);
+  --site-nav-muted: var(--color-site-stone-600);
+  --site-nav-hover-surface: color-mix(in srgb, var(--color-site-stone-200) 42%, transparent);
+  --site-nav-active-surface: color-mix(in srgb, var(--color-site-stone-300) 78%, transparent);
+  --site-nav-pending-surface: color-mix(in srgb, var(--color-site-stone-300) 90%, transparent);
+  --site-nav-border: color-mix(in srgb, var(--color-site-stone-600) 18%, transparent);
+  --site-nav-focus: color-mix(in srgb, var(--color-site-blue-500) 45%, transparent);
 
-  /* 白、灰、天蓝主题 - 亮色模式 */
-  --background: oklch(0.985 0.003 230);
-  /* 非常浅的冷灰色/近乎白色 */
-  --foreground: oklch(0.22 0.01 230);
-  /* 深冷灰色 (用于文本) */
+  /* 通用 UI：暖色表面 + 编辑蓝强调。 */
+  --background: var(--site-page-bg);
+  --foreground: var(--site-nav-ink);
+  --card: var(--color-site-stone-50);
+  --card-foreground: var(--site-nav-ink);
+  --popover: var(--color-site-stone-50);
+  --popover-foreground: var(--site-nav-ink);
+  --primary: var(--color-site-blue-500);
+  --primary-foreground: var(--site-nav-ink);
+  --secondary: var(--color-site-stone-100);
+  --secondary-foreground: var(--color-site-stone-700);
+  --muted: var(--color-site-stone-100);
+  --muted-foreground: var(--color-site-stone-600);
+  --accent: var(--color-site-blue-200);
+  --accent-foreground: var(--color-site-blue-900);
+  --destructive: var(--color-site-red-700);
+  --border: var(--color-site-stone-300);
+  --input: var(--color-site-stone-100);
+  --ring: color-mix(in srgb, var(--color-site-blue-500) 55%, transparent);
 
-  --card: oklch(1 0 0);
-  /* 卡片背景 - 纯白 */
-  --card-foreground: oklch(0.22 0.01 230);
-  /* 卡片文字 - 深冷灰色 */
+  /* 分类色交错取样，避免沿色轮连续取相邻色。 */
+  --chart-1: var(--color-site-blue-500);
+  --chart-2: var(--color-site-orange-500);
+  --chart-3: var(--color-site-lime-600);
+  --chart-4: var(--color-site-violet-600);
+  --chart-5: var(--color-site-teal-600);
 
-  --popover: oklch(1 0 0);
-  /* 弹窗背景 - 纯白 */
-  --popover-foreground: oklch(0.22 0.01 230);
-  /* 弹窗文字 - 深冷灰色 */
+  --sidebar: var(--color-site-stone-50);
+  --sidebar-foreground: var(--site-nav-ink);
+  --sidebar-primary: var(--color-site-blue-500);
+  --sidebar-primary-foreground: var(--site-nav-ink);
+  --sidebar-accent: var(--color-site-blue-200);
+  --sidebar-accent-foreground: var(--color-site-blue-900);
+  --sidebar-border: var(--color-site-stone-300);
+  --sidebar-ring: var(--ring);
 
-  --primary: oklch(0.68 0.15 225);
-  /* 主色 - 天蓝色 */
-  --primary-foreground: oklch(0.99 0 0);
-  /* 主色上的文字 - 白色 */
+  --color-1-new: var(--color-site-blue-500);
+  --color-2-new: var(--color-site-orange-500);
+  --color-3-new: var(--color-site-lime-600);
+  --color-4-new: var(--color-site-violet-500);
+  --color-5-new: var(--color-site-teal-600);
 
-  --secondary: oklch(0.94 0.004 230);
-  /* 次要色背景 - 浅冷灰色 */
-  --secondary-foreground: oklch(0.35 0.01 230);
-  /* 次要色文字 - 中深冷灰色 */
-
-  --muted: oklch(0.96 0.003 230);
-  /* 静默色背景 - 更浅的冷灰色 */
-  --muted-foreground: oklch(0.48 0.008 230);
-  /* 静默色文字 - 中冷灰色 */
-
-  --accent: oklch(0.72 0.14 230);
-  /* 强调色 - 略亮的天蓝色 */
-  --accent-foreground: oklch(0.99 0 0);
-  /* 强调色上的文字 - 白色 */
-
-  --destructive: oklch(0.577 0.245 27.325);
-  /* 破坏色 - 保持红色系或按需调整 */
-
-  --border: oklch(0.90 0.005 230);
-  /* 边框 - 浅冷灰色 */
-  --input: oklch(0.95 0.004 230);
-  /* 输入框背景 - 非常浅的冷灰色 */
-  --ring: oklch(0.68 0.15 225 / 0.5);
-  /* 焦点环 - 半透明天蓝色 (基于 primary) */
-
-  /* 图表颜色 - 使用天蓝的各种色调和中性灰 */
-  --chart-1: oklch(0.68 0.15 225);
-  /* 天蓝 */
-  --chart-2: oklch(0.75 0.10 230);
-  /* 较浅的天蓝 */
-  --chart-3: oklch(0.55 0.02 230);
-  /* 深静默蓝灰色 */
-  --chart-4: oklch(0.82 0.08 220);
-  /* 非常浅的天蓝 */
-  --chart-5: oklch(0.60 0.05 235);
-  /* 中等蓝灰色 */
-
-  /* 侧边栏颜色 - 亮色模式 */
-  --sidebar: oklch(0.97 0.003 230);
-  /* 侧边栏背景 - 非常浅的冷灰色 */
-  --sidebar-foreground: oklch(0.25 0.01 230);
-  /* 侧边栏文字 - 深冷灰色 */
-  --sidebar-primary: oklch(0.68 0.15 225);
-  /* 侧边栏主色 - 天蓝色 */
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  /* 侧边栏主色上的文字 - 白色 */
-  --sidebar-accent: oklch(0.72 0.14 230);
-  /* 侧边栏强调色 - 略亮天蓝 */
-  --sidebar-accent-foreground: oklch(0.99 0 0);
-  /* 侧边栏强调色上的文字 - 白色 */
-  --sidebar-border: oklch(0.90 0.005 230);
-  /* 侧边栏边框 - 浅冷灰色 */
-  --sidebar-ring: oklch(0.68 0.15 225 / 0.5);
-  /* 侧边栏焦点环 - 半透明天蓝色 */
-
-  /* 新的彩虹色，围绕天蓝主题 */
-  --color-1-new: oklch(0.68 0.15 225);
-  /* 主天蓝 */
-  --color-2-new: oklch(0.75 0.13 240);
-  /* 偏紫的天蓝 */
-  --color-3-new: oklch(0.72 0.16 210);
-  /* 偏青的天蓝 */
-  --color-4-new: oklch(0.82 0.10 230);
-  /* 更亮的天蓝 */
-  --color-5-new: oklch(0.60 0.18 220);
-  /* 更深的天蓝 */
+  /* 未进入频道作用域时的默认文章 token。 */
+  --channel-bg: var(--color-site-canvas);
+  --channel-card: var(--color-site-stone-200);
+  --channel-card-hover: var(--color-site-stone-300);
+  --channel-ink: var(--color-site-ink);
+  --channel-muted: var(--color-site-stone-600);
+  --channel-border: var(--color-site-stone-300);
+  --channel-accent: var(--color-site-ink);
+  --channel-accent-soft: var(--color-site-stone-200);
+  --channel-accent-strong: var(--color-site-neutral-900);
 }
 
 html,
@@ -334,122 +300,96 @@ body > main {
 }
 
 .dark {
-  /* 白、灰、天蓝主题 - 暗色模式 */
-  --background: oklch(0.12 0.008 230);
-  /* 深邃的冷调暗灰色/近乎黑色 */
-  --foreground: oklch(0.94 0.004 230);
-  /* 浅冷灰色 (用于文本) */
+  /* 暗色通用 UI：蓝灰暗面 + 扩展色板中的较亮彩色档。 */
+  --background: var(--color-site-slate-950);
+  --foreground: var(--color-site-stone-100);
+  --card: var(--color-site-slate-900);
+  --card-foreground: var(--color-site-stone-100);
+  --popover: var(--color-site-slate-900);
+  --popover-foreground: var(--color-site-stone-100);
+  --primary: var(--color-site-blue-400);
+  --primary-foreground: var(--color-site-blue-950);
+  --secondary: var(--color-site-slate-800);
+  --secondary-foreground: var(--color-site-stone-100);
+  --muted: var(--color-site-slate-800);
+  --muted-foreground: var(--color-site-slate-400);
+  --accent: var(--color-site-blue-700);
+  --accent-foreground: var(--color-site-blue-50);
+  --destructive: var(--color-site-red-500);
+  --border: var(--color-site-slate-700);
+  --input: var(--color-site-slate-800);
+  --ring: color-mix(in srgb, var(--color-site-blue-400) 62%, transparent);
 
-  --card: oklch(0.17 0.01 230);
-  /* 卡片背景 - 比主背景稍亮的暗灰色 */
-  --card-foreground: oklch(0.94 0.004 230);
-  /* 卡片文字 - 浅冷灰色 */
+  --chart-1: var(--color-site-blue-400);
+  --chart-2: var(--color-site-orange-400);
+  --chart-3: var(--color-site-lime-400);
+  --chart-4: var(--color-site-violet-400);
+  --chart-5: var(--color-site-teal-400);
 
-  --popover: oklch(0.17 0.01 230);
-  /* 弹窗背景 - 同卡片 */
-  --popover-foreground: oklch(0.94 0.004 230);
-  /* 弹窗文字 - 浅冷灰色 */
+  --sidebar: var(--color-site-slate-900);
+  --sidebar-foreground: var(--color-site-stone-100);
+  --sidebar-primary: var(--color-site-blue-400);
+  --sidebar-primary-foreground: var(--color-site-blue-950);
+  --sidebar-accent: var(--color-site-blue-700);
+  --sidebar-accent-foreground: var(--color-site-blue-50);
+  --sidebar-border: var(--color-site-slate-700);
+  --sidebar-ring: var(--ring);
 
-  --primary: oklch(0.72 0.14 225);
-  /* 主色 - 亮眼的天蓝色 (比亮色模式下的 primary 更亮一点以便突出) */
-  --primary-foreground: oklch(0.1 0.01 230);
-  /* 主色上的文字 - 非常深的冷灰色 */
-
-  --secondary: oklch(0.22 0.01 230);
-  /* 次要色背景 - 中等暗灰色 */
-  --secondary-foreground: oklch(0.88 0.005 230);
-  /* 次要色文字 - 较浅的冷灰色 */
-
-  --muted: oklch(0.25 0.01 230);
-  /* 静默色背景 - 略浅于次要色的暗灰色 */
-  --muted-foreground: oklch(0.65 0.008 230);
-  /* 静默色文字 - 中等强度的冷灰色 */
-
-  --accent: oklch(0.75 0.15 230);
-  /* 强调色 - 更亮的天蓝色 */
-  --accent-foreground: oklch(0.1 0.01 230);
-  /* 强调色上的文字 - 非常深的冷灰色 */
-
-  --destructive: oklch(0.704 0.191 22.216);
-  /* 破坏色 - 保持红色系或按需调整 */
-
-  --border: oklch(0.30 0.01 230);
-  /* 边框 - 在暗背景上可见的灰色 */
-  --input: oklch(0.28 0.01 230);
-  /* 输入框背景 - 略浅的暗灰色 */
-  --ring: oklch(0.72 0.14 225 / 0.5);
-  /* 焦点环 - 半透明亮天蓝色 (基于 primary) */
-
-  /* 图表颜色 - 暗色模式 */
-  --chart-1: oklch(0.72 0.14 225);
-  /* 亮天蓝 */
-  --chart-2: oklch(0.65 0.10 230);
-  /* 较暗但仍清晰的天蓝 */
-  --chart-3: oklch(0.80 0.08 220);
-  /* 更亮、略偏青的天蓝 */
-  --chart-4: oklch(0.45 0.05 235);
-  /* 深蓝灰色 */
-  --chart-5: oklch(0.55 0.07 240);
-  /* 中等蓝紫色调 */
-
-  /* 侧边栏颜色 - 暗色模式 */
-  --sidebar: oklch(0.17 0.01 230);
-  /* 侧边栏背景 - 同卡片背景 */
-  --sidebar-foreground: oklch(0.94 0.004 230);
-  /* 侧边栏文字 - 浅冷灰色 */
-  --sidebar-primary: oklch(0.72 0.14 225);
-  /* 侧边栏主色 - 亮天蓝 */
-  --sidebar-primary-foreground: oklch(0.1 0.01 230);
-  /* 侧边栏主色上的文字 - 非常深的冷灰色 */
-  --sidebar-accent: oklch(0.75 0.15 230);
-  /* 侧边栏强调色 - 更亮天蓝 */
-  --sidebar-accent-foreground: oklch(0.1 0.01 230);
-  /* 侧边栏强调色上的文字 - 非常深的冷灰色 */
-  --sidebar-border: oklch(0.30 0.01 230);
-  /* 侧边栏边框 - 同全局边框 */
-  --sidebar-ring: oklch(0.72 0.14 225 / 0.5);
-  /* 侧边栏焦点环 - 半透明亮天蓝色 */
-
-  /* 新的彩虹色，在暗色模式下保持鲜明但不过于刺眼 */
-  --color-1-new: oklch(0.68 0.15 225);
-  --color-2-new: oklch(0.75 0.13 240);
-  --color-3-new: oklch(0.72 0.16 210);
-  --color-4-new: oklch(0.82 0.10 230);
-  --color-5-new: oklch(0.60 0.18 220);
+  --color-1-new: var(--color-site-blue-400);
+  --color-2-new: var(--color-site-orange-400);
+  --color-3-new: var(--color-site-lime-400);
+  --color-4-new: var(--color-site-violet-400);
+  --color-5-new: var(--color-site-teal-400);
 }
 
 [data-tech-page],
-[data-life-page],
 .theme-warm-editorial {
-  --channel-bg: #F0EEE7;
-  --channel-card: #E2DBCE;
-  --channel-card-hover: #D8D0C3;
-  --channel-ink: #141413;
-  --channel-muted: #68645d;
-  --channel-border: #D8D0C3;
-  --channel-accent: #141413;
+  --channel-bg: var(--site-page-bg);
+  --channel-card: var(--color-site-stone-200);
+  --channel-card-hover: var(--color-site-stone-300);
+  --channel-ink: var(--color-site-ink);
+  --channel-muted: var(--color-site-stone-600);
+  --channel-border: var(--color-site-stone-300);
+  --channel-accent: var(--color-site-ink);
+  --channel-accent-soft: var(--color-site-stone-200);
+  --channel-accent-strong: var(--color-site-neutral-900);
+  color: var(--channel-ink);
+}
+
+[data-life-page] {
+  --channel-bg: var(--site-page-bg);
+  --channel-card: var(--color-site-stone-200);
+  --channel-card-hover: var(--color-site-stone-300);
+  --channel-ink: var(--color-site-ink);
+  --channel-muted: var(--color-site-stone-600);
+  --channel-border: var(--color-site-stone-300);
+  --channel-accent: var(--color-site-blue-500);
+  --channel-accent-soft: var(--color-site-blue-200);
+  --channel-accent-strong: var(--color-site-blue-700);
   color: var(--channel-ink);
 }
 
 .theme-muji {
-  --muji-bg: #F0EEE7;
-  --muji-paper: #E2DBCE;
-  --muji-ink: #141413;
-  --muji-taupe: #68645d;
-  --muji-wood: #141413;
-  --muji-border: #D8D0C3;
-  --muji-accent: #D8D0C3;
-  --muji-map-visited: #E2DBCE;
-  --muji-map-stayed: #D8D0C3;
-  --muji-map-lived: #141413;
-  --muji-map-unvisited: #CFC7B9;
-  --channel-bg: #F0EEE7;
-  --channel-card: #E2DBCE;
-  --channel-card-hover: #D8D0C3;
-  --channel-ink: #141413;
-  --channel-muted: #68645d;
-  --channel-border: #D8D0C3;
-  --channel-accent: #141413;
+  --muji-bg: var(--site-page-bg);
+  --muji-paper: var(--color-site-stone-200);
+  --muji-ink: var(--color-site-ink);
+  --muji-taupe: var(--color-site-stone-600);
+  --muji-wood: var(--color-site-stone-700);
+  --muji-border: var(--color-site-stone-300);
+  --muji-accent: var(--color-site-lime-600);
+  --muji-map-visited: var(--color-site-stone-200);
+  --muji-map-stayed: var(--color-site-lime-300);
+  --muji-map-lived: var(--color-site-lime-600);
+  --muji-map-unvisited: var(--color-site-stone-300);
+  --channel-bg: var(--site-page-bg);
+  --channel-card: var(--color-site-stone-200);
+  --channel-card-hover: var(--color-site-stone-300);
+  --channel-ink: var(--color-site-ink);
+  --channel-muted: var(--color-site-stone-600);
+  --channel-border: var(--color-site-stone-300);
+  --channel-accent: var(--color-site-lime-600);
+  --channel-accent-soft: var(--color-site-lime-300);
+  --channel-accent-strong: var(--color-site-lime-700);
 }
 
 .site-navbar {
@@ -541,7 +481,7 @@ body > main {
 
 .site-loading-shell {
   min-height: 100vh;
-  background: #F0EEE7;
+  background: var(--site-page-bg);
   color: var(--site-nav-ink);
   padding: 7rem clamp(1.5rem, 5vw, 5rem) 4rem;
 }
@@ -555,8 +495,8 @@ body > main {
 .site-loading-block {
   position: relative;
   overflow: hidden;
-  background: rgba(226, 219, 206, 0.82);
-  border: 1px solid rgba(104, 100, 93, 0.08);
+  background: color-mix(in srgb, var(--color-site-stone-200) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-site-stone-600) 8%, transparent);
 }
 
 .site-loading-kicker {
@@ -682,7 +622,7 @@ body > main {
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(240, 238, 231, 0.82), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--site-page-bg) 82%, transparent), transparent);
   animation: site-loading-shimmer 1.4s ease-in-out infinite;
 }
 
@@ -949,7 +889,7 @@ article {
 }
 
 .article-reading-prose h2 {
-  border-top: 1px solid var(--channel-border, transparent);
+  border-top: 1px solid var(--channel-border);
   padding-top: 1.35em;
 }
 
@@ -992,22 +932,15 @@ article {
 
 /* Inline 圆球 —— Blue Bottle 色系流动渐变 */
 .orb-gradient {
-  /* 多层径向渐变叠加 —— 蓝瓶蓝 + 原木色 + 雾灰交织 */
+  /* 多层径向渐变叠加 —— 编辑蓝 + 暖石 + 雾灰交织 */
   background:
-    /* 高光点 —— 左上，极浅蓝 */
-    radial-gradient(ellipse 70% 60% at 20% 30%, rgba(224, 244, 251, 0.85) 0%, transparent 55%),
-    /* 深蓝瓶核心 —— 右上 */
-    radial-gradient(ellipse 60% 75% at 75% 65%, rgba(0, 119, 163, 0.85) 0%, transparent 50%),
-    /* 深木色晕染 —— 左下 */
-    radial-gradient(ellipse 80% 50% at 45% 85%, rgba(196, 180, 154, 0.75) 0%, transparent 50%),
-    /* 极浅木色边缘 —— 右上 */
-    radial-gradient(ellipse 55% 65% at 85% 15%, rgba(247, 243, 236, 0.7) 0%, transparent 45%),
-    /* 悬停木色交织 —— 左上 */
-    radial-gradient(ellipse 70% 70% at 15% 75%, rgba(212, 200, 180, 0.5) 0%, transparent 50%),
-    /* 蓝瓶蓝过渡 —— 中央 */
-    radial-gradient(ellipse 90% 40% at 60% 45%, rgba(0, 169, 224, 0.6) 0%, transparent 50%),
-    /* 底色 —— 极浅木色 */
-    #F7F3EC;
+    radial-gradient(ellipse 70% 60% at 20% 30%, color-mix(in srgb, var(--color-site-blue-100) 85%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 75% at 75% 65%, color-mix(in srgb, var(--color-site-blue-500) 85%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 45% 85%, color-mix(in srgb, var(--color-site-stone-400) 75%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 65% at 85% 15%, color-mix(in srgb, var(--color-site-stone-50) 70%, transparent) 0%, transparent 45%),
+    radial-gradient(ellipse 70% 70% at 15% 75%, color-mix(in srgb, var(--color-site-stone-300) 50%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 40% at 60% 45%, color-mix(in srgb, var(--color-site-sky-500) 60%, transparent) 0%, transparent 50%),
+    var(--color-site-stone-50);
 
   /* 超大 background-size 确保放大到全屏时色彩仍然丰富 */
   background-size: 400% 400%;
@@ -1053,11 +986,11 @@ article {
 .story-text .line {
   font-size: clamp(1.5rem, 4vw, 3rem);
   font-weight: 300;
-  color: #ffffff;
+  color: var(--color-site-stone-50);
   letter-spacing: 0.05em;
   line-height: 1.8;
   text-align: center;
-  text-shadow: 0 2px 20px rgba(0, 119, 163, 0.2);
+  text-shadow: 0 2px 20px color-mix(in srgb, var(--color-site-blue-700) 24%, transparent);
 }
 
 /* 滚动提示 */
@@ -1067,7 +1000,7 @@ article {
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.75rem;
-  color: #97948E;
+  color: var(--color-site-stone-500);
   letter-spacing: 0.2em;
   opacity: 0.6;
   animation: breathe 2s ease-in-out infinite;

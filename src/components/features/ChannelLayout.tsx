@@ -55,7 +55,7 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                             {channelConfig.name}
                         </h1>
                     </div>
-                    <p className={`text-lg max-w-2xl mx-auto ${isLifeChannel ? 'font-light' : 'text-gray-600 dark:text-gray-400'}`}
+                    <p className={`text-lg max-w-2xl mx-auto ${isLifeChannel ? 'font-light' : 'text-site-gray-600 dark:text-site-gray-400'}`}
                        style={isTechChannel || isLifeChannel ? {color: 'var(--channel-muted)', letterSpacing: '0.01em'} : {}}>
                         {channelConfig.description}
                     </p>
@@ -63,12 +63,12 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                     {/* 面包屑导航 */}
                     <nav className="mt-6 text-sm">
                         <Link href="/" className="transition-colors hover:opacity-80" 
-                              style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>首页</Link>
-                        <span className="mx-2" style={isTechChannel || isLifeChannel ? {color: 'var(--channel-muted)'} : {color: '#6b7280'}}>{'>'}</span>
+                              style={{ color: 'var(--channel-muted)' }}>首页</Link>
+                        <span className="mx-2" style={{color: 'var(--channel-muted)'}}>{'>'}</span>
                         <Link href="/blog" className="transition-colors hover:opacity-80" 
-                              style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : { color: '#6b7280' }}>博客</Link>
-                        <span className="mx-2" style={isTechChannel || isLifeChannel ? {color: 'var(--channel-muted)'} : {color: '#6b7280'}}>{'>'}</span>
-                        <span style={isTechChannel || isLifeChannel ? {color: 'var(--channel-ink)'} : { color: '#eaddd7' }}>{channelConfig.name}</span>
+                              style={{ color: 'var(--channel-muted)' }}>博客</Link>
+                        <span className="mx-2" style={{color: 'var(--channel-muted)'}}>{'>'}</span>
+                        <span style={{color: 'var(--channel-ink)'}}>{channelConfig.name}</span>
                      </nav>
                  </motion.div>
 
@@ -80,7 +80,7 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1, duration: 0.6 }}
-                        className={isLifeChannel || isTechChannel ? "overflow-hidden transition-all duration-300" : "bg-white/50 dark:bg-gray-800/50 rounded-2xl p-6 md:p-8 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"}
+                        className={isLifeChannel || isTechChannel ? "overflow-hidden transition-all duration-300" : "bg-site-neutral-50/50 dark:bg-site-gray-800/50 rounded-2xl p-6 md:p-8 backdrop-blur-sm border border-site-gray-200/50 dark:border-site-gray-700/50"}
                         style={isLifeChannel || isTechChannel ? {
                             backgroundColor: 'var(--channel-card)',
                             border: '1px solid var(--channel-border)',
@@ -90,11 +90,11 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                         {/* 专栏标题 */}
                         <div className={`flex items-center justify-between mb-6 ${isLifeChannel || isTechChannel ? 'p-8' : ''}`}>
                             <div>
-                                <h2 className={`text-2xl mb-2 ${isLifeChannel ? 'font-light' : 'font-bold text-gray-900 dark:text-white'}`}
+                                <h2 className={`text-2xl mb-2 ${isLifeChannel ? 'font-light' : 'font-bold text-site-gray-900 dark:text-site-neutral-50'}`}
                                     style={isTechChannel || isLifeChannel ? {color: 'var(--channel-ink)', letterSpacing: '0.02em'} : {}}>
                                     {config.name}
                                 </h2>
-                                <p className={isLifeChannel ? 'font-light' : 'text-gray-600 dark:text-gray-400'}
+                                <p className={isLifeChannel ? 'font-light' : 'text-site-gray-600 dark:text-site-gray-400'}
                                    style={isTechChannel || isLifeChannel ? {color: 'var(--channel-muted)', letterSpacing: '0.01em'} : {}}>
                                     {config.description}
                                 </p>
@@ -108,7 +108,7 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                                     letterSpacing: '0.01em'
                                 } : { 
                                     backgroundColor: 'rgba(234, 221, 215, 0.1)', 
-                                    color: '#eaddd7' 
+                                    color: 'var(--channel-ink)'
                                 }}
                                 onMouseEnter={(e) => {
                                     if (!isLifeChannel && !isTechChannel) {
@@ -136,25 +136,25 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                                     className="group"
                                 >
                                     <Link href={`/blog/${channelKey}/${columnKey}/${post.slug}`}>
-                                        <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}}>
+                                        <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-site-gray-50 dark:hover:bg-site-gray-700/50 transition-colors" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}}>
                                             {/* 文章信息 */}
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors line-clamp-2 group-hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}}>
+                                                <h3 className="text-lg font-semibold text-site-gray-900 dark:text-site-neutral-50 transition-colors line-clamp-2 group-hover:text-primary" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : {}}>
                                                     {post.title}
                                                 </h3>
                                                 {post.excerpt && (
-                                                    <p className="text-gray-600 dark:text-gray-400 mt-2 line-clamp-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
+                                                    <p className="text-site-gray-600 dark:text-site-gray-400 mt-2 line-clamp-2" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
                                                         {post.excerpt}
                                                     </p>
                                                 )}
-                                                <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
+                                                <div className="flex items-center gap-4 mt-3 text-sm text-site-gray-500 dark:text-site-gray-400" style={isTechChannel || isLifeChannel ? { color: 'var(--channel-muted)' } : {}}>
                                                     <span>
                                                         {post.date ? format(parseISO(post.date), 'yyyy年MM月dd日', { locale: zhCN }) : '未知日期'}
                                                     </span>
                                                     {post.tags && (
                                                         <div className="flex gap-2">
                                                             {post.tags.slice(0, 2).map(tag => (
-                                                                <span key={tag} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+                                                                <span key={tag} className="px-2 py-1 bg-site-gray-100 dark:bg-site-gray-700 rounded text-xs">
                                                                     #{tag}
                                                                 </span>
                                                             ))}
@@ -166,7 +166,7 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                                             {/* 置顶标识 */}
                                             {post.pinned && (
                                                 <div className="flex-shrink-0">
-                                                    <span className="inline-flex items-center px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium rounded">
+                                                    <span className="inline-flex items-center px-2 py-1 bg-site-red-100 dark:bg-site-red-900/30 text-site-red-600 dark:text-site-red-400 text-xs font-medium rounded">
                                                         📌 置顶
                                                     </span>
                                                 </div>
@@ -182,7 +182,7 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                                 <Link 
                                     href={`/blog/${channelKey}/${columnKey}`}
                                     className="inline-flex items-center gap-2 transition-colors font-medium hover:opacity-80"
-                                    style={isTechChannel || isLifeChannel ? { color: 'var(--channel-ink)' } : { color: '#eaddd7' }}
+                                    style={{ color: 'var(--channel-ink)' }}
                                 >
                                     查看更多 {columnPosts.length - 3} 篇文章
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,10 +204,10 @@ export default function ChannelLayout({ channelKey, channelConfig, posts }) {
                     className="text-center py-12"
                 >
                     <div className="text-6xl mb-4">📝</div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-xl font-semibold text-site-gray-900 dark:text-site-neutral-50 mb-2">
                         暂无内容
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-site-gray-600 dark:text-site-gray-400">
                         该频道下暂时还没有文章，敬请期待！
                     </p>
                 </motion.div>

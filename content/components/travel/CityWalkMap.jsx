@@ -164,7 +164,7 @@ export default function CityWalkMap({
         }}
       />
       {!loaded && (
-        <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-400 bg-[#f5f5f5]">
+        <div className="absolute inset-0 flex items-center justify-center text-sm text-site-gray-400 bg-[#f5f5f5]">
           地图加载中…
         </div>
       )}

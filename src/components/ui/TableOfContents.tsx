@@ -89,9 +89,9 @@ export function TableOfContents() {
     return null;
   }
 
-  const borderColor = 'var(--channel-border, rgb(229 229 229))';
-  const activeColor = 'var(--channel-ink, rgb(23 23 23))';
-  const mutedColor = 'var(--channel-muted, rgb(115 115 115))';
+  const borderColor = 'var(--channel-border)';
+  const activeColor = 'var(--channel-ink)';
+  const mutedColor = 'var(--channel-muted)';
 
   return (
     <nav>

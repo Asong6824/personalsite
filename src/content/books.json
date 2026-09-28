@@ -52,5 +52,21 @@
     "coverUrl": "/images/placeholders/default.svg",
     "year": 2017,
     "pageCount": 109
+  },
+  {
+    "id": "travel-singapore",
+    "title": "新加坡旅行手绘本",
+    "shortTitle": "新加坡手绘本",
+    "author": "阿松",
+    "description": "以水彩跨页记录滨海湾、牛车水、如切与新加坡河沿途的旅行片段。",
+    "coverUrl": "/life/sketchbook/meng-to-sketchbook/marina-bay-skyline.png",
+    "year": 2023,
+    "pageCount": 9,
+    "chapters": ["滨海湾", "城市街区", "河流与花园"],
+    "open": {
+      "type": "sketchbook",
+      "sketchbookId": "singapore",
+      "initialSpreadId": "marina-bay-skyline"
+    }
   }
 ]

@@ -89,7 +89,7 @@ export function InContextLearningChart() {
           <SketchyText x={465} y={173} text="13B" fontSize={11} color={C_13B} />
           <SketchyText x={465} y={261} text="1.3B" fontSize={11} color={C_1_3B} />
         </SketchySvg>
-        <p className="text-center text-gray-400 text-xs mt-1">
+        <p className="text-center text-site-gray-400 text-xs mt-1">
           GPT-3 的上下文学习能力：模型规模越大，从示例中学习的效果越显著
         </p>
       </div>

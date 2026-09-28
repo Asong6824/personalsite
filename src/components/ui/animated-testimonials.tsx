@@ -55,13 +55,13 @@ export const AnimatedTestimonials = ({
           </div>
           <div className="flex flex-col justify-between py-4">
             <div>
-              <h3 className="text-2xl font-bold text-black dark:text-white">
+              <h3 className="text-2xl font-bold text-site-neutral-950 dark:text-site-neutral-50">
                 {testimonials[0]?.name}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-neutral-500">
+              <p className="text-sm text-site-gray-500 dark:text-site-neutral-500">
                 {testimonials[0]?.designation}
               </p>
-              <p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
+              <p className="mt-8 text-lg text-site-gray-500 dark:text-site-neutral-300">
                 {testimonials[0]?.quote}
               </p>
             </div>
@@ -116,7 +116,7 @@ export const AnimatedTestimonials = ({
                     draggable={false}
                     className={`h-full w-full rounded-3xl ${testimonial.src?.includes('tech-cover.svg') ? 'object-contain' : 'object-cover'} object-center`}
                     style={{
-                      backgroundColor: testimonial.src?.includes('tech-cover.svg') ? 'var(--channel-card,#e2dbce)' : '#f5f5f5'
+                      backgroundColor: testimonial.src?.includes('tech-cover.svg') ? 'var(--channel-card)' : 'var(--color-site-neutral-50)'
                     }} />
                 </motion.div>
               ))}
@@ -142,13 +142,13 @@ export const AnimatedTestimonials = ({
               duration: 0.2,
               ease: "easeInOut",
             }}>
-            <h3 className="text-2xl font-bold text-black dark:text-white">
+            <h3 className="text-2xl font-bold text-site-neutral-950 dark:text-site-neutral-50">
               {testimonials[active].name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-neutral-500">
+            <p className="text-sm text-site-gray-500 dark:text-site-neutral-500">
               {testimonials[active].designation}
             </p>
-            <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
+            <motion.p className="mt-8 text-lg text-site-gray-500 dark:text-site-neutral-300">
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -190,7 +190,7 @@ export const AnimatedTestimonials = ({
                 }}>
                 <a
                   href={testimonials[active].link}
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200"
+                  className="inline-flex items-center text-site-blue-600 hover:text-site-blue-800 dark:text-site-blue-400 dark:hover:text-site-blue-300 font-medium transition-colors duration-200"
                 >
                   阅读更多
                   <svg
@@ -214,15 +214,15 @@ export const AnimatedTestimonials = ({
           <div className="flex gap-4 pt-12 md:pt-0">
             <button
               onClick={handlePrev}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
+              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-site-gray-100 dark:bg-site-neutral-800">
               <IconArrowLeft
-                className="h-5 w-5 text-black transition-transform duration-300 group-hover/button:rotate-12 dark:text-neutral-400" />
+                className="h-5 w-5 text-site-neutral-950 transition-transform duration-300 group-hover/button:rotate-12 dark:text-site-neutral-400" />
             </button>
             <button
               onClick={handleNext}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
+              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-site-gray-100 dark:bg-site-neutral-800">
               <IconArrowRight
-                className="h-5 w-5 text-black transition-transform duration-300 group-hover/button:-rotate-12 dark:text-neutral-400" />
+                className="h-5 w-5 text-site-neutral-950 transition-transform duration-300 group-hover/button:-rotate-12 dark:text-site-neutral-400" />
             </button>
           </div>
         </div>

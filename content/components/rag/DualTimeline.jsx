@@ -371,22 +371,22 @@ const PHASES = [
 function TimelineNode({ side, data, eventId, isActive, onClick, hasPair }) {
   const isLeft = side === "left";
   const colorClass = isLeft
-    ? "bg-indigo-500 ring-indigo-200 dark:ring-indigo-900"
-    : "bg-amber-500 ring-amber-200 dark:ring-amber-900";
+    ? "bg-site-indigo-500 ring-site-indigo-200 dark:ring-site-indigo-900"
+    : "bg-site-amber-500 ring-site-amber-200 dark:ring-site-amber-900";
   const textClass = isLeft
-    ? "text-indigo-700 dark:text-indigo-300"
-    : "text-amber-700 dark:text-amber-300";
+    ? "text-site-indigo-700 dark:text-site-indigo-300"
+    : "text-site-amber-700 dark:text-site-amber-300";
   const borderClass = isLeft
-    ? "border-indigo-200 dark:border-indigo-800"
-    : "border-amber-200 dark:border-amber-800";
+    ? "border-site-indigo-200 dark:border-site-indigo-800"
+    : "border-site-amber-200 dark:border-site-amber-800";
   const bgClass = isLeft
-    ? "bg-indigo-50/60 dark:bg-indigo-950/30"
-    : "bg-amber-50/60 dark:bg-amber-950/30";
+    ? "bg-site-indigo-50/60 dark:bg-site-indigo-950/30"
+    : "bg-site-amber-50/60 dark:bg-site-amber-950/30";
 
   if (!data) {
     return (
       <div className={`flex-1 ${isLeft ? "text-right pr-6" : "text-left pl-6"}`}>
-        <span className="text-neutral-300 dark:text-neutral-700">—</span>
+        <span className="text-site-neutral-300 dark:text-site-neutral-700">—</span>
       </div>
     );
   }
@@ -407,11 +407,11 @@ function TimelineNode({ side, data, eventId, isActive, onClick, hasPair }) {
           className={`inline-block rounded-xl border px-3 py-2 md:px-4 md:py-3 transition-all duration-300 cursor-pointer ${
             isActive
               ? `${bgClass} ${borderClass} shadow-md`
-              : "border-transparent hover:border-neutral-200 dark:hover:border-neutral-700"
+              : "border-transparent hover:border-site-neutral-200 dark:hover:border-site-neutral-700"
           }`}
         >
           <div
-            className={`text-[10px] md:text-xs font-mono tracking-tight text-neutral-400 dark:text-neutral-500 mb-0.5 ${
+            className={`text-[10px] md:text-xs font-mono tracking-tight text-site-neutral-400 dark:text-site-neutral-500 mb-0.5 ${
               isLeft ? "" : ""
             }`}
           >
@@ -445,7 +445,7 @@ function TimelineNode({ side, data, eventId, isActive, onClick, hasPair }) {
             <div
               className={`mt-2 inline-block rounded-lg ${bgClass} border ${borderClass} px-3 py-2 md:px-4 md:py-3 max-w-xs md:max-w-sm`}
             >
-              <p className="text-xs md:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              <p className="text-xs md:text-sm text-site-neutral-700 dark:text-site-neutral-300 leading-relaxed">
                 {data.desc}
               </p>
             </div>
@@ -466,13 +466,13 @@ function PhaseHeader({ phase, index }) {
       className="relative flex items-center justify-center my-8 md:my-10"
     >
       <div className="absolute inset-0 flex items-center">
-        <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
+        <div className="w-full border-t border-site-neutral-200 dark:border-site-neutral-800" />
       </div>
-      <div className="relative bg-white dark:bg-[#1a1a1a] px-4 md:px-6 py-2 rounded-full border border-neutral-200 dark:border-neutral-800 shadow-sm">
-        <h3 className="text-sm md:text-base font-bold text-neutral-800 dark:text-neutral-100">
+      <div className="relative bg-site-neutral-50 dark:bg-[#1a1a1a] px-4 md:px-6 py-2 rounded-full border border-site-neutral-200 dark:border-site-neutral-800 shadow-sm">
+        <h3 className="text-sm md:text-base font-bold text-site-neutral-800 dark:text-site-neutral-100">
           {phase.name}
         </h3>
-        <span className="text-[10px] md:text-xs text-neutral-400 dark:text-neutral-500 ml-2 font-mono">
+        <span className="text-[10px] md:text-xs text-site-neutral-400 dark:text-site-neutral-500 ml-2 font-mono">
           {phase.period}
         </span>
       </div>
@@ -489,8 +489,8 @@ function ContextBox({ text }) {
       transition={{ duration: 0.5 }}
       className="my-4 md:my-6 mx-auto max-w-2xl"
     >
-      <div className="rounded-lg border-l-4 border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-900/50 px-4 py-3 md:px-5 md:py-4">
-        <p className="text-xs md:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
+      <div className="rounded-lg border-l-4 border-site-neutral-300 dark:border-site-neutral-600 bg-site-neutral-50 dark:bg-site-neutral-900/50 px-4 py-3 md:px-5 md:py-4">
+        <p className="text-xs md:text-sm text-site-neutral-600 dark:text-site-neutral-400 leading-relaxed italic">
           {text}
         </p>
       </div>
@@ -506,14 +506,14 @@ export function DualTimeline() {
       {/* Legend */}
       <div className="flex items-center justify-center gap-6 mb-6 md:mb-8 text-xs md:text-sm">
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-indigo-500" />
-          <span className="text-neutral-600 dark:text-neutral-400 font-medium">
+          <span className="w-3 h-3 rounded-full bg-site-indigo-500" />
+          <span className="text-site-neutral-600 dark:text-site-neutral-400 font-medium">
             大模型 / 基础设施
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-amber-500" />
-          <span className="text-neutral-600 dark:text-neutral-400 font-medium">
+          <span className="w-3 h-3 rounded-full bg-site-amber-500" />
+          <span className="text-site-neutral-600 dark:text-site-neutral-400 font-medium">
             检索 / 知识挂载
           </span>
         </div>
@@ -525,7 +525,7 @@ export function DualTimeline() {
 
           <div className="relative">
             {/* Central axis */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-neutral-200 dark:bg-neutral-800 -translate-x-1/2" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-site-neutral-200 dark:bg-site-neutral-800 -translate-x-1/2" />
 
             {/* Events */}
             <div className="relative space-y-4 md:space-y-5">
@@ -555,10 +555,10 @@ export function DualTimeline() {
 
                     {/* Center: Date marker */}
                     <div className="relative z-10 flex flex-col items-center justify-start px-2 md:px-3 pt-3">
-                      <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white dark:bg-[#1a1a1a] border-2 border-neutral-300 dark:border-neutral-700 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-neutral-400 dark:bg-neutral-600" />
+                      <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-site-neutral-50 dark:bg-[#1a1a1a] border-2 border-site-neutral-300 dark:border-site-neutral-700 flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-site-neutral-400 dark:bg-site-neutral-600" />
                       </div>
-                      <span className="text-[10px] md:text-xs font-mono text-neutral-400 dark:text-neutral-500 mt-1 whitespace-nowrap">
+                      <span className="text-[10px] md:text-xs font-mono text-site-neutral-400 dark:text-site-neutral-500 mt-1 whitespace-nowrap">
                         {event.date}
                       </span>
                     </div>

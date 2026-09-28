@@ -59,12 +59,12 @@ const Slider = React.memo(({ label, subLabel, description, gradient, min, max, u
     return (
         <div className="space-y-2 select-none">
             <div className="flex justify-between items-center">
-                <span className="font-bold text-gray-900 dark:text-gray-100">{label}</span>
-                <span className="text-xs text-gray-500 font-mono bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded">
+                <span className="font-bold text-site-gray-900 dark:text-site-gray-100">{label}</span>
+                <span className="text-xs text-site-gray-500 font-mono bg-site-gray-100 dark:bg-site-zinc-800 px-2 py-0.5 rounded">
                     {value}{unit}
                 </span>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-site-gray-600 dark:text-site-gray-400">
                 {description}
             </p>
 
@@ -84,13 +84,13 @@ const Slider = React.memo(({ label, subLabel, description, gradient, min, max, u
 
                 {/* Current Value Indicator (Thumb) */}
                 <div
-                    className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.1)] ring-1 ring-black/20 pointer-events-none transition-all duration-75 ease-out z-10"
+                    className="absolute top-0 bottom-0 w-1 bg-site-neutral-50 shadow-[0_0_0_1px_rgba(0,0,0,0.1)] ring-1 ring-site-neutral-950/20 pointer-events-none transition-all duration-75 ease-out z-10"
                     style={{
                         left: `${currentPercentage}%`,
                         transform: 'translateX(-50%)'
                     }}
                 >
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-transparent border-2 border-white rounded-full shadow-sm"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-transparent border-2 border-site-neutral-50 rounded-full shadow-sm"></div>
                 </div>
 
                 {/* Hover Tooltip */}
@@ -104,11 +104,11 @@ const Slider = React.memo(({ label, subLabel, description, gradient, min, max, u
                             className="absolute top-0 transform -translate-x-1/2 pointer-events-none z-20"
                             style={{ left: `${hoverX}%` }}
                         >
-                            <div className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                            <div className="bg-site-gray-900 dark:bg-site-neutral-50 text-site-neutral-50 dark:text-site-gray-900 text-xs font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap">
                                 {hoverValue}{unit}
                             </div>
                             {/* Arrow */}
-                            <div className="w-2 h-2 bg-gray-900 dark:bg-white rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"></div>
+                            <div className="w-2 h-2 bg-site-gray-900 dark:bg-site-neutral-50 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"></div>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -144,7 +144,7 @@ export const HSBSliders = () => {
     })();
 
     return (
-        <div className="space-y-8 my-8 p-6 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div className="space-y-8 my-8 p-6 bg-site-neutral-50 dark:bg-site-zinc-900 rounded-2xl border border-site-gray-200 dark:border-site-zinc-800 shadow-sm">
 
             {/* Sliders Area */}
             <div className="space-y-6">
@@ -183,23 +183,23 @@ export const HSBSliders = () => {
             </div>
 
             {/* Preview Area */}
-            <div className="pt-6 border-t border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row gap-6 items-center">
+            <div className="pt-6 border-t border-site-gray-100 dark:border-site-zinc-800 flex flex-col sm:flex-row gap-6 items-center">
                 <div
-                    className="w-24 h-24 rounded-full shadow-lg ring-4 ring-white dark:ring-zinc-800 transition-colors duration-200"
+                    className="w-24 h-24 rounded-full shadow-lg ring-4 ring-site-neutral-50 dark:ring-site-zinc-800 transition-colors duration-200"
                     style={{ backgroundColor: hexColor }}
                 ></div>
 
                 <div className="flex-1 w-full grid grid-cols-2 gap-4">
-                    <div className="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-lg flex flex-col justify-center">
-                        <span className="text-xs text-gray-500 uppercase tracking-wider mb-1">Color Preview</span>
-                        <span className="font-mono font-bold text-gray-900 dark:text-gray-100 text-lg">
+                    <div className="bg-site-gray-50 dark:bg-site-zinc-800/50 p-3 rounded-lg flex flex-col justify-center">
+                        <span className="text-xs text-site-gray-500 uppercase tracking-wider mb-1">Color Preview</span>
+                        <span className="font-mono font-bold text-site-gray-900 dark:text-site-gray-100 text-lg">
                             HSB({hsb.h}, {hsb.s}%, {hsb.b}%)
                         </span>
                     </div>
 
-                    <div className="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-lg flex flex-col justify-center">
-                        <span className="text-xs text-gray-500 uppercase tracking-wider mb-1">Usage Suggestion</span>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="bg-site-gray-50 dark:bg-site-zinc-800/50 p-3 rounded-lg flex flex-col justify-center">
+                        <span className="text-xs text-site-gray-500 uppercase tracking-wider mb-1">Usage Suggestion</span>
+                        <span className="text-sm text-site-gray-600 dark:text-site-gray-400">
                             {hsb.b < 20 ? "适合深色背景 / Dark Mode" :
                                 hsb.b > 90 && hsb.s < 10 ? "适合浅色背景 / 纸张白" :
                                     hsb.s > 80 && hsb.b > 80 ? "适合强调色 / 按钮" : "通用色彩"}

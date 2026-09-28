@@ -17,7 +17,7 @@ export default function InlineSvgWithHover({ src, className, style, idToLabel, h
     tooltip.style.borderRadius = "4px"
     tooltip.style.fontSize = "12px"
     tooltip.style.background = "rgba(0,0,0,0.75)"
-    tooltip.style.color = "#fff"
+    tooltip.style.color = "var(--color-site-neutral-50)"
     tooltip.style.transform = "translate(-50%, -140%)"
     tooltip.style.whiteSpace = "nowrap"
     tooltip.style.display = "none"
@@ -151,4 +151,3 @@ export default function InlineSvgWithHover({ src, className, style, idToLabel, h
     <div ref={containerRef} className={className} style={style} />
   )
 }
-

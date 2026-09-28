@@ -18,6 +18,7 @@ import {
   normalizeToBase100,
 } from "@/lib/finance/market-study-metrics";
 import type { MarketStudyArtifact } from "@/lib/finance/market-study-schema";
+import { PLOT_NEUTRALS, PLOT_SEMANTIC } from "@/lib/plot-palette";
 
 echarts.use([
   LineChart,
@@ -70,7 +71,7 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
     study.instruments.find(({ id }) => id === selectedInstrumentId) ?? study.instruments[0];
 
   const option = useMemo(() => {
-    const textColor = "#4b504c";
+    const textColor = PLOT_NEUTRALS.muted;
     const gridColor = "rgba(71, 79, 73, 0.12)";
     const common = {
       animationDuration: 450,
@@ -80,7 +81,7 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
         trigger: "axis",
         backgroundColor: "rgba(22, 27, 24, 0.94)",
         borderWidth: 0,
-        textStyle: { color: "#f7f5ef", fontSize: 12 },
+        textStyle: { color: PLOT_NEUTRALS.canvas, fontSize: 12 },
         formatter: (params: any[]) => {
           if (!params?.length) return "";
           const date = formatDate(params[0].value[0]);
@@ -106,7 +107,7 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
           borderColor: "transparent",
           backgroundColor: "rgba(71, 79, 73, 0.06)",
           fillerColor: "rgba(23, 107, 91, 0.14)",
-          handleStyle: { color: "#176b5b", borderColor: "#176b5b" },
+          handleStyle: { color: PLOT_SEMANTIC.success, borderColor: PLOT_SEMANTIC.success },
           textStyle: { color: textColor },
         },
       ],
@@ -145,10 +146,10 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
             type: "candlestick",
             data: candleData,
             itemStyle: {
-              color: "#b33a3a",
-              color0: "#176b5b",
-              borderColor: "#b33a3a",
-              borderColor0: "#176b5b",
+              color: PLOT_SEMANTIC.danger,
+              color0: PLOT_SEMANTIC.success,
+              borderColor: PLOT_SEMANTIC.danger,
+              borderColor0: PLOT_SEMANTIC.success,
             },
           },
           {
@@ -227,7 +228,7 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
   return (
     <div className="min-w-0" data-testid="market-study-chart">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="grid w-full grid-cols-2 rounded-md border border-[#cfd2cc] bg-[#f3f2ed] p-1 sm:flex sm:w-auto" role="group" aria-label="图表视图">
+        <div className="grid w-full grid-cols-2 rounded-md border border-site-neutral-300 bg-site-stone-100 p-1 sm:flex sm:w-auto" role="group" aria-label="图表视图">
           {MODES.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -235,7 +236,7 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
               aria-pressed={mode === id}
               onClick={() => setMode(id)}
               className="flex h-9 shrink-0 items-center justify-center gap-1.5 rounded px-3 text-xs font-medium transition-colors"
-              style={mode === id ? { backgroundColor: "#1d2923", color: "#fff" } : { color: "#59605b" }}
+              style={mode === id ? { backgroundColor: "var(--color-site-emerald-950)", color: "var(--color-site-neutral-50)" } : { color: "var(--color-site-neutral-600)" }}
             >
               <Icon size={14} aria-hidden="true" />
               {label}
@@ -243,12 +244,12 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
           ))}
         </div>
         {mode === "candlestick" && study.instruments.length > 1 && (
-          <label className="flex items-center gap-2 text-xs text-[#59605b]">
+          <label className="flex items-center gap-2 text-xs text-site-neutral-600">
             标的
             <select
               value={selectedInstrument.id}
               onChange={(event) => setSelectedInstrumentId(event.target.value)}
-              className="h-9 rounded border border-[#cfd2cc] bg-white px-3 text-[#1d2923]"
+              className="h-9 rounded border border-site-neutral-300 bg-site-neutral-50 px-3 text-site-emerald-950"
             >
               {study.instruments.map((instrument) => (
                 <option key={instrument.id} value={instrument.id}>{instrument.symbol} · {instrument.name}</option>
@@ -263,7 +264,7 @@ export default function StockStageChart({ study, compact = false }: StockStageCh
         aria-label={`${study.title}，当前为${MODES.find(({ id }) => id === mode)?.label}图`}
         className={compact ? "h-[340px] w-full sm:h-[410px]" : "h-[420px] w-full sm:h-[520px]"}
       />
-      <p className="mt-2 text-[11px] leading-relaxed text-[#747a75]">
+      <p className="mt-2 text-[11px] leading-relaxed text-site-neutral-500">
         {mode === "candlestick"
           ? "可拖动底部时间轴或双指缩放。红色表示上涨、绿色表示下跌；涨跌同时通过位置和数值区分。"
           : "可拖动底部时间轴或双指缩放，悬停或轻触查看各标的在同一日期的数值。"}

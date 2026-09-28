@@ -25,13 +25,13 @@ export function InlineExplanation({ children, explanation }) {
         tabIndex={0}
         aria-expanded={isOpen}
         aria-controls={contentId}
-        className="text-blue-600 dark:text-blue-400 underline decoration-dotted cursor-pointer hover:text-blue-800 dark:hover:text-blue-300
+        className="text-site-blue-600 dark:text-site-blue-400 underline decoration-dotted cursor-pointer hover:text-site-blue-800 dark:hover:text-site-blue-300
     font-semibold"
       >
         {children}
       </span>
       {isOpen && (
-        <span id={contentId} className="block my-4 p-4 bg-gray-50 dark:bg-gray-800/50 border-l-4 border-blue-500 rounded-r-lg">
+        <span id={contentId} className="block my-4 p-4 bg-site-gray-50 dark:bg-site-gray-800/50 border-l-4 border-site-blue-500 rounded-r-lg">
           {explanation}
         </span>
       )}

@@ -28,14 +28,14 @@ export default function GoalProgressGrid({ data = { goals: [], krs: [], entries:
 
   // Heatmap intensity palette (same as calendar heatmap)
   const heatColorForPercent = (p) => {
-    if (p <= 0) return "#EDEFF2";        // none
-    if (p <= 20) return "#e7f5ff";       // very light
-    if (p <= 40) return "#a5d8ff";       // light
-    if (p <= 60) return "#4dabf7";       // medium
-    if (p <= 80) return "#228be6";       // strong
-    return "#1971c2";                    // strongest
+    if (p <= 0) return "var(--color-site-neutral-100)";
+    if (p <= 20) return "var(--color-site-blue-100)";
+    if (p <= 40) return "var(--color-site-blue-300)";
+    if (p <= 60) return "var(--color-site-blue-500)";
+    if (p <= 80) return "var(--color-site-blue-700)";
+    return "var(--color-site-blue-900)";
   }
-  const heatSecondary = "#EDEFF2"
+  const heatSecondary = "var(--color-site-neutral-100)"
 
   return (
     <div className="rounded-xl border bg-background text-foreground p-4">

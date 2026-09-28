@@ -28,7 +28,7 @@ export const articleMdxOptions: any = {
           content: {
             type: "element",
             tagName: "span",
-            properties: { className: ["inline-block", "ml-2", "text-neutral-500"] },
+            properties: { className: ["inline-block", "ml-2", "text-site-neutral-500"] },
             children: [{ type: "text", value: "#" }],
           },
         },

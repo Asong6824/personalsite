@@ -2,6 +2,9 @@
   "name": "personalsite",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "predev": "tsx scripts/build-posts-index.ts && tsx scripts/validate-content-graph.ts && tsx scripts/build-finance-studies.ts",
     "dev": "next dev",
@@ -94,6 +97,7 @@
     "@vitest/ui": "^4.1.7",
     "eslint": "^9",
     "eslint-config-next": "15.5.21",
+    "node": "24.20.0",
     "tailwindcss": "^4",
     "tsx": "^4.22.3",
     "tw-animate-css": "^1.3.2",
